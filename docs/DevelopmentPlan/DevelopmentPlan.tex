@@ -21,7 +21,7 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 2022-09-26 & Jonathan Cels & Team meeting and communication plans, personal role, workflow plan, coding standard, project scheduling, started technology section\\
-Date2 & Name(s) & Description of changes\\
+22-09-26 & Alexander Van Kralingen & Introduce CI/CD plan, team member role\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -50,7 +50,13 @@ In the case of emergencies or time-critical situations, a team member will use S
 
 \section{Team Member Roles}
 \subsection{Alexander Van Kralingen}
-{}
+\begin{itemize}
+    \item Embedded systems software development
+    \item Continuous Integration/Deployment management
+    \item Assisting with development of web application
+    \item Code reviewing for both embedded and web application code
+    \item Unit/integration testing development
+\end{itemize}
 
 \subsection{Arshdeep Aujla}
 {}
@@ -132,8 +138,58 @@ you will be able to overcome this risk?
     \item \textbf{Stockfish.js:} Chess engine to find optimal moves
 \end{itemize}
 
-\item Specific plans for Continuous Integration (CI), or an explanation that CI
-  is not being done (TBD)
+\item \textbf{Continuous Integration (CI)} GitHub Actions are to be used for CI, with the following general workflow:
+\begin{itemize}
+    \item Running on ubuntu-latest
+    \item \textbf{Pull Requests (PR):} 
+    \begin{itemize}
+        \item Require one reviewer
+        \item Require building/linting and tests to run completely without errors
+    \end{itemize}
+    \item \textbf{Build Embedded Code:}
+    \begin{itemize}
+        \item Triggered on PR from any hardware/* branches
+        \item Checkout hardware/* branch
+        \item Build all C code
+        \item Run all C tests
+    \end{itemize}
+    \item \textbf{Build Web App Code:} 
+    \begin{itemize}
+        \item Triggered on PR from any webapp/* branches
+        \item Checkout webapp/* branch
+        \item Lint all Python code
+        \item Lint all JavaScript code
+        \item Build JavaScript code
+        \item Run all JavaScript tests
+        \item Run all Python tests
+    \end{itemize}
+    \item \textbf{Build LaTeX docs:} 
+    \begin{itemize}
+        \item Triggered on push (any branch) with *.tex file changes
+        \item Build all latex documents
+    \end{itemize}
+    \item \textbf{Embedded Testing:} 
+    \begin{itemize}
+        \item Triggered on PR with Hardware Label opened, updated or closed
+        \item Run all C tests
+    \end{itemize}
+    \item \textbf{Web-App Testing:} 
+    \begin{itemize}
+        \item Triggered on PR with Webapp Label opened, updated or closed
+        \item Run all JavaScript tests
+        \item Run all Python tests
+    \end{itemize}
+
+\end{itemize}
+\item \textbf{Continuous Deployment (CD)} GitHub integration in Heroku to be used for continuous deployment:
+\begin{itemize}
+    \item \textbf{Deploy:}
+    \begin{itemize}
+        \item Triggered on push to main
+        \item Push to main event occurs when merging a PR
+        \item Web application deployed to Heroku on successfully merged PR.
+    \end{itemize}
+\end{itemize}
 
 \item Hardware (TBD) (Microcontroller, display, circuits)
 \end{itemize}
