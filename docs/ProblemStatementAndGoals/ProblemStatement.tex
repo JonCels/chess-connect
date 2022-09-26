@@ -7,7 +7,7 @@
 
 \author{\authname}
 
-\date{}
+\date{2022-09-22}
 
 \input{../Comments}
 \input{../Common}
@@ -31,10 +31,7 @@ Date2 & Name(s) & Description of changes\\
 
 \section{Problem Statement}
 
-\wss{You should check your problem statement with the
-\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.}
-\wss{You can change the section headings, as long as you include the required information.}
+{Online chess has functionality for both beginners and experienced players to learn and practice the game. Physical boards place emphasis on tactile learning when practicing their game. Chess players often use a combination of the two styles to optimize their play. However, no option exists for players of any skill level to integrate their over-the-board and online play with one solution.}
 
 \subsection{Problem}
 
@@ -44,13 +41,38 @@ Date2 & Name(s) & Description of changes\\
 Use abstraction so that you can avoid details.}
 
 \subsection{Stakeholders}
+Chess players of any level looking for a tool to help them learn and study the game. Chess tournament organizers and chess enthusiasts looking to easily broadcast and share their games online in real time. 
 
 \subsection{Environment}
+Due to the web application component of our project, many of our languages will revolve around a standard full-stack development tech stack. Because of this, we will be using JavaScript, HTML, CSS, and Python. React.js is a front-end framework that encompasses the use of JavaScript, HTML, and CSS in a single framework. We are also planning to use Node.js and FastAPI for our back-end, making use of Python. C will be used as a middleware to transmit information from the hardware to the web application. To deploy our web application online we will be using a cloud application platform called Heroku. Testing will be done using PyTest and the React Testing Library which is part of the React framework. In order to store previous games, we might also make use of databases such as MySQL and MongoDB. Our method of connecting the hardware and software together will be Bluetooth. In terms of the hardware, we are planning to use --- for the micro-controller and --- for the display. Our documentation will be done using Overleaf, an online LaTeX editor which will be connected to our personal Github repository. We will also be using Thode Makerspace as a workshop to build our project.
 
-\wss{Hardware and software}
+% \\\textbf{Languages:} JavaScript, HTML, CSS, Python, C
+% \\\textbf{Frontend:} React.js
+% \\\textbf{Backend:} Node.js, FastAPI
+% \\\textbf{Database:} MySQL, MongoDB 
+% \\\textbf{Connection:} Bluetooth
+% \\\textbf{Workshop:} Thode Makerspace
+% \\\textbf{Micro-controller:} TBD
+% \\\textbf{Display:} TBD
+% \\\textbf{Documentation:} Overleaf
+% \\\textbf{Testing:} PyTest, React Testing Library
+% \\\textbf{Deployment:} Heroku
+% \\\textbf{Repository:} Github
+
+
 
 \section{Goals}
 
-\section{Stretch Goals}
+\subsection{Live Broadcasting}
+{Physical chess boards lack the ability to share and store moves with anyone outside of the room. Chess Connect will live broadcast the state of the game to a server and store the moves to share with others. This allows for players to communicate world-wide while maintaining the benefits of a physical board.} 
+\subsection{Engine Integration}
+{Online chess has taken large leaps in recent years due to chess engine development and implementation growing immensely. Physical boards lack this real time evaluation and potential for improvement. Chess Connect will fetch best moves from an existing engine and display the moves on-board via LCD display.}
+\subsection{Beginner Mode}
+{For new players, nothing beats learning on a real board. It increases }
 
+\section{Stretch Goals}
+\subsection{Database}
+Providing users the ability to study their past games, allows them learn from their mistakes and blunders in the game and allow them to evaluate their own positions with a better understanding on how to play in future games. Using MySQL and MongoDB to store those games in these databases, we can let users look through all games previously played on our board.
+\subsection{Study Mode}
+Study Mode will allow users to create puzzles or positions that do not start from a default starting position of the game, instead allowing users to practice a specific phase of the game and the ability to take back moves without having to play out a full game with an opponent. This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.
 \end{document}
