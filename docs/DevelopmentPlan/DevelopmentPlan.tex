@@ -42,7 +42,11 @@ On the event that no lecture is scheduled, the meeting time shall be changed to 
 \noindent{Additional meetings will be scheduled when necessary using the communication methods outlined in the Team Communication Plan.}
 
 \section{Team Communication Plan}
-{The team will communicate over a Discord group channel. Each team member is expected to have Discord downloaded and readily accessible on at least one of their devices.}
+{The team will communicate over a Discord group channel. Each team member is expected to have Discord downloaded and readily accessible on at least one of their devices. 
+In the case of emergencies or time-critical situations, a team member will use SMS text messaging in place of Discord. Text messages will only be used in critical situations.}
+
+\medskip
+\noindent{Issues will be managed using a kanban board, implemented with a Git project board. Tasks will be split into small, workable items with differing deadlines and importance.}
 
 \section{Team Member Roles}
 \subsection{Alexander Van Kralingen}
@@ -66,12 +70,24 @@ On the event that no lecture is scheduled, the meeting time shall be changed to 
 {}
 
 \section{Workflow Plan}
-
-\begin{itemize}
-	\item How will you be using git, including branches, pull request, etc.?
-	\item How will you be managing issues, including template issues, issue
-	classificaiton, etc.?
-\end{itemize}
+{The project will use the feature-branch methodology in Git. An outline of the workflow is as follows:}
+\begin{enumerate}
+    \item Pull any changes from the master branch
+    \item Create a new branch for development of a specific feature or subsystem
+        \begin{enumerate}
+            \item Use branch names that are descriptive to the feature
+        \end{enumerate}
+    \item Commit code frequently with descriptive messages
+    \item Add unit and integration tests for the changes
+    \item Push code to branch
+    \item Create a pull request
+    \item Another team member reviews and approves or rejects the pull request
+        \begin{enumerate}
+            \item The tests are reviewed and more tests are created if necessary
+            \item The pull request cannot be approved if all tests do not pass
+        \end{enumerate}
+    \item Merge feature branch into the main branch
+\end{enumerate}
 
 \section{Proof of Concept Demonstration Plan}
 
@@ -82,22 +98,55 @@ you will be able to overcome this risk?
 \section{Technology}
 
 \begin{itemize}
-\item Specific programming language
-\item Specific linter tool (if appropriate)
-\item Specific unit testing framework
-\item Investigation of code coverage measuring tools
+\item Languages and Frameworks
+\begin{itemize}
+    \item \textbf{JavaScript, HTML, CSS, and React.js:} Frontend web based development
+    \item \textbf{Python, FastAPI, Node.js:} Backend development and bluetooth connection
+    \item \textbf{C:} Microcontroller programming
+    \item \textbf{MongoDB:} Database solution
+\end{itemize}
+
+\item Linting
+\begin{itemize}
+    \item \textbf{ESLint:} JavaScript development in VSCode
+    \item \textbf{Flake8:} Python development in VSCode
+\end{itemize} 
+
+\item Testing Frameworks
+\begin{itemize}
+    \item \textbf{React Testing Library:} JavaScript testing framework for React.js
+    \item \textbf{PyTest:} Python testing framework
+\end{itemize}
+
+\item \textbf{Heroku:} Deployment
+
+\item \textbf{VSCode:} Code editor
+
+\item \textbf{GitHub:} Version control and project management
+
+\item \textbf{LaTeX:} Documentation
+
+\item Libraries and API's
+\begin{itemize}
+    \item \textbf{Bluez, PyBluez:} Enabling bluetooth data transfer
+    \item \textbf{Stockfish.js:} Chess engine to find optimal moves
+\end{itemize}
+
 \item Specific plans for Continuous Integration (CI), or an explanation that CI
-  is not being done
-\item Specific performance measuring tools (like Valgrind), if
-  appropriate
-\item Libraries you will likely be using?
-\item Tools you will likely be using?
+  is not being done (TBD)
+
+\item Hardware (TBD) (Microcontroller, display, circuits)
 \end{itemize}
 
 \section{Coding Standard}
+{The project will follow the \href{https://github.com/airbnb/javascript}{Airbnb style guide} for JavaScript development, and use the \href{https://flake8.pycqa.org/en/latest/}{Flake8 style guide} for Python development.}
 
 \section{Project Scheduling}
+{The project will use a GitHub project board to track and schedule tasks on a weekly basis.} 
 
-\wss{How will the project be scheduled?}
+\medskip
+\noindent{Technical roles are decided on the basis of prior knowledge and interest. In the case of the team leader, the role will change with every deliverable. Team members are responsible for decomposing their tasks into kanban items, individually or alongside other team members working on the same task.}
 
+\medskip
+\noindent{Major milestones will be tracked on the project board. Milestones include both hard and soft deadlines for task completion. Hard deadlines are the project deliverable due dates. Soft deadlines are decided by the team for the completion of technical tasks.}
 \end{document}
