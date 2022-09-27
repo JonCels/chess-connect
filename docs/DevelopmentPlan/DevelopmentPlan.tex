@@ -26,6 +26,7 @@
 2022-09-26 & Joshua Chapman & Modify Hardware List 6, 3.2 Add Role\\
 2022-09-26 & Alexander Van Kralingen & Fix author field not being populated bug\\
 2022-09-26 & Alexander Van Kralingen & Populate proof of concept plan\\
+2022-09-26 & Rupinder Nagra & editing\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -37,7 +38,7 @@
 \section{Team Meeting Plan}
 {The team will meet weekly on Thursdays at 10:20 AM until 11:20 AM. 
 Team members are expected to attend the Thursday lecture and meet up following the lecture. 
-On the event that no lecture is scheduled, the meeting time shall be changed to 9:30 until 11:20AM.}
+On the event that no lecture is scheduled, the meeting time shall be changed to 9:30 AM until 11:20 AM.}
 
 \medskip
 \noindent{Additional meetings will be scheduled when necessary using the communication methods outlined in the Team Communication Plan.}
@@ -47,7 +48,7 @@ On the event that no lecture is scheduled, the meeting time shall be changed to 
 In the case of emergencies or time-critical situations, a team member will use SMS text messaging in place of Discord. Text messages will only be used in critical situations.}
 
 \medskip
-\noindent{Issues will be managed using a kanban board, implemented with a Git project board. Tasks will be split into small, workable items with differing deadlines and importance.}
+\noindent{Issues will be managed using a Kanban board, implemented with a Git project board. Tasks will be split into small, workable items with differing deadlines and importance.}
 
 \section{Team Member Roles}
 \subsection{Alexander Van Kralingen}
@@ -71,7 +72,7 @@ In the case of emergencies or time-critical situations, a team member will use S
 \begin{itemize}
     \item Enabling the Bluetooth connection between the application and the microcontroller
     \item Assisting with development of web application
-    \item Programming the microcontroller with multiplexing, bluetooth and rules of chess
+    \item Programming the microcontroller with multiplexing, Bluetooth and rules of chess
     \item Leading testing initiatives and ensuring that thorough testing is completed
     \item Editing and formatting of all documentation before submission
 \end{itemize}
@@ -81,7 +82,7 @@ In the case of emergencies or time-critical situations, a team member will use S
     \item Circuit design of power and transmission of sensing units
     \item Hardware component selection and integration
     \item Assisting with soldering components and mechanical assembly
-    \item Programming the microcontroller with multiplexing, bluetooth and rules of chess
+    \item Programming the microcontroller with multiplexing, Bluetooth and rules of chess
     \item Team leader for purchasing and planning phase
 \end{itemize}
 
@@ -150,12 +151,12 @@ The proof of concept demonstration will involve both a hardware component and a 
     \end{itemize}
     \item Demonstration
     \begin{itemize}
-        \item The UI layout will be shown, as well as all of the various components that will (eventually) connect to the back-end and hardware. The bluetooth connection will provide the information needed to populate the UI with pieces, valid moves, best moves, game modes, etc. The bluetooth connection will not be a part of this proof of concept because it is a tool that has been tested and proven in many other applications. 
+        \item The UI layout will be shown, as well as all of the various components that will (eventually) connect to the back-end and hardware. The Bluetooth connection will provide the information needed to populate the UI with pieces, valid moves, best moves, game modes, etc. The Bluetooth connection will not be a part of this proof of concept because it is a tool that has been tested and proven in many other applications. 
     \end{itemize}
     \item Risks:
     \begin{enumerate}
-        \item Hardware-software connection could be problematic due to signal loss or dropped communication packets. This will not be demonstrated in the proof of concept plan, however, bluetooth is a commonly used communication method and should be a reliable information stream for the web application.
-        \item Communication speed could limit the processing of valid moves and add delays to the connection between the moving pieces and the display on the UI. The speed in which pieces are identified and processed can show that this information can be sent over bluetooth and processed for the web app quickly and efficiently.
+        \item Hardware-software connection could be problematic due to signal loss or dropped communication packets. This will not be demonstrated in the proof of concept plan. However, Bluetooth is a commonly used communication method and should be a reliable information stream for the web application.
+        \item Communication speed could limit the processing of valid moves and add delays to the connection between the moving pieces and the display on the UI. The speed in which pieces are identified and processed can show that this information can be sent over Bluetooth and processed for the web app quickly and efficiently.
         \item Chess engines could be resource intensive and the web application hosting platform and user system could prevent the user experience from being smooth and responsive. Displaying a light interface without too many calculations involved will minimize the computing power needed to provide a smooth user experience.
     \end{enumerate}
 \end{itemize}
@@ -165,8 +166,8 @@ The proof of concept demonstration will involve both a hardware component and a 
 \begin{itemize}
 \item Languages and Frameworks
 \begin{itemize}
-    \item \textbf{JavaScript, HTML, CSS, and React.js:} Frontend web based development
-    \item \textbf{Python, FastAPI, Node.js:} Backend development and bluetooth connection
+    \item \textbf{JavaScript, HTML, CSS, and React:} Front-end web based development
+    \item \textbf{Python, FastAPI, Node.js:} Back-end development and Bluetooth connection
     \item \textbf{C:} Microcontroller programming
     \item \textbf{MongoDB, MySQL:} Database solution
 \end{itemize}
@@ -179,7 +180,7 @@ The proof of concept demonstration will involve both a hardware component and a 
 
 \item Testing Frameworks
 \begin{itemize}
-    \item \textbf{React Testing Library:} JavaScript testing framework for React.js
+    \item \textbf{React Testing Library:} JavaScript testing framework for React
     \item \textbf{PyTest:} Python testing framework
 \end{itemize}
 
@@ -193,7 +194,7 @@ The proof of concept demonstration will involve both a hardware component and a 
 
 \item Libraries and API's
 \begin{itemize}
-    \item \textbf{Bluez, PyBluez:} Enabling bluetooth data transfer
+    \item \textbf{Bluez, PyBluez:} Enabling Bluetooth data transfer
     \item \textbf{Stockfish.js:} Chess engine to find optimal moves
 \end{itemize}
 
