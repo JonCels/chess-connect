@@ -3,14 +3,14 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 
+\input{../Comments}
+\input{../Common}
+
 \title{Development Plan\\\progname}
 
 \author{\authname}
 
 \date{}
-
-\input{../Comments}
-\input{../Common}
 
 \begin{document}
 
@@ -24,6 +24,8 @@
 22-09-26 & Alexander Van Kralingen & Introduce CI/CD plan, team member role\\
 22-09-26 & Arshdeep Aujla & Introduce Hardware List 6, 3.2 Add Roles\\
 22-09-26 & Joshua Chapman & Modify Hardware List 6, 3.2 Add Role\\
+22-09-26 & Alexander Van Kralingen & Fix author field not being populated bug\\
+22-09-26 & Alexander Van Kralingen & Populate proof of concept plan\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -87,7 +89,12 @@ In the case of emergencies or time-critical situations, a team member will use S
 \end{itemize}
 
 \subsection{Rupinder Nagra}
-{}
+\begin{itemize}
+    \item Lead front-end developer
+    \item Deployment and testing of web application
+    \item Back-end development for server/database management
+    \item Code reviewing for all web application-related changes
+\end{itemize}
 
 \section{Workflow Plan}
 {The project will use the feature-branch methodology in Git. An outline of the workflow is as follows:}
@@ -111,9 +118,51 @@ In the case of emergencies or time-critical situations, a team member will use S
 
 \section{Proof of Concept Demonstration Plan}
 
-What is the main risk, or risks, for the success of your project?  What will you
-demonstrate during your proof of concept demonstration to convince yourself that
-you will be able to overcome this risk?
+% What is the main risk, or risks, for the success of your project?  What will you
+% demonstrate during your proof of concept demonstration to convince yourself that
+% you will be able to overcome this risk?
+
+The proof of concept demonstration will involve both a hardware component and a software component.
+\paragraph{Hardware}
+\begin{itemize}
+    \item Components Involved: 
+    \begin{itemize}
+        \item Three different chess pieces with magnets attached (ex: white quen, white pawn, black knight).
+        \item Two 3D-printed squares with hall-effect sensors and LCDs attached.
+    \end{itemize}
+    \item Demonstration:
+    \begin{itemize}
+        \item The squares will sensors will be wired to the microcontroller. The input signals will be recorded and displayed to demonstrate that the squares will be able to identify the different pieces based on the different magnets attached. The embedded code will be able to tell what class of piece is on the square (ex: knight, rook, etc.) as well as the colour. Both squares will have a location code based on standard chess notation (A1 through H8), and will register as valid spaced depending on which piece is placed on it. 
+    \end{itemize} 
+    \item Risks:
+    \begin{itemize}
+        \item The configuration of the sensors might be challenging to coordinate (sixty-four different sensors means many IOs to process at once). Correctly configuring two pieces means this can be easily scaled to sixty-four.
+        \item The sensor accuracy is something that could create a barrier to identifying six different pieces in each colour. Inaccuracy could mean misreading the identity of the piece on the square. Correctly sensing three different pieces will prove that this barrier can be overcome.
+        \item Supply-chain issues could mean some of the products selected for this project may not arrive on time for the demonstration.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Software}
+\begin{itemize}
+    \item Concepts to Demonstrate:
+    \begin{itemize}
+        \item Front-end User Interface (UI)
+    \end{itemize}
+    \item Demo Platform:
+    \begin{itemize}
+        \item \href{https://www.figma.com/}{Figma Design Platform}
+    \end{itemize}
+    \item Demonstration
+    \begin{itemize}
+        \item The UI layout will be shown, as well as all of the various components that will (eventually) connect to the back-end and hardware. The bluetooth connection will provide the information needed to populate the UI with pieces, valid moves, best moves, game modes, etc. The bluetooth connection will not be a part of this proof of concept because it is a tool that has been tested and proven in many other applications. 
+    \end{itemize}
+    \item Risks:
+    \begin{itemize}
+        \item Hardware-software connection could be problematic due to signal loss or dropped communication packets. This will not be demonstrated in the proof of concept plan, however, bluetooth is a commonly used communication method and should be a reliable information stream for the web application.
+        \item Communication speed could limit the processing of valid moves and add delays to the connection between the moving pieces and the display on the UI. The speed in which pieces are identified and processed can show that this information can be sent over bluetooth and processed for the web app quickly and efficiently.
+        \item Chess engines could be resource intensive and the web application hosting platform and user system could prevent the user experience from being smooth and responsive. Displaying a light interface without too many calculations involved will minimize the computing power needed to provide a smooth user experience.
+    \end{itemize}
+\end{itemize}
 
 \section{Technology}
 
