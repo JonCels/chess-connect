@@ -38,7 +38,7 @@ However, these forms of learning place emphasis on a visual style of learning us
 The highest rated chess players often use a combination of the two styles to optimize their play. However, no option exists for players of any skill level to integrate their over-the-board and online play with one solution.}
 
 \medskip
-{This project plans to centralize these two mediums of studying the game in order to provide flexibility and remove constraints for new players in learning how to play chess.}
+\noindent{This project plans to centralize these two mediums of studying the game in order to provide flexibility and remove constraints for new players in learning how to play chess.}
 
 \subsection{Inputs and Outputs}
 
@@ -48,7 +48,7 @@ The highest rated chess players often use a combination of the two styles to opt
     \item[b.] Type of piece in a board location
     \item[c.] Colour of piece in a board location
     \item[d.] Experience level of player using the board
-    \item[e.] Chess engine board state
+    \item[e.] Chess engine optimal moves for board state
 \end{enumerate}
 
 \subsubsection{Outputs}
@@ -69,12 +69,12 @@ Because of this, we will be using JavaScript, HTML, CSS, and Python, along with 
 
 \medskip
 \noindent{The Python back-end will use both Node.js and FastAPI. A combination of Python and C will be used to facilitate the transmission of information from the hardware to the web application over Bluetooth. 
-To deploy the web application online we will be using Heroku, a cloud application platform. Unit and integration testing will be done using PyTest and the React Testing Library and will be implemented as part of the CI/CD methodology. 
+To deploy the web application online we will be using Heroku, a cloud application platform. Unit and integration testing will be done using PyTest, and the React Testing Library and will be implemented as part of the CI/CD methodology. 
 In order to store previous games, we might also make use of databases such as MySQL and MongoDB, relating to some of our tasks in the stretch goals section below.}
 
 \medskip
-\noindent{In terms of the hardware, we are planning to use sensors to track pieces on the board using a micro-controller that will be programmed in C and display engine moves with an LCD display, where our method of connecting the hardware and software together will be Bluetooth. 
-Our documentation will be done using Overleaf, an online LaTeX editor which will be connected to our personal Github repository. Thode Makerspace will be utilized as a workspace to build the project.}
+\noindent{In terms of the hardware, we are planning to use sensors to track pieces on the board using a micro-controller that will be programmed in C. An LCD display will show engine moves, where our method of connecting the hardware and software together will be Bluetooth. 
+Thode Makerspace will be utilized as a workspace to build the project.}
 
 \section{Goals}
 \subsection{Live Broadcasting}
@@ -84,8 +84,8 @@ This prevents any distractions for the players and allows viewers to remain upda
 
 \subsection{Engine Integration}
 {Online chess has taken large leaps in recent years due to chess engine development that can now quickly evaluate the entirety of a game with great accuracy in a small amount of time. 
-However, physical boards lack this real time evaluation, decreasing the potential for improvement for a player. Chess Connect will fetch the best moves from the open-source chess Stockfish engine and display those moves based on the board configuration through an LCD display attached to the physical board. 
-This will assist a player in recognizing the best moves they can currently play, and also building on their intuition for future moves.}
+However, physical boards lack this real time evaluation, decreasing potential improvement for a player. Chess Connect will fetch the best moves from a chess engine API and display those moves based on the board state through an LCD display attached to the physical board. 
+This will assist a player in recognizing the best moves they can currently play, and also build on their intuition for future moves.}
 
 \subsection{Beginner Mode}
 {For new players, nothing beats learning on a real board. It reinforces tactile learning and allows for better board vision. There are many nuanced rules of chess and can be difficult for beginners to remember. 
@@ -93,13 +93,13 @@ Chess Connect will display possible moves of individual pieces and notify users 
 
 \section{Stretch Goals}
 \subsection{Database}
-{Providing users the ability to study their past games, allows them learn from their mistakes and blunders in the game and allow them to evaluate their own positions with a better understanding on how to play in future games. 
+{Providing users the ability to study their past games allows them to learn from their mistakes and blunders in the game. It also allows them to evaluate their own positions with a better understanding on how to play in future games. 
 Using MySQL and MongoDB to store those games in these databases, we can let users look through all games previously played on our board.}
 
 \subsection{Study Mode}
-{Study Mode will allow users to create puzzles or positions that do not start from a default starting position of the game, instead allowing users to practice a specific phase of the game and the ability to take back moves without having to play out a full game with an opponent. This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.}
+{Study Mode will allow users to set up puzzles that do not start from the default position. Instead, study mode will allow users to practice a specific phase of the game, and will include the ability to take back moves without having to play out a full game with an opponent. This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.}
 
 \subsection{Existing Chess Site Integration}
-{Online chess has extensive communities on existing platforms. To promote code reusability, the Chess-Connect online platform will interface with popular existing websites.
+{Online chess has extensive communities on existing platforms. To promote code reusability, the Chess Connect online platform will interface with popular existing websites.
 Users of the board have the capability to share their games with a larger community via these platforms in addition to the custom web application. These sites include, but are not limited to, Chess.com and Lichess.}
 \end{document}
