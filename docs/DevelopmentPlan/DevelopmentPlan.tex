@@ -23,6 +23,7 @@
 2022-09-26 & Jonathan Cels & Team meeting and communication plans, personal role, workflow plan, coding standard, project scheduling, started technology section\\
 22-09-26 & Alexander Van Kralingen & Introduce CI/CD plan, team member role\\
 22-09-26 & Arshdeep Aujla & Introduce Hardware List 6, 3.2 Add Roles\\
+22-09-26 & Joshua Chapman & Modify Hardware List 6, 3.2 Add Role\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -76,7 +77,13 @@ In the case of emergencies or time-critical situations, a team member will use S
 \end{itemize}
 
 \subsection{Joshua Chapman}
-{}
+\begin{itemize}
+    \item Circuit design of power and transmission of sensing units
+    \item Hardware component selection and integration
+    \item Assisting with soldering components and mechanical assembly
+    \item Programming the microcontroller with multiplexing, bluetooth and rules of chess
+    \item Team leader for purchasing and planning phase
+\end{itemize}
 
 \subsection{Rupinder Nagra}
 {}
@@ -200,57 +207,27 @@ you will be able to overcome this risk?
 
 \item \textbf{Hardware}
 \begin{itemize}
+    \item \textbf{Design Tools}
+    \begin{itemize}
+        \item Altium for circuit design and testing
+        \item AutoCAD for mechanical modeling and printing
+    \end{itemize}
     \item \textbf{Chess Board:}
     \begin{itemize}
-        \item Chess squares in two different colors
+        \item Custom chess board with embedded circuit 
+        \item Chess pieces with embedded magnets to facilitate piece detection
     \end{itemize}
-    \item \textbf{Chess Pieces:}
+    \item \textbf{Electrical Components}
     \begin{itemize}
-        \item Customised chess pieces with magnets attached at the bottom of each piece for their detection
-    \end{itemize}
-    \item \textbf{PCB:}
-    \begin{itemize}
-        \item Through hole PCB prototype board
-    \end{itemize}
-     \item \textbf{Breadboard:}
-    \begin{itemize}
-        \item For prototyping the integration of hardware components
-    \end{itemize}
-    \item \textbf{Hall Sensors:}
-    \begin{itemize}
-        \item Sensors below the board to detect the different chess pieces
-    \end{itemize}
-    \item \textbf{Magnets:}
-    \begin{itemize}
-        \item To attach below the chess pieces for their detection on the chessboard
-    \end{itemize}
-    \item \textbf{Wires:}
-    \begin{itemize}
-        \item To connect sensors to the controllers, power LEDs
+        \item Hall sensor for piece detection
+        \item RGB LEDs for move display
+        \item LCD display on board for best engine move suggestions
+        \item Mechanical switch component
     \end{itemize}
     \item \textbf{Processor:}
     \begin{itemize}
-        \item An 8 Analog Inputs 32 GPIO Bluetooth Module
-    \end{itemize}
-    \item \textbf{Power supply cable:}
-    \begin{itemize}
-        \item Wall extension cable to the chess board
-    \end{itemize}
-    \item \textbf{Power supply circuit}
-    \begin{itemize}
-        \item 120V AC to V DC power converter
-    \end{itemize}
-    \item \textbf{LCD Display:}
-    \begin{itemize}
-        \item Can be a 7-segment display or an LED
-    \end{itemize}
-    \item \textbf{Switches:}
-    \begin{itemize}
-        \item To toggle between different modes
-    \end{itemize}
-    \item \textbf{LEDs:}
-    \begin{itemize}
-        \item To light up the squares to display the best moves or to teach the game
+        \item Programmed for I/O handling and multiplexing
+        \item Bluetooth unit to transmit custom packets back and forth
     \end{itemize}
 
 \end{itemize}
