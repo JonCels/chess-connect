@@ -24,6 +24,7 @@
 \midrule
 Date1 & Name(s) & Description of changes\\
 Date2 & Name(s) & Description of changes\\
+2022-09-26 & Joshua Chapman & Inputs, outputs, goals, stretch goals\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -33,18 +34,41 @@ Date2 & Name(s) & Description of changes\\
 
 {Online chess has functionality for both beginners and experienced players to learn and practice the game. However, these forms of learning place emphasis on a visual style of learning using a standard keyboard and mouse, while physical boards place emphasis on tactile learning when learning or studying the game. The highest rated chess players often use a combination of the two styles to optimize their play. However, no option exists for players of any skill level to integrate their over-the-board and online play with one solution. This project plans to centralize these two mediums of studying the game in order to provide flexibility and remove constraints from new players in learning how to play chess.}
 
-\subsection{Problem}
-
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
+\subsubsection{Inputs}
+\begin{enumerate}
+    \item[a.] Location of chess piece on the board
+    \item[b.] Type of piece in a location
+    \item[c.] Colour of piece in a location
+    \item[d.] Level of player using the board
+    \item[e.] Chess AI board knowledge
+\end{enumerate}
+
+\subsubsection{Outputs}
+\begin{enumerate}
+    \item[a.] Store current games online
+    \item[b.] Communicate engine moves to players
+    \item[c.] Signify possible moves to players
+\end{enumerate}
 
 \subsection{Stakeholders}
-This project will be able to assist chess players of any level looking for a tool to help them learn and study the game. For beginners, the board serves as a learning tutorial and a general introduction to the game, while intermediate and advanced players can use the machine learning move recommendations to study new lines, puzzles, and specific positions for practice. In addition to chess enthusiasts, this project will also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real time. 
+{This project will be able to assist chess players of any level looking for a tool to help them learn and study the game. 
+For beginners, the board serves as a learning tutorial and a general introduction to the game, while intermediate and advanced players can use the machine learning move recommendations to study new lines, puzzles, and specific positions for practice. 
+In addition to chess enthusiasts, this project will also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real time. }
 
 \subsection{Environment}
-Due to the web application component of our project, many of our languages will revolve around a standard full-stack development tech stack. Because of this, we will be using JavaScript, HTML, CSS, and Python. React is a front-end framework that encompasses JavaScript, HTML, and CSS in a single framework. We are also planning to use Node and FastAPI for our back-end which both make use of Python. The C programming language will be used as a middleware to transmit information from the hardware to the web application. To deploy our web application online we will be using a cloud application platform called Heroku, and testing will be done using PyTest and the React Testing Library which is part of the React framework. In order to store previous games, we might also make use of databases such as MySQL and MongoDB, relating to some of our tasks in the stretch goals section below. In terms of the hardware, we are planning to use --- for the micro-controller and --- for the display, where our method of connecting the hardware and software together will be Bluetooth.  Our documentation will be done using Overleaf, an online LaTeX editor which will be connected to our personal Github repository. We will also be using Thode Makerspace as a workshop to build our project.
+{Due to the web application component of our project, many of our languages will revolve around a standard full-stack development tech stack. 
+Because of this, we will be using JavaScript, HTML, CSS, and Python. React is a front-end framework that encompasses JavaScript, HTML, and CSS in a single framework.}
+
+\medskip
+\noindent{We are also planning to use Node and FastAPI for our back-end which both make use of Python. The C programming language will be used as a middleware to transmit information from the hardware to the web application. 
+To deploy our web application online we will be using a cloud application platform called Heroku, and testing will be done using PyTest and the React Testing Library which is part of the React framework. 
+In order to store previous games, we might also make use of databases such as MySQL and MongoDB, relating to some of our tasks in the stretch goals section below.}
+
+\medskip
+\noindent{In terms of the hardware, we are planning to use --- for the micro-controller and --- for the display, where our method of connecting the hardware and software together will be Bluetooth. 
+Our documentation will be done using Overleaf, an online LaTeX editor which will be connected to our personal Github repository. We will also be using Thode Makerspace as a workshop to build our project.}
 
 % \\\textbf{Languages:} JavaScript, HTML, CSS, Python, C
 % \\\textbf{Frontend:} React.js
@@ -60,17 +84,23 @@ Due to the web application component of our project, many of our languages will 
 % \\\textbf{Repository:} Github
 
 \section{Goals}
-
 \subsection{Live Broadcasting}
 {Physical chess boards lack the ability to share moves with anyone outside of the room. It also provides an inconvenience to both players and viewers if multiple people wish to view the game being played on a physical board. However, Chess Connect will be able to provide a live broadcast of the state of the game to a local server that allow anyone on the network to view the game on any device with an internet connection. This prevents any distractions for the players and allows viewers to remain updated with the game as long as they remain within the Bluetooth range of the board. This allows for players to communicate while maintaining the benefits of a physical board.} 
+
 \subsection{Engine Integration}
 {Online chess has taken large leaps in recent years due to chess engine development that can now quickly evaluate the entirety of a game with great accuracy in a small amount of time. However, physical boards lack this real time evaluation, decreasing the potential for improvement for a player. However, Chess Connect will fetch the best moves from the open-source chess Stockfish engine and display those moves based on the board configuration through an LCD display attached to the physical board. This will assist a player in recognizing the best moves they can currently play, also building on their intuition for future moves.}
+
 \subsection{Beginner Mode}
-{Chess Connect will provide a mode specifically designed for beginners that will serve as a tutorial to the game of chess, teaching how to move certain pieces, goals of the game, and basic strategies. The web application will provide instructions for beginners that will serve as a visual aid to the moves they are playing on the board. This mode designs to accelerate the learning process with the use of tactile learning compared to a visual learning method of online chess.}
+{For new players, nothing beats learning on a real board. It reinforces tactile learning and allows for better board vision. There are many nuanced rules of chess and can be difficult for beginners to remember. Chess Connect will display possible moves of individual pieces and display moves that break the rules.}
 
 \section{Stretch Goals}
 \subsection{Database}
-Providing users the ability to study their past games, allows them learn from their mistakes and blunders in the game and allow them to evaluate their own positions with a better understanding on how to play in future games. Using MySQL and MongoDB to store those games in these databases, we can let users look through all games previously played on our board.
+{Providing users the ability to study their past games, allows them learn from their mistakes and blunders in the game and allow them to evaluate their own positions with a better understanding on how to play in future games. Using MySQL and MongoDB to store those games in these databases, we can let users look through all games previously played on our board.}
+
 \subsection{Study Mode}
-Study Mode will allow users to create puzzles or positions that do not start from a default starting position of the game, instead allowing users to practice a specific phase of the game and the ability to take back moves without having to play out a full game with an opponent. This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.
+{Study Mode will allow users to create puzzles or positions that do not start from a default starting position of the game, instead allowing users to practice a specific phase of the game and the ability to take back moves without having to play out a full game with an opponent. This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.}
+
+\subsection{Existing Chess Site Integration}
+{Online chess has extensive communities on existing platforms. To promote code reusability, the Chess-Connect online platform will interface with popular existing websites.
+Users of the board have the capability to share their games with a larger community via these platforms in addition to the custom web application. These sites include, but are not limited to, Chess.com and Lichess.}
 \end{document}
