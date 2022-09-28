@@ -126,9 +126,9 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
-\author{Author Name(s)}
-\date{\today}
+\title{Software Requirements Specification for Chess Connect: Online tools combined with on-board vision to improve and share your game} 
+\author{\authname}
+\date{September 27, 2022}
 	
 \maketitle
 
@@ -145,7 +145,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
+Sept 27, 2022 & 1.0 & General naming changes and formatting start\\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
@@ -170,8 +170,9 @@ description of the unit and the SI name.
     \toprule		
     \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
     \midrule 
-    \si{\metre} & length & metre\\
-    \si{\kilogram} & mass	& kilogram\\
+    \si{\volt} & electric potential & volt\\
+    \si{\ampere} & current	& ampere\\
+    \si{\ohm} & resistance	& ohm\\
     \si{\second} & time & second\\
     \si{\celsius} & temperature & centigrade\\
     \si{\joule} & energy & joule\\
@@ -180,24 +181,6 @@ description of the unit and the SI name.
   \end{tabular}
   %	\caption{Provide a caption}
 %\end{table}
-
-\plt{Only include the units that your SRS actually uses.}
-
-\plt{Derived units, like newtons, pascal, etc, should show their derivation
-    (the units they are derived from) if their constituent units are in the
-    table of units (that is, if the units they are derived from are used in the
-    document).  For instance, the derivation of pascals as
-    $\si{\pascal}=\si{\newton\per\square\meter}$ is shown if newtons and m are
-    both in the table.  The derivations of newtons would not be shown if kg and
-    s are not both in the table.}
-
-\plt{The symbol for units named after people use capital letters, but the name
-  of the unit itself uses lower case.  For instance, pascals use the symbol Pa,
-  watts use the symbol W, teslas use the symbol T, newtons use the symbol N,
-  etc.  The one exception to this is degree Celsius.  Details on writing metric
-  units can be found on the 
-  \href{https://www.nist.gov/pml/weights-and-measures/writing-metric-units}
-  {NIST} web-page.}
 
 \subsection{Table of Symbols}
 
@@ -234,15 +217,16 @@ which heat is transferred in
   GS & Goal Statement\\
   IM & Instance Model\\
   LC & Likely Change\\
+  LCD & Liquid Crystal Display\\
+  LED & Light-Emmitting Diode\\
+  MCU & Micro Controller Unit\\
   PS & Physical System Description\\
   R & Requirement\\
   SRS & Software Requirements Specification\\
-  \progname{} & \plt{put an expanded version of your program name here (as appropriate)}\\
   T & Theoretical Model\\
   \bottomrule
 \end{tabular}\\
 
-\plt{Add any other abbreviations or acronyms that you add}
 
 \subsection{Mathematical Notation}
 
