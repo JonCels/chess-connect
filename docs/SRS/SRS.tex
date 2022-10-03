@@ -213,6 +213,7 @@ which heat is transferred in
   \midrule 
   A & Assumption\\
   DD & Data Definition\\
+  FIDE & International Chess Federation or Fédération Internationale des Échecs\\
   GD & General Definition\\
   GS & Goal Statement\\
   IM & Instance Model\\
@@ -331,20 +332,31 @@ expect in the Introduction section.}
 
 \subsection{Scope of Requirements} 
 
-\plt{Modelling the real world requires simplification.  The full complexity of
-  the actual physics, chemistry, biology is too much for existing models, and
-  for existing computational solution techniques.  Rather than say what is in
-  the scope, it is usually easier to say what is not.  You can think of it as
-  the scope is initially everything, and then it is constrained to create the
-  actual scope.  For instance, the problem can be restricted to 2 dimensions, or
-  it can ignore the effect of temperature (or pressure) on the material
-  properties, etc.}  
+{The system is called Chess Connect, and will include a software application and physical hardware device. The hardware will take the form of a chess set, and will collect and relay move and piece data. The device will convey the best moves for the specific board position, and will convey legal moves for specific pieces.
+The device will be connected to the software application, relaying and receiving relevant data. The software application will model and track the physical device, and will broadcast the data in an accessible format. The application will be constrained to a 2-dimensional model of the hardware device, showing a top-down view of the game.}
 
-\plt{The scope section is related to the assumptions section
-  (Section~\ref{sec_assumpt}).  However, the scope and the assumptions are not
-  at the same level of abstraction.  The scope is at a high level.  The focus is
-  on the ``big picture'' assumptions.  The assumptions section lists, and
-  describes, all of the assumptions.}
+\bigskip
+{In-scope items for the system include the following:
+\begin{enumerate}
+    \item Modeling and tracking a chess game played using the Chess Connect hardware
+    \item Displaying and broadcasting the game state on the Chess Connect software application
+    \item Giving users an option to choose between beginner mode, engine mode, and normal mode
+    \begin{itemize}
+        \item Beginner mode will display legal moves for individual pieces when a chess piece is picked up, and will warn the players when an illegal move is made
+        \item Engine mode will display the best moves as determined by a chess engine for the position
+        \item Normal mode will disable the engine and beginner mode features. This is intended for regular play between experienced players
+    \end{itemize}
+\end{enumerate}
+
+\bigskip
+The following items are deemed to be out of scope:
+\begin{enumerate}
+    \item FIDE (International Chess Federation) standards for tournament-appropriate chess equipment
+    \item Tracking and support for alternate chess variants such as Chess960, Atomic Chess, King of the Hill. More information found at \citet{ListOfChessVariants2022}.
+    \item Proper tracking of alternate starting positions like puzzles
+    \item Proper tracking of illegal moves and rule violations when warnings are ignored
+\end{enumerate}}
+
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
@@ -358,11 +370,13 @@ expect in the Introduction section.}
   the same person could be a ``user'' and an ``intended reader.''}
 
 \plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
+  as specifically as possible. Rather than say, the user should have an
   understanding of physics, say what kind of physics and at what level.  For
   instance, is high school physics adequate, or should the reader have had a
   graduate course on advanced quantum mechanics?}
 
+  {The document is written with the purpose of guiding development for the Chess Connect team. The intended readers of this document are the developers of Chess Connect, Dr.~Spencer Smith, and Nicholas Annable, the teaching assistant assigned to this project. 
+  The document is thus written for an audience that is well-versed in formal specification at a university level. This includes models, diagrams, and mathematical notation. Readers should also have an understanding of university-level physics and circuit diagrams. }
 \subsection{Organization of Document}
 
 \plt{This section provides a roadmap of the SRS document.  It will help the
