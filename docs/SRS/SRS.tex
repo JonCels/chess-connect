@@ -1036,16 +1036,23 @@ be covered in the Verification and Validation document.}
   correctness, you can characterize how far away from the correct (true)
   solution you are allowed to be.  This is discussed under accuracy.}
 
+\newcounter{vnvSectionNfr}
+\setcounter{vnvSectionNfr}{1}
 \noindent \begin{itemize}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:] \textbf{Accuracy}
+    {The software application game state will model the game state on the \progname{} hardware with a high degree of accuracy. 
+    The level of accuracy shall be described following the procedure given in Section 5.2.\thevnvSectionNfr~of the VnV (Verification and Validation) Plan.}
+    \stepcounter{vnvSectionNfr}
+
+  \plt{Characterize the accuracy by giving the context/use for
     the software.  Maybe something like, ``The accuracy of the computed
     solutions should meet the level needed for $<$engineering or scientific
     application$>$.  The level of accuracy achieved by \progname{} shall be
     described following the procedure given in Section~X of the Verification and
     Validation Plan.''  A link to the VnV plan would be a nice extra.}
 
+ 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
   \plt{Characterize the usability by giving the context/use for the software.
     You should likely reference the user characteristics section.  The level of
@@ -1053,11 +1060,18 @@ be covered in the Verification and Validation document.}
     procedure given in Section~X of the Verification and Validation Plan.  A
     link to the VnV plan would be a nice extra.}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
+    {The product will be able to be used by chess players of any experience level with minimal instruction.
+    The level of usability achieved by the system shall be described following the procedure given in Section 5.2.\thevnvSectionNfr~of the VnV Plan.}
+    \stepcounter{vnvSectionNfr}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Style}
+    {The product shall look and feel similar enough to traditional chess boards and chess pieces that the target audience will recognize the product 
+    as a chess set when encountering it for the first time. The level and speed of audience recognition achieved by the design shall be described 
+    following the procedure given in Section 5.2.\thevnvSectionNfr~of the VnV Plan.}
+    \stepcounter{vnvSectionNfr}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:] \textbf{Maintainability} 
+    {The effort required to make any of the likely changes listed for \progname{} should be less than FRACTION of the original development time.}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
   \textbf{Portability} \plt{This NFR is easier to write than the others.  The
@@ -1066,6 +1080,14 @@ be covered in the Verification and Validation document.}
     given.  To make the NFR verifiable a statement could be made that the tests
     from a given section of the VnV plan can be successfully run on all of the
     possible operating environments.}
+    {\progname{} shall be accessible from any web browser. The application shall be able to be hosted on at least any of the following systems:
+    \begin{enumerate}
+        \item Windows 8
+        \item Windows 10
+        \item Windows 11
+        \item WSL 2 (Windows Subsystem for Linux)
+        \item Ubuntu
+    \end{enumerate}}
 
 \item Other NFRs that might be discussed include verifiability,
   understandability and reusability.
