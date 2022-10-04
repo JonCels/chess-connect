@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI Latex
+name: Latex
 
 # Controls when the workflow will run
 on:
@@ -18,7 +18,6 @@ on:
 jobs:
   # This workflow contains a single job called "build-latex"
   build-latex:
-    name: 'build latex'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     defaults:
@@ -177,9 +176,9 @@ jobs:
           args: -interaction=nonstopmode -shell-escape
           
   push-new-pdfs:
-    name: 'push new pdfs'
     runs-on: ubuntu-latest
     steps:
+      - name: push pdfs
       - uses: actions/checkout@v3
       - run: |
           git config user.name "$(git log -n 1 --pretty=format:%an)"
