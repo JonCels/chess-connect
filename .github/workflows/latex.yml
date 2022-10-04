@@ -9,7 +9,8 @@ on:
     branches:
       - "main"
     paths: 
-      - .github/workflows/latex.yml
+      #- .github/workflows/latex.yml
+      - "**.tex"
   pull_request:
     branches: 
       - "main" 
