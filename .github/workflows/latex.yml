@@ -18,6 +18,7 @@ on:
 jobs:
   # This workflow contains a single job called "build-latex"
   build-latex:
+    name: 'build latex'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     defaults:
@@ -176,6 +177,7 @@ jobs:
           args: -interaction=nonstopmode -shell-escape
           
   push-new-pdfs:
+    name: 'push new pdfs'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
