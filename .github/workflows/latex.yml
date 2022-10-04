@@ -72,117 +72,105 @@ jobs:
         if: ${{ steps.filter.outputs.base == 'true' }}
         with:
           root_file: docs/Common.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex Comments
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' }}
         with:
           root_file: docs/Comments.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex MG
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
         with:
           root_file: docs/Design/MG/MG.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex MIS
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
         with:
           root_file: docs/Design/MIS/MIS.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
       
       - name: pdflatex DevelopmentPlan
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.dp == 'true' }}
         with:
           root_file: docs/DevelopmentPlan/DevelopmentPlan.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex ha
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.ha == 'true' }}
         with:
           root_file: docs/HazardAnalysis/HazardAnalysis.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex psag
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.psag == 'true' }}
         with:
           root_file: docs/ProblemStatementAndGoals/ProblemStatement.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex reflect
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.reflect == 'true' }}
         with:
           root_file: docs/Reflection/Reflection.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex ca
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
           root_file: docs/SRS/CA.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex srs-faq
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
           root_file: docs/SRS/SRS-FAQ.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex srs
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
           root_file: docs/SRS/SRS.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex userguide
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.ug == 'true' }}
         with:
           root_file: docs/UserGuide/UserGuide.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex VnVPlan
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.vnvp == 'true' }}
         with:
           root_file: docs/VnVPlan/VnVPlan.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: pdflatex VnVReport
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.vnvr == 'true' }}
         with:
           root_file: docs/VnVReport/VnVReport.tex
-          compiler: pdflatex
-          args: -interaction=nonstopmode -shell-escape
+          args: -pdf -interaction=nonstopmode -shell-escape
           
       - name: Push new .pdfs
+        if: ${{ success() }}
         run: |
           git config user.name "$(git log -n 1 --pretty=format:%an)"
           git config user.email "$(git log -n 1 --pretty=format:%ae)"
           git add .
           git commit -m "Generated new .pdf files in docs subfolders"
           git push
+        continue-on-error: true
