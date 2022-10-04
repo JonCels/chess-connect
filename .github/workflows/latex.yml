@@ -65,7 +65,7 @@ jobs:
           
       - name: pdflatex Common
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.base == 'true'
+        if: ${{ steps.filter.outputs.base == 'true' }}
         with:
           root_file: Common.tex
           compiler: pdflatex
@@ -73,7 +73,7 @@ jobs:
           
       - name: pdflatex Comments
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.base == 'true'
+        if: ${{ steps.filter.outputs.base == 'true' }}
         with:
           root_file: Comments.tex
           compiler: pdflatex
@@ -81,7 +81,7 @@ jobs:
           
       - name: pdflatex MG
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.design == 'true'
+        if: ${{ steps.filter.outputs.design == 'true' }}
         with:
           root_file: Design/MG/MG.tex
           compiler: pdflatex
@@ -89,7 +89,7 @@ jobs:
           
       - name: pdflatex MIS
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.design == 'true'
+        if: ${{ steps.filter.outputs.design == 'true' }}
         with:
           root_file: Design/MIS/MIS.tex
           compiler: pdflatex
@@ -97,7 +97,7 @@ jobs:
       
       - name: pdflatex DevelopmentPlan
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.dp == 'true'
+        if: ${{ steps.filter.outputs.dp == 'true' }}
         with:
           root_file: DevelopmentPlan/DevelopmentPlan.tex
           compiler: pdflatex
@@ -105,7 +105,7 @@ jobs:
           
       - name: pdflatex ha
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.ha == 'true'
+        if: ${{ steps.filter.outputs.ha == 'true' }}
         with:
           root_file: HazardAnalysis/HazardAnalysis.tex
           compiler: pdflatex
@@ -113,7 +113,7 @@ jobs:
           
       - name: pdflatex psag
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.psag == 'true'
+        if: ${{ steps.filter.outputs.psag == 'true' }}
         with:
           root_file: ProblemStatementAndGoals/ProblemStatement.tex
           compiler: pdflatex
@@ -121,7 +121,7 @@ jobs:
           
       - name: pdflatex reflect
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.reflect == 'true'
+        if: ${{ steps.filter.outputs.reflect == 'true' }}
         with:
           root_file: Reflection/Reflection.tex
           compiler: pdflatex
@@ -129,7 +129,7 @@ jobs:
           
       - name: pdflatex ca
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.srs == 'true'
+        if: ${{ steps.filter.outputs.srs == 'true' }}
         with:
           root_file: SRS/CA.tex
           compiler: pdflatex
@@ -137,7 +137,7 @@ jobs:
           
       - name: pdflatex srs-faq
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.srs == 'true'
+        if: ${{ steps.filter.outputs.srs == 'true' }}
         with:
           root_file: SRS/SRS-FAQ.tex
           compiler: pdflatex
@@ -145,7 +145,7 @@ jobs:
           
       - name: pdflatex srs
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.srs == 'true'
+        if: ${{ steps.filter.outputs.srs == 'true' }}
         with:
           root_file: SRS/SRS.tex
           compiler: pdflatex
@@ -153,7 +153,7 @@ jobs:
           
       - name: pdflatex userguide
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.ug == 'true'
+        if: ${{ steps.filter.outputs.ug == 'true' }}
         with:
           root_file: UserGuide/UserGuide.tex
           compiler: pdflatex
@@ -161,7 +161,7 @@ jobs:
           
       - name: pdflatex VnVPlan
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.vnvp == 'true'
+        if: ${{ steps.filter.outputs.vnvp == 'true' }}
         with:
           root_file: VnVPlan/VnVPlan.tex
           compiler: pdflatex
@@ -169,20 +169,16 @@ jobs:
           
       - name: pdflatex VnVReport
         uses: dante-ev/latex-action@latest
-        if: steps.filter.outputs.vnvr == 'true'
+        if: ${{ steps.filter.outputs.vnvr == 'true' }}
         with:
           root_file: VnVReport/VnVReport.tex
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-  push-new-pdfs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: push pdfs
-      - uses: actions/checkout@v3
-      - run: |
+      - name: Push new .pdfs
+        run: |
           git config user.name "$(git log -n 1 --pretty=format:%an)"
           git config user.email "$(git log -n 1 --pretty=format:%ae)"
           git add .
-          git commit -m "generated new pdfs in docs subfolders"
+          git commit -m "Generated new .pdf files in docs subfolders"
           git push
