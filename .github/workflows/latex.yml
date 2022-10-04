@@ -63,7 +63,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           
-      - name: pdflatex main
+      - name: pdflatex Common
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.base == 'true'
         with:
@@ -71,7 +71,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex Comments
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.base == 'true'
         with:
@@ -79,7 +79,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex MG
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.design == 'true'
         with:
@@ -87,7 +87,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex MIS
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.design == 'true'
         with:
@@ -95,7 +95,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
       
-      - name: pdflatex main
+      - name: pdflatex DevelopmentPlan
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.dp == 'true'
         with:
@@ -103,7 +103,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex ha
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.ha == 'true'
         with:
@@ -111,7 +111,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex psag
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.psag == 'true'
         with:
@@ -119,7 +119,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex reflect
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.reflect == 'true'
         with:
@@ -127,7 +127,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex ca
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.srs == 'true'
         with:
@@ -135,7 +135,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex srs-faq
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.srs == 'true'
         with:
@@ -143,7 +143,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex srs
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.srs == 'true'
         with:
@@ -151,7 +151,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex userguide
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.ug == 'true'
         with:
@@ -159,7 +159,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex VnVPlan
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.vnvp == 'true'
         with:
@@ -167,7 +167,7 @@ jobs:
           compiler: pdflatex
           args: -interaction=nonstopmode -shell-escape
           
-      - name: pdflatex main
+      - name: pdflatex VnVReport
         uses: dante-ev/latex-action@latest
         if: steps.filter.outputs.vnvr == 'true'
         with:
