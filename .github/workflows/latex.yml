@@ -1,17 +1,16 @@
 # This is a basic workflow to help you get started with Actions
-
+# Uses:
+# https://github.com/marketplace/actions/latex-compilation
+# https://github.com/dorny/paths-filter
 name: Latex
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches:
-      - "main"
-    paths: 
-      #- .github/workflows/latex.yml
-      - "**.tex"
+  # Triggers the workflow pull request events but only for the "main" branch
   pull_request:
+    types:
+      - opened
+      - synchronize
     branches: 
       - "main" 
     paths: 
@@ -67,7 +66,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
                   
-      - name: pdflatex MG
+      - name: latexmk MG
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
         with:
@@ -75,7 +74,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/Design/MG
           
-      - name: pdflatex MIS
+      - name: latexmk MIS
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
         with:
@@ -83,7 +82,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/Design/MIS
       
-      - name: pdflatex DevelopmentPlan
+      - name: latexmk DevelopmentPlan
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.dp == 'true' }}
         with:
@@ -91,7 +90,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/DevelopmentPlan
           
-      - name: pdflatex ha
+      - name: latexmk ha
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.ha == 'true' }}
         with:
@@ -99,7 +98,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/HazardAnalysis
           
-      - name: pdflatex psag
+      - name: latexmk psag
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.psag == 'true' }}
         with:
@@ -107,7 +106,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/ProblemStatementAndGoals
           
-      - name: pdflatex reflect
+      - name: latexmk reflect
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.reflect == 'true' }}
         with:
@@ -115,7 +114,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/Reflection
           
-      - name: pdflatex ca
+      - name: latexmk ca
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
@@ -123,7 +122,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/SRS
           
-      - name: pdflatex srs-faq
+      - name: latexmk srs-faq
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
@@ -131,7 +130,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/SRS
           
-      - name: pdflatex srs
+      - name: latexmk srs
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
@@ -139,7 +138,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/SRS
           
-      - name: pdflatex userguide
+      - name: latexmk userguide
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.ug == 'true' }}
         with:
@@ -147,7 +146,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/UserGuide
           
-      - name: pdflatex VnVPlan
+      - name: latexmk VnVPlan
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.vnvp == 'true' }}
         with:
@@ -155,7 +154,7 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/VnVPlan
           
-      - name: pdflatex VnVReport
+      - name: latexmk VnVReport
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.vnvr == 'true' }}
         with:
@@ -163,12 +162,12 @@ jobs:
           args: -pdf -interaction=nonstopmode -shell-escape
           working_directory: docs/VnVReport
           
-      - name: Push new .pdfs
-        if: ${{ success() }}
-        run: |
-          git config user.name "$(git log -n 1 --pretty=format:%an)"
-          git config user.email "$(git log -n 1 --pretty=format:%ae)"
-          git add .
-          git commit -m "Generated new .pdf files in docs subfolders"
-          git push
-        continue-on-error: true
+#       - name: Push new .pdfs
+#         if: ${{ success() }}
+#         run: |
+#           git config user.name "$(git log -n 1 --pretty=format:%an)"
+#           git config user.email "$(git log -n 1 --pretty=format:%ae)"
+#           git add .
+#           git commit -m "Generated new .pdf files in docs subfolders"
+#           git push
+#         continue-on-error: true
