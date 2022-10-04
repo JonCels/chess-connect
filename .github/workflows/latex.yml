@@ -73,7 +73,7 @@ jobs:
         with:
           root_file: MG.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/Design/MG
+          working_directory: docs/Design/MG
           
       - name: pdflatex MIS
         uses: dante-ev/latex-action@latest
@@ -81,7 +81,7 @@ jobs:
         with:
           root_file: MIS.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/Design/MIS
+          working_directory: docs/Design/MIS
       
       - name: pdflatex DevelopmentPlan
         uses: dante-ev/latex-action@latest
@@ -89,7 +89,7 @@ jobs:
         with:
           root_file: DevelopmentPlan.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/DevelopmentPlan
+          working_directory: docs/DevelopmentPlan
           
       - name: pdflatex ha
         uses: dante-ev/latex-action@latest
@@ -97,7 +97,7 @@ jobs:
         with:
           root_file: HazardAnalysis.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/HazardAnalysis
+          working_directory: docs/HazardAnalysis
           
       - name: pdflatex psag
         uses: dante-ev/latex-action@latest
@@ -105,7 +105,7 @@ jobs:
         with:
           root_file: ProblemStatement.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/ProblemStatementAndGoals
+          working_directory: docs/ProblemStatementAndGoals
           
       - name: pdflatex reflect
         uses: dante-ev/latex-action@latest
@@ -113,7 +113,7 @@ jobs:
         with:
           root_file: Reflection.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/Reflection
+          working_directory: docs/Reflection
           
       - name: pdflatex ca
         uses: dante-ev/latex-action@latest
@@ -121,7 +121,7 @@ jobs:
         with:
           root_file: CA.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/SRS
+          working_directory: docs/SRS
           
       - name: pdflatex srs-faq
         uses: dante-ev/latex-action@latest
@@ -129,7 +129,7 @@ jobs:
         with:
           root_file: SRS-FAQ.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/SRS
+          working_directory: docs/SRS
           
       - name: pdflatex srs
         uses: dante-ev/latex-action@latest
@@ -137,7 +137,7 @@ jobs:
         with:
           root_file: SRS.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/SRS
+          working_directory: docs/SRS
           
       - name: pdflatex userguide
         uses: dante-ev/latex-action@latest
@@ -145,7 +145,7 @@ jobs:
         with:
           root_file: UserGuide.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/UserGuide
+          working_directory: docs/UserGuide
           
       - name: pdflatex VnVPlan
         uses: dante-ev/latex-action@latest
@@ -153,7 +153,7 @@ jobs:
         with:
           root_file: VnVPlan.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/VnVPlan
+          working_directory: docs/VnVPlan
           
       - name: pdflatex VnVReport
         uses: dante-ev/latex-action@latest
@@ -161,7 +161,7 @@ jobs:
         with:
           root_file: VnVReport.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working-directory: docs/VnVReport
+          working_directory: docs/VnVReport
           
       - name: Push new .pdfs
         if: ${{ success() }}
