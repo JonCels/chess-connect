@@ -71,85 +71,97 @@ jobs:
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
         with:
-          root_file: docs/Design/MG/MG.tex
+          root_file: MG.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/Design/MG
           
       - name: pdflatex MIS
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
         with:
-          root_file: docs/Design/MIS/MIS.tex
+          root_file: MIS.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/Design/MIS
       
       - name: pdflatex DevelopmentPlan
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.dp == 'true' }}
         with:
-          root_file: docs/DevelopmentPlan/DevelopmentPlan.tex
+          root_file: DevelopmentPlan.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/DevelopmentPlan
           
       - name: pdflatex ha
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.ha == 'true' }}
         with:
-          root_file: docs/HazardAnalysis/HazardAnalysis.tex
+          root_file: HazardAnalysis.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/HazardAnalysis
           
       - name: pdflatex psag
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.psag == 'true' }}
         with:
-          root_file: docs/ProblemStatementAndGoals/ProblemStatement.tex
+          root_file: ProblemStatement.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/ProblemStatementAndGoals
           
       - name: pdflatex reflect
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.reflect == 'true' }}
         with:
-          root_file: docs/Reflection/Reflection.tex
+          root_file: Reflection.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/Reflection
           
       - name: pdflatex ca
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
-          root_file: docs/SRS/CA.tex
+          root_file: CA.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/SRS
           
       - name: pdflatex srs-faq
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
-          root_file: docs/SRS/SRS-FAQ.tex
+          root_file: SRS-FAQ.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/SRS
           
       - name: pdflatex srs
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
         with:
-          root_file: docs/SRS/SRS.tex
+          root_file: SRS.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/SRS
           
       - name: pdflatex userguide
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.ug == 'true' }}
         with:
-          root_file: docs/UserGuide/UserGuide.tex
+          root_file: UserGuide.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/UserGuide
           
       - name: pdflatex VnVPlan
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.vnvp == 'true' }}
         with:
-          root_file: docs/VnVPlan/VnVPlan.tex
+          root_file: VnVPlan.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/VnVPlan
           
       - name: pdflatex VnVReport
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.vnvr == 'true' }}
         with:
-          root_file: docs/VnVReport/VnVReport.tex
+          root_file: VnVReport.tex
           args: -pdf -interaction=nonstopmode -shell-escape
+          working-directory: docs/VnVReport
           
       - name: Push new .pdfs
         if: ${{ success() }}
