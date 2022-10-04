@@ -66,21 +66,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          
-      - name: pdflatex Common
-        uses: dante-ev/latex-action@latest
-        if: ${{ steps.filter.outputs.base == 'true' }}
-        with:
-          root_file: docs/Common.tex
-          args: -pdf -interaction=nonstopmode -shell-escape
-          
-      - name: pdflatex Comments
-        uses: dante-ev/latex-action@latest
-        if: ${{ steps.filter.outputs.base == 'true' }}
-        with:
-          root_file: docs/Comments.tex
-          args: -pdf -interaction=nonstopmode -shell-escape
-          
+                  
       - name: pdflatex MG
         uses: dante-ev/latex-action@latest
         if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
