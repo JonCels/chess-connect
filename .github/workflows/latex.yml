@@ -1,0 +1,173 @@
+# This is a basic workflow to help you get started with Actions
+# Uses:
+# https://github.com/marketplace/actions/latex-compilation
+# https://github.com/dorny/paths-filter
+name: Latex
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow pull request events but only for the "main" branch
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches: 
+      - "main" 
+    paths: 
+      - "**.tex"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build-latex"
+  build-latex:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2.10.2
+        id: filter
+        with:
+          filters: |
+            base:
+              - 'docs/Comm*.tex'
+            design:
+              - 'docs/Design/**'
+            dp:
+              - 'docs/DevelopmentPlan/**'
+            ha:
+              - 'docs/HazardAnalysis/**'
+            psag:
+              - 'docs/ProblemStatementAndGoals/**'
+            reflect:
+              - 'docs/Reflection/**'
+            srs:
+              - 'docs/SRS/**'
+            ug:
+              - 'docs/UserGuide/**'
+            vnvp:
+              - 'docs/VnVPlan/**'
+            vnvr:
+              - 'docs/VnVReport/**'
+        
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+                  
+      - name: latexmk MG
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
+        with:
+          root_file: MG.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/Design/MG
+          
+      - name: latexmk MIS
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
+        with:
+          root_file: MIS.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/Design/MIS
+      
+      - name: latexmk DevelopmentPlan
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.dp == 'true' }}
+        with:
+          root_file: DevelopmentPlan.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/DevelopmentPlan
+          
+      - name: latexmk ha
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.ha == 'true' }}
+        with:
+          root_file: HazardAnalysis.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/HazardAnalysis
+          
+      - name: latexmk psag
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.psag == 'true' }}
+        with:
+          root_file: ProblemStatement.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/ProblemStatementAndGoals
+          
+      - name: latexmk reflect
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.reflect == 'true' }}
+        with:
+          root_file: Reflection.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/Reflection
+          
+      - name: latexmk ca
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
+        with:
+          root_file: CA.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/SRS
+          
+      - name: latexmk srs-faq
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
+        with:
+          root_file: SRS-FAQ.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/SRS
+          
+      - name: latexmk srs
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.srs == 'true' }}
+        with:
+          root_file: SRS.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/SRS
+          
+      - name: latexmk userguide
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.ug == 'true' }}
+        with:
+          root_file: UserGuide.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/UserGuide
+          
+      - name: latexmk VnVPlan
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.vnvp == 'true' }}
+        with:
+          root_file: VnVPlan.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/VnVPlan
+          
+      - name: latexmk VnVReport
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.vnvr == 'true' }}
+        with:
+          root_file: VnVReport.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/VnVReport
+          
+#       - name: Push new .pdfs
+#         if: ${{ success() }}
+#         run: |
+#           git config user.name "$(git log -n 1 --pretty=format:%an)"
+#           git config user.email "$(git log -n 1 --pretty=format:%ae)"
+#           git add .
+#           git commit -m "Generated new .pdf files in docs subfolders"
+#           git push
+#         continue-on-error: true
