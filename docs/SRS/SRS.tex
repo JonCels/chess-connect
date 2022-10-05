@@ -17,15 +17,24 @@
 \usepackage{pdflscape}
 \usepackage{afterpage}
 \usepackage{fullpage}
+\usepackage{titlesec}
+\usepackage[shortlabels]{enumitem}
 \usepackage[round]{natbib}
 \usepackage{array}
 
 \input{../Comments}
 \input{../Common}
 
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
 \begin{document}
 
-\title{Software Requirements Specification for Chess Connect: Online tools combined with on-board vision to improve and share your game} 
+\title{Software Requirements Specification for \progname{}: Online tools combined with on-board vision to improve and share your game} 
 \author{\authname}
 \date{October 4th, 2022}
 	
@@ -46,6 +55,8 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 2022-10-04 & Jonathan Cels & Template creation and document formatting\\ 
+2022-10-04 & Jonathan Cels & Non-functional requirements\\
+2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
 date & name & change\\
 \bottomrule
 \end{tabularx}
@@ -85,7 +96,9 @@ description of the unit and the SI name.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   A & Assumption\\
+  CSA & Canadian Standards Association\\
   DD & Data Definition\\
+  FIDE & International Chess Federation or Fédération Internationale des Échecs\\
   GD & General Definition\\
   GS & Goal Statement\\
   IM & Instance Model\\
@@ -97,6 +110,8 @@ description of the unit and the SI name.
   R & Requirement\\
   SRS & Software Requirements Specification\\
   T & Theoretical Model\\
+  VnV & Verification and Validation\\
+  WCAG & Web Content Accessibility Guidelines\\
   \bottomrule
 \end{tabular}\\
 
@@ -107,8 +122,17 @@ description of the unit and the SI name.
 \section{Introduction}
 \subsection{Document Purpose}
 \subsection{Characteristics of Intended Reader}
+{The document is written with the purpose of guiding development for the \progname{} team. The intended readers of this document 
+are the developers of \progname{}, Dr.~Spencer Smith, and Nicholas Annable, the teaching assistant assigned to this project. The 
+document is thus written for an audience that is well-versed in formal specification at a university level. This includes models, 
+diagrams, and mathematical notation. Readers should also have a university-level understanding of electrical circuit knowledge.}
+
 \subsection{Characteristics of Intended User}
 \subsection{Stakeholders}
+{This project will assist chess players of any level that are looking for a tool to help them learn and study the game. For beginners, 
+the board serves as a learning tutorial and a general introduction to the game, while intermediate and advanced players can use the 
+engine move recommendations to study new lines, puzzles, and specific positions. In addition to chess enthusiasts, this project will 
+also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real-time. }
 
 \section{Problem Description}
 
@@ -117,6 +141,34 @@ description of the unit and the SI name.
 \section{Constraints}
 
 \section{Scope}
+{The system is called \progname{}, and will include a software application and physical hardware device. The hardware will take the 
+form of a chess set, and will collect and relay move and piece data. The device will convey the best moves for the specific board 
+position, and will convey legal moves for specific pieces.The device will be connected to the software application, relaying and 
+receiving relevant data. The software application will model and track the physical device, and will broadcast the data in an accessible 
+format. The application will be constrained to a 2-dimensional model of the hardware device, showing a top-down view of the game.}
+
+\bigskip
+\noindent{\textbf{In-scope} items for the system include the following:
+\begin{enumerate}
+    \item Modeling and tracking a chess game played using the \progname{} hardware
+    \item Displaying and broadcasting the game state on the \progname{} software application
+    \item Giving users an option to choose between beginner mode, engine mode, and normal mode
+    \begin{itemize}
+        \item Beginner mode will display legal moves for individual pieces when a chess piece is picked up, and will warn the players when an illegal move is made
+        \item Engine mode will display the best moves as determined by a chess engine for the position
+        \item Normal mode will disable the engine and beginner mode features. This is intended for regular play between experienced players
+    \end{itemize}
+\end{enumerate}}
+
+\bigskip
+
+\noindent{The following items are deemed to be \textbf{out of scope}:
+\begin{enumerate}
+    \item FIDE (International Chess Federation) standards for tournament appropriate chess equipment
+    \item Tracking and support for alternate chess variants such as Chess960, Atomic Chess, King of the Hill. More information found here: \cite{ListOfChessVariants2022}.
+    \item Proper tracking of alternate starting positions like puzzles
+    \item Proper tracking of illegal moves and rule violations when warnings are ignored
+\end{enumerate}}
 
 \section{Project Overview}
 \subsection{System Context Diagram}
@@ -133,9 +185,9 @@ description of the unit and the SI name.
 \begin{table}[H]
   \centering
       \setlength{\leftmargini}{0.4cm}
-      \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
+      \begin{tabular}{| >{\centering\arraybackslash}m{5cm} | 
         >{\centering\arraybackslash}m{2cm} | 
-        >{\centering\arraybackslash}m{10cm} |}
+        >{\centering\arraybackslash}m{5cm} |}
       \hline
       \rowcolor[gray]{0.9}
       Constant & Unit & Value\\
@@ -149,6 +201,7 @@ description of the unit and the SI name.
      Chess board tile length & inches & 1.5\\ 
      \hline 
      Supply Power to Board & Volts & 110 VAC\\
+     \hline
       \end{tabular}
   \label{Table}
   \end{table}
@@ -223,6 +276,216 @@ description of the unit and the SI name.
 \subsection{Functional Requirements}
 \subsection{Nonfunctional Requirements}
 
+\newcounter{vnvSectionNfr}
+\setcounter{vnvSectionNfr}{1}
+
+\newcounter{nfrNum}
+\setcounter{nfrNum}{1}
+
+\subsubsection{Look and Feel Requirements}
+\label{NFR_LF}
+\paragraph{Appearance Requirements}
+\begin{enumerate}[{LF}1., leftmargin=2\parindent]
+    \item The product shall use white, black, grey, and brown as its primary colours.
+    \item The product shall use green, red, and blue as its secondary colours.
+\end{enumerate}
+
+\paragraph{Style Requirements}
+\begin{enumerate}[{LF}1., leftmargin=2\parindent, resume]
+    \item The product shall look and feel similar enough to traditional chess boards and chess pieces that the target audience will 
+    recognize the product as a chess set when encountering it for the first time. The level and speed of audience recognition achieved 
+    by the design shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}~of the VnV 
+    (Verification and Validation) Plan.
+\end{enumerate}
+
+
+
+\subsubsection{Usability and Humanity Requirements}
+\label{NFR_UH}
+\paragraph{Ease of Use Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent]
+    \item The system shall require the user to place chess pieces fully on their intended squares.
+    \item Physical hardware components of the system will not impede the user during play.
+\end{enumerate}
+
+\paragraph{Personalization and Internationalization Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The system will only display information in English.
+    \item The system will only use the Arabic numerals.
+\end{enumerate}
+
+\paragraph{Learning Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The product shall be able to be used by members of the public over with no previous training. Details on the learnability 
+    of the system shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+\end{enumerate}
+
+\paragraph{Understandability and Politeness Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item All symbols and words shall be similar to historically used Chess symbols. \cite{ChessHistory2003}
+\end{enumerate}
+
+\paragraph{Accessibility Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The system shall follow guidelines for correct size and colour contrast ratio for text to the background as stated in the \cite{WCAG2018}.
+\end{enumerate}
+
+
+
+\subsubsection{Performance Requirements}
+\label{NFR_PR}
+\paragraph{Speed and Latency Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent]
+    \item The average time between a user placing down a piece and the visual model response shall be small.
+    \item The maximum time between a user placing down a piece and the visual model response shall be small.
+    \item The average time between a user picking up a piece and the visual board indicator response shall be small.
+    \item The maximum time between a user picking up a piece and the visual board indicator response shall be small. 
+    The degree of speed for PR1 through PR4 shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+\end{enumerate}
+
+%Modified from Safety-Critical Requirements to better cover the SRS rubric
+\paragraph{Health and Safety-Critical Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The system shall be properly grounded according to the Canadian Electrical Code. \cite{CanadianElectricalCode2021}
+    \item The maximum power on any single wire shall be within the safety limits described in the Canadian Electrical Code.
+\end{enumerate}
+
+\paragraph{Precision or Accuracy Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software application game state will model the game state on the \progname{} hardware with a high degree of accuracy. 
+    The level of accuracy shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+        
+\end{enumerate}
+
+\paragraph{Reliability and Availability Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product shall be available with a high degree of uptime. The level of availability shall be described following the procedure 
+    given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+\end{enumerate}
+
+\paragraph{Robustness or Fault-Tolerance Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software application shall maintain the game state if the connection between the software and hardware systems is interrupted.
+\end{enumerate}
+
+\paragraph{Capacity Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software shall require computer memory to function effectively. The level of memory capacity required shall be described following
+    the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+\end{enumerate}
+
+\paragraph{Scalability or Extensibility Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product must support the addition of new features and components.
+\end{enumerate}
+
+\paragraph{Longevity Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product must be supported while the application remains deployed.
+    \item The product will depend on the continued support of packages and libraries.
+\end{enumerate}
+
+
+
+\subsubsection{Operational and Environmental Requirements}
+\label{NFR_OE}
+\paragraph{Expected Physical Environment}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent]
+    \item The hardware and software systems shall be close enough to each other to facilitate communication. The degree of proximity required 
+    shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+    \item The area shall be clear of potentially dangerous or harmful environmental factors.
+\end{enumerate}
+
+\paragraph{Requirements for Interfacing with Adjacent Systems}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The system shall interface with an external server to make requests to a chess engine.
+\end{enumerate}
+
+\paragraph{Productization Requirements}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The product shall be deployed to a public website where users may access it.
+\end{enumerate}
+
+\paragraph{Release Requirements}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The product will be tested for bugs and issues. These issues will be fixed and the application will be redeployed accordingly.
+\end{enumerate}
+
+
+
+\subsubsection{Maintainability and Support Requirements}
+\label{NFR_MS}
+\paragraph{Maintenance Requirements}
+\begin{enumerate}[{MS}1., leftmargin=2\parindent]
+    \item The product shall be maintained actively by the developers until the \progname{} team graduates.
+\end{enumerate}
+
+\paragraph{Supportability Requirements}
+N/A
+
+\paragraph{Adaptability Requirements}
+\begin{enumerate}[{MS}1., leftmargin=2\parindent, resume]
+    \item The software application will be able to be hosted on Apple, Windows, and Linux devices.
+    \item The product shall be accessible from any web browser.
+\end{enumerate}
+
+
+
+\subsubsection{Security Requirements}
+\label{NFR_SR}
+\paragraph{Access Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent]
+    \item Only the \progname{} team are able to modify the software system.
+\end{enumerate}
+
+\paragraph{Integrity Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item The product will not store game data after a game has concluded.
+\end{enumerate}
+
+\paragraph{Privacy Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item The product will not store or collect user data.
+\end{enumerate}
+
+\paragraph{Audit Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item Requirements shall be easy to follow and verify against both the system and the VnV plan in order to facilitate regular inspections.
+\end{enumerate}
+
+\paragraph{Immunity Requirements}
+N/A
+
+
+
+\subsubsection{Political and Cultural Requirements}
+\label{NFR_PC}
+\paragraph{Cultural Requirements}
+\begin{enumerate}[{PC}1., leftmargin=2\parindent]
+    \item The product will not use and terms or symbols that are deemed offensive to any culture.
+\end{enumerate}
+
+\paragraph{Political Requirements}
+N/A
+
+
+
+\subsubsection{Legal Requirements}
+\label{NFR_Legal}
+\paragraph{Compliance Requirements}
+\begin{enumerate}[{LR}1., leftmargin=2\parindent]
+    \item The system shall comply with the Canadian Electrical Code \cite{CanadianElectricalCode2021}.
+\end{enumerate}
+
+\paragraph{Standards Requirements}
+\begin{enumerate}[{LR}1., leftmargin=2\parindent, resume]
+    \item The product shall follow \cite{WCAG2018}.
+\end{enumerate}
+
+
 \section{Likely Changes}
 \section{Unlikely Changes}
 
@@ -237,4 +500,9 @@ description of the unit and the SI name.
 \section{Reflection}
 \subsection{Skills for Success}
 \subsection{Knowledge and Learning Approaches}
+
+\newpage
+
+\bibliographystyle {plainnat}
+\bibliography {../../refs/References}
 \end{document}
