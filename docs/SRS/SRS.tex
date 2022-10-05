@@ -5,7 +5,8 @@
 \usepackage{siunitx}
 \usepackage{titlesec}
 \usepackage[shortlabels]{enumitem}
-
+\usepackage[round]{natbib}
+\usepackage{array}
 
 \input{../Comments}
 \input{../Common}
@@ -139,104 +140,215 @@ description of the unit and the SI name.
 \setcounter{nfrNum}{1}
 
 \subsubsection{Look and Feel Requirements}
-
+\label{NFR_LF}
 \paragraph{Appearance Requirements}
 \begin{enumerate}[{LF}1., leftmargin=2\parindent]
-    \item Test1
-    \item Test2
+    \item The product shall use white, black, grey, and brown as its primary colours.
+    \item The product shall use green, red, and blue as its secondary colours.
 \end{enumerate}
 
 \paragraph{Style Requirements}
 \begin{enumerate}[{LF}1., leftmargin=2\parindent, resume]
-    \item Test3
-    \item Test4
+    \item The product shall look and feel similar enough to traditional chess boards and chess pieces that the target audience will 
+    recognize the product as a chess set when encountering it for the first time. The level and speed of audience recognition achieved 
+    by the design shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}~of the VnV 
+    (Verification and Validation) Plan.
 \end{enumerate}
 
+
+
 \subsubsection{Usability and Humanity Requirements}
+\label{NFR_UH}
 \paragraph{Ease of Use Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent]
+    \item The system shall require the user to place chess pieces fully on their intended squares.
+
+\end{enumerate}
+
 \paragraph{Personalization and Internationalization Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The system will only display information in English.
+    \item The system will only use the Arabic numerals.
+\end{enumerate}
+
 \paragraph{Learning Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The product shall be able to be used by members of the public over with no previous training. Details on the learnability 
+    of the system shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+\end{enumerate}
+
 \paragraph{Understandability and Politeness Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item All symbols and words shall be similar to historically used Chess symbols \cite{ChessHistory2003}
+\end{enumerate}
+
 \paragraph{Accessibility Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The system shall follow guidelines for correct colour contrast ratio for text to the background as stated in the WCAG \cite{WCAG2018}
+\end{enumerate}
+
 
 
 \subsubsection{Performance Requirements}
+\label{NFR_PR}
 \paragraph{Speed and Latency Requirements}
-\paragraph{Safety-Critical Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent]
+    \item The average time between a user placing down a piece and the visual model response shall be small.
+    \item The maximum time between a user placing down a piece and the visual model response shall be small.
+    \item The average time between a user picking up a piece and the visual board indicator response shall be small.
+    \item The maximum time between a user picking up a piece and the visual board indicator response shall be small. 
+    The degree of speed for PR1 through PR4 shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+\end{enumerate}
+
+%Modified from Safety-Critical Requirements to better cover the SRS rubric
+\paragraph{Health and Safety-Critical Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The system shall be properly grounded to *Standards*
+    \item The maximum power on any single wire shall be within the safety limits as deemed by *Standards*
+\end{enumerate}
+
 \paragraph{Precision or Accuracy Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software application game state will model the game state on the \progname{} hardware with a high degree of accuracy. 
+    The level of accuracy shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+        
+\end{enumerate}
+
 \paragraph{Reliability and Availability Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product shall be available with a high degree of uptime. The level of availability shall be described following the procedure 
+    given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+\end{enumerate}
+
 \paragraph{Robustness or Fault-Tolerance Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software application shall maintain the game state if the connection between the software and hardware systems is interrupted.
+\end{enumerate}
+
 \paragraph{Capacity Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software shall require computer memory to function effectively. The level of memory capacity required shall be described following
+    the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+\end{enumerate}
+
 \paragraph{Scalability or Extensibility Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product must support the addition of new features and components.
+\end{enumerate}
+
 \paragraph{Longevity Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product must be supported while the application remains deployed.
+\end{enumerate}
+
 
 
 \subsubsection{Operational and Environmental Requirements}
+\label{NFR_OE}
 \paragraph{Expected Physical Environment}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent]
+    \item The hardware and software systems shall be close enough to each other to facilitate communication. The degree of proximity required 
+    shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+    \item The area shall be clear of potentially dangerous or harmful environmental factors.
+\end{enumerate}
+
 \paragraph{Requirements for Interfacing with Adjacent Systems}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The system shall interface with an external server to make requests to a chess engine.
+\end{enumerate}
+
 \paragraph{Productization Requirements}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The product shall be deployed to a public website where users may access it.
+\end{enumerate}
+
 \paragraph{Release Requirements}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The product will be tested for bugs and issues. These issues will be fixed and the application will be redeployed accordingly.
+\end{enumerate}
+
 
 
 \subsubsection{Maintainability and Support Requirements}
+\label{NFR_MS}
 \paragraph{Maintenance Requirements}
+\begin{enumerate}[{MS}1., leftmargin=2\parindent]
+    \item The product shall be maintained actively by the developers until the \progname{} team graduates.
+\end{enumerate}
+
 \paragraph{Supportability Requirements}
+\begin{enumerate}[{MS}1., leftmargin=2\parindent, resume]
+    \item N/A
+\end{enumerate}
+
 \paragraph{Adaptability Requirements}
+\begin{enumerate}[{MS}1., leftmargin=2\parindent, resume]
+    \item The software application will be able to be hosted on Apple, Windows, and Linux devices.
+    \item The product shall be accessible from any web browser.
+\end{enumerate}
+
 
 
 \subsubsection{Security Requirements}
+\label{NFR_SR}
 \paragraph{Access Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent]
+    \item N/A
+\end{enumerate}
+
 \paragraph{Integrity Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item The product will not store game data after a game has concluded.
+\end{enumerate}
+
 \paragraph{Privacy Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item The product will not store or collect user data.
+\end{enumerate}
+
 \paragraph{Audit Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item Requirements shall be easy to follow and verify against both the system and the VnV plan in order to facilitate regular inspections.
+\end{enumerate}
+
 \paragraph{Immunity Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item N/A
+\end{enumerate}
 
 
-\subsubsection{Cultural and Political Requirements}
+
+\subsubsection{Political and Cultural Requirements}
+\label{NFR_PC}
 \paragraph{Cultural Requirements}
+\begin{enumerate}[{PC}1., leftmargin=2\parindent]
+    \item The product will not use and terms or symbols that are deemed offensive to any culture.
+\end{enumerate}
+
 \paragraph{Political Requirements}
+\begin{enumerate}[{PC}1., leftmargin=2\parindent, resume]
+    \item N/A
+\end{enumerate}
+
 
 
 \subsubsection{Legal Requirements}
+\label{NFR_Legal}
 \paragraph{Compliance Requirements}
+\begin{enumerate}[{LR}1., leftmargin=2\parindent]
+    \item TBD - may be some compliance for circuits/hardware products?
+\end{enumerate}
+
 \paragraph{Standards Requirements}
-\paragraph{Health and Safety Requirements}
+\begin{enumerate}[{LR}1., leftmargin=2\parindent, resume]
+    \item The product shall comply with *Grounding standards TBD*
+    \item The product shall comply with *Power standards TBD*
+    \item The product shall comply with WCAG. \cite{WCAG2018}
+\end{enumerate}
 
-\noindent \begin{itemize}
-
-% \item[NFR\thenfrNum \stepcounter{nfrNum} \label{NFR_Accuracy}:] \textbf{Accuracy}
-%     {The software application game state will model the game state on the \progname{} hardware with a high degree of accuracy. 
-%     The level of accuracy shall be described following the procedure given in Section 5.2.\thevnvSectionNfr~of the VnV (Verification and Validation) Plan.}
-%     \stepcounter{vnvSectionNfr}
- 
-% \item[NFR\thenfrNum \stepcounter{nfrNum} \label{NFR_Usability}:] \textbf{Usability}
-%     {The product will be able to be used by chess players of any experience level with minimal instruction.
-%     The level of usability achieved by the system shall be described following the procedure given in Section 5.2.\thevnvSectionNfr~of the VnV Plan.}
-%     \stepcounter{vnvSectionNfr}
-
-% \item[NFR\thenfrNum \stepcounter{nfrNum} \label{NFR_Style}:] \textbf{Style}
-%     {The product shall look and feel similar enough to traditional chess boards and chess pieces that the target audience will recognize the product 
-%     as a chess set when encountering it for the first time. The level and speed of audience recognition achieved by the design shall be described 
-%     following the procedure given in Section 5.2.\thevnvSectionNfr~of the VnV Plan.}
-%     \stepcounter{vnvSectionNfr}
-
-% \item[NFR\thenfrNum \stepcounter{nfrNum} \label{NFR_Maintainability}:] \textbf{Maintainability} 
-%     {The effort required to make any of the likely changes listed for \progname{} should be less than FRACTION of the original development time.}
-
-% \item[NFR\thenfrNum \stepcounter{nfrNum} \label{NFR_Portability}:] \textbf{Portability} 
-%     {\progname{} shall be accessible from any web browser. The application shall be able to be hosted on at least any of the following systems:
-%     \begin{enumerate}
-%         \item Windows 8
-%         \item Windows 10
-%         \item Windows 11
-%         \item WSL 2 (Windows Subsystem for Linux)
-%         \item Ubuntu
-%     \end{enumerate}}
-
-% \item[NFR\thenfrNum \stepcounter{nfrNum} \label{NFR_Reusability}:] \textbf{Reusability}
- \item Other NFRs that might be discussed include verifiability,
-%   understandability and reusability.
-\end{itemize}
 
 \section{Likely Changes}
 \section{Unlikely Changes}
@@ -252,4 +364,9 @@ description of the unit and the SI name.
 \section{Reflection}
 \subsection{Skills for Success}
 \subsection{Knowledge and Learning Approaches}
+
+\newpage
+
+\bibliographystyle {plainnat}
+\bibliography {../../refs/References}
 \end{document}
