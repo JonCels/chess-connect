@@ -1,8 +1,22 @@
 \documentclass[12pt]{article}
-\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath, mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{xr}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{xfrac}
 \usepackage{tabularx}
-\usepackage{booktabs}
+\usepackage{float}
 \usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{fullpage}
 \usepackage{titlesec}
 \usepackage[shortlabels]{enumitem}
 \usepackage[round]{natbib}
@@ -167,10 +181,96 @@ format. The application will be constrained to a 2-dimensional model of the hard
 
 \section{System Level Variables}
 \subsection{Constants}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{5cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{5cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Constant & Unit & Value\\
+      \hline
+      Chess board width & inches & 12\\
+     \hline
+     Chess board length & inches & 12\\
+     \hline
+     Chess board tile width & inches & 1.5\\
+     \hline 
+     Chess board tile length & inches & 1.5\\ 
+     \hline 
+     Supply Power to Board & Volts & 110 VAC\\
+     \hline
+      \end{tabular}
+  \label{Table}
+  \end{table}
+
 \subsection{Monitored Variables}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{9cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Variable & Units & Description\\
+      \hline
+      s\_a\{1-8\} & Volts & States of tiles a1 - a8 on the board. They are analog signals 
+      converted to digital and the state of the tile is determined. The possible states of 
+      each tile is empty, black/white pawn, black/white rook, black/white knight, 
+      black/white bishop, black/white queen, black/white king. \\
+      \hline
+      s\_b\{1-8\} & Volts & States of tiles b1 - b8 on the board. " " \\
+      \hline
+      s\_c\{1-8\} & Volts & States git of tiles c1 - c8 on the board. " " \\
+      \hline
+      s\_d\{1-8\} & Volts & States of tiles d1 - d8 on the board. " " \\
+      \hline
+      s\_e\{1-8\} & Volts & States of tiles e1 - e8 on the board. " " \\
+      \hline
+      s\_f\{1-8\} & Volts & States of tiles f1 - f8 on the board. " " \\
+      \hline
+      s\_g\{1-8\} & Volts & States of tiles g1 - g8 on the board. " " \\
+      \hline
+      sw\_3pos\_p{1-2} & Volts & The three-position switch for both players is located
+      on top of the board on their respective sides. It toggles between the beginner 
+      advice, engine advice and no advice modes for each player.\\
+      \hline
+      tieB\_p\{1-2\} & Volts & The "draw" push-button for each player is located on 
+      the top of the board on their respective sides. When both players press their button
+      the game is a draw. \\
+      \hline
+      engine\_move & chess notation & The chess engine API provides best moves into 
+      the system. \\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
+
 \subsection{Controlled Variables}
 
-~\newpage
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{9cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Variable & Units & Description\\
+      \hline 
+      LED\_row\{1-9\} & Volts & A total of 81 LEDS will be located under the board. They 
+      are on the corner of each tile and illuminate based on conditions of the inputs. \\
+      \hline 
+      LCD\_Display & Volts & An LCD Display is located on the chess board to indicate
+      best moves delivered by the engine. \\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
 \section{Requirements}
 \subsection{Functional Requirements}
