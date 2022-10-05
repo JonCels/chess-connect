@@ -3,13 +3,14 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{siunitx}
+\usepackage[round]{natbib}
 
 \input{../Comments}
 \input{../Common}
 
 \begin{document}
 
-\title{Software Requirements Specification for Chess Connect: Online tools combined with on-board vision to improve and share your game} 
+\title{Software Requirements Specification for \progname{}: Online tools combined with on-board vision to improve and share your game} 
 \author{\authname}
 \date{October 4th, 2022}
 	
@@ -91,6 +92,11 @@ description of the unit and the SI name.
 \section{Introduction}
 \subsection{Document Purpose}
 \subsection{Characteristics of Intended Reader}
+{The document is written with the purpose of guiding development for the \progname{} team. The intended readers of this document 
+are the developers of \progname{}, Dr.~Spencer Smith, and Nicholas Annable, the teaching assistant assigned to this project. The 
+document is thus written for an audience that is well-versed in formal specification at a university level. This includes models, 
+diagrams, and mathematical notation. Readers should also have a university-level understanding of electrical circuit knowledge.}
+
 \subsection{Characteristics of Intended User}
 \subsection{Stakeholders}
 
@@ -101,6 +107,34 @@ description of the unit and the SI name.
 \section{Constraints}
 
 \section{Scope}
+{The system is called \progname{}, and will include a software application and physical hardware device. The hardware will take the 
+form of a chess set, and will collect and relay move and piece data. The device will convey the best moves for the specific board 
+position, and will convey legal moves for specific pieces.The device will be connected to the software application, relaying and 
+receiving relevant data. The software application will model and track the physical device, and will broadcast the data in an accessible 
+format. The application will be constrained to a 2-dimensional model of the hardware device, showing a top-down view of the game.}
+
+\bigskip
+\noindent{\textbf{In-scope} items for the system include the following:
+\begin{enumerate}
+    \item Modeling and tracking a chess game played using the \progname{} hardware
+    \item Displaying and broadcasting the game state on the \progname{} software application
+    \item Giving users an option to choose between beginner mode, engine mode, and normal mode
+    \begin{itemize}
+        \item Beginner mode will display legal moves for individual pieces when a chess piece is picked up, and will warn the players when an illegal move is made
+        \item Engine mode will display the best moves as determined by a chess engine for the position
+        \item Normal mode will disable the engine and beginner mode features. This is intended for regular play between experienced players
+    \end{itemize}
+\end{enumerate}}
+
+\bigskip
+
+\noindent{The following items are deemed to be \textbf{out of scope}:
+\begin{enumerate}
+    \item FIDE (International Chess Federation) standards for tournament appropriate chess equipment
+    \item Tracking and support for alternate chess variants such as Chess960, Atomic Chess, King of the Hill. More information found here: \cite{ListOfChessVariants2022}.
+    \item Proper tracking of alternate starting positions like puzzles
+    \item Proper tracking of illegal moves and rule violations when warnings are ignored
+\end{enumerate}}
 
 \section{Project Overview}
 \subsection{System Context Diagram}
@@ -134,4 +168,7 @@ description of the unit and the SI name.
 \section{Reflection}
 \subsection{Skills for Success}
 \subsection{Knowledge and Learning Approaches}
+
+\bibliographystyle {plainnat}
+\bibliography {../../refs/References}
 \end{document}
