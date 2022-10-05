@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{titlesec}
 \usepackage[shortlabels]{enumitem}
@@ -42,6 +43,7 @@
 \midrule
 2022-10-04 & Jonathan Cels & Template creation and document formatting\\ 
 2022-10-04 & Jonathan Cels & Non-functional requirements\\
+2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
 date & name & change\\
 \bottomrule
 \end{tabularx}
@@ -120,6 +122,17 @@ description of the unit and the SI name.
 
 \section{Project Overview}
 \subsection{System Context Diagram}
+
+The context of the system invloves two integrated but separate system components, as well as two distinct end users.
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale=0.65]{chess-connect-system-context.png}
+    \caption{System Context}
+    \label{Fig_SystemContext} 
+  \end{center}
+\end{figure}
+
 \subsection{Normal Operation}
 \subsubsection{Description}
 \subsubsection{Use Cases/Scenarios}
