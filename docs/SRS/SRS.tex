@@ -75,6 +75,9 @@
 \newcounter{lcnum} %Likely change number
 \newcommand{\lthelcnum}{LC\thelcnum}
 \newcommand{\lcref}[1]{LC\ref{#1}}
+\newcounter{ucnum} %Unlikely change number
+\newcommand{\utheucnum}{UC\theucnum}
+\newcommand{\ucref}[1]{UC\ref{#1}}
 
 \usepackage{fullpage}
 
@@ -1076,14 +1079,28 @@ be covered in the Verification and Validation document.}
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] backend and database might change
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] hardware microcontroller might change
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] ethernet vs blueooth transfer
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] sensor technique might be too complicated to do by weight
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] 3d printing our own designs
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] size of the chess board we are making
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] advanced reverse moves mode
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] local server multiple people connection
+% \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] hardware microcontroller might change
+% \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] advanced reverse moves mode
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}.] The backend/database programming languages and frameworks previously listed
+are subject to change depending on the use of the data transfer functionality, in which comptibility to the hardware would play a role
+in picking our technology stack.  
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}.] The load capacity of our system is initially set low for the
+first edition of this application. As demand for the application increases, the load capacity must also increase to support a
+larger user base.
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}.] The method of data transfer is subject to change depending on
+interfacing between the hardware and software. Examples of these are Bluetooth and ethernet connected to the board.
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}.] The dimensions of the chess board are subject to change based
+the 3D-printed designs we use for the pieces. 
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}.] Existing chess pieces may be modified to be fit with sensors instead
+of 3D-printing all the chess pieces.
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}.] The chess pieces are currently being designed to use weight sensors
+to detect movement and tracking its location. This is subject to change as we might use sensors that do not track the weight of the piece,
+and instead its relative position on the board.
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}.] The local server that requires users to connect to watch the game
+maybe have a limit, requiring there to be a central source to view the game. 
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}.] The application maybe required to include new features as
+discovered through use of the system in real-world scenarios.
 
 \end{itemize}
 
@@ -1091,11 +1108,17 @@ be covered in the Verification and Validation document.}
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] web application display
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] piece sensors and tracking
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] using stockfish engine to display moves
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] tutorial mode on website
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] frontend technology
+\item[UC\refstepcounter{ucnum}\theucnum\label{UC_meaningfulLabel}.] Since overarching idea of the project is integration between
+over the board and online chess, a web application will be necessary.
+\item[UC\refstepcounter{ucnum}\theucnum\label{UC_meaningfulLabel}.] There must be sensors for the pieces in order to solve tracking
+and object detection.
+\item[UC\refstepcounter{ucnum}\theucnum\label{UC_meaningfulLabel}.] The most popular and easy to use chess engine is Stockfish, which is 
+open source and includes a well-written API documentation. This will likely be the engine we will be using for predicting future moves.
+\item[UC\refstepcounter{ucnum}\theucnum\label{UC_meaningfulLabel}.] As a learning application, giving beginners to ability to learn quickly
+is a big priority, so the application will likely include a tutorial mode to get started with the game.
+\item[UC\refstepcounter{ucnum}\theucnum\label{UC_meaningfulLabel}.] Although the back-end/database technologies are subject to change,
+the front-end will most likely make use of our past members' experience in user interface design. For this reason, the technologies
+previously mentioned for front-end are unlikely to change.
 
 \end{itemize}
 
