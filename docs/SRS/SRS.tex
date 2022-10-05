@@ -18,6 +18,7 @@
 \usepackage{afterpage}
 \usepackage{fullpage}
 \usepackage[round]{natbib}
+\usepackage{array}
 
 \input{../Comments}
 \input{../Common}
@@ -129,17 +130,89 @@ description of the unit and the SI name.
 \section{System Level Variables}
 \subsection{Constants}
 
-\begin{tabularx}{1\textwidth}{|c|c|c|}
- \hline
- \rowcolor[gray]{0.9}
- Constant & Unit & Value\\
- \hline
- Chess Board Width & inches & 12\\
-\hline
-\end{tabularx}
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{10cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Constant & Unit & Value\\
+      \hline
+      Chess board width & inches & 12\\
+     \hline
+     Chess board length & inches & 12\\
+     \hline
+     Chess board tile width & inches & 1.5\\
+     \hline 
+     Chess board tile length & inches & 1.5\\ 
+     \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
 \subsection{Monitored Variables}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{10cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Variable & Units & Description\\
+      \hline
+      s\_a\{1-8\} & Voltage & States of tiles a1 - a8 on the board. They are analog signals 
+      converted to digital and the state of the tile is determined. The possible states of 
+      each tile is empty, black/white pawn, black/white rook, black/white knight, 
+      black/white bishop, black/white queen, black/white king. \\
+      \hline
+      s\_b\{1-8\} & Voltage & States of tiles b1 - b8 on the board. " " \\
+      \hline
+      s\_c\{1-8\} & Voltage 1-5& States of tiles c1 - c8 on the board. " " \\
+      \hline
+      s\_d\{1-8\} & Voltage & States of tiles d1 - d8 on the board. " " \\
+      \hline
+      s\_e\{1-8\} & Voltage & States of tiles e1 - e8 on the board. " " \\
+      \hline
+      s\_f\{1-8\} & Voltage & States of tiles f1 - f8 on the board. " " \\
+      \hline
+      s\_g\{1-8\} & Voltage & States of tiles g1 - g8 on the board. " " \\
+      \hline
+      sw\_3pos\_p1 & Voltage & The three-position switch for player 1 is located on 
+      top of the board. It toggles between the beginner advice, engine advice and no
+      advice modes.\\
+      \hline
+      engine\_move & chess notation & The chess engine API provides best moves into 
+      the system. \\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
+
 \subsection{Controlled Variables}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{9cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Variable & Units & Description\\
+      \hline 
+      LED\_row\{1-9\} & Voltage & A total of 81 LEDS will be located under the board. They 
+      are on the corner of each tile and illuminate based on conditions of the inputs. \\
+      \hline 
+      LCD\_Display & Voltage & An LCD Display is located on the chess board to indicate
+      best moves delivered by the engine. \\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
 \section{Requirements}
 \subsection{Functional Requirements}
