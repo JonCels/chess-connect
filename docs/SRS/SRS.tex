@@ -1,8 +1,23 @@
 \documentclass[12pt]{article}
-\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath, mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{xr}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{xfrac}
 \usepackage{tabularx}
-\usepackage{booktabs}
+\usepackage{float}
 \usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{fullpage}
+\usepackage[round]{natbib}
 
 \input{../Comments}
 \input{../Common}
@@ -113,6 +128,16 @@ description of the unit and the SI name.
 
 \section{System Level Variables}
 \subsection{Constants}
+
+\begin{tabularx}{1\textwidth}{|c|c|c|}
+ \hline
+ \rowcolor[gray]{0.9}
+ Constant & Unit & Value\\
+ \hline
+ Chess Board Width & inches & 12\\
+\hline
+\end{tabularx}
+
 \subsection{Monitored Variables}
 \subsection{Controlled Variables}
 
