@@ -81,7 +81,9 @@ description of the unit and the SI name.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   A & Assumption\\
+  CSA & Canadian Standards Association\\
   DD & Data Definition\\
+  FIDE & International Chess Federation or Fédération Internationale des Échecs\\
   GD & General Definition\\
   GS & Goal Statement\\
   IM & Instance Model\\
@@ -94,6 +96,7 @@ description of the unit and the SI name.
   SRS & Software Requirements Specification\\
   T & Theoretical Model\\
   VnV & Verification and Validation\\
+  WCAG & Web Content Accessibility Guidelines\\
   \bottomrule
 \end{tabular}\\
 
@@ -182,12 +185,12 @@ description of the unit and the SI name.
 
 \paragraph{Understandability and Politeness Requirements}
 \begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
-    \item All symbols and words shall be similar to historically used Chess symbols \cite{ChessHistory2003}
+    \item All symbols and words shall be similar to historically used Chess symbols. \cite{ChessHistory2003}
 \end{enumerate}
 
 \paragraph{Accessibility Requirements}
 \begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
-    \item The system shall follow guidelines for correct colour contrast ratio for text to the background as stated in the \cite{WCAG2018}
+    \item The system shall follow guidelines for correct colour contrast ratio for text to the background as stated in the \cite{WCAG2018}.
 \end{enumerate}
 
 
@@ -207,8 +210,8 @@ description of the unit and the SI name.
 %Modified from Safety-Critical Requirements to better cover the SRS rubric
 \paragraph{Health and Safety-Critical Requirements}
 \begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
-    \item The system shall be properly grounded to *Standards*
-    \item The maximum power on any single wire shall be within the safety limits as deemed by *Standards*
+    \item The system shall be properly grounded according to the Canadian Electrical Code. \cite{CanadianElectricalCode2021}
+    \item The maximum power on any single wire shall be within the safety limits described in the Canadian Electrical Code.
 \end{enumerate}
 
 \paragraph{Precision or Accuracy Requirements}
@@ -282,9 +285,7 @@ description of the unit and the SI name.
 \end{enumerate}
 
 \paragraph{Supportability Requirements}
-\begin{enumerate}[{MS}1., leftmargin=2\parindent, resume]
-    \item N/A
-\end{enumerate}
+N/A
 
 \paragraph{Adaptability Requirements}
 \begin{enumerate}[{MS}1., leftmargin=2\parindent, resume]
@@ -297,12 +298,10 @@ description of the unit and the SI name.
 \subsubsection{Security Requirements}
 \label{NFR_SR}
 \paragraph{Access Requirements}
-\begin{enumerate}[{SR}1., leftmargin=2\parindent]
-    \item N/A
-\end{enumerate}
+N/A
 
 \paragraph{Integrity Requirements}
-\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+\begin{enumerate}[{SR}1., leftmargin=2\parindent]
     \item The product will not store game data after a game has concluded.
 \end{enumerate}
 
@@ -317,9 +316,7 @@ description of the unit and the SI name.
 \end{enumerate}
 
 \paragraph{Immunity Requirements}
-\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
-    \item N/A
-\end{enumerate}
+N/A
 
 
 
@@ -331,9 +328,7 @@ description of the unit and the SI name.
 \end{enumerate}
 
 \paragraph{Political Requirements}
-\begin{enumerate}[{PC}1., leftmargin=2\parindent, resume]
-    \item N/A
-\end{enumerate}
+N/A
 
 
 
@@ -346,7 +341,7 @@ description of the unit and the SI name.
 
 \paragraph{Standards Requirements}
 \begin{enumerate}[{LR}1., leftmargin=2\parindent, resume]
-    \item The product shall comply with \cite{WCAG2018}.
+    \item The product shall follow \cite{WCAG2018}.
 \end{enumerate}
 
 
