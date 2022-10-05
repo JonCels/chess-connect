@@ -182,9 +182,13 @@ description of the unit and the SI name.
       \hline
       s\_g\{1-8\} & Voltage & States of tiles g1 - g8 on the board. " " \\
       \hline
-      sw\_3pos\_p1 & Voltage & The three-position switch for player 1 is located on 
-      top of the board. It toggles between the beginner advice, engine advice and no
-      advice modes.\\
+      sw\_3pos\_p{1-2} & Voltage & The three-position switch for both players is located
+      on top of the board on their respective sides. It toggles between the beginner 
+      advice, engine advice and no advice modes for each player.\\
+      \hline
+      tieB\_p\{1-2\} & Voltage & The "draw" push-button for each player is located on 
+      the top of the board on their respective sides. When both players press their button
+      the game is a draw. \\
       \hline
       engine\_move & chess notation & The chess engine API provides best moves into 
       the system. \\
