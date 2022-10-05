@@ -3,9 +3,19 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{siunitx}
+\usepackage{titlesec}
+\usepackage[shortlabels]{enumitem}
+
 
 \input{../Comments}
 \input{../Common}
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 \begin{document}
 
@@ -129,16 +139,68 @@ description of the unit and the SI name.
 \setcounter{nfrNum}{1}
 
 \subsubsection{Look and Feel Requirements}
-\noindent \begin{enumerate}
-    \item Example
+
+\paragraph{Appearance Requirements}
+\begin{enumerate}[{LF}1., leftmargin=2\parindent]
+    \item Test1
+    \item Test2
 \end{enumerate}
+
+\paragraph{Style Requirements}
+\begin{enumerate}[{LF}1., leftmargin=2\parindent, resume]
+    \item Test3
+    \item Test4
+\end{enumerate}
+
 \subsubsection{Usability and Humanity Requirements}
+\paragraph{Ease of Use Requirements}
+\paragraph{Personalization and Internationalization Requirements}
+\paragraph{Learning Requirements}
+\paragraph{Understandability and Politeness Requirements}
+\paragraph{Accessibility Requirements}
+
+
 \subsubsection{Performance Requirements}
+\paragraph{Speed and Latency Requirements}
+\paragraph{Safety-Critical Requirements}
+\paragraph{Precision or Accuracy Requirements}
+\paragraph{Reliability and Availability Requirements}
+\paragraph{Robustness or Fault-Tolerance Requirements}
+\paragraph{Capacity Requirements}
+\paragraph{Scalability or Extensibility Requirements}
+\paragraph{Longevity Requirements}
+
+
 \subsubsection{Operational and Environmental Requirements}
+\paragraph{Expected Physical Environment}
+\paragraph{Requirements for Interfacing with Adjacent Systems}
+\paragraph{Productization Requirements}
+\paragraph{Release Requirements}
+
+
 \subsubsection{Maintainability and Support Requirements}
+\paragraph{Maintenance Requirements}
+\paragraph{Supportability Requirements}
+\paragraph{Adaptability Requirements}
+
+
 \subsubsection{Security Requirements}
+\paragraph{Access Requirements}
+\paragraph{Integrity Requirements}
+\paragraph{Privacy Requirements}
+\paragraph{Audit Requirements}
+\paragraph{Immunity Requirements}
+
+
 \subsubsection{Cultural and Political Requirements}
+\paragraph{Cultural Requirements}
+\paragraph{Political Requirements}
+
+
 \subsubsection{Legal Requirements}
+\paragraph{Compliance Requirements}
+\paragraph{Standards Requirements}
+\paragraph{Health and Safety Requirements}
 
 \noindent \begin{itemize}
 
