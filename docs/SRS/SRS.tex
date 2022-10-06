@@ -153,6 +153,15 @@ how to play chess.}
 
 \section{Assumptions}
 
+\begin{enumerate}[{A}1., leftmargin=2\parindent]
+    \item Users of the board have knowledge of the starting position of each of the pieces. \\
+    \item Users will not make illegal moves outsie of beginner mode. \\
+    \item Game termination as dictated by the rules of chess \cite{RulesofChess} \\
+    \item {During gameplay, users will not take back moves. When a piece is layed
+    on the board, that move is final.} \\
+    \item Users will have the knowledge of bluetooth setup and connection. \\
+\end{enumerate}
+
 \section{Constraints}
 
 \begin{table}[H]
@@ -301,7 +310,7 @@ The context of the system invloves two integrated but separate system components
       \hline
       sw\_3pos & Volts & The three-position switch is located
       on top of the board. It toggles between the beginner 
-      advice, engine advice and no advice modes.\\
+      advice, engine advice and normal modes.\\
       \hline
       tieB\_p\{1-2\} & Volts & The "draw" push-button for each player is located on 
       the top of the board on their respective sides. When both players press their button
