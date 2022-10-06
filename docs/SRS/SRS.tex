@@ -187,10 +187,11 @@ how to play chess.}
 \section{Assumptions}
 
 \begin{enumerate}[{A}1., leftmargin=2\parindent]
-    \item Users of the board have knowledge of the starting position of each of the pieces. \\
-    \item Users will not make illegal moves outsie of beginner mode. \\
+    \item Users of the board have knowledge of the starting positions and will
+    set them up before the start of a new game.  \\
+    \item Users will not make illegal moves outside of beginner mode. \\
     \item Game termination as dictated by the rules of chess \cite{RulesofChess} \\
-    \item {During gameplay, users will not take back moves. When a piece is layed
+    \item {During gameplay, users will not take back moves. When a piece is placed
     on the board, that move is final.} \\
     \item Users will have the knowledge of bluetooth setup and connection. \\
 \end{enumerate}
@@ -528,7 +529,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \end{enumerate}
 
 \paragraph{Data Transfer}
-\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+\begin{enumerate}[{ED}1., leftmargin=2\parindent]
     \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
     \item The system shall send the web application engine moves to the LCD display over the chosen data transfer method.
 \end{enumerate}
@@ -554,7 +555,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \end{enumerate}
 
 \paragraph{Data Transfer}
-\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+\begin{enumerate}[{BD}1., leftmargin=2\parindent]
     \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
 \end{enumerate}
 
@@ -822,18 +823,40 @@ N/A
 
 \section{Traceability Matrix}
 
-\appendix
-\section{Values of Auxiliary Constants}
-\subsection{Auxiliary Constants}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{Constant} & \textbf{Value}\\
-  \midrule 
-  ENDTIME & 5\\
-  \bottomrule
-\end{tabular}\\
-
-\newpage
+\begin{table}[H]
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabularx}{\linewidth}{|c|X|}
+        \hline
+        A1 & GI1 \\
+        \hline 
+        A2 & BB3 \\ 
+        \hline 
+        A3 & BB2, BB3 \\
+        \hline
+        A4 & UH1 \\
+        \hline
+        BA1 & UH5 \\
+        \hline
+        7.3.2.1 & NB1,  NB2,  NB3,  ND1, NA1, NA3, \\
+        \hline 
+        7.3.2.2 & EB1, EB2, EB3, EB4 ED1, ED2, EA1, EA2, EA3, EA4, EA5, EA6\\
+        \hline
+        7.3.2.3 & BB1, BB2, BB3, BB4, BB5, BD1, BA1, BA2 \\
+        \hline
+        7.4.0.4 & PR9\\ 
+        \hline
+        7.4.0.5 & PR9\\
+        \hline
+        PR11 & LC1, LC2, LC3, LC4, LC5, LC6, LC7, LC8, LC9 \\
+        \hline
+        LF2 & BB2, BB3 \\ 
+        \hline
+        \end{tabularx}
+    \label{Table}
+    \end{table}
+  
+  
 
 \appendix
 \section{Reflection}
