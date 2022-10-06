@@ -63,6 +63,7 @@
 2022-10-05 & Rupinder Nagra, Jonathan Cels & Functional Requirements\\
 2022-10-05 & Arshdeep Aujla & Constraints\\
 2022-10-05 & Alexander Van Kralingen & Added Use Cases/Scenarios. Fixed system context diagram position. Added likely change.\\
+2022-10-05 & Alexander Van Kralingen & Added Undesired Event Handling section and a likely change.\\
 2022-10-05 & Arshdeep Aujla & Characteristics of Intended User, Stakeholders\\
 date & name & change\\
 \bottomrule
@@ -276,7 +277,30 @@ format. The application will be constrained to a 2-dimensional model of the hard
     }
 }
 
-\subsection{Undesired Scenario Handling}
+\subsection{Undesired Scenario Handling}{
+    \paragraph{Earthquake Scenario}{
+        Also known as the "sore loser scenario," when some or all of the pieces are removed from their spaces within a short amount of time, the game will be ended as a draw. 
+    }
+    
+    \paragraph{Power Loss}{
+        When the power to the board is cut, the Web-App will end the game as a draw. The board will also have to be reconfigured back into the default starting positions for all pieces.
+    }
+    
+    \paragraph{Bluetooth Disconnection}{
+        On bluetooth disconnection, the board will attempt to reconnect for 30 seconds. Upon the expiration of this timer, the game will end as a draw.
+    }
+    
+    \paragraph{Internet Disconnection}{
+        On internet disconnection, the server will keep a history of past moves made. On reconnection, the game will be updated to reflect these moves as they are sent through the
+        queue to the hosted interface.
+    }
+    
+    \paragraph{Cheating}{
+        If pieces are moved or removed out of turn, the spaces which were affected will be lit up with red LEDs. When the board is returned to the state before cheating occured,
+        the game will resume as normal.
+    }
+    
+}
 
 \section{System Level Variables}
 \subsection{Constants}
@@ -709,6 +733,11 @@ N/A
 \subsection{Play Against Computer Opponent}{
     An additional game setting to enable either white or black to be a "computer" opponent will be implemented in Engine Mode. The user will be able to set a skill level
     for the computer, and moves will be displayed as squares lit up by the on-board LEDs.
+}
+\subsection{Handling of Unwanted Scenarios}{
+    When pieces are lost, power is cut or data transmission is cut, the current result is ending the game as a draw. Adding the ability for the board to start from any state
+    would allow the players to resume from where they left off. This would require several other options such as "which colour starts," "pausing the game" and "resume from
+    last saved configuration."
 }
 
 \section{Unlikely Changes}
