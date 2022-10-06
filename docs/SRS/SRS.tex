@@ -58,7 +58,9 @@
 \midrule
 2022-10-04 & Jonathan Cels & Template creation and document formatting\\ 
 2022-10-04 & Jonathan Cels & Non-functional requirements\\
+2022-10-05 & Joshua Chapman & Constants, Monitored Variables, Controlled Variables\\
 2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
+2022-10-05 & Joshua Chapman & Problem Description, Assumptions \\
 2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
 2022-10-05 & Rupinder Nagra, Jonathan Cels & Functional Requirements\\
 2022-10-05 & Arshdeep Aujla & Constraints\\
@@ -126,10 +128,30 @@ description of the unit and the SI name.
 
 \subsection{Mathematical Notation}
 
-\subsection{Terminology and  Definitions}
+\subsection{Terminology and Definitions}
+\begin{tabularx}{\linewidth}{ l X }
+    \toprule		
+    \textbf{Term} & \textbf{Definition}\\
+    \midrule 
+    Legal Move & Moving a single chess piece from one square on the board to another in a way that follows the rules of chess. \\[0.5cm]
+    Resign & To forfeit or surrender a game of chess. \\[0.5cm]
+    Draw & To tie a game of chess. \\[0.5cm]
+    Draw by Agreement & When both players agree to draw instead of continuing to play. \\[0.5cm]
+    Capture & When a piece moves into the space of an opposing piece following the rules of chess, removing that piece from the game. \\[0.5cm]
+    Check & A condition that occurs when a player's king is under threat of being captured. \\[0.5cm]
+    Checkmate & A condition that occurs when a player's king is in check \textbf{and} has no legal moves to escape. 
+    This ends the game, and the player who delivered the checkmate wins. \\[0.5cm]
+    Stalemate & A type of draw that occurs when the king is \textbf{not} in check, but no piece can be moved without putting the king in check. \\[0.5cm]
+    \bottomrule
+  \end{tabularx}
 
 \section{Introduction}
 \subsection{Document Purpose}
+The purpose of this document is to provide a set of requirements for a system that will integrate over-the-board chess with the online world of chess to assist in learning the game in a flexible manner.
+This includes a detailed description of our functional and non-functional requirements, including the performance and attributes of our design. 
+The document also includes a project overview showcasing the behaviour with event handling and system diagrams, and the likely and unlikely changes we expect to 
+encounter throughout the development of our product.
+
 \subsection{Characteristics of Intended Reader}
 {The document is written with the purpose of guiding development for the \progname{} team. The intended readers of this document 
 are the developers of \progname{}, Dr.~Spencer Smith, and Nicholas Annable, the teaching assistant assigned to this project. The 
@@ -140,6 +162,7 @@ diagrams, and mathematical notation. Readers should also have a university-level
 {This project will assist chess players of any level that are looking for a tool to help them learn and study the game. For beginners, 
 the board serves as a learning tutorial and a general introduction to the game, while intermediate and advanced players can use the 
 engine move recommendations to study new lines, puzzles, and specific positions to enhance their chess skills.}
+
 \subsection{Stakeholders}
 {The professor and TAs for the course SFWRENG 4G06 as they will be providing the feedback which will directly affect the project’s development. 
 Society is also a stakeholder because this project will provide the members of society another gateway to be involved in the community through the game of chess. Lastly, this project will 
@@ -160,6 +183,15 @@ how to play chess.}
 
 
 \section{Assumptions}
+
+\begin{enumerate}[{A}1., leftmargin=2\parindent]
+    \item Users of the board have knowledge of the starting position of each of the pieces. \\
+    \item Users will not make illegal moves outsie of beginner mode. \\
+    \item Game termination as dictated by the rules of chess \cite{RulesofChess} \\
+    \item {During gameplay, users will not take back moves. When a piece is layed
+    on the board, that move is final.} \\
+    \item Users will have the knowledge of bluetooth setup and connection. \\
+\end{enumerate}
 
 \section{Constraints}
 
@@ -228,26 +260,31 @@ format. The application will be constrained to a 2-dimensional model of the hard
 
     The context of the system invloves two integrated but separate system components, as well as two distinct end users.
 
-    \begin{figure}[H]
-    \centering
-        \includegraphics[scale=0.65]{chess-connect-system-context.png}
-        \caption{System Context}
-        \label{Fig_SystemContext} 
-    \end{figure}
-}
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.65]{chess-connect-system-context.png}
+    \caption{Overall System Context}
+    \label{Fig_SystemContext} 
+  \end{center}
+\end{figure}
 
-\subsection{Behaviour Overview}{
-
-}
+\subsection{Behaviour Overview}
+\begin{figure}[H]
+    \begin{center}
+      \includegraphics[scale=0.8]{Hardware_System_Context_Diagram.jpeg}
+      \caption{On-board System Context}
+      \label{Fig_SystemContext2} 
+    \end{center}
+  \end{figure}
 
 \subsection{Normal Operation}
 \subsubsection{Description}{
     The normal operation of the chess board involves configuring game mode and settings, reading the physical positions and identifiers (magnetic strength) of the pieces, 
-    lighting up corresponding LEDs and determining valid moves on the microcontroller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
-    calculated by a chess engine and displayed by LEDs on the board) and Beginner Mode (valid moves displayed by LED when a piece is picked up). The microcontroller will also be 
-    simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of "best" moves from the server. The server will be calculating these 
+    lighting up corresponding LEDs and determining legal moves on the microcontroller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
+    calculated by a chess engine and displayed by an LCD display) and Beginner Mode (legal moves displayed by LED when a piece is picked up). The microcontroller will also be 
+    simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of ``best'' moves from the server. The server will be calculating these 
     best moves in real time depending on the configuration of the pieces on the board sent from the chess board, and sending it back over Bluetooth every time it is queried
-    while the game is in "Engine Mode". The server will also be communicating all of this information to a Web Application where users can tune in and watch the pieces and see
+    while the game is in ``Engine Mode''. The server will also be communicating all of this information to a web application where users can tune in and watch the pieces and see
     game stats in real time.
 }
 
@@ -255,36 +292,36 @@ format. The application will be constrained to a 2-dimensional model of the hard
     
     \paragraph{Normal Mode}{
         Users play the game without any LED feedback. This would typically be a formal match involving players that are familiar with the game. Moves would still be broadcast to the
-        Web-App, and move history will still be recorded for future reference.
+        web application, and move history will still be recorded for future reference.
     }
         
     \paragraph{Engine Mode}{
-        Users play the game with LED feedback indicating which pieces to move to which positions that would be statistically the most probable move to win the game. This game mode would
+        Users play the game with LCD feedback indicating which pieces to move to which positions that would be statistically the most probable move to win the game. This game mode would
         be most likely played as a way to improve one's skill level and to gain a deeper understanding of the game.
     }
     
     \paragraph{Beginner Mode}{
-        Users play the game with LED feedback on lifting a piece. The piece lifted will be determiend by the hardware and corresponding valid moves will be lit up on the board. This game
-        mode is designed to help beginners learn the game of chess. Valid moves will involve more complex strategies such as "en passant" and "castling."
+        Users play the game with LED feedback on lifting a piece. The piece lifted will be determiend by the hardware and corresponding legal moves will be lit up on the board. This game
+        mode is designed to help beginners learn the game of chess. Legal moves will involve more complex strategies such as ``en passant'' and ``castling''.
     }
         
     \paragraph{Studying Past Games}{
-        The Web-App will have a record of the moves made in past games. This can be used to study the game moves and understand scenarios which could have been handled differently
+        The web application will have a record of the moves made in past games. This can be used to study the game moves and understand scenarios which could have been handled differently
         to produce a more favourable outcome.
     }
     
     \paragraph{Tournament Play}{
-        Since the moves made in the game will be broadcasted live to the internet via the Web-App, tournaments can be held with spectators watching the game in real time.
+        Since the moves made in the game will be broadcasted live to the internet via the web application, tournaments can be held with spectators watching the game in real time.
     }
 }
 
 \subsection{Undesired Scenario Handling}{
     \paragraph{Earthquake Scenario}{
-        Also known as the "sore loser scenario," when some or all of the pieces are removed from their spaces within a short amount of time, the game will be ended as a draw. 
+        Also known as the ``sore loser scenario'', when some or all of the pieces are removed from their spaces within a short amount of time, the game will be ended as a draw. 
     }
     
     \paragraph{Power Loss}{
-        When the power to the board is cut, the Web-App will end the game as a draw. The board will also have to be reconfigured back into the default starting positions for all pieces.
+        When the power to the board is cut, the web application will end the game as a draw. The board will also have to be reconfigured back into the default starting positions for all pieces.
     }
     
     \paragraph{Bluetooth Disconnection}{
@@ -359,11 +396,11 @@ format. The application will be constrained to a 2-dimensional model of the hard
       \hline
       s\_g\{1-8\} & Volts & States of tiles g1 - g8 on the board. " " \\
       \hline
-      sw\_3pos\_p{1-2} & Volts & The three-position switch for both players is located
-      on top of the board on their respective sides. It toggles between the beginner 
-      advice, engine advice and no advice modes for each player.\\
+      sw\_3pos & Volts & The three-position switch is located
+      on top of the board. It toggles between the beginner 
+      advice, engine advice and normal modes.\\
       \hline
-      tieB\_p\{1-2\} & Volts & The "draw" push-button for each player is located on 
+      tieB\_p\{1-2\} & Volts & The ``draw'' push-button for each player is located on 
       the top of the board on their respective sides. When both players press their button
       the game is a draw. \\
       \hline
@@ -395,7 +432,6 @@ format. The application will be constrained to a 2-dimensional model of the hard
       \end{tabular}
   \label{Table}
   \end{table}
-
 
 
 \section{Requirements}
@@ -740,7 +776,7 @@ N/A
     This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.
     \item Online chess has extensive communities on existing platforms. To promote code reusability, the Chess Connect online platform will interface with popular existing websites.
     Users of the board have the capability to share their games with a larger community via these platforms in addition to the custom web application. These sites include, but are not limited to, Chess.com and Lichess.
-    \item An additional game setting to enable either white or black to be a "computer" opponent will be implemented in Engine Mode. The user will be able to set a skill level
+    \item An additional game setting to enable either white or black to be a ``computer'' opponent will be implemented in Engine Mode. The user will be able to set a skill level
     for the computer, and moves will be displayed as squares lit up by the on-board LEDs.
     \item The backend/database programming languages and frameworks previously listed
     are subject to change depending on the use of the data transfer functionality, in which comptibility to the hardware would play a role
@@ -758,7 +794,6 @@ N/A
 \end{enumerate}
   
 \section{Unlikely Changes}    
-
 \noindent
 \begin{enumerate}[{UC}1., leftmargin=2\parindent]
     \item Since overarching idea of the project is integration between
