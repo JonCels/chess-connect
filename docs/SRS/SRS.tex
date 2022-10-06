@@ -258,7 +258,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \subsection{Normal Operation}
 \subsubsection{Description}{
     The normal operation of the chess board involves configuring game mode and settings, reading the physical positions and identifiers (magnetic strength) of the pieces, 
-    lighting up corresponding LEDs and determining valid moves on the microcontroller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
+    lighting up corresponding LEDs and determining legal moves on the microcontroller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
     calculated by a chess engine and displayed by an LCD display) and Beginner Mode (legal moves displayed by LED when a piece is picked up). The microcontroller will also be 
     simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of ``best'' moves from the server. The server will be calculating these 
     best moves in real time depending on the configuration of the pieces on the board sent from the chess board, and sending it back over Bluetooth every time it is queried
@@ -279,27 +279,27 @@ format. The application will be constrained to a 2-dimensional model of the hard
     }
     
     \paragraph{Beginner Mode}{
-        Users play the game with LED feedback on lifting a piece. The piece lifted will be determiend by the hardware and corresponding valid moves will be lit up on the board. This game
-        mode is designed to help beginners learn the game of chess. Valid moves will involve more complex strategies such as "en passant" and "castling."
+        Users play the game with LED feedback on lifting a piece. The piece lifted will be determiend by the hardware and corresponding legal moves will be lit up on the board. This game
+        mode is designed to help beginners learn the game of chess. Legal moves will involve more complex strategies such as ``en passant'' and ``castling''.
     }
         
     \paragraph{Studying Past Games}{
-        The Web-App will have a record of the moves made in past games. This can be used to study the game moves and understand scenarios which could have been handled differently
+        The web application will have a record of the moves made in past games. This can be used to study the game moves and understand scenarios which could have been handled differently
         to produce a more favourable outcome.
     }
     
     \paragraph{Tournament Play}{
-        Since the moves made in the game will be broadcasted live to the internet via the Web-App, tournaments can be held with spectators watching the game in real time.
+        Since the moves made in the game will be broadcasted live to the internet via the web application, tournaments can be held with spectators watching the game in real time.
     }
 }
 
 \subsection{Undesired Scenario Handling}{
     \paragraph{Earthquake Scenario}{
-        Also known as the "sore loser scenario," when some or all of the pieces are removed from their spaces within a short amount of time, the game will be ended as a draw. 
+        Also known as the ``sore loser scenario'', when some or all of the pieces are removed from their spaces within a short amount of time, the game will be ended as a draw. 
     }
     
     \paragraph{Power Loss}{
-        When the power to the board is cut, the Web-App will end the game as a draw. The board will also have to be reconfigured back into the default starting positions for all pieces.
+        When the power to the board is cut, the web application will end the game as a draw. The board will also have to be reconfigured back into the default starting positions for all pieces.
     }
     
     \paragraph{Bluetooth Disconnection}{
@@ -378,7 +378,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
       on top of the board on their respective sides. It toggles between the beginner 
       advice, engine advice and no advice modes for each player.\\
       \hline
-      tieB\_p\{1-2\} & Volts & The "draw" push-button for each player is located on 
+      tieB\_p\{1-2\} & Volts & The ``draw'' push-button for each player is located on 
       the top of the board on their respective sides. When both players press their button
       the game is a draw. \\
       \hline
@@ -755,7 +755,7 @@ N/A
     This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.
     \item Online chess has extensive communities on existing platforms. To promote code reusability, the Chess Connect online platform will interface with popular existing websites.
     Users of the board have the capability to share their games with a larger community via these platforms in addition to the custom web application. These sites include, but are not limited to, Chess.com and Lichess.
-    \item An additional game setting to enable either white or black to be a "computer" opponent will be implemented in Engine Mode. The user will be able to set a skill level
+    \item An additional game setting to enable either white or black to be a ``computer'' opponent will be implemented in Engine Mode. The user will be able to set a skill level
     for the computer, and moves will be displayed as squares lit up by the on-board LEDs.
     \item The backend/database programming languages and frameworks previously listed
     are subject to change depending on the use of the data transfer functionality, in which comptibility to the hardware would play a role
