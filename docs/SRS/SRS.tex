@@ -58,7 +58,9 @@
 \midrule
 2022-10-04 & Jonathan Cels & Template creation and document formatting\\ 
 2022-10-04 & Jonathan Cels & Non-functional requirements\\
+2022-10-05 & Joshua Chapman & Constants, Monitored Variables, Controlled Variables\\
 2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
+2022-10-05 & Joshua Chapman & Problem Description, Assumptions \\
 2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
 2022-10-05 & Rupinder Nagra, Jonathan Cels & Functional Requirements\\
 2022-10-05 & Arshdeep Aujla & Constraints\\
@@ -182,6 +184,15 @@ how to play chess.}
 
 \section{Assumptions}
 
+\begin{enumerate}[{A}1., leftmargin=2\parindent]
+    \item Users of the board have knowledge of the starting position of each of the pieces. \\
+    \item Users will not make illegal moves outsie of beginner mode. \\
+    \item Game termination as dictated by the rules of chess \cite{RulesofChess} \\
+    \item {During gameplay, users will not take back moves. When a piece is layed
+    on the board, that move is final.} \\
+    \item Users will have the knowledge of bluetooth setup and connection. \\
+\end{enumerate}
+
 \section{Constraints}
 
 \begin{table}[H]
@@ -249,16 +260,22 @@ format. The application will be constrained to a 2-dimensional model of the hard
 
     The context of the system invloves two integrated but separate system components, as well as two distinct end users.
 
-    \begin{figure}[H]
-    \centering
-        \includegraphics[scale=0.65]{chess-connect-system-context.png}
-        \caption{System Context}
-        \label{Fig_SystemContext} 
-    \end{figure}
-}
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.65]{chess-connect-system-context.png}
+    \caption{Overall System Context}
+    \label{Fig_SystemContext} 
+  \end{center}
+\end{figure}
 
-\subsection{Behaviour Overview}{
-
+\subsection{Behaviour Overview}
+\begin{figure}[H]
+    \begin{center}
+      \includegraphics[scale=0.8]{Hardware_System_Context_Diagram.jpeg}
+      \caption{On-board System Context}
+      \label{Fig_SystemContext2} 
+    \end{center}
+  \end{figure}
 
 \subsection{Normal Operation}
 \subsubsection{Description}{
@@ -379,9 +396,9 @@ format. The application will be constrained to a 2-dimensional model of the hard
       \hline
       s\_g\{1-8\} & Volts & States of tiles g1 - g8 on the board. " " \\
       \hline
-      sw\_3pos\_p{1-2} & Volts & The three-position switch for both players is located
-      on top of the board on their respective sides. It toggles between the beginner 
-      advice, engine advice and no advice modes for each player.\\
+      sw\_3pos & Volts & The three-position switch is located
+      on top of the board. It toggles between the beginner 
+      advice, engine advice and normal modes.\\
       \hline
       tieB\_p\{1-2\} & Volts & The ``draw'' push-button for each player is located on 
       the top of the board on their respective sides. When both players press their button
@@ -415,7 +432,6 @@ format. The application will be constrained to a 2-dimensional model of the hard
       \end{tabular}
   \label{Table}
   \end{table}
-
 
 
 \section{Requirements}
