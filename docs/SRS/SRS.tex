@@ -10,162 +10,78 @@
 \usepackage{longtable}
 \usepackage{xfrac}
 \usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{float}
 \usepackage{siunitx}
-\usepackage{booktabs}
 \usepackage{caption}
 \usepackage{pdflscape}
 \usepackage{afterpage}
-
+\usepackage{fullpage}
+\usepackage{titlesec}
+\usepackage[shortlabels]{enumitem}
 \usepackage[round]{natbib}
-
-%\usepackage{refcheck}
-
-\hypersetup{
-    bookmarks=true,         % show bookmarks bar?
-      colorlinks=true,       % false: boxed links; true: colored links
-    linkcolor=red,          % color of internal links (change box color with linkbordercolor)
-    citecolor=green,        % color of links to bibliography
-    filecolor=magenta,      % color of file links
-    urlcolor=cyan           % color of external links
-}
+\usepackage{array}
 
 \input{../Comments}
 \input{../Common}
+\graphicspath{{./images/}}
 
-% For easy change of table widths
-\newcommand{\colZwidth}{1.0\textwidth}
-\newcommand{\colAwidth}{0.13\textwidth}
-\newcommand{\colBwidth}{0.82\textwidth}
-\newcommand{\colCwidth}{0.1\textwidth}
-\newcommand{\colDwidth}{0.05\textwidth}
-\newcommand{\colEwidth}{0.8\textwidth}
-\newcommand{\colFwidth}{0.17\textwidth}
-\newcommand{\colGwidth}{0.5\textwidth}
-\newcommand{\colHwidth}{0.28\textwidth}
+\setcounter{secnumdepth}{4}
 
-% Used so that cross-references have a meaningful prefix
-\newcounter{defnum} %Definition Number
-\newcommand{\dthedefnum}{GD\thedefnum}
-\newcommand{\dref}[1]{GD\ref{#1}}
-\newcounter{datadefnum} %Datadefinition Number
-\newcommand{\ddthedatadefnum}{DD\thedatadefnum}
-\newcommand{\ddref}[1]{DD\ref{#1}}
-\newcounter{theorynum} %Theory Number
-\newcommand{\tthetheorynum}{T\thetheorynum}
-\newcommand{\tref}[1]{T\ref{#1}}
-\newcounter{tablenum} %Table Number
-\newcommand{\tbthetablenum}{T\thetablenum}
-\newcommand{\tbref}[1]{TB\ref{#1}}
-\newcounter{assumpnum} %Assumption Number
-\newcommand{\atheassumpnum}{P\theassumpnum}
-\newcommand{\aref}[1]{A\ref{#1}}
-\newcounter{goalnum} %Goal Number
-\newcommand{\gthegoalnum}{P\thegoalnum}
-\newcommand{\gsref}[1]{GS\ref{#1}}
-\newcounter{instnum} %Instance Number
-\newcommand{\itheinstnum}{IM\theinstnum}
-\newcommand{\iref}[1]{IM\ref{#1}}
-\newcounter{reqnum} %Requirement Number
-\newcommand{\rthereqnum}{P\thereqnum}
-\newcommand{\rref}[1]{R\ref{#1}}
-\newcounter{nfrnum} %NFR Number
-\newcommand{\rthenfrnum}{NFR\thenfrnum}
-\newcommand{\nfrref}[1]{NFR\ref{#1}}
-\newcounter{lcnum} %Likely change number
-\newcommand{\lthelcnum}{LC\thelcnum}
-\newcommand{\lcref}[1]{LC\ref{#1}}
-
-\usepackage{fullpage}
-
-\newcommand{\deftheory}[9][Not Applicable]
-{
-\newpage
-\noindent \rule{\textwidth}{0.5mm}
-
-\paragraph{RefName: } \textbf{#2} \phantomsection 
-\label{#2}
-
-\paragraph{Label:} #3
-
-\noindent \rule{\textwidth}{0.5mm}
-
-\paragraph{Equation:}
-
-#4
-
-\paragraph{Description:}
-
-#5
-
-\paragraph{Notes:}
-
-#6
-
-\paragraph{Source:}
-
-#7
-
-\paragraph{Ref.\ By:}
-
-#8
-
-\paragraph{Preconditions for \hyperref[#2]{#2}:}
-\label{#2_precond}
-
-#9
-
-\paragraph{Derivation for \hyperref[#2]{#2}:}
-\label{#2_deriv}
-
-#1
-
-\noindent \rule{\textwidth}{0.5mm}
-
-}
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 \begin{document}
 
-\title{Software Requirements Specification for Chess Connect: Online tools combined with on-board vision to improve and share your game} 
+\title{Software Requirements Specification for \progname{}: Online tools combined with on-board vision to improve and share your game} 
 \author{\authname}
-\date{September 27, 2022}
+\date{October 4th, 2022}
 	
 \maketitle
 
 ~\newpage
 
-\pagenumbering{roman}
-
 \tableofcontents
 
 ~\newpage
 
-\section*{Revision History}
-
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\addcontentsline{toc}{section}{Table of Revisions}
+\section*{Table of Revisions}
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Sept 27, 2022 & 1.0 & General naming changes and formatting start\\
-Date 2 & 1.1 & Notes\\
+2022-10-04 & Jonathan Cels & Template creation and document formatting\\ 
+2022-10-04 & Jonathan Cels & Non-functional requirements\\
+2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
+2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
+2022-10-05 & Rupinder Nagra, Jonathan Cels & Functional Requirements\\
+2022-10-05 & Arshdeep Aujla & Constraints\\
+2022-10-05 & Alexander Van Kralingen & Added Use Cases/Scenarios. Fixed system context diagram position. Added likely change.\\
+2022-10-05 & Rupinder Nagra & Purpose, Likely Changes and Unlikely Changes\\
+2022-10-05 & Alexander Van Kralingen & Added Undesired Event Handling section and a likely change.\\
+2022-10-05 & Arshdeep Aujla & Characteristics of Intended User, Stakeholders\\
+date & name & change\\
 \bottomrule
 \end{tabularx}
+\end{table}
 
 ~\newpage
 
-\section{Reference Material}
-
-This section records info for easy reference.
+\section{Units, Terms, Acronyms, and Abbreviations}
 
 \subsection{Table of Units}
-
 Throughout this document SI (Syst\`{e}me International d'Unit\'{e}s) is employed
 as the unit system.  In addition to the basic units, several derived units are
 used as described below.  For each unit, the symbol is given followed by a
 description of the unit and the SI name.
-~\newline
 
-\renewcommand{\arraystretch}{1.2}
-%\begin{table}[ht]
+\begin{table}[ht]
   \noindent \begin{tabular}{l l l} 
     \toprule		
     \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
@@ -179,40 +95,19 @@ description of the unit and the SI name.
     \si{\watt} & power & watt (W = \si{\joule\per\second})\\
     \bottomrule
   \end{tabular}
-  %	\caption{Provide a caption}
-%\end{table}
+\end{table}
 
-\subsection{Table of Symbols}
-
-The table that follows summarizes the symbols used in this document along with
-their units.  The choice of symbols was made to be consistent with the heat
-transfer literature and with existing documentation for solar water heating
-systems.  The symbols are listed in alphabetical order.
-
-\renewcommand{\arraystretch}{1.2}
-%\noindent \begin{tabularx}{1.0\textwidth}{l l X}
-\noindent \begin{longtable*}{l l p{12cm}} \toprule
-\textbf{symbol} & \textbf{unit} & \textbf{description}\\
-\midrule 
-$A_C$ & \si[per-mode=symbol] {\square\metre} & coil surface area
-\\
-$A_\text{in}$ & \si[per-mode=symbol] {\square\metre} & surface area over 
-which heat is transferred in
-\\ 
-\bottomrule
-\end{longtable*}
-\plt{Use your problems actual symbols.  The si package is a good idea to use for
-  units.}
+\newpage
 
 \subsection{Abbreviations and Acronyms}
-
-\renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   A & Assumption\\
+  CSA & Canadian Standards Association\\
   DD & Data Definition\\
+  FIDE & International Chess Federation or Fédération Internationale des Échecs\\
   GD & General Definition\\
   GS & Goal Statement\\
   IM & Instance Model\\
@@ -224,1077 +119,682 @@ which heat is transferred in
   R & Requirement\\
   SRS & Software Requirements Specification\\
   T & Theoretical Model\\
+  VnV & Verification and Validation\\
+  WCAG & Web Content Accessibility Guidelines\\
   \bottomrule
 \end{tabular}\\
 
-
 \subsection{Mathematical Notation}
 
-\plt{This section is optional, but should be included for projects that make use
-  of notation to convey mathematical information.  For instance, if typographic
-  conventions (like bold face font) are used to distinguish matrices, this
-  should be stated here.  If symbols are used to show mathematical operations,
-  these should be summarized here.  In some cases the easiest way to summarize
-  the notation is to point to a text or other source that explains the
-  notation.}
-
-\plt{This section was added to the template because some students use very
-  domain specific notation.  This notation will not be readily understandable to
-  people outside of your domain.  It should be explained.}
-
-\newpage
-
-\pagenumbering{arabic}
-
-\plt{This SRS template is based on \citet{SmithAndLai2005, SmithEtAl2007}.  It
-  will get you started.  You should not modify the section headings, without
-  first discussing the change with the course instructor.  Modification means
-  you are not following the template, which loses some of the advantage of a
-  template, especially standardization.  Although the bits shown below do not
-  include type information, you may need to add this information for your
-  problem.  If you are unsure, please can ask the instructor.}
-
-\plt{Feel free to change the appearance of the report by modifying the LaTeX
-  commands.}
-
-\plt{This template document assumes that a single program is being documented.
-  If you are documenting a family of models, you should start with a commonality
-  analysis.  A separate template is provided for this.  For program
-  families you should look at \cite{Smith2006, SmithMcCutchanAndCarette2017}.
-  Single family member programs are often programs based on a single physical
-  model.  General purpose tools are usually documented as a family.  Families of
-  physical models also come up.}
-
-\plt{The SRS is not generally written, or read, sequentially.  The SRS is a
-  reference document.  It is generally read in an ad hoc order, as the need
-  arises.  For writing an SRS, and for reading one for the first time, the
-  suggested order of sections is:
-\begin{itemize}
-\item Goal Statement
-\item Instance Models
-\item Requirements
-\item Introduction
-\item Specific System Description
-\end{itemize}
-}
-
-\plt{Guiding principles for the SRS document:
-\begin{itemize}
-\item Do not repeat the same information at the same abstraction level.  If
-  information is repeated, the repetition should be at a different abstraction
-  level.  For instance, there will be overlap between the scope section and the
-  assumptions, but the scope section will not go into as much detail as the
-  assumptions section.
-\end{itemize}
-}
-
-\plt{The template description comments should be disabled before submitting this
-  document for grading.}
-
-\plt{You can borrow any wording from the text given in the template.  It is part
-  of the template, and not considered an instance of academic integrity.  Of
-  course, you need to cite the source of the template.}
-
-\plt{When the documentation is done, it should be possible to trace back to the
-  source of every piece of information.  Some information will come from
-  external sources, like terminology.  Other information will be derived, like
-  General Definitions.}
-
-\plt{An SRS document should have the following qualities: unambiguous,
-  consistent, complete, validatable, abstract and traceable.}
-
-\plt{The overall goal of the SRS is that someone that meets the Characteristics
-  of the Intended Reader (Section~\ref{sec_IntendedReader}) can learn,
-  understand and verify the captured domain knowledge.  They should not have to
-  trust the authors of the SRS on any statements.  They should be able to
-  independently verify/derive every statement made.}
+\subsection{Terminology and  Definitions}
 
 \section{Introduction}
-
-\plt{The introduction section is written to introduce the problem.  It starts
-  general and focuses on the problem domain. The general advice is to start with
-a paragraph or two that describes the problem, followed by a ``roadmap''
-paragraph.  A roadmap orients the reader by telling them what sub-sections to
-expect in the Introduction section.}
-
-\subsection{Purpose of Document}
-
-\plt{This section summarizes the purpose of the SRS document.  It does not focus
-  on the problem itself.  The problem is described in the ``Problem
-  Description'' section (Section~\ref{Sec_pd}).  The purpose is for the document
-  in the context of the project itself, not in the context of this course.
-  Although the ``purpose'' of the document is to get a grade, you should not
-  mention this.  Instead, ``fake it'' as if this is a real project.  The purpose
-  section will be similar between projects.  The purpose of the document is the
-  purpose of the SRS, including communication, planning for the design stage,
-  etc.}
-
-\subsection{Scope of Requirements} 
-
-\plt{Modelling the real world requires simplification.  The full complexity of
-  the actual physics, chemistry, biology is too much for existing models, and
-  for existing computational solution techniques.  Rather than say what is in
-  the scope, it is usually easier to say what is not.  You can think of it as
-  the scope is initially everything, and then it is constrained to create the
-  actual scope.  For instance, the problem can be restricted to 2 dimensions, or
-  it can ignore the effect of temperature (or pressure) on the material
-  properties, etc.}  
-
-\plt{The scope section is related to the assumptions section
-  (Section~\ref{sec_assumpt}).  However, the scope and the assumptions are not
-  at the same level of abstraction.  The scope is at a high level.  The focus is
-  on the ``big picture'' assumptions.  The assumptions section lists, and
-  describes, all of the assumptions.}
-
-\subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
-
-\plt{This section summarizes the skills and knowledge of the readers of the
-  SRS.  It does NOT have the same purpose as the ``User Characteristics''
-  section (Section~\ref{SecUserCharacteristics}).  The intended readers are the
-  people that will read, review and maintain the SRS.  They are the people that
-  will conceivably design the software that is intended to meet the
-  requirements.  The user, on the other hand, is the person that uses the
-  software that is built.  They may never read this SRS document.  Of course,
-  the same person could be a ``user'' and an ``intended reader.''}
-
-\plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
-  understanding of physics, say what kind of physics and at what level.  For
-  instance, is high school physics adequate, or should the reader have had a
-  graduate course on advanced quantum mechanics?}
-
-\subsection{Organization of Document}
-
-\plt{This section provides a roadmap of the SRS document.  It will help the
-  reader orient themselves.  It will provide direction that will help them
-  select which sections they want to read, and in what order.  This section will
-  be similar between project.}
-
-\section{General System Description}
-
-This section provides general information about the system.  It identifies the
-interfaces between the system and its environment, describes the user
-characteristics and lists the system constraints.  \plt{This text can likely be
-  borrowed verbatim.}
-
-\plt{The purpose of this section is to provide general information about the
-  system so the specific requirements in the next section will be easier to
-  understand. The general system description section is designed to be
-  changeable independent of changes to the functional requirements documented in
-  the specific system description. The general system description provides a
-  context for a family of related models.  The general description can stay the
-  same, while specific details are changed between family members.}
-
-\subsection{System Context}
-
-\plt{Your system context will include a figure that shows the abstract view of
-  the software.  Often in a scientific context, the program can be viewed
-  abstractly following the design pattern of Inputs $\rightarrow$ Calculations
-  $\rightarrow$ Outputs.  The system context will therefore often follow this
-  pattern.  The user provides inputs, the system does the calculations, and then
-  provides the outputs to the user.  The figure should not show all of the
-  inputs, just an abstract view of the main categories of inputs (like material
-  properties, geometry, etc.).  Likewise, the outputs should be presented from
-  an abstract point of view.  In some cases the diagram will show other external
-  entities, besides the user.  For instance, when the software product is a
-  library, the user will be another software program, not an actual end user.
-  If there are system constraints that the software must work with external
-  libraries, these libraries can also be shown on the System Context diagram.
-  They should only be named with a specific library name if this is required by
-  the system constraint.}
-
-\begin{figure}[h!]
-\begin{center}
- \includegraphics[width=0.6\textwidth]{SystemContextFigure}
-\caption{System Context}
-\label{Fig_SystemContext} 
-\end{center}
-\end{figure}
-
-\plt{For each of the entities in the system context diagram its responsibilities
-  should be listed.  Whenever possible the system should check for data quality,
-  but for some cases the user will need to assume that responsibility.  The list
-  of responsibilites should be about the inputs and outputs only, and they
-  should be abstract.  Details should not be presented here.  However, the
-  information should not be so abstract as to just say ``inputs'' and
-  ``outputs''.  A summarizing phrase can be used to characterize the inputs.
-  For instance, saying ``material properties'' provides some information, but it
-  stays away from the detail of listing every required properties.}
-
-\begin{itemize}
-\item User Responsibilities:
-\begin{itemize}
-\item 
-\end{itemize}
-\item \progname{} Responsibilities:
-\begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
-\end{itemize}
-\end{itemize}
-
-\subsection{User Characteristics} \label{SecUserCharacteristics}
-
-\plt{This section summarizes the knowledge/skills expected of the user.
-  Measuring usability, which is often a required non-function requirement,
-  requires knowledge of a typical user.  As mentioned above, the user is a
-  different role from the ``intended reader,'' as given in
-  Section~\ref{sec_IntendedReader}.  As in Section~\ref{sec_IntendedReader}, the
-  user characteristics should be specific an unambiguous.  For instance, ``The
-  end user of \progname{} should have an understanding of undergraduate Level 1
-  Calculus and Physics.''}
-
-\subsection{System Constraints}
-
-\plt{System constraints differ from other type of requirements because they
-  limit the developers' options in the system design and they identify how the
-  eventual system must fit into the world. This is the only place in the SRS
-  where design decisions can be specified.  That is, the quality requirement for
-  abstraction is relaxed here.  However, system constraints should only be
-  included if they are truly required.}
-
-\section{Specific System Description}
-
-This section first presents the problem description, which gives a high-level
-view of the problem to be solved.  This is followed by the solution characteristics
-specification, which presents the assumptions, theories, definitions and finally
-the instance models.  \plt{Add any project specific details that are relevant
-  for the section overview.}
-
-\subsection{Problem Description} \label{Sec_pd}
-
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
-
-\subsubsection{Terminology and  Definitions}
-
-\plt{This section is expressed in words, not with equations.  It provide the
-  meaning of the different words and phrases used in the domain of the problem.
-The terminology is used to introduce concepts from the world outside of the
-mathematical model  The terminology provides a real world connection to give the
-mathematical model meaning.}
-
-This subsection provides a list of terms that are used in the subsequent
-sections and their meaning, with the purpose of reducing ambiguity and making it
-easier to correctly understand the requirements:
-
-\begin{itemize}
-
-\item 
-
-\end{itemize}
-
-\subsubsection{Physical System Description} \label{sec_phySystDescrip}
-
-\plt{The purpose of this section is to clearly and unambiguously state the
-  physical system that is to be modelled. Effective problem solving requires a
-  logical and organized approach. The statements on the physical system to be
-  studied should cover enough information to solve the problem. The physical
-  description involves element identification, where elements are defined as
-  independent and separable items of the physical system. Some example elements
-  include acceleration due to gravity, the mass of an object, and the size and
-  shape of an object. Each element should be identified and labelled, with their
-  interesting properties specified clearly. The physical description can also
-  include interactions of the elements, such as the following: i) the
-  interactions between the elements and their physical environment; ii) the
-  interactions between elements; and, iii) the initial or boundary conditions.}
-
-The physical system of \progname{}, as shown in Figure~?,
-includes the following elements:
-
-\begin{itemize}
-
-\item[PS1:] 
-
-\item[PS2:] ...
-
-\end{itemize}
-
-\plt{A figure here makes sense for most SRS documents}
-
-% \begin{figure}[h!]
-% \begin{center}
-% %\rotatebox{-90}
-% {
-%  \includegraphics[width=0.5\textwidth]{<FigureName>}
-% }
-% \caption{\label{<Label>} <Caption>}
-% \end{center}
-% \end{figure}
-
-\subsubsection{Goal Statements}
-
-\plt{The goal statements refine the ``Problem Description''
-  (Section~\ref{Sec_pd}).  A goal is a functional objective the system under
-  consideration should achieve. Goals provide criteria for sufficient
-  completeness of a requirements specification and for requirements
-  pertinence. Goals will be refined in Section “Instanced Models”
-  (Section~\ref{sec_instance}). Large and complex goals should be decomposed
-  into smaller sub-goals.  The goals are written abstractly, with a minimal
-  amount of technical language.  They should be understandable by non-domain
-  experts.}
-
-\noindent Given the \plt{inputs}, the goal statements are:
-
-\begin{itemize}
-
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_meaningfulLabel}:] \plt{One
-    sentence description of the goal.  There may be more than one.  Each Goal
-    should have a meaningful label.}
-
-\end{itemize}
-
-\subsection{Solution Characteristics Specification}
-
-\plt{This section specifies the information in the solution domain of the system
-  to be developed. This section is intended to express what is required in
-  such a way that analysts and stakeholders get a clear picture, and the
-  latter will accept it. The purpose of this section is to reduce the problem
-  into one expressed in mathematical terms. Mathematical expertise is used to
-  extract the essentials from the underlying physical description of the
-  problem, and to collect and substantiate all physical data pertinent to the
-  problem.}
-
-\plt{This section presents the solution characteristics by successively refining
-  models.  It starts with the abstract/general Theoretical Models (TMs) and
-  refines them to the concrete/specific Instance Models (IMs).  If necessary
-  there are intermediate refinements to General Definitions (GDs).  All of these
-  refinements can potentially use Assumptions (A) and Data Definitions (DD).
-  TMs are refined to create new models, that are called GMs or IMs. DDs are not
-  refined; they are just used. GDs and IMs are derived, or refined, from other
-  models. DDs are not derived; they are just given. TMs are also just given, but
-  they are refined, not used.  If a potential DD includes a derivation, then
-  that means it is refining other models, which would make it a GD or an IM.}
-
-\plt{The above makes a distinction between ``refined'' and ``used.'' A model is
-  refined to another model if it is changed by the refinement. When we change a
-  general 3D equation to a 2D equation, we are making a refinement, by applying
-  the assumption that the third dimension does not matter. If we use a
-  definition, like the definition of density, we aren't refining, or changing
-  that definition, we are just using it.}
-
-\plt{The same information can be a TM in one problem and a DD in another.  It is
-  about how the information is used.  In one problem the definition of
-  acceleration can be a TM, in another it would be a DD.}
-
-\plt{There is repetition between the information given in the different chunks
-  (TM, GDs etc) with other information in the document.  For instance, the
-  meaning of the symbols, the units etc are repeated.  This is so that the
-  chunks can stand on their own when being read by a reviewer/user.  It also
-  facilitates reuse of the models in a different context.}
-
-\noindent \plt{The relationships between the parts of the document are show in
-  the following figure.  In this diagram ``may ref'' has the same role as
-  ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
-  reference (use) Assumptions.}
-
-\begin{figure}[H]
-  \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}
-\end{figure}
-
-The instance models that govern \progname{} are presented in
-Subsection~\ref{sec_instance}.  The information to understand the meaning of the
-instance models and their derivation is also presented, so that the instance
-models can be verified.
-
-\subsubsection{Assumptions} \label{sec_assumpt}
-
-\plt{The assumptions are a refinement of the scope.  The scope is general, where
-  the assumptions are specific.  All assumptions should be listed, even those
-  that domain experts know so well that they are rarely (if ever) written down.}
-\plt{The document should not take for granted that the reader knows which
-  assumptions have been made. In the case of unusual assumptions, it is
-  recommended that the documentation either include, or point to, an explanation
-  and justification for the assumption.}
-
-This section simplifies the original problem and helps in developing the
-theoretical model by filling in the missing information for the physical
-system. The numbers given in the square brackets refer to the theoretical model
-[T], general definition [GD], data definition [DD], instance model [IM], or
-likely change [LC], in which the respective assumption is used.
-
-\begin{itemize}
-
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
-  \plt{Short description of each assumption.  Each assumption
-    should have a meaningful label.  Use cross-references to identify the
-    appropriate traceability to T, GD, DD etc., using commands like dref, ddref
-    etc.  Each assumption should be atomic - that is, there should not be an
-    explicit (or implicit) ``and'' in the text of an assumption.}
-
-\end{itemize}
-
-\subsubsection{Theoretical Models}\label{sec_theoretical}
-
-\plt{Theoretical models are sets of abstract mathematical equations or axioms
-  for solving the problem described in Section ``Physical System Description''
-  (Section~\ref{sec_phySystDescrip}). Examples of theoretical models are
-  physical laws, constitutive equations, relevant conversion factors, etc.}
-
-This section focuses on the general equations and laws that \progname{} is based
-on.  \plt{Modify the examples below for your problem, and add additional models
-  as appropriate.}
-
-~\newline
-
-\noindent
-\deftheory
-% #2 refname of theory
-{T:COE}
-% #3 label
-{Conservation of thermal energy}
-% #4 equation
-{
-  $-{\bf \nabla \cdot q} + g$ = $\rho C \frac{\partial T}{\partial t}$
+\subsection{Document Purpose}
+\subsection{Characteristics of Intended Reader}
+{The document is written with the purpose of guiding development for the \progname{} team. The intended readers of this document 
+are the developers of \progname{}, Dr.~Spencer Smith, and Nicholas Annable, the teaching assistant assigned to this project. The 
+document is thus written for an audience that is well-versed in formal specification at a university level. This includes models, 
+diagrams, and mathematical notation. Readers should also have a university-level understanding of electrical circuit knowledge.}
+
+\subsection{Characteristics of Intended User}
+{This project will assist chess players of any level that are looking for a tool to help them learn and study the game. For beginners, 
+the board serves as a learning tutorial and a general introduction to the game, while intermediate and advanced players can use the 
+engine move recommendations to study new lines, puzzles, and specific positions to enhance their chess skills.}
+\subsection{Stakeholders}
+{The professor and TAs for the course SFWRENG 4G06 as they will be providing the feedback which will directly affect the project’s development. 
+Society is also a stakeholder because this project will provide the members of society another gateway to be involved in the community through the game of chess. Lastly, this project will 
+also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real-time.}
+
+\section{Problem Description}
+
+{Online chess has functionality for both beginners and experienced players to
+learn and practice the game. However, these forms of learning emphasize a
+visual style of learning using a standard keyboard and mouse, while physical
+boards place emphasis on tactile learning when learning or studying the game.
+The highest-rated chess players often use a combination of the two styles to
+optimize their play. However, no option exists for players of any skill level to
+integrate their over-the-board and online play with one solution.\\
+Chess Connect plans to centralize these two mediums of studying the game in
+order to provide flexibility and remove constraints for new players in learning
+how to play chess.}
+
+
+\section{Assumptions}
+
+\section{Constraints}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{12cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      C1 & The cost should not exceed CAD \$750\\
+      \hline 
+      Rationale & This is the maximum budget alloted to this project as per the course requirements.\\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
+  
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{12cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      C2 & The project must be completed by the winter semester of 2023\\
+      \hline 
+      Rationale & This is the allocated time for this project as per the course requirements.\\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}  
+
+\section{Scope}
+{The system is called \progname{}, and will include a software application and physical hardware device. The hardware will take the 
+form of a chess set, and will collect and relay move and piece data. The device will convey the best moves for the specific board 
+position, and will convey legal moves for specific pieces.The device will be connected to the software application, relaying and 
+receiving relevant data. The software application will model and track the physical device, and will broadcast the data in an accessible 
+format. The application will be constrained to a 2-dimensional model of the hardware device, showing a top-down view of the game.}
+
+\bigskip
+\noindent{\textbf{In-scope} items for the system include the following:
+\begin{enumerate}
+    \item Modeling and tracking a chess game played using the \progname{} hardware
+    \item Displaying and broadcasting the game state on the \progname{} software application
+    \item Giving users an option to choose between beginner mode, engine mode, and normal mode
+    \begin{itemize}
+        \item Beginner mode will display legal moves for individual pieces when a chess piece is picked up, and will warn the players when an illegal move is made
+        \item Engine mode will display the best moves as determined by a chess engine for the position
+        \item Normal mode will disable the engine and beginner mode features. This is intended for regular play between experienced players
+    \end{itemize}
+\end{enumerate}}
+
+\bigskip
+
+\noindent{The following items are deemed to be \textbf{out of scope}:
+\begin{enumerate}
+    \item FIDE (International Chess Federation) standards for tournament appropriate chess equipment
+    \item Tracking and support for alternate chess variants such as Chess960, Atomic Chess, King of the Hill. More information found here: \cite{ListOfChessVariants2022}.
+    \item Proper tracking of alternate starting positions like puzzles
+    \item Proper tracking of illegal moves and rule violations when warnings are ignored
+\end{enumerate}}
+
+\section{Project Overview}
+\subsection{System Context Diagram}{
+
+    The context of the system invloves two integrated but separate system components, as well as two distinct end users.
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[scale=0.65]{chess-connect-system-context.png}
+        \caption{System Context}
+        \label{Fig_SystemContext} 
+    \end{figure}
 }
-% #5 description
-{
-  The above equation gives the conservation of energy for transient heat transfer in a material
-  of specific heat capacity $C$ (\si{\joule\per\kilogram\per\celsius}) and density $\rho$ 
-  (\si{\kilogram\per\cubic\metre}), where $\bf q$ is the thermal flux vector (\si{\watt\per\square\metre}),
-  $g$ is the volumetric heat generation
-  (\si{\watt\per\cubic\metre}), $T$ is the temperature
-  (\si{\celsius}),  $t$ is time (\si{\second}), and $\nabla$ is
-  the gradient operator.  For this equation to apply, other forms
-  of energy, such as mechanical energy, are assumed to be negligible in the
-  system (\aref{A_OnlyThermalEnergy}).  In general, the material properties ($\rho$ and $C$) depend on temperature.
+
+\subsection{Behaviour Overview}{
+
 }
-% #6 Notes
-{
-None.
+
+\subsection{Normal Operation}
+\subsubsection{Description}{
+    The normal operation of the chess board involves configuring game mode and settings, reading the physical positions and identifiers (magnetic strength) of the pieces, 
+    lighting up corresponding LEDs and determining valid moves on the microcontroller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
+    calculated by a chess engine and displayed by LEDs on the board) and Beginner Mode (valid moves displayed by LED when a piece is picked up). The microcontroller will also be 
+    simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of "best" moves from the server. The server will be calculating these 
+    best moves in real time depending on the configuration of the pieces on the board sent from the chess board, and sending it back over Bluetooth every time it is queried
+    while the game is in "Engine Mode". The server will also be communicating all of this information to a Web Application where users can tune in and watch the pieces and see
+    game stats in real time.
 }
-% #7 Source
-{
-  \url{http://www.efunda.com/formulae/heat_transfer/conduction/overview_cond.cfm}
+
+\subsubsection{Use Cases/Scenarios}{
+    
+    \paragraph{Normal Mode}{
+        Users play the game without any LED feedback. This would typically be a formal match involving players that are familiar with the game. Moves would still be broadcast to the
+        Web-App, and move history will still be recorded for future reference.
+    }
+        
+    \paragraph{Engine Mode}{
+        Users play the game with LED feedback indicating which pieces to move to which positions that would be statistically the most probable move to win the game. This game mode would
+        be most likely played as a way to improve one's skill level and to gain a deeper understanding of the game.
+    }
+    
+    \paragraph{Beginner Mode}{
+        Users play the game with LED feedback on lifting a piece. The piece lifted will be determiend by the hardware and corresponding valid moves will be lit up on the board. This game
+        mode is designed to help beginners learn the game of chess. Valid moves will involve more complex strategies such as "en passant" and "castling."
+    }
+        
+    \paragraph{Studying Past Games}{
+        The Web-App will have a record of the moves made in past games. This can be used to study the game moves and understand scenarios which could have been handled differently
+        to produce a more favourable outcome.
+    }
+    
+    \paragraph{Tournament Play}{
+        Since the moves made in the game will be broadcasted live to the internet via the Web-App, tournaments can be held with spectators watching the game in real time.
+    }
 }
-% #8 Referenced by
-{
-  \dref{ROCT}
+
+\subsection{Undesired Scenario Handling}{
+    \paragraph{Earthquake Scenario}{
+        Also known as the "sore loser scenario," when some or all of the pieces are removed from their spaces within a short amount of time, the game will be ended as a draw. 
+    }
+    
+    \paragraph{Power Loss}{
+        When the power to the board is cut, the Web-App will end the game as a draw. The board will also have to be reconfigured back into the default starting positions for all pieces.
+    }
+    
+    \paragraph{Bluetooth Disconnection}{
+        On bluetooth disconnection, the board will attempt to reconnect for 30 seconds. Upon the expiration of this timer, the game will end as a draw.
+    }
+    
+    \paragraph{Internet Disconnection}{
+        On internet disconnection, the server will keep a history of past moves made. On reconnection, the game will be updated to reflect these moves as they are sent through the
+        queue to the hosted interface.
+    }
+    
+    \paragraph{Cheating}{
+        If pieces are moved or removed out of turn, the spaces which were affected will be lit up with red LEDs. When the board is returned to the state before cheating occured,
+        the game will resume as normal.
+    }
+    
 }
-% #9 Preconditions
-{
-None
-}
-% #1 derivation - not applicable by default
-{}
 
-\plt{``Ref.\ By'' is used repeatedly with the different types of information.
-  This stands for Referenced By.  It means that the models, definitions and
-  assumptions listed reference the current model, definition or assumption.
-  This information is given for traceability.  Ref. By provides a pointer in the
-  opposite direction to what we commonly do.  You still need to have a reference
-  in the other direction pointing to the current model, definition or
-  assumption.  As an example, if T1 is referenced by G2, that means that G2 will
-  explicitly include a reference to T1.}
+\section{System Level Variables}
+\subsection{Constants}
 
-~\newline
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{5cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{5cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Constant & Unit & Value\\
+      \hline
+      Chess board width & inches & 12\\
+     \hline
+     Chess board length & inches & 12\\
+     \hline
+     Chess board tile width & inches & 1.5\\
+     \hline 
+     Chess board tile length & inches & 1.5\\ 
+     \hline 
+     Supply Power to Board & Volts & 110 VAC\\
+     \hline
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
-\subsubsection{General Definitions}\label{sec_gendef}
+\subsection{Monitored Variables}
 
-\plt{General Definitions (GDs) are a refinement of one or more TMs, and/or of
-  other GDs.  The GDs are less abstract than the TMs.  Generally the reduction
-  in abstraction is possible through invoking (using/referencing) Assumptions.
-  For instance, the TM could be Newton's Law of Cooling stated abstracting.  The
-  GD could take the general law and apply it to get a 1D equation.}
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{9cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Variable & Units & Description\\
+      \hline
+      s\_a\{1-8\} & Volts & States of tiles a1 - a8 on the board. They are analog signals 
+      converted to digital and the state of the tile is determined. The possible states of 
+      each tile is empty, black/white pawn, black/white rook, black/white knight, 
+      black/white bishop, black/white queen, black/white king. \\
+      \hline
+      s\_b\{1-8\} & Volts & States of tiles b1 - b8 on the board. " " \\
+      \hline
+      s\_c\{1-8\} & Volts & States of tiles c1 - c8 on the board. " " \\
+      \hline
+      s\_d\{1-8\} & Volts & States of tiles d1 - d8 on the board. " " \\
+      \hline
+      s\_e\{1-8\} & Volts & States of tiles e1 - e8 on the board. " " \\
+      \hline
+      s\_f\{1-8\} & Volts & States of tiles f1 - f8 on the board. " " \\
+      \hline
+      s\_g\{1-8\} & Volts & States of tiles g1 - g8 on the board. " " \\
+      \hline
+      sw\_3pos\_p{1-2} & Volts & The three-position switch for both players is located
+      on top of the board on their respective sides. It toggles between the beginner 
+      advice, engine advice and no advice modes for each player.\\
+      \hline
+      tieB\_p\{1-2\} & Volts & The "draw" push-button for each player is located on 
+      the top of the board on their respective sides. When both players press their button
+      the game is a draw. \\
+      \hline
+      engine\_move & chess notation & The chess engine API provides best moves into 
+      the system. \\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
-This section collects the laws and equations that will be used in building the
-instance models.
+\subsection{Controlled Variables}
 
-\plt{Some projects may not have any content for this section, but the section
-  heading should be kept.}  \plt{Modify the examples below for your problem, and
-  add additional definitions as appropriate.}
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{9cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Variable & Units & Description\\
+      \hline 
+      LED\_row\{1-9\} & Volts & A total of 81 LEDS will be located under the board. They 
+      are on the corner of each tile and illuminate based on conditions of the inputs. \\
+      \hline 
+      LCD\_Display & Volts & An LCD Display is located on the chess board to indicate
+      best moves delivered by the engine. \\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
-~\newline
 
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& GD\refstepcounter{defnum}\thedefnum \label{NL}\\
-\hline
-Label &\bf Newton's law of cooling \\
-\hline
-% Units&$MLt^{-3}T^0$\\
-% \hline
-SI Units&\si{\watt\per\square\metre}\\
-\hline
-Equation&$ q(t) = h \Delta T(t)$  \\
-\hline
-Description &
-Newton's law of cooling describes convective cooling from a surface.  The law is
-stated as: the rate of heat loss from a body is proportional to the difference
-in temperatures between the body and its surroundings.
-\\
-& $q(t)$ is the thermal flux (\si{\watt\per\square\metre}).\\
-& $h$ is the heat transfer coefficient, assumed independent of $T$ (\aref{A_hcoeff})
-	(\si{\watt\per\square\metre\per\celsius}).\\
-&$\Delta T(t)$= $T(t) - T_{\text{env}}(t)$ is the time-dependent thermal gradient
-between the environment and the object (\si{\celsius}).
-\\
-\hline
-  Source & Citation here \\
-  \hline
-  Ref.\ By & \ddref{FluxCoil}, \ddref{FluxPCM}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection*{Detailed derivation of simplified rate of change of temperature}
-
-\plt{This may be necessary when the necessary information does not fit in the
-  description field.}
-\plt{Derivations are important for justifying a given GD.  You want it to be
-  clear where the equation came from.}
-
-\subsubsection{Data Definitions}\label{sec_datadef}
-
-\plt{The Data Definitions are definitions of symbols and equations that are
-  given for the problem.  They are not derived; they are simply used by other
-  models.  For instance, if a problem depends on density, there may be a data
-  definition for the equation defining density.  The DDs are given information
-  that you can use in your other modules.}
-
-\plt{All Data Definitions should be used (referenced) by at least one other
-  model.}
-
-This section collects and defines all the data needed to build the instance
-models. The dimension of each quantity is also given.  \plt{Modify the examples
-  below for your problem, and add additional definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{FluxCoil}\\
-\hline
-Label& \bf Heat flux out of coil\\
-\hline
-Symbol &$q_C$\\
-\hline
-% Units& $Mt^{-3}$\\
-% \hline
-  SI Units & \si{\watt\per\square\metre}\\
-  \hline
-  Equation&$q_C(t) = h_C (T_C - T_W(t))$, over area $A_C$\\
-  \hline
-  Description & 
-                $T_C$ is the temperature of the coil (\si{\celsius}).  $T_W$ is the temperature of the water (\si{\celsius}).  
-                The heat flux out of the coil, $q_C$ (\si{\watt\per\square\metre}), is found by
-                assuming that Newton's Law 
-                of Cooling applies (\aref{A_Newt_coil}).  This law (\dref{NL}) is used on the surface of
-                the coil, which has area $A_C$ (\si{\square\metre}) and heat 
-                transfer coefficient $h_C$
-                (\si{\watt\per\square\metre\per\celsius}).  This equation
-                assumes that the temperature of the coil is constant over time (\aref{A_tcoil}) and that it does not vary along the length
-                of the coil (\aref{A_tlcoil}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{ewat}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Data Types}\label{sec_datatypes}
-
-\plt{This section is optional.  In many scientific computing programs it isn't
-  necessary, since the inputs and outpus are straightforward types, like reals,
-  integers, and sequences of reals and integers.  However, for some problems it
-  is very helpful to capture the type information.}
-
-\plt{The data types are not derived; they are simply stated and used by other
-  models.}
-
-\plt{All data types must be used by at least one of the models.}
-
-\plt{For the mathematical notation for expressing types, the recommendation is
-  to use the notation of~\citet{HoffmanAndStrooper1995}.}
-
-This section collects and defines all the data types needed to document the
-models. \plt{Modify the examples below for your problem, and add additional
-  definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Type Name & Name for Type\\
-  \hline
-  Type Def & mathematical definition of the type\\
-  \hline
-  Description & description here
-  \\
-  \hline
-  Sources & Citation here, if the type is borrowed from another source\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Instance Models} \label{sec_instance}    
-
-\plt{The motivation for this section is to reduce the problem defined in
-  ``Physical System Description'' (Section~\ref{sec_phySystDescrip}) to one
-  expressed in mathematical terms. The IMs are built by refining the TMs and/or
-  GDs.  This section should remain abstract.  The SRS should specify the
-  requirements without considering the implementation.}
-
-This section transforms the problem defined in Section~\ref{Sec_pd} into 
-one which is expressed in mathematical terms. It uses concrete symbols defined 
-in Section~\ref{sec_datadef} to replace the abstract symbols in the models 
-identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
-
-The goals \plt{reference your goals} are solved by \plt{reference your instance
-  models}.  \plt{other details, with cross-references where appropriate.}
-\plt{Modify the examples below for your problem, and add additional models as
-  appropriate.}
-
-~\newline
-
-%Instance Model 1
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Number& IM\refstepcounter{instnum}\theinstnum \label{ewat}\\
-  \hline
-  Label& \bf Energy balance on water to find $T_W$\\
-  \hline
-  Input&$m_W$, $C_W$, $h_C$, $A_C$, $h_P$, $A_P$, $t_\text{final}$, $T_C$, 
-  $T_\text{init}$, $T_P(t)$ from \iref{epcm}\\
-  & The input is constrained so that $T_\text{init} \leq T_C$ (\aref{A_charge})\\
-  \hline
-  Output&$T_W(t)$, $0\leq t \leq t_\text{final}$, such that\\
-  &$\frac{dT_W}{dt} = \frac{1}{\tau_W}[(T_C - T_W(t)) + {\eta}(T_P(t) - T_W(t))]$,\\
-  &$T_W(0) = T_P(0) = T_\text{init}$ (\aref{A_InitTemp}) and $T_P(t)$ from \iref{epcm} \\
-  \hline
-  Description&$T_W$ is the water temperature (\si{\celsius}).\\
-  &$T_P$ is the PCM temperature (\si{\celsius}).\\
-  &$T_C$ is the coil temperature (\si{\celsius}).\\
-  &$\tau_W = \frac{m_W C_W}{h_C A_C}$ is a constant (\si{\second}).\\
-  &$\eta = \frac{h_P A_P}{h_C A_C}$ is a constant (dimensionless).\\
-  & The above equation applies as long as the water is in liquid form,
-  $0<T_W<100^o\text{C}$, where $0^o\text{C}$ and $100^o\text{C}$ are the melting
-  and boiling points of water, respectively (\aref{A_OpRange}, \aref{A_Pressure}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{epcm}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-%~\newline
-
-\subsubsection*{Derivation of ...}
-
-\plt{The derivation shows how the IM is derived from the TMs/GDs.  In cases
-  where the derivation cannot be described under the Description field, it will
-  be necessary to include this subsection.}
-
-\subsubsection{Input Data Constraints} \label{sec_DataConstraints}    
-
-Table~\ref{TblInputVar} shows the data constraints on the input output
-variables.  The column for physical constraints gives the physical limitations
-on the range of values that can be taken by the variable.  The column for
-software constraints restricts the range of inputs to reasonable values.  The
-software constraints will be helpful in the design stage for picking suitable
-algorithms.  The constraints are conservative, to give the user of the model the
-flexibility to experiment with unusual situations.  The column of typical values
-is intended to provide a feel for a common scenario.  The uncertainty column
-provides an estimate of the confidence with which the physical quantities can be
-measured.  This information would be part of the input if one were performing an
-uncertainty quantification exercise.
-
-The specification parameters in Table~\ref{TblInputVar} are listed in
-Table~\ref{TblSpecParams}.
-
-\begin{table}[!h]
-  \caption{Input Variables} \label{TblInputVar}
-  \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l l l c} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} &
-                             \textbf{Typical Value} & \textbf{Uncertainty}\\
-  \midrule 
-  $L$ & $L > 0$ & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol] {\metre} & 10\%
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\noindent 
-\begin{description}
-\item[(*)] \plt{you might need to add some notes or clarifications}
-\end{description}
-
-\begin{table}[!h]
-\caption{Specification Parameter Values} \label{TblSpecParams}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Value} \\
-  \midrule 
-  $L_\text{min}$ & 0.1 \si{\metre}\\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
-
-\noindent
-A correct solution must exhibit \plt{fill in the details}.  \plt{These
-  properties are in addition to the stated requirements.  There is no need to
-  repeat the requirements here.  These additional properties may not exist for
-  every problem.  Examples include conservation laws (like conservation of
-  energy or mass) and known constraints on outputs, which are usually summarized
-  in tabular form.  A sample table is shown in Table~\ref{TblOutputVar}}
-
-\begin{table}[!h]
-\caption{Output Variables} \label{TblOutputVar}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} \\
-  \midrule 
-  $T_W$ & $T_\text{init} \leq T_W \leq T_C$ (by~\aref{A_charge})
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\plt{This section is not for test cases or techniques for verification and
-  validation.  Those topics will be addressed in the Verification and Validation
-  plan.}
 
 \section{Requirements}
-
-\plt{The requirements refine the goal statement.  They will make heavy use of
-  references to the instance models.}
-
-This section provides the functional requirements, the business tasks that the
-software is expected to complete, and the nonfunctional requirements, the
-qualities that the software is expected to exhibit.
-
 \subsection{Functional Requirements}
+{The system has two states, the Game Active State and the Game Inactive State. When in the Game Active State, the system can be in one of three possible ``user modes''. The user modes are Normal Mode, Engine Mode, and Beginner Mode.}
 
-\noindent \begin{itemize}
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=0.75]{GameActiveFSM.drawio}
+        \caption{Game State Diagram}
+        \label{Fig_GameStates} 
+    \end{center}
+\end{figure}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
-    for the inputs that are supplied by the user.  This information has to be
-    explicit.}
+\subsubsection{Game Active State}
+\paragraph{Chess Board}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent]
+    \item Pressing the Resign/Draw button will change the system to the Game Inactive State.
+    \item Pressing the New Game button will have no effect.
+    \item Allow users to switch between user modes, choosing Normal Mode, Engine Mode, or Beginner Mode by using the User Mode switch on the side of the board.
+    \item The chess board follows the \textbf{Chess Board} section for the respective user mode being played.
+\end{enumerate}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
-    always required, but often echoing the inputs as part of the output is a
-    good idea.}
+\paragraph{Data Transfer}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent, resume]
+    \item Data transfer follows the \textbf{Data Transfer} section for the respective user mode being played.
+\end{enumerate}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-    related requirements.}
+\paragraph{Web Application}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent, resume]
+    \item Entering the Game Active State will reset the game state to the starting position.
+    \item Game termination of type stalemate or checkmate shall change the system to the Game Inactive State.
+    \item The web application follows the \textbf{Web Application} section for the respective user mode being played.
+\end{enumerate}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-  \plt{Verification related requirements.}
+\subsubsection{Game Inactive State}
+\paragraph{Chess Board}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent]
+    \item Pressing the New Game button will change the system to the Game Active State.
+    \item Using the User Mode switch at the side of the board will have no effect until the system is in the Game Active State.
+    \item Pressing the Resign/Draw button will have no effect.
+\end{enumerate}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-    requirements.}
+\paragraph{Data Transfer}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent, resume]
+    \item The board state data is not sent to the web application when a piece is moved.
+\end{enumerate}
 
-\end{itemize}
+\paragraph{Web Application}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent, resume]
+    \item The web application will display the final game state upon game termination.
+    \item The web application will display a message with the game termination type (stalemate, checkmate, resignation, draw).
+\end{enumerate}
 
-\plt{Every IM should map to at least one requirement, but not every requirement
-  has to map to a corresponding IM.}
+\subsubsection{Normal Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{NB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board. 
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{NA}1., leftmargin=2\parindent]
+    \item The web application will receive data related to the previous move.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State.
+\end{enumerate}
+
+\subsubsection{Engine Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{EB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item The system shall show the top engine moves on the LCD display.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+    \item The system shall send the web application engine moves to the LCD display over the chosen data transfer method.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{EA}1., leftmargin=2\parindent]
+    \item The web application will receive data related to the previous move.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+    \item The system shall input the current chess game position to a chess engine.
+    \item The system shall use the chess engine to evaluate the position and calculate the best engine moves.
+    \item The system shall display the calculated engine moves on the web application.
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State.
+\end{enumerate}
+
+\subsubsection{Beginner Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{BB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item When a user picks up a piece, allow them to view all legal moves with green LED lights on valid squares.
+    \item If an illegal move is made, the tile that the piece is moved onto will display a red LED light.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{BA}1., leftmargin=2\parindent]
+    \item Allow user to view instructions regarding the rules of chess on web application.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+\end{enumerate}
+
+
 
 \subsection{Nonfunctional Requirements}
 
-\plt{List your nonfunctional requirements.  You may consider using a fit
-  criterion to make them verifiable.}
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
+\newcounter{vnvSectionNfr}
+\setcounter{vnvSectionNfr}{1}
 
-\noindent \begin{itemize}
+\newcounter{nfrNum}
+\setcounter{nfrNum}{1}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  A link to the VnV plan would be a nice extra.}
+\subsubsection{Look and Feel Requirements}
+\label{NFR_LF}
+\paragraph{Appearance Requirements}
+\begin{enumerate}[{LF}1., leftmargin=2\parindent]
+    \item The product shall use white, black, grey, and brown as its primary colours.
+    \item The product shall use green, red, and blue as its secondary colours.
+\end{enumerate}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  A
-    link to the VnV plan would be a nice extra.}
+\paragraph{Style Requirements}
+\begin{enumerate}[{LF}1., leftmargin=2\parindent, resume]
+    \item The product shall look and feel similar enough to traditional chess boards and chess pieces that the target audience will 
+    recognize the product as a chess set when encountering it for the first time. The level and speed of audience recognition achieved 
+    by the design shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}~of the VnV 
+    (Verification and Validation) Plan.
+\end{enumerate}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
 
-\item Other NFRs that might be discussed include verifiability,
-  understandability and reusability.
+\subsubsection{Usability and Humanity Requirements}
+\label{NFR_UH}
+\paragraph{Ease of Use Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent]
+    \item The system shall require the user to place chess pieces fully on their intended squares.
+    \item Physical hardware components of the system will not impede the user during play.
+\end{enumerate}
 
-\end{itemize}
+\paragraph{Personalization and Internationalization Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The system will only display information in English.
+    \item The system will only use the Arabic numerals.
+\end{enumerate}
 
-\section{Likely Changes}    
+\paragraph{Learning Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The product shall be able to be used by members of the public over with no previous training. Details on the learnability 
+    of the system shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+\end{enumerate}
 
-\noindent \begin{itemize}
+\paragraph{Understandability and Politeness Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item All symbols and words shall be similar to historically used Chess symbols. \cite{ChessHistory2003}
+\end{enumerate}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with a reference to the related assumption (aref), as appropriate.}
+\paragraph{Accessibility Requirements}
+\begin{enumerate}[{UH}1., leftmargin=2\parindent, resume]
+    \item The system shall follow guidelines for correct size and colour contrast ratio for text to the background as stated in the \cite{WCAG2018}.
+\end{enumerate}
 
-\end{itemize}
 
+
+\subsubsection{Performance Requirements}
+\label{NFR_PR}
+\paragraph{Speed and Latency Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent]
+    \item The average time between a user placing down a piece and the visual model response shall be small.
+    \item The maximum time between a user placing down a piece and the visual model response shall be small.
+    \item The average time between a user picking up a piece and the visual board indicator response shall be small.
+    \item The maximum time between a user picking up a piece and the visual board indicator response shall be small. 
+    The degree of speed for PR1 through PR4 shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+\end{enumerate}
+
+%Modified from Safety-Critical Requirements to better cover the SRS rubric
+\paragraph{Health and Safety-Critical Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The system shall be properly grounded according to the Canadian Electrical Code. \cite{CanadianElectricalCode2021}
+    \item The maximum power on any single wire shall be within the safety limits described in the Canadian Electrical Code.
+\end{enumerate}
+
+\paragraph{Precision or Accuracy Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software application game state will model the game state on the \progname{} hardware with a high degree of accuracy. 
+    The level of accuracy shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
+    of the VnV Plan.
+        
+\end{enumerate}
+
+\paragraph{Reliability and Availability Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product shall be available with a high degree of uptime. The level of availability shall be described following the procedure 
+    given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+\end{enumerate}
+
+\paragraph{Robustness or Fault-Tolerance Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software application shall maintain the game state if the connection between the software and hardware systems is interrupted.
+\end{enumerate}
+
+\paragraph{Capacity Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The software shall require computer memory to function effectively. The level of memory capacity required shall be described following
+    the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+\end{enumerate}
+
+\paragraph{Scalability or Extensibility Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product must support the addition of new features and components.
+\end{enumerate}
+
+\paragraph{Longevity Requirements}
+\begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
+    \item The product must be supported while the application remains deployed.
+    \item The product will depend on the continued support of packages and libraries.
+\end{enumerate}
+
+
+
+\subsubsection{Operational and Environmental Requirements}
+\label{NFR_OE}
+\paragraph{Expected Physical Environment}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent]
+    \item The hardware and software systems shall be close enough to each other to facilitate communication. The degree of proximity required 
+    shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+    \item The area shall be clear of potentially dangerous or harmful environmental factors.
+\end{enumerate}
+
+\paragraph{Requirements for Interfacing with Adjacent Systems}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The system shall interface with an external server to make requests to a chess engine.
+\end{enumerate}
+
+\paragraph{Productization Requirements}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The product shall be deployed to a public website where users may access it.
+\end{enumerate}
+
+\paragraph{Release Requirements}
+\begin{enumerate}[{OE}1., leftmargin=2\parindent, resume]
+    \item The product will be tested for bugs and issues. These issues will be fixed and the application will be redeployed accordingly.
+\end{enumerate}
+
+
+
+\subsubsection{Maintainability and Support Requirements}
+\label{NFR_MS}
+\paragraph{Maintenance Requirements}
+\begin{enumerate}[{MS}1., leftmargin=2\parindent]
+    \item The product shall be maintained actively by the developers until the \progname{} team graduates.
+\end{enumerate}
+
+\paragraph{Supportability Requirements}
+N/A
+
+\paragraph{Adaptability Requirements}
+\begin{enumerate}[{MS}1., leftmargin=2\parindent, resume]
+    \item The software application will be able to be hosted on Apple, Windows, and Linux devices.
+    \item The product shall be accessible from any web browser.
+\end{enumerate}
+
+
+
+\subsubsection{Security Requirements}
+\label{NFR_SR}
+\paragraph{Access Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent]
+    \item Only the \progname{} team are able to modify the software system.
+\end{enumerate}
+
+\paragraph{Integrity Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item The product will not store game data after a game has concluded.
+\end{enumerate}
+
+\paragraph{Privacy Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item The product will not store or collect user data.
+\end{enumerate}
+
+\paragraph{Audit Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item Requirements shall be easy to follow and verify against both the system and the VnV plan in order to facilitate regular inspections.
+\end{enumerate}
+
+\paragraph{Immunity Requirements}
+N/A
+
+
+
+\subsubsection{Political and Cultural Requirements}
+\label{NFR_PC}
+\paragraph{Cultural Requirements}
+\begin{enumerate}[{PC}1., leftmargin=2\parindent]
+    \item The product will not use and terms or symbols that are deemed offensive to any culture.
+\end{enumerate}
+
+\paragraph{Political Requirements}
+N/A
+
+
+
+\subsubsection{Legal Requirements}
+\label{NFR_Legal}
+\paragraph{Compliance Requirements}
+\begin{enumerate}[{LR}1., leftmargin=2\parindent]
+    \item The system shall comply with the Canadian Electrical Code \cite{CanadianElectricalCode2021}.
+\end{enumerate}
+
+\paragraph{Standards Requirements}
+\begin{enumerate}[{LR}1., leftmargin=2\parindent, resume]
+    \item The product shall follow \cite{WCAG2018}.
+\end{enumerate}
+
+
+\section{Likely Changes}
+\noindent
+\begin{enumerate}[{LC}1., leftmargin=2\parindent]
+    \item Reviewing past games allows players to evaluate their own positions with a better understanding on how to play in future games.
+    We will use databases such as MySQL and MongoDB in order to store these games for users to view.
+    \item An additional user mode, Study Mode, that will allow users to set up puzzles that do not start from the default position.
+    It will allow users to practice a specific phase of the game, including the ability to take back moves without having to play out a full game with an opponent. 
+    This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.
+    \item Online chess has extensive communities on existing platforms. To promote code reusability, the Chess Connect online platform will interface with popular existing websites.
+    Users of the board have the capability to share their games with a larger community via these platforms in addition to the custom web application. These sites include, but are not limited to, Chess.com and Lichess.
+    \item An additional game setting to enable either white or black to be a "computer" opponent will be implemented in Engine Mode. The user will be able to set a skill level
+    for the computer, and moves will be displayed as squares lit up by the on-board LEDs.
+    \item The backend/database programming languages and frameworks previously listed
+    are subject to change depending on the use of the data transfer functionality, in which comptibility to the hardware would play a role
+    in picking our technology stack.  
+    \item The load capacity of our system is initially set low for the
+    first edition of this application. As demand for the application increases, the load capacity must also increase to support a
+    larger user base.
+    \item The method of data transfer is subject to change depending on
+    interfacing between the hardware and software. Examples of these are Bluetooth and USB connected to the board.
+    \item The dimensions of the chess board are subject to change based
+    the 3D-printed designs we use for the pieces. 
+    \item When pieces are lost, power is cut or data transmission is cut, the current result is ending the game as a draw. Adding the ability for the board to start from any state
+    would allow the players to resume from where they left off. This would require several other options such as ``which colour starts'', ``pausing the game'' and ``resume from
+    last saved configuration''.
+\end{enumerate}
+  
 \section{Unlikely Changes}    
 
-\noindent \begin{itemize}
+\noindent
+\begin{enumerate}[{UC}1., leftmargin=2\parindent]
+    \item Since overarching idea of the project is integration between
+    over the board and online chess, a web application will be necessary.
+    \item There must be sensors to locate the pieces in order to solve tracking and object detection.
+    \item The most popular and easy to use chess engine is Stockfish, which is 
+    open source and includes a well-written API documentation. This will likely be the engine we will be using for predicting future moves.
+    \item As a learning application, giving beginners the ability to learn quickly
+    is a big priority, so the application will include a beginner mode to help familiarize players with the movement of the chess pieces.
+    \item Although the back-end/database technologies are subject to change,
+    the front-end will make use of our past members' experience in user interface design. For this reason, the technologies
+    previously mentioned for front-end are unlikely to change.
+\end{enumerate}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
+\section{Traceability Matrix}
 
-\end{itemize}
-
-\section{Traceability Matrices and Graphs}
-
-The purpose of the traceability matrices is to provide easy references on what
-has to be additionally modified if a certain component is changed.  Every time a
-component is changed, the items in the column of that component that are marked
-with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
-dependencies of theoretical models, general definitions, data definitions, and
-instance models with each other. Table~\ref{Table:R_trace} shows the
-dependencies of instance models, requirements, and data constraints on each
-other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, and likely changes on
-the assumptions.
-
-\plt{You will have to modify these tables for your problem.}
-
-\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
-  means that GD1's derivation or presentation requires invocation of A1.  A1
-  does not use GD1.  A1 is ``used by'' GD1.}
-
-\plt{The traceability matrix is challenging to maintain manually.  Please do
-  your best.  In the future tools (like Drasil) will make this much easier.}
-
-\afterpage{
-\begin{landscape}
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
-\hline
-\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
-\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
-\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
-\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
-\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
-\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
-\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
-\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
-\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
-\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
-\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
-\label{Table:A_trace}
-\end{table}
-\end{landscape}
-}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline        
-	& \tref{T_COE}& \tref{T_SHE}& \tref{T_LHE}& \dref{NL}& \dref{ROCT} & \ddref{FluxCoil}& \ddref{FluxPCM} & \ddref{D_HOF}& \ddref{D_MF}& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM} \\
-\hline
-\tref{T_COE}     & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}     & & & X& & & & & & & & & & \\ \hline
-\tref{T_LHE}     & & & & & & & & & & & & & \\ \hline
-\dref{NL}        & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}      & X& & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil} & & & & X& & & & & & & & & \\ \hline
-\ddref{FluxPCM}  & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}    & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}     & & & & & & & & X& & & & & \\ \hline
-\iref{ewat}      & & & & & X& X& X& & & & X& & \\ \hline
-\iref{epcm}      & & & & & X& & X& & X& X& & & X \\ \hline
-\iref{I_HWAT}    & & X& & & & & & & & & & & \\ \hline
-\iref{I_HPCM}    & & X& X& & & & X& X& X& & X& & \\
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
-\label{Table:trace}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-	& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM}& \ref{sec_DataConstraints}& \rref{R_RawInputs}& \rref{R_MassInputs} \\
-\hline
-\iref{ewat}            & & X& & & & X& X \\ \hline
-\iref{epcm}            & X& & & X& & X& X \\ \hline
-\iref{I_HWAT}          & & & & & & X& X \\ \hline
-\iref{I_HPCM}          & & X& & & & X& X \\ \hline
-\rref{R_RawInputs}     & & & & & & & \\ \hline
-\rref{R_MassInputs}    & & & & & & X& \\ \hline
-\rref{R_CheckInputs}   & & & & & X& & \\ \hline
-\rref{R_OutputInputs}  & X& X& & & & X& X \\ \hline
-\rref{R_TempWater}     & X& & & & & & \\ \hline 
-\rref{R_TempPCM}       & & X& & & & & \\ \hline
-\rref{R_EnergyWater}   & & & X& & & & \\ \hline
-\rref{R_EnergyPCM}     & & & & X& & & \\ \hline
-\rref{R_VerifyOutput}  & & & X& X& & & \\ \hline
-\rref{R_timeMeltBegin} & & X& & & & & \\ \hline
-\rref{R_timeMeltEnd}   & & X& & & & & \\ 
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
-\label{Table:R_trace}
-\end{table}
-
-The purpose of the traceability graphs is also to provide easy references on
-what has to be additionally modified if a certain component is changed.  The
-arrows in the graphs represent dependencies. The component at the tail of an
-arrow is depended on by the component at the head of that arrow. Therefore, if a
-component is changed, the components that it points to should also be
-changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
-instance models, requirements, and data constraints on each other.
-
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=\textwidth]{ATrace.png}
-% 		}
-% 		\caption{\label{Fig_ATrace} Traceability Matrix Showing the Connections Between Items of Different Sections}
-% 	\end{center}
-% \end{figure}
-
-
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=0.7\textwidth]{RTrace.png}
-% 		}
-% 		\caption{\label{Fig_RTrace} Traceability Matrix Showing the Connections Between Requirements, Instance Models, and Data Constraints}
-% 	\end{center}
-% \end{figure}
-
-\section{Development Plan}
-
-\plt{This section is optional.  It is used to explain the plan for developing
-  the software.  In particular, this section gives a list of the order in which
-  the requirements will be implemented.  In the context of a course  this is
-  where you can indicate which requirements will be implemented as part of the
-  course, and which will be ``faked'' as future work.  This section can be
-  organized as a prioritized list of requirements, or it could should the
-  requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
-
+\appendix
 \section{Values of Auxiliary Constants}
+\subsection{Auxiliary Constants}
+\begin{tabular}{l l} 
+  \toprule		
+  \textbf{Constant} & \textbf{Value}\\
+  \midrule 
+  ENDTIME & 5\\
+  \bottomrule
+\end{tabular}\\
 
-\plt{Show the values of the symbolic parameters introduced in the report.}
+\newpage
 
-\plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.}
-
-\plt{The value of FRACTION, for the Maintainability NFR would be given here.}
+\appendix
+\section{Reflection}
+\subsection{Skills for Success}
+\subsection{Knowledge and Learning Approaches}
 
 \newpage
 
 \bibliographystyle {plainnat}
 \bibliography {../../refs/References}
-
-\newpage
-
-\noindent \plt{The following is not part of the template, just some things to consider
-  when filing in the template.}
-
-\noindent \plt{Grammar, flow and \LaTeX advice:
-\begin{itemize}
-\item For Mac users \texttt{*.DS\_Store} should be in \texttt{.gitignore}
-\item \LaTeX{} and formatting rules
-\begin{itemize}
-\item Variables are italic, everything else not, includes subscripts (link to
-  document)
-\begin{itemize}
-\item \href{https://physics.nist.gov/cuu/pdf/typefaces.pdf}{Conventions}
-\item Watch out for implied multiplication
-\end{itemize}
-\item Use BibTeX
-\item Use cross-referencing
-\end{itemize}
-\item Grammar and writing rules
-\begin{itemize}
-\item Acronyms expanded on first usage (not just in table of acronyms)
-\item ``In order to'' should be ``to''
-\end{itemize}
-\end{itemize}}
-
-\noindent \plt{Advice on using the template:
-\begin{itemize}
-\item Difference between physical and software constraints
-\item Properties of a correct solution means \emph{additional} properties, not
-  a restating of the requirements (may be ``not applicable'' for your problem).
-  If you have a table of output constraints, then these are properties of a
-  correct solution.
-\item Assumptions have to be invoked somewhere
-\item ``Referenced by'' implies that there is an explicit reference
-\item Think of traceability matrix, list of assumption invocations and list of
-  reference by fields as automatically generatable
-\item If you say the format of the output (plot, table etc), then your
-  requirement could be more abstract
-\end{itemize}
-}
-
 \end{document}
