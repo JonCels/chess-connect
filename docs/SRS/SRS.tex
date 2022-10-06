@@ -25,6 +25,7 @@
 
 \input{../Comments}
 \input{../Common}
+\graphicspath{{./images/}}
 
 \setcounter{secnumdepth}{4}
 
@@ -61,7 +62,12 @@
 2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
 2022-10-05 & Joshua Chapman & Problem Description, Assumptions \\
 2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
+2022-10-05 & Rupinder Nagra, Jonathan Cels & Functional Requirements\\
 2022-10-05 & Arshdeep Aujla & Constraints\\
+2022-10-05 & Alexander Van Kralingen & Added Use Cases/Scenarios. Fixed system context diagram position. Added likely change.\\
+2022-10-05 & Rupinder Nagra & Purpose, Likely Changes and Unlikely Changes\\
+2022-10-05 & Alexander Van Kralingen & Added Undesired Event Handling section and a likely change.\\
+2022-10-05 & Arshdeep Aujla & Characteristics of Intended User, Stakeholders\\
 date & name & change\\
 \bottomrule
 \end{tabularx}
@@ -126,6 +132,11 @@ description of the unit and the SI name.
 
 \section{Introduction}
 \subsection{Document Purpose}
+The purpose of this document is to provide a set of requirements for a system that will integrate over-the-board chess with the online world of chess to assist in learning the game in a flexible manner.
+This includes a detailed description of our functional and non-functional requirements, including the performance and attributes of our design. 
+The document also includes a project overview showcasing the behaviour with event handling and system diagrams, and the likely and unlikely changes we expect to 
+encounter throughout the development of our product.
+
 \subsection{Characteristics of Intended Reader}
 {The document is written with the purpose of guiding development for the \progname{} team. The intended readers of this document 
 are the developers of \progname{}, Dr.~Spencer Smith, and Nicholas Annable, the teaching assistant assigned to this project. The 
@@ -133,11 +144,13 @@ document is thus written for an audience that is well-versed in formal specifica
 diagrams, and mathematical notation. Readers should also have a university-level understanding of electrical circuit knowledge.}
 
 \subsection{Characteristics of Intended User}
-\subsection{Stakeholders}
 {This project will assist chess players of any level that are looking for a tool to help them learn and study the game. For beginners, 
 the board serves as a learning tutorial and a general introduction to the game, while intermediate and advanced players can use the 
-engine move recommendations to study new lines, puzzles, and specific positions. In addition to chess enthusiasts, this project will 
-also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real-time. }
+engine move recommendations to study new lines, puzzles, and specific positions to enhance their chess skills.}
+\subsection{Stakeholders}
+{The professor and TAs for the course SFWRENG 4G06 as they will be providing the feedback which will directly affect the project’s development. 
+Society is also a stakeholder because this project will provide the members of society another gateway to be involved in the community through the game of chess. Lastly, this project will 
+also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real-time.}
 
 \section{Problem Description}
 
@@ -227,9 +240,9 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \end{enumerate}}
 
 \section{Project Overview}
-\subsection{System Context Diagram}
+\subsection{System Context Diagram}{
 
-The context of the system invloves two integrated but separate system components, as well as two distinct end users.
+    The context of the system invloves two integrated but separate system components, as well as two distinct end users.
 
 \begin{figure}[H]
   \begin{center}
@@ -239,6 +252,7 @@ The context of the system invloves two integrated but separate system components
   \end{center}
 \end{figure}
 
+\subsection{Behaviour Overview}
 \begin{figure}[H]
     \begin{center}
       \includegraphics[scale=0.8]{Hardware_System_Context_Diagram.jpeg}
@@ -248,11 +262,67 @@ The context of the system invloves two integrated but separate system components
   \end{figure}
 
 \subsection{Normal Operation}
-\subsubsection{Description}
-\subsubsection{Use Cases/Scenarios}
+\subsubsection{Description}{
+    The normal operation of the chess board involves configuring game mode and settings, reading the physical positions and identifiers (magnetic strength) of the pieces, 
+    lighting up corresponding LEDs and determining valid moves on the microcontroller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
+    calculated by a chess engine and displayed by LEDs on the board) and Beginner Mode (valid moves displayed by LED when a piece is picked up). The microcontroller will also be 
+    simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of "best" moves from the server. The server will be calculating these 
+    best moves in real time depending on the configuration of the pieces on the board sent from the chess board, and sending it back over Bluetooth every time it is queried
+    while the game is in "Engine Mode". The server will also be communicating all of this information to a Web Application where users can tune in and watch the pieces and see
+    game stats in real time.
+}
 
-\subsection{Behaviour Overview}
-\subsection{Undesired Scenario Handling}
+\subsubsection{Use Cases/Scenarios}{
+    
+    \paragraph{Normal Mode}{
+        Users play the game without any LED feedback. This would typically be a formal match involving players that are familiar with the game. Moves would still be broadcast to the
+        Web-App, and move history will still be recorded for future reference.
+    }
+        
+    \paragraph{Engine Mode}{
+        Users play the game with LED feedback indicating which pieces to move to which positions that would be statistically the most probable move to win the game. This game mode would
+        be most likely played as a way to improve one's skill level and to gain a deeper understanding of the game.
+    }
+    
+    \paragraph{Beginner Mode}{
+        Users play the game with LED feedback on lifting a piece. The piece lifted will be determiend by the hardware and corresponding valid moves will be lit up on the board. This game
+        mode is designed to help beginners learn the game of chess. Valid moves will involve more complex strategies such as "en passant" and "castling."
+    }
+        
+    \paragraph{Studying Past Games}{
+        The Web-App will have a record of the moves made in past games. This can be used to study the game moves and understand scenarios which could have been handled differently
+        to produce a more favourable outcome.
+    }
+    
+    \paragraph{Tournament Play}{
+        Since the moves made in the game will be broadcasted live to the internet via the Web-App, tournaments can be held with spectators watching the game in real time.
+    }
+}
+
+\subsection{Undesired Scenario Handling}{
+    \paragraph{Earthquake Scenario}{
+        Also known as the "sore loser scenario," when some or all of the pieces are removed from their spaces within a short amount of time, the game will be ended as a draw. 
+    }
+    
+    \paragraph{Power Loss}{
+        When the power to the board is cut, the Web-App will end the game as a draw. The board will also have to be reconfigured back into the default starting positions for all pieces.
+    }
+    
+    \paragraph{Bluetooth Disconnection}{
+        On bluetooth disconnection, the board will attempt to reconnect for 30 seconds. Upon the expiration of this timer, the game will end as a draw.
+    }
+    
+    \paragraph{Internet Disconnection}{
+        On internet disconnection, the server will keep a history of past moves made. On reconnection, the game will be updated to reflect these moves as they are sent through the
+        queue to the hosted interface.
+    }
+    
+    \paragraph{Cheating}{
+        If pieces are moved or removed out of turn, the spaces which were affected will be lit up with red LEDs. When the board is returned to the state before cheating occured,
+        the game will resume as normal.
+    }
+    
+}
 
 \section{System Level Variables}
 \subsection{Constants}
@@ -350,6 +420,124 @@ The context of the system invloves two integrated but separate system components
 
 \section{Requirements}
 \subsection{Functional Requirements}
+{The system has two states, the Game Active State and the Game Inactive State. When in the Game Active State, the system can be in one of three possible ``user modes''. The user modes are Normal Mode, Engine Mode, and Beginner Mode.}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=0.75]{GameActiveFSM.drawio}
+        \caption{Game State Diagram}
+        \label{Fig_GameStates} 
+    \end{center}
+\end{figure}
+
+\subsubsection{Game Active State}
+\paragraph{Chess Board}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent]
+    \item Pressing the Resign/Draw button will change the system to the Game Inactive State.
+    \item Pressing the New Game button will have no effect.
+    \item Allow users to switch between user modes, choosing Normal Mode, Engine Mode, or Beginner Mode by using the User Mode switch on the side of the board.
+    \item The chess board follows the \textbf{Chess Board} section for the respective user mode being played.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent, resume]
+    \item Data transfer follows the \textbf{Data Transfer} section for the respective user mode being played.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent, resume]
+    \item Entering the Game Active State will reset the game state to the starting position.
+    \item Game termination of type stalemate or checkmate shall change the system to the Game Inactive State.
+    \item The web application follows the \textbf{Web Application} section for the respective user mode being played.
+\end{enumerate}
+
+\subsubsection{Game Inactive State}
+\paragraph{Chess Board}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent]
+    \item Pressing the New Game button will change the system to the Game Active State.
+    \item Using the User Mode switch at the side of the board will have no effect until the system is in the Game Active State.
+    \item Pressing the Resign/Draw button will have no effect.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent, resume]
+    \item The board state data is not sent to the web application when a piece is moved.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent, resume]
+    \item The web application will display the final game state upon game termination.
+    \item The web application will display a message with the game termination type (stalemate, checkmate, resignation, draw).
+\end{enumerate}
+
+\subsubsection{Normal Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{NB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board. 
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{NA}1., leftmargin=2\parindent]
+    \item The web application will receive data related to the previous move.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State.
+\end{enumerate}
+
+\subsubsection{Engine Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{EB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item The system shall show the top engine moves on the LCD display.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+    \item The system shall send the web application engine moves to the LCD display over the chosen data transfer method.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{EA}1., leftmargin=2\parindent]
+    \item The web application will receive data related to the previous move.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+    \item The system shall input the current chess game position to a chess engine.
+    \item The system shall use the chess engine to evaluate the position and calculate the best engine moves.
+    \item The system shall display the calculated engine moves on the web application.
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State.
+\end{enumerate}
+
+\subsubsection{Beginner Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{BB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item When a user picks up a piece, allow them to view all legal moves with green LED lights on valid squares.
+    \item If an illegal move is made, the tile that the piece is moved onto will display a red LED light.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{BA}1., leftmargin=2\parindent]
+    \item Allow user to view instructions regarding the rules of chess on web application.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+\end{enumerate}
+
+
+
 \subsection{Nonfunctional Requirements}
 
 \newcounter{vnvSectionNfr}
@@ -563,12 +751,60 @@ N/A
 
 
 \section{Likely Changes}
-\section{Unlikely Changes}
+\noindent
+\begin{enumerate}[{LC}1., leftmargin=2\parindent]
+    \item Reviewing past games allows players to evaluate their own positions with a better understanding on how to play in future games.
+    We will use databases such as MySQL and MongoDB in order to store these games for users to view.
+    \item An additional user mode, Study Mode, that will allow users to set up puzzles that do not start from the default position.
+    It will allow users to practice a specific phase of the game, including the ability to take back moves without having to play out a full game with an opponent. 
+    This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.
+    \item Online chess has extensive communities on existing platforms. To promote code reusability, the Chess Connect online platform will interface with popular existing websites.
+    Users of the board have the capability to share their games with a larger community via these platforms in addition to the custom web application. These sites include, but are not limited to, Chess.com and Lichess.
+    \item An additional game setting to enable either white or black to be a "computer" opponent will be implemented in Engine Mode. The user will be able to set a skill level
+    for the computer, and moves will be displayed as squares lit up by the on-board LEDs.
+    \item The backend/database programming languages and frameworks previously listed
+    are subject to change depending on the use of the data transfer functionality, in which comptibility to the hardware would play a role
+    in picking our technology stack.  
+    \item The load capacity of our system is initially set low for the
+    first edition of this application. As demand for the application increases, the load capacity must also increase to support a
+    larger user base.
+    \item The method of data transfer is subject to change depending on
+    interfacing between the hardware and software. Examples of these are Bluetooth and USB connected to the board.
+    \item The dimensions of the chess board are subject to change based
+    the 3D-printed designs we use for the pieces. 
+    \item When pieces are lost, power is cut or data transmission is cut, the current result is ending the game as a draw. Adding the ability for the board to start from any state
+    would allow the players to resume from where they left off. This would require several other options such as ``which colour starts'', ``pausing the game'' and ``resume from
+    last saved configuration''.
+\end{enumerate}
+  
+\section{Unlikely Changes}    
+
+\noindent
+\begin{enumerate}[{UC}1., leftmargin=2\parindent]
+    \item Since overarching idea of the project is integration between
+    over the board and online chess, a web application will be necessary.
+    \item There must be sensors to locate the pieces in order to solve tracking and object detection.
+    \item The most popular and easy to use chess engine is Stockfish, which is 
+    open source and includes a well-written API documentation. This will likely be the engine we will be using for predicting future moves.
+    \item As a learning application, giving beginners the ability to learn quickly
+    is a big priority, so the application will include a beginner mode to help familiarize players with the movement of the chess pieces.
+    \item Although the back-end/database technologies are subject to change,
+    the front-end will make use of our past members' experience in user interface design. For this reason, the technologies
+    previously mentioned for front-end are unlikely to change.
+\end{enumerate}
 
 \section{Traceability Matrix}
 
 \appendix
 \section{Values of Auxiliary Constants}
+\subsection{Auxiliary Constants}
+\begin{tabular}{l l} 
+  \toprule		
+  \textbf{Constant} & \textbf{Value}\\
+  \midrule 
+  ENDTIME & 5\\
+  \bottomrule
+\end{tabular}\\
 
 \newpage
 
