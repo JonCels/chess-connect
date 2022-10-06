@@ -283,8 +283,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \subsection{Normal Operation}
 \subsubsection{Description}{
     The normal operation of the chess board involves configuring game mode and settings, reading the physical positions and identifiers (magnetic strength) of the pieces, 
-    lighting up corresponding LEDs and determining legal moves on the microcontroller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
-    calculated by a chess engine and displayed by an LCD display) and Beginner Mode (legal moves displayed by LED when a piece is picked up). The microcontroller will also be 
+    lighting up corresponding LEDs and determining legal moves on the micro-controller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
+    calculated by a chess engine and displayed by an LCD display) and Beginner Mode (legal moves displayed by LED when a piece is picked up). The micro-controller will also be 
     simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of ``best'' moves from the server. The server will be calculating these 
     best moves in real time depending on the configuration of the pieces on the board sent from the chess board, and sending it back over Bluetooth every time it is queried
     while the game is in ``Engine Mode''. The server will also be communicating all of this information to a web application where users can tune in and watch the pieces and see
@@ -864,16 +864,18 @@ N/A
 \subsection{Skills for Success and Learning Approaches}
 \noindent
 \begin{enumerate}[{SS}1., leftmargin=2\parindent]
-    \item Proper unit tests must be made for the integration between the web application
-     and microcontroller. The web application will be made using React so this a skill 
-     that will have to be learned. This required knowledge will be acquired by reading 
-     documentation on open-source projects with similar use of technology. This will 
-     be done by member Jonathan Cels, Rupinder Nagra, and Alexander Van Kralingen.
-    \item The back-end system will be created using Python and MongoDB. These skills will have to be learned by reading online documentation and blog forums. This will be done by Rupinder Nagra.
-    \item Continuous integration/deployment will have to be integrated into the project. This skill will be learned by review the tutorials related to this topic as well as reading online documentation. This will be done by member Alexander Van Kralingen.
-    \item The microcontroller will need to be setup to use Bluetooth to communicate between the web application and the microcontroller. This will be learned by reading the documentation for the Bluetooth hardware chosen. The skills required for this will be learned by members Jonathan Cels, Joshua Chapman, and Alexander Van Kralingen.
-    \item The microcontroller will need to be programmed with the rules of chess. The rules of chess can be found through online resources. This will be done by member Joshua Chapman.
-    \item Utilisation of a Hall sensor to identify unique chess pieces using magnets is required. Knowledge of installing and soldering hardware components will have to be learned. This knowledge will be acquired by reading blog posts by people who have used these components and watching tutorial videos on media platforms such as YouTube. This will be done by member Arshdeep Aujla and Joshua Chapman.
+    \item Proper unit tests must be created for the integration between the web application
+     and micro-controller. The web application will be made using React so this a skill 
+     that will have to be learned. React is a popular front-end framework that encompasses all of the core front-end technologies such as
+     HTML, CSS, and Javascript. This required knowledge will be acquired by reading 
+     documentation and studying open-source projects. This will be done by group members Jonathan Cels, Rupinder Nagra, and Alexander Van Kralingen.
+    \item The back-end system will likely be created using Python and its related frameworks, which is a popular setup for back-end stacks
+    in the field of web development. It will also be useful to acquire knowledge in relational and non-relational databases such as MySQL
+    and MongoDB. These skills will have to be learned by also reading online documentation and blog forums. This will be done by Rupinder Nagra.
+    \item Continuous integration/deployment will have to be used in the project. These skills will be learned by reviewing the tutorials related to this topic as well as reading online documentation. This will be done by member Alexander Van Kralingen.
+    \item The micro-controller will need to be set up to use Bluetooth to communicate between the web application and the micro-controller. This will be learned by reading the documentation for the Bluetooth hardware chosen. The skills required for this will be learned by members Jonathan Cels, Joshua Chapman, and Alexander Van Kralingen.
+    \item The micro-controller will need to be programmed with the rules of chess. The rules of chess can be found through online resources, with various packages and libraries also able to implement them. This will be done by member Joshua Chapman.
+    \item Utilisation of a Hall sensors to identify unique chess pieces using magnets is required. Knowledge of installing and soldering hardware components will have to be learned. This knowledge will be acquired by reading blog posts by people who have used these components and watching tutorial videos on media platforms such as YouTube. This will be done by member Arshdeep Aujla and Joshua Chapman.
     \item The relation between the inputs and outputs will have to be mapped using Karnaugh Maps and State Machine Tables. This will be learned by reviewing related course materials from previous/current years. This will be done by member Arshdeep Aujla.
 \end{enumerate}
 \newpage
