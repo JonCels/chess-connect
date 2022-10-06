@@ -63,6 +63,7 @@
 2022-10-05 & Rupinder Nagra, Jonathan Cels & Functional Requirements\\
 2022-10-05 & Arshdeep Aujla & Constraints\\
 2022-10-05 & Alexander Van Kralingen & Added Use Cases/Scenarios. Fixed system context diagram position. Added likely change.\\
+2022-10-05 & Rupinder Nagra & Purpose, Likely Changes and Unlikely Changes\\
 2022-10-05 & Alexander Van Kralingen & Added Undesired Event Handling section and a likely change.\\
 2022-10-05 & Arshdeep Aujla & Characteristics of Intended User, Stakeholders\\
 date & name & change\\
@@ -730,17 +731,47 @@ N/A
 
 
 \section{Likely Changes}
-\subsection{Play Against Computer Opponent}{
-    An additional game setting to enable either white or black to be a "computer" opponent will be implemented in Engine Mode. The user will be able to set a skill level
+\noindent
+\begin{enumerate}[{LC}1., leftmargin=2\parindent]
+    \item Reviewing past games allows players to evaluate their own positions with a better understanding on how to play in future games.
+    We will use databases such as MySQL and MongoDB in order to store these games for users to view.
+    \item An additional user mode, Study Mode, that will allow users to set up puzzles that do not start from the default position.
+    It will allow users to practice a specific phase of the game, including the ability to take back moves without having to play out a full game with an opponent. 
+    This mode is meant to be used individually, also allowing a user to use and study the board without the necessity of another player.
+    \item Online chess has extensive communities on existing platforms. To promote code reusability, the Chess Connect online platform will interface with popular existing websites.
+    Users of the board have the capability to share their games with a larger community via these platforms in addition to the custom web application. These sites include, but are not limited to, Chess.com and Lichess.
+    \item An additional game setting to enable either white or black to be a "computer" opponent will be implemented in Engine Mode. The user will be able to set a skill level
     for the computer, and moves will be displayed as squares lit up by the on-board LEDs.
-}
-\subsection{Handling of Unwanted Scenarios}{
-    When pieces are lost, power is cut or data transmission is cut, the current result is ending the game as a draw. Adding the ability for the board to start from any state
-    would allow the players to resume from where they left off. This would require several other options such as "which colour starts," "pausing the game" and "resume from
-    last saved configuration."
-}
+    \item The backend/database programming languages and frameworks previously listed
+    are subject to change depending on the use of the data transfer functionality, in which comptibility to the hardware would play a role
+    in picking our technology stack.  
+    \item The load capacity of our system is initially set low for the
+    first edition of this application. As demand for the application increases, the load capacity must also increase to support a
+    larger user base.
+    \item The method of data transfer is subject to change depending on
+    interfacing between the hardware and software. Examples of these are Bluetooth and USB connected to the board.
+    \item The dimensions of the chess board are subject to change based
+    the 3D-printed designs we use for the pieces. 
+    \item When pieces are lost, power is cut or data transmission is cut, the current result is ending the game as a draw. Adding the ability for the board to start from any state
+    would allow the players to resume from where they left off. This would require several other options such as ``which colour starts'', ``pausing the game'' and ``resume from
+    last saved configuration''.
+\end{enumerate}
+  
+\section{Unlikely Changes}    
 
-\section{Unlikely Changes}
+\noindent
+\begin{enumerate}[{UC}1., leftmargin=2\parindent]
+    \item Since overarching idea of the project is integration between
+    over the board and online chess, a web application will be necessary.
+    \item There must be sensors to locate the pieces in order to solve tracking and object detection.
+    \item The most popular and easy to use chess engine is Stockfish, which is 
+    open source and includes a well-written API documentation. This will likely be the engine we will be using for predicting future moves.
+    \item As a learning application, giving beginners the ability to learn quickly
+    is a big priority, so the application will include a beginner mode to help familiarize players with the movement of the chess pieces.
+    \item Although the back-end/database technologies are subject to change,
+    the front-end will make use of our past members' experience in user interface design. For this reason, the technologies
+    previously mentioned for front-end are unlikely to change.
+\end{enumerate}
 
 \section{Traceability Matrix}
 
