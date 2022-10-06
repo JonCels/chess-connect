@@ -254,16 +254,15 @@ format. The application will be constrained to a 2-dimensional model of the hard
 
 \subsection{Behaviour Overview}{
 
-}
 
 \subsection{Normal Operation}
 \subsubsection{Description}{
     The normal operation of the chess board involves configuring game mode and settings, reading the physical positions and identifiers (magnetic strength) of the pieces, 
     lighting up corresponding LEDs and determining valid moves on the microcontroller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
-    calculated by a chess engine and displayed by LEDs on the board) and Beginner Mode (valid moves displayed by LED when a piece is picked up). The microcontroller will also be 
-    simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of "best" moves from the server. The server will be calculating these 
+    calculated by a chess engine and displayed by an LCD display) and Beginner Mode (legal moves displayed by LED when a piece is picked up). The microcontroller will also be 
+    simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of ``best'' moves from the server. The server will be calculating these 
     best moves in real time depending on the configuration of the pieces on the board sent from the chess board, and sending it back over Bluetooth every time it is queried
-    while the game is in "Engine Mode". The server will also be communicating all of this information to a Web Application where users can tune in and watch the pieces and see
+    while the game is in ``Engine Mode''. The server will also be communicating all of this information to a web application where users can tune in and watch the pieces and see
     game stats in real time.
 }
 
@@ -271,11 +270,11 @@ format. The application will be constrained to a 2-dimensional model of the hard
     
     \paragraph{Normal Mode}{
         Users play the game without any LED feedback. This would typically be a formal match involving players that are familiar with the game. Moves would still be broadcast to the
-        Web-App, and move history will still be recorded for future reference.
+        web application, and move history will still be recorded for future reference.
     }
         
     \paragraph{Engine Mode}{
-        Users play the game with LED feedback indicating which pieces to move to which positions that would be statistically the most probable move to win the game. This game mode would
+        Users play the game with LCD feedback indicating which pieces to move to which positions that would be statistically the most probable move to win the game. This game mode would
         be most likely played as a way to improve one's skill level and to gain a deeper understanding of the game.
     }
     
@@ -774,7 +773,6 @@ N/A
 \end{enumerate}
   
 \section{Unlikely Changes}    
-
 \noindent
 \begin{enumerate}[{UC}1., leftmargin=2\parindent]
     \item Since overarching idea of the project is integration between
