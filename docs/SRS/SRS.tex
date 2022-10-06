@@ -220,13 +220,21 @@ format. The application will be constrained to a 2-dimensional model of the hard
 
 The context of the system invloves two integrated but separate system components, as well as two distinct end users.
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \begin{center}
     \includegraphics[scale=0.65]{chess-connect-system-context.png}
-    \caption{System Context}
+    \caption{Overall System Context}
     \label{Fig_SystemContext} 
   \end{center}
 \end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+      \includegraphics[scale=0.8]{Hardware_System_Context_Diagram.jpeg}
+      \caption{On-board System Context}
+      \label{Fig_SystemContext2} 
+    \end{center}
+  \end{figure}
 
 \subsection{Normal Operation}
 \subsubsection{Description}
@@ -291,9 +299,9 @@ The context of the system invloves two integrated but separate system components
       \hline
       s\_g\{1-8\} & Volts & States of tiles g1 - g8 on the board. " " \\
       \hline
-      sw\_3pos\_p{1-2} & Volts & The three-position switch for both players is located
-      on top of the board on their respective sides. It toggles between the beginner 
-      advice, engine advice and no advice modes for each player.\\
+      sw\_3pos & Volts & The three-position switch is located
+      on top of the board. It toggles between the beginner 
+      advice, engine advice and no advice modes.\\
       \hline
       tieB\_p\{1-2\} & Volts & The "draw" push-button for each player is located on 
       the top of the board on their respective sides. When both players press their button
