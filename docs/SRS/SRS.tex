@@ -25,6 +25,7 @@
 
 \input{../Comments}
 \input{../Common}
+\graphicspath{{./images/}}
 
 \setcounter{secnumdepth}{4}
 
@@ -59,6 +60,7 @@
 2022-10-04 & Jonathan Cels & Non-functional requirements\\
 2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
 2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
+2022-10-05 & Rupinder Nagra, Jonathan Cels & Functional Requirements\\
 2022-10-05 & Arshdeep Aujla & Constraints\\
 2022-10-05 & Alexander Van Kralingen & Added Use Cases/Scenarios. Fixed system context diagram position. Added likely change.\\
 2022-10-05 & Alexander Van Kralingen & Added Undesired Event Handling section and a likely change.\\
@@ -390,8 +392,128 @@ format. The application will be constrained to a 2-dimensional model of the hard
   \label{Table}
   \end{table}
 
+
+
 \section{Requirements}
 \subsection{Functional Requirements}
+{The system has two states, the Game Active State and the Game Inactive State. When in the Game Active State, the system can be in one of three possible ``user modes''. The user modes are Normal Mode, Engine Mode, and Beginner Mode.}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=0.75]{GameActiveFSM.drawio}
+        \caption{Game State Diagram}
+        \label{Fig_GameStates} 
+    \end{center}
+\end{figure}
+
+\subsubsection{Game Active State}
+\paragraph{Chess Board}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent]
+    \item Pressing the Resign/Draw button will change the system to the Game Inactive State.
+    \item Pressing the New Game button will have no effect.
+    \item Allow users to switch between user modes, choosing Normal Mode, Engine Mode, or Beginner Mode by using the User Mode switch on the side of the board.
+    \item The chess board follows the \textbf{Chess Board} section for the respective user mode being played.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent, resume]
+    \item Data transfer follows the \textbf{Data Transfer} section for the respective user mode being played.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{GA}1., leftmargin=2\parindent, resume]
+    \item Entering the Game Active State will reset the game state to the starting position.
+    \item Game termination of type stalemate or checkmate shall change the system to the Game Inactive State.
+    \item The web application follows the \textbf{Web Application} section for the respective user mode being played.
+\end{enumerate}
+
+\subsubsection{Game Inactive State}
+\paragraph{Chess Board}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent]
+    \item Pressing the New Game button will change the system to the Game Active State.
+    \item Using the User Mode switch at the side of the board will have no effect until the system is in the Game Active State.
+    \item Pressing the Resign/Draw button will have no effect.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent, resume]
+    \item The board state data is not sent to the web application when a piece is moved.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{GI}1., leftmargin=2\parindent, resume]
+    \item The web application will display the final game state upon game termination.
+    \item The web application will display a message with the game termination type (stalemate, checkmate, resignation, draw).
+\end{enumerate}
+
+\subsubsection{Normal Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{NB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board. 
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{NA}1., leftmargin=2\parindent]
+    \item The web application will receive data related to the previous move.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State.
+\end{enumerate}
+
+\subsubsection{Engine Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{EB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item The system shall show the top engine moves on the LCD display.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+    \item The system shall send the web application engine moves to the LCD display over the chosen data transfer method.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{EA}1., leftmargin=2\parindent]
+    \item The web application will receive data related to the previous move.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+    \item The system shall input the current chess game position to a chess engine.
+    \item The system shall use the chess engine to evaluate the position and calculate the best engine moves.
+    \item The system shall display the calculated engine moves on the web application.
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State.
+\end{enumerate}
+
+\subsubsection{Beginner Mode}
+\paragraph{Chess Board}
+\begin{enumerate}[{BB}1., leftmargin=2\parindent]
+    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
+    \item When a user picks up a piece, allow them to view all legal moves with green LED lights on valid squares.
+    \item If an illegal move is made, the tile that the piece is moved onto will display a red LED light.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+\end{enumerate}
+
+\paragraph{Data Transfer}
+\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+\end{enumerate}
+
+\paragraph{Web Application}
+\begin{enumerate}[{BA}1., leftmargin=2\parindent]
+    \item Allow user to view instructions regarding the rules of chess on web application.
+    \item The web application will display the updated game board configuration with the data of the previous move.
+\end{enumerate}
+
+
+
 \subsection{Nonfunctional Requirements}
 
 \newcounter{vnvSectionNfr}
@@ -621,6 +743,14 @@ N/A
 
 \appendix
 \section{Values of Auxiliary Constants}
+\subsection{Auxiliary Constants}
+\begin{tabular}{l l} 
+  \toprule		
+  \textbf{Constant} & \textbf{Value}\\
+  \midrule 
+  ENDTIME & 5\\
+  \bottomrule
+\end{tabular}\\
 
 \newpage
 
