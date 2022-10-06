@@ -59,6 +59,7 @@
 2022-10-04 & Jonathan Cels & Non-functional requirements\\
 2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
 2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
+2022-10-05 & Arshdeep Aujla & Constraints\\
 date & name & change\\
 \bottomrule
 \end{tabularx}
@@ -141,6 +142,36 @@ also be relevant to chess tournament organizers looking for a method to easily b
 \section{Assumptions}
 
 \section{Constraints}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{12cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      C1 & The cost should not exceed CAD \$750\\
+      \hline 
+      Rationale & This is the maximum budget alloted to this project as per the course requirements.\\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
+  
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{12cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      C2 & The project must be completed by the winter semester of 2023\\
+      \hline 
+      Rationale & This is the allocated time for this project as per the course requirements.\\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}  
 
 \section{Scope}
 {The system is called \progname{}, and will include a software application and physical hardware device. The hardware will take the 
@@ -238,7 +269,7 @@ The context of the system invloves two integrated but separate system components
       \hline
       s\_b\{1-8\} & Volts & States of tiles b1 - b8 on the board. " " \\
       \hline
-      s\_c\{1-8\} & Volts & States git of tiles c1 - c8 on the board. " " \\
+      s\_c\{1-8\} & Volts & States of tiles c1 - c8 on the board. " " \\
       \hline
       s\_d\{1-8\} & Volts & States of tiles d1 - d8 on the board. " " \\
       \hline
