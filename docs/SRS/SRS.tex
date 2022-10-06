@@ -68,7 +68,8 @@
 2022-10-05 & Rupinder Nagra & Purpose, Likely Changes and Unlikely Changes\\
 2022-10-05 & Alexander Van Kralingen & Added Undesired Event Handling section and a likely change.\\
 2022-10-05 & Arshdeep Aujla & Characteristics of Intended User, Stakeholders\\
-date & name & change\\
+2022-10-05 & Arshdeep Aujla & Reflection\\
+2022-10-05 & Alexander Van Kralingen & Added FSM\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -120,6 +121,7 @@ description of the unit and the SI name.
   PS & Physical System Description\\
   R & Requirement\\
   SRS & Software Requirements Specification\\
+  SS & Skills for Success\\
   T & Theoretical Model\\
   VnV & Verification and Validation\\
   WCAG & Web Content Accessibility Guidelines\\
@@ -185,10 +187,11 @@ how to play chess.}
 \section{Assumptions}
 
 \begin{enumerate}[{A}1., leftmargin=2\parindent]
-    \item Users of the board have knowledge of the starting position of each of the pieces. \\
-    \item Users will not make illegal moves outsie of beginner mode. \\
+    \item Users of the board have knowledge of the starting positions and will
+    set them up before the start of a new game.  \\
+    \item Users will not make illegal moves outside of beginner mode. \\
     \item Game termination as dictated by the rules of chess \cite{RulesofChess} \\
-    \item {During gameplay, users will not take back moves. When a piece is layed
+    \item {During gameplay, users will not take back moves. When a piece is placed
     on the board, that move is final.} \\
     \item Users will have the knowledge of bluetooth setup and connection. \\
 \end{enumerate}
@@ -288,6 +291,16 @@ format. The application will be constrained to a 2-dimensional model of the hard
     game stats in real time.
 }
 
+\subsubsection{Finite State Machine}{
+\begin{figure}[H]
+    \begin{center}
+      \includegraphics[scale=0.5]{chess-connect-FSM.png}
+      \caption{Finite State Machine Detailing Normal System Behaviour}
+      \label{Fig_FSM} 
+    \end{center}
+  \end{figure}
+}
+
 \subsubsection{Use Cases/Scenarios}{
     
     \paragraph{Normal Mode}{
@@ -334,7 +347,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
     }
     
     \paragraph{Cheating}{
-        If pieces are moved or removed out of turn, the spaces which were affected will be lit up with red LEDs. When the board is returned to the state before cheating occured,
+        If pieces are moved or removed out of turn, the spaces which were affected will be lit up with red LEDs. When the board is returned to the state before cheating occurred,
         the game will resume as normal.
     }
     
@@ -516,7 +529,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \end{enumerate}
 
 \paragraph{Data Transfer}
-\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+\begin{enumerate}[{ED}1., leftmargin=2\parindent]
     \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
     \item The system shall send the web application engine moves to the LCD display over the chosen data transfer method.
 \end{enumerate}
@@ -542,7 +555,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \end{enumerate}
 
 \paragraph{Data Transfer}
-\begin{enumerate}[{ND}1., leftmargin=2\parindent]
+\begin{enumerate}[{BD}1., leftmargin=2\parindent]
     \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
 \end{enumerate}
 
@@ -810,24 +823,59 @@ N/A
 
 \section{Traceability Matrix}
 
-\appendix
-\section{Values of Auxiliary Constants}
-\subsection{Auxiliary Constants}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{Constant} & \textbf{Value}\\
-  \midrule 
-  ENDTIME & 5\\
-  \bottomrule
-\end{tabular}\\
-
-\newpage
+\begin{table}[H]
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabularx}{\linewidth}{|c|X|}
+        \hline
+        A1 & GI1 \\
+        \hline 
+        A2 & BB3 \\ 
+        \hline 
+        A3 & BB2, BB3 \\
+        \hline
+        A4 & UH1 \\
+        \hline
+        BA1 & UH5 \\
+        \hline
+        7.3.2.1 & NB1,  NB2,  NB3,  ND1, NA1, NA3, \\
+        \hline 
+        7.3.2.2 & EB1, EB2, EB3, EB4 ED1, ED2, EA1, EA2, EA3, EA4, EA5, EA6\\
+        \hline
+        7.3.2.3 & BB1, BB2, BB3, BB4, BB5, BD1, BA1, BA2 \\
+        \hline
+        7.4.0.4 & PR9\\ 
+        \hline
+        7.4.0.5 & PR9\\
+        \hline
+        PR11 & LC1, LC2, LC3, LC4, LC5, LC6, LC7, LC8, LC9 \\
+        \hline
+        LF2 & BB2, BB3 \\ 
+        \hline
+        \end{tabularx}
+    \label{Table}
+    \end{table}
+  
+  
 
 \appendix
 \section{Reflection}
-\subsection{Skills for Success}
-\subsection{Knowledge and Learning Approaches}
 
+\subsection{Skills for Success and Learning Approaches}
+\noindent
+\begin{enumerate}[{SS}1., leftmargin=2\parindent]
+    \item Proper unit tests must be made for the integration between the web application
+     and microcontroller. The web application will be made using React so this a skill 
+     that will have to be learned. This required knowledge will be acquired by reading 
+     documentation on open-source projects with similar use of technology. This will 
+     be done by member Jonathan Cels, Rupinder Nagra, and Alexander Van Kralingen.
+    \item The back-end system will be created using Python and MongoDB. These skills will have to be learned by reading online documentation and blog forums. This will be done by Rupinder Nagra.
+    \item Continuous integration/deployment will have to be integrated into the project. This skill will be learned by review the tutorials related to this topic as well as reading online documentation. This will be done by member Alexander Van Kralingen.
+    \item The microcontroller will need to be setup to use Bluetooth to communicate between the web application and the microcontroller. This will be learned by reading the documentation for the Bluetooth hardware chosen. The skills required for this will be learned by members Jonathan Cels, Joshua Chapman, and Alexander Van Kralingen.
+    \item The microcontroller will need to be programmed with the rules of chess. The rules of chess can be found through online resources. This will be done by member Joshua Chapman.
+    \item Utilisation of a Hall sensor to identify unique chess pieces using magnets is required. Knowledge of installing and soldering hardware components will have to be learned. This knowledge will be acquired by reading blog posts by people who have used these components and watching tutorial videos on media platforms such as YouTube. This will be done by member Arshdeep Aujla and Joshua Chapman.
+    \item The relation between the inputs and outputs will have to be mapped using Karnaugh Maps and State Machine Tables. This will be learned by reviewing related course materials from previous/current years. This will be done by member Arshdeep Aujla.
+\end{enumerate}
 \newpage
 
 \bibliographystyle {plainnat}
