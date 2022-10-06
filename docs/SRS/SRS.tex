@@ -69,6 +69,7 @@
 2022-10-05 & Alexander Van Kralingen & Added Undesired Event Handling section and a likely change.\\
 2022-10-05 & Arshdeep Aujla & Characteristics of Intended User, Stakeholders\\
 2022-10-05 & Arshdeep Aujla & Reflection\\
+2022-10-05 & Alexander Van Kralingen & Added FSM\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -290,6 +291,16 @@ format. The application will be constrained to a 2-dimensional model of the hard
     game stats in real time.
 }
 
+\subsubsection{Finite State Machine}{
+\begin{figure}[H]
+    \begin{center}
+      \includegraphics[scale=0.5]{chess-connect-FSM.png}
+      \caption{Finite State Machine Detailing Normal System Behaviour}
+      \label{Fig_FSM} 
+    \end{center}
+  \end{figure}
+}
+
 \subsubsection{Use Cases/Scenarios}{
     
     \paragraph{Normal Mode}{
@@ -336,7 +347,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
     }
     
     \paragraph{Cheating}{
-        If pieces are moved or removed out of turn, the spaces which were affected will be lit up with red LEDs. When the board is returned to the state before cheating occured,
+        If pieces are moved or removed out of turn, the spaces which were affected will be lit up with red LEDs. When the board is returned to the state before cheating occurred,
         the game will resume as normal.
     }
     
