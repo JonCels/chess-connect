@@ -1,0 +1,531 @@
+<svg width="936" height="841" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1378.31 1790.74">
+<g id="graph0" class="graph" transform="translate(-200,1786.7399572238917) scale(0.9999999574887017)">
+<title>Chess_Connect</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-1786.74 1374.31,-1786.74 1374.31,4 -4,4"/>
+<!-- pwr_off --><text text-anchor="middle" x="685.15" y="-1756.24" font-family="Times,serif" font-weight="bold" font-size="25.00"> </text>
+
+<!-- pre_init --><g id="node1" class="node">
+<title>pwr_off</title>
+<ellipse fill="none" stroke="black" cx="583.5" cy="-1715.33" rx="51.56" ry="18"/>
+<text text-anchor="middle" x="583.5" y="-1711.13" font-family="Times,serif" font-size="14.00">Power Off</text>
+</g>
+
+<!-- pwr_off&#45;&gt;pre_init --><g id="node2" class="node">
+<title>pre_init</title>
+<ellipse fill="none" stroke="green" cx="819.5" cy="-1715.33" rx="90.38" ry="18"/>
+<text text-anchor="middle" x="819.5" y="-1711.13" font-family="Times,serif" font-size="14.00" fill="green">WAIT FOR START</text>
+</g>
+
+<!-- init --><g id="edge1" class="edge">
+<title>pwr_off-&gt;pre_init</title>
+<path fill="none" stroke="black" d="M635.29,-1715.33C659.81,-1715.33 689.96,-1715.33 718.72,-1715.33"/>
+<polygon fill="black" stroke="black" points="718.83,-1718.83 728.83,-1715.33 718.83,-1711.83 718.83,-1718.83"/>
+<text text-anchor="middle" x="682.04" y="-1739.33" font-family="Times,serif" font-size="14.00">Power Button</text>
+<text text-anchor="middle" x="682.04" y="-1722.53" font-family="Times,serif" font-size="14.00">Pressed</text>
+</g>
+
+<!-- pre_init&#45;&gt;init --><g id="node3" class="node">
+<title>init</title>
+<ellipse fill="none" stroke="black" cx="1115.5" cy="-1715.33" rx="58.14" ry="29.33"/>
+<text text-anchor="middle" x="1115.5" y="-1719.53" font-family="Times,serif" font-size="14.00">Read Board</text>
+<text text-anchor="middle" x="1115.5" y="-1702.73" font-family="Times,serif" font-size="14.00">State</text>
+</g>
+
+<!-- is_init --><g id="edge2" class="edge">
+<title>pre_init-&gt;init</title>
+<path fill="none" stroke="black" d="M910.32,-1715.33C954.34,-1715.33 1006.34,-1715.33 1046.97,-1715.33"/>
+<polygon fill="black" stroke="black" points="1047.05,-1718.83 1057.05,-1715.33 1047.05,-1711.83 1047.05,-1718.83"/>
+<text text-anchor="middle" x="983.55" y="-1756.13" font-family="Times,serif" font-size="14.00">Inputs:</text>
+<text text-anchor="middle" x="983.55" y="-1739.33" font-family="Times,serif" font-size="14.00">-Game Mode Selection</text>
+<text text-anchor="middle" x="983.55" y="-1722.53" font-family="Times,serif" font-size="14.00">-Start Game</text>
+</g>
+<g id="node25" class="node">
+<title>is_init</title>
+<polygon fill="none" stroke="black" points="831.5,-1649.01 768.41,-1607.31 831.5,-1565.61 894.59,-1607.31 831.5,-1649.01"/>
+<text text-anchor="middle" x="831.5" y="-1611.51" font-family="Times,serif" font-size="14.00">Is Initial</text>
+<text text-anchor="middle" x="831.5" y="-1594.71" font-family="Times,serif" font-size="14.00">State?</text>
+</g>
+<!-- init&#45;&gt;is_init -->
+<g id="edge3" class="edge">
+<title>init-&gt;is_init</title>
+<path fill="none" stroke="black" d="M1069.55,-1697.18C1017.68,-1677.81 933.61,-1646.43 880.5,-1626.61"/>
+<polygon fill="black" stroke="black" points="881.56,-1623.26 870.96,-1623.05 879.11,-1629.82 881.56,-1623.26"/>
+</g>
+<!-- send_config -->
+<g id="node4" class="node">
+<title>send_config</title>
+<ellipse fill="none" stroke="black" cx="679.5" cy="-1017.63" rx="113.08" ry="29.33"/>
+<text text-anchor="middle" x="679.5" y="-1021.83" font-family="Times,serif" font-size="14.00">Send Piece Configuration</text>
+<text text-anchor="middle" x="679.5" y="-1005.03" font-family="Times,serif" font-size="14.00">to Web-App</text>
+</g>
+<!-- is_init&#45;&gt;send_config -->
+<!-- is_init&#45;&gt;send_config -->
+<g id="edge4" class="edge">
+<title>is_init-&gt;send_config</title>
+<path fill="none" stroke="black" d="M774.68,-1602.97C701.19,-1595.23 582.5,-1569.56 582.5,-1484.5 582.5,-1484.5 582.5,-1484.5 582.5,-1128.27 582.5,-1096.87 605.08,-1070.25 628.46,-1051.1"/>
+<polygon fill="black" stroke="black" points="630.67,-1053.82 636.39,-1044.9 626.35,-1048.3 630.67,-1053.82"/>
+<text text-anchor="middle" x="595.71" y="-1253.88" font-family="Times,serif" font-size="14.00">True</text>
+</g>
+<!-- check -->
+<g id="node13" class="node">
+<title>check</title>
+<ellipse fill="none" stroke="black" cx="831.5" cy="-1483.5" rx="83.77" ry="29.33"/>
+<text text-anchor="middle" x="831.5" y="-1487.7" font-family="Times,serif" font-size="14.00">Check for</text>
+<text text-anchor="middle" x="831.5" y="-1470.9" font-family="Times,serif" font-size="14.00">Check/Checkmate</text>
+</g>
+<!-- is_init&#45;&gt;check -->
+
+<!-- is_init&#45;&gt;check -->
+<g id="edge5" class="edge">
+<title>is_init-&gt;check</title>
+<path fill="none" stroke="black" d="M831.5,-1565.41C831.5,-1551.89 831.5,-1536.88 831.5,-1523.5"/>
+<polygon fill="black" stroke="black" points="835,-1523.18 831.5,-1513.18 828,-1523.18 835,-1523.18"/>
+<text text-anchor="middle" x="846.27" y="-1535.11" font-family="Times,serif" font-size="14.00">False</text>
+</g>
+<!-- calc -->
+<g id="node5" class="node">
+<title>calc</title>
+<ellipse fill="none" stroke="black" cx="679.5" cy="-906" rx="84.42" ry="29.33"/>
+<text text-anchor="middle" x="679.5" y="-910.2" font-family="Times,serif" font-size="14.00">Run Chess Engine</text>
+<text text-anchor="middle" x="679.5" y="-893.4" font-family="Times,serif" font-size="14.00">Calculations</text>
+</g>
+<!-- send_config&#45;&gt;calc -->
+<g id="edge6" class="edge">
+<title>send_config-&gt;calc</title>
+<path fill="none" stroke="black" d="M679.5,-988.12C679.5,-975.28 679.5,-959.91 679.5,-946.02"/>
+<polygon fill="black" stroke="black" points="683,-945.76 679.5,-935.76 676,-945.76 683,-945.76"/>
+</g>
+<!-- engine -->
+<g id="node24" class="node">
+<title>engine</title>
+<polygon fill="none" stroke="black" points="662.5,-839.69 606.69,-797.99 662.5,-756.29 718.31,-797.99 662.5,-839.69"/>
+<text text-anchor="middle" x="662.5" y="-802.19" font-family="Times,serif" font-size="14.00">Engine</text>
+<text text-anchor="middle" x="662.5" y="-785.39" font-family="Times,serif" font-size="14.00">Mode</text>
+</g>
+<!-- calc&#45;&gt;engine -->
+<g id="edge9" class="edge">
+<title>calc-&gt;engine</title>
+<path fill="none" stroke="black" d="M674.94,-876.59C673.41,-867.02 671.65,-856.07 669.95,-845.47"/>
+<polygon fill="black" stroke="black" points="673.39,-844.79 668.35,-835.47 666.48,-845.9 673.39,-844.79"/>
+</g>
+<!-- disp_moves_in_web -->
+<g id="node6" class="node">
+<title>disp_moves_in_web</title>
+<ellipse fill="none" stroke="black" cx="771.5" cy="-708.97" rx="71.56" ry="29.33"/>
+<text text-anchor="middle" x="771.5" y="-713.17" font-family="Times,serif" font-size="14.00">Display Moves</text>
+<text text-anchor="middle" x="771.5" y="-696.37" font-family="Times,serif" font-size="14.00">on Web-App</text>
+</g>
+<!-- calc&#45;&gt;disp_moves_in_web -->
+<g id="edge7" class="edge">
+<title>calc-&gt;disp_moves_in_web</title>
+<path fill="none" stroke="black" d="M702.52,-877.59C711.18,-866.32 720.6,-852.83 727.5,-839.59 742.78,-810.25 754.45,-774.49 761.92,-747.97"/>
+<polygon fill="black" stroke="black" points="765.31,-748.86 764.58,-738.29 758.56,-747 765.31,-748.86"/>
+</g>
+<!-- disp_moves_on_board -->
+<g id="node7" class="node">
+<title>disp_moves_on_board</title>
+<ellipse fill="none" stroke="black" cx="662.5" cy="-632.14" rx="87.45" ry="29.33"/>
+<text text-anchor="middle" x="662.5" y="-636.34" font-family="Times,serif" font-size="14.00">Send Moves to</text>
+<text text-anchor="middle" x="662.5" y="-619.54" font-family="Times,serif" font-size="14.00">Board, Light LEDs</text>
+</g>
+<!-- engine&#45;&gt;disp_moves_on_board -->
+<g id="edge10" class="edge">
+<title>engine-&gt;disp_moves_on_board</title>
+<path fill="none" stroke="black" d="M662.5,-756.06C662.5,-730.24 662.5,-697.09 662.5,-671.72"/>
+<polygon fill="black" stroke="black" points="666,-671.72 662.5,-661.72 659,-671.72 666,-671.72"/>
+<text text-anchor="middle" x="675.71" y="-704.77" font-family="Times,serif" font-size="14.00">True</text>
+</g>
+<!-- wait_input -->
+<g id="node8" class="node">
+<title>wait_input</title>
+<ellipse fill="none" stroke="blue" cx="543.5" cy="-536.31" rx="53.25" ry="29.33"/>
+<text text-anchor="middle" x="543.5" y="-540.51" font-family="Times,serif" font-size="14.00" fill="blue">Wait for</text>
+<text text-anchor="middle" x="543.5" y="-523.71" font-family="Times,serif" font-size="14.00" fill="blue">User Input</text>
+</g>
+<!-- engine&#45;&gt;wait_input -->
+<g id="edge11" class="edge">
+<title>engine-&gt;wait_input</title>
+<path fill="none" stroke="black" d="M634.34,-777.12C603.68,-753.59 556.44,-711.25 536.95,-661.56 526.2,-634.16 528.75,-600.74 533.48,-575.46"/>
+<polygon fill="black" stroke="black" points="536.94,-576.01 535.53,-565.51 530.08,-574.6 536.94,-576.01"/>
+<text text-anchor="middle" x="552.27" y="-627.94" font-family="Times,serif" font-size="14.00">False</text>
+</g>
+<!-- disp_moves_on_board&#45;&gt;wait_input -->
+<g id="edge12" class="edge">
+<title>disp_moves_on_board-&gt;wait_input</title>
+<path fill="none" stroke="black" d="M629.03,-604.75C614.3,-593.14 596.91,-579.43 581.68,-567.41"/>
+<polygon fill="black" stroke="black" points="583.48,-564.38 573.46,-560.94 579.15,-569.88 583.48,-564.38"/>
+</g><g id="edge8" class="edge">
+<title>disp_moves_in_web-&gt;wait_input</title>
+<path fill="none" stroke="black" d="M775.83,-679.19C777.66,-655.93 776.15,-623.72 758.5,-602.73 721.58,-558.82 656.14,-543.77 607.12,-538.91"/>
+<polygon fill="black" stroke="black" points="607.19,-535.4 596.93,-538.02 606.59,-542.38 607.19,-535.4"/>
+</g>
+<!-- wait_input&#45;&gt;pre_init -->
+<g id="edge37" class="edge">
+<title>wait_input-&gt;pre_init</title>
+<path fill="none" stroke="black" d="M516.12,-561.56C499.51,-579.03 481.5,-604.2 481.5,-631.14 481.5,-1608.31 481.5,-1608.31 481.5,-1608.31 481.5,-1636.15 650.52,-1677.63 749.52,-1699.54"/>
+<polygon fill="black" stroke="black" points="748.94,-1703 759.46,-1701.73 750.44,-1696.16 748.94,-1703"/>
+<text text-anchor="middle" x="517.86" y="-1133.47" font-family="Times,serif" font-size="14.00">Reset Button</text>
+<text text-anchor="middle" x="517.86" y="-1116.67" font-family="Times,serif" font-size="14.00">Pressed</text>
+</g>
+<!-- wait_placement -->
+<g id="node9" class="node">
+<title>wait_placement</title>
+<ellipse fill="none" stroke="black" cx="658.5" cy="-407.88" rx="70.32" ry="29.33"/>
+<text text-anchor="middle" x="658.5" y="-412.08" font-family="Times,serif" font-size="14.00">Wait for New</text>
+<text text-anchor="middle" x="658.5" y="-395.28" font-family="Times,serif" font-size="14.00">Piece Location</text>
+</g>
+<!-- wait_input&#45;&gt;wait_placement --><g id="node19" class="node">
+<title>blue_disc</title>
+<ellipse fill="none" stroke="black" cx="68.5" cy="-407.88" rx="68.49" ry="29.33"/>
+<text text-anchor="middle" x="68.5" y="-412.08" font-family="Times,serif" font-size="14.00">Bluetooth</text>
+<text text-anchor="middle" x="68.5" y="-395.28" font-family="Times,serif" font-size="14.00">Disconnection</text>
+</g>
+<g id="edge13" class="edge">
+<title>wait_input-&gt;wait_placement</title>
+<path fill="none" stroke="black" d="M566.77,-509.72C584.19,-490.57 608.2,-464.18 627.28,-443.2"/>
+<polygon fill="black" stroke="black" points="629.93,-445.49 634.07,-435.73 624.75,-440.78 629.93,-445.49"/>
+<text text-anchor="middle" x="645.63" y="-476.29" font-family="Times,serif" font-size="14.00">User Picks</text>
+<text text-anchor="middle" x="645.63" y="-459.49" font-family="Times,serif" font-size="14.00">Up Piece</text>
+</g>
+<!-- draw -->
+<g id="node29" class="node">
+<title>draw</title>
+<polygon fill="none" stroke="black" points="908.5,-425.88 862.61,-407.88 908.5,-389.88 954.38,-407.88 908.5,-425.88"/>
+<text text-anchor="middle" x="908.5" y="-403.68" font-family="Times,serif" font-size="14.00">Draw</text>
+</g>
+<!-- wait_input&#45;&gt;draw -->
+<g id="edge31" class="edge">
+<title>wait_input-&gt;draw</title>
+<path fill="none" stroke="black" d="M597.04,-535.72C647.03,-533.67 721.76,-524.18 775.5,-488.89 790.68,-478.92 784.35,-466.33 798.78,-455.29 817.78,-440.76 827.42,-446.5 849.5,-437.29 859.73,-433.03 870.72,-427.89 880.42,-423.16"/>
+<polygon fill="black" stroke="black" points="882.19,-426.19 889.6,-418.62 879.09,-419.92 882.19,-426.19"/>
+<text text-anchor="middle" x="835.85" y="-476.29" font-family="Times,serif" font-size="14.00">Draw Button</text>
+<text text-anchor="middle" x="835.85" y="-459.49" font-family="Times,serif" font-size="14.00">Pressed</text>
+</g>
+<!-- end -->
+<g id="node15" class="node">
+<title>end</title>
+<ellipse fill="none" stroke="red" cx="918.5" cy="-277.05" rx="61.96" ry="18"/>
+<text text-anchor="middle" x="918.5" y="-272.85" font-family="Times,serif" font-size="14.00" fill="red">END GAME</text>
+</g>
+<!-- wait_input&#45;&gt;end -->
+<g id="edge32" class="edge">
+<title>wait_input-&gt;end</title>
+<path fill="none" stroke="black" d="M592.08,-523.81C618.97,-516.22 652.34,-504.73 679.5,-488.89 709.3,-471.51 715.45,-463.83 737.5,-437.29 757.01,-413.81 752.07,-400.71 772.99,-378.46 804.57,-344.89 849.17,-316.15 880.65,-298.13"/>
+<polygon fill="black" stroke="black" points="882.57,-301.06 889.56,-293.11 879.13,-294.96 882.57,-301.06"/>
+<text text-anchor="middle" x="813.75" y="-412.08" font-family="Times,serif" font-size="14.00">Resign Button</text>
+<text text-anchor="middle" x="813.75" y="-395.28" font-family="Times,serif" font-size="14.00">Pressed</text>
+</g>
+<!-- blue_disc -->
+
+<!-- wait_input&#45;&gt;blue_disc -->
+<g id="edge38" class="edge">
+<title>wait_input-&gt;blue_disc</title>
+<path fill="none" stroke="black" d="M492.1,-527.64C442.41,-519.73 365.19,-506.13 299.5,-488.89 230.08,-470.68 214.22,-461.04 146.5,-437.29 140.92,-435.34 135.13,-433.28 129.34,-431.2"/>
+<polygon fill="black" stroke="black" points="130.22,-427.8 119.62,-427.7 127.84,-434.38 130.22,-427.8"/>
+</g>
+<!-- wifi_disc -->
+<g id="node20" class="node">
+<title>wifi_disc</title>
+<ellipse fill="none" stroke="black" cx="245.5" cy="-407.88" rx="90.42" ry="29.33"/>
+<text text-anchor="middle" x="245.5" y="-412.08" font-family="Times,serif" font-size="14.00">Internet Connection</text>
+<text text-anchor="middle" x="245.5" y="-395.28" font-family="Times,serif" font-size="14.00">Lost</text>
+</g>
+<!-- wait_input&#45;&gt;wifi_disc -->
+<g id="edge40" class="edge">
+<title>wait_input-&gt;wifi_disc</title>
+<path fill="none" stroke="black" d="M492.03,-527.82C453.68,-520.99 400.71,-508.84 357.5,-488.89 331.26,-476.78 304.81,-458.25 284.21,-442.08"/>
+<polygon fill="black" stroke="black" points="286.33,-439.29 276.33,-435.78 281.96,-444.76 286.33,-439.29"/>
+</g>
+<!-- cheat -->
+<g id="node23" class="node">
+<title>cheat</title>
+<ellipse fill="none" stroke="black" cx="610.5" cy="-342.46" rx="84.47" ry="18"/>
+<text text-anchor="middle" x="610.5" y="-338.26" font-family="Times,serif" font-size="14.00">Cheating Occurred</text>
+</g>
+<!-- wait_input&#45;&gt;cheat -->
+<g id="edge46" class="edge">
+<title>wait_input-&gt;cheat</title>
+<path fill="none" stroke="black" d="M545.78,-506.66C549.33,-474.06 558.15,-419.95 579.5,-378.46 581.32,-374.91 583.6,-371.43 586.07,-368.13"/>
+<polygon fill="black" stroke="black" points="588.84,-370.27 592.51,-360.33 583.44,-365.81 588.84,-370.27"/>
+</g>
+<!-- is_valid -->
+<g id="node27" class="node">
+<title>is_valid</title>
+<polygon fill="none" stroke="black" points="717.5,-295.05 652.42,-277.05 717.5,-259.05 782.57,-277.05 717.5,-295.05"/>
+<text text-anchor="middle" x="717.5" y="-272.85" font-family="Times,serif" font-size="14.00">Is Valid?</text>
+</g>
+<!-- wait_placement&#45;&gt;is_valid -->
+<g id="edge14" class="edge">
+<title>wait_placement-&gt;is_valid</title>
+<path fill="none" stroke="black" d="M682.8,-380.18C687.52,-374.02 692.06,-367.27 695.5,-360.46 704.36,-342.89 709.95,-321.35 713.27,-304.7"/>
+<polygon fill="black" stroke="black" points="716.77,-305.03 715.14,-294.56 709.89,-303.76 716.77,-305.03"/>
+<text text-anchor="middle" x="744.06" y="-346.66" font-family="Times,serif" font-size="14.00">Piece Placed</text>
+<text text-anchor="middle" x="744.06" y="-329.86" font-family="Times,serif" font-size="14.00">Down</text>
+</g>
+<!-- not_normal -->
+
+<!-- not_normal -->
+<g id="node26" class="node">
+<title>not_normal</title>
+<polygon fill="none" stroke="black" points="1243.5,-194.93 1163.19,-153.23 1243.5,-111.53 1323.81,-153.23 1243.5,-194.93"/>
+<text text-anchor="middle" x="1243.5" y="-157.43" font-family="Times,serif" font-size="14.00">not Normal</text>
+<text text-anchor="middle" x="1243.5" y="-140.63" font-family="Times,serif" font-size="14.00">Mode</text>
+</g>
+<!-- not_normal&#45;&gt;send_config -->
+
+<!-- green --><g id="node12" class="node">
+<title>green</title>
+<ellipse fill="none" stroke="black" cx="1314.5" cy="-29.42" rx="55.63" ry="18"/>
+<text text-anchor="middle" x="1314.5" y="-25.22" font-family="Times,serif" font-size="14.00">Green LED</text>
+</g>
+
+<!-- not_normal&#45;&gt;green -->
+
+<!-- is_valid&#45;&gt;not_normal -->
+
+<!-- is_valid&#45;&gt;not_normal -->
+<g id="edge15" class="edge">
+<title>is_valid-&gt;not_normal</title>
+<path fill="none" stroke="black" d="M751.2,-268.24C837.37,-248.29 1066.84,-195.14 1179.41,-169.07"/>
+<polygon fill="black" stroke="black" points="1180.33,-172.45 1189.28,-166.79 1178.75,-165.63 1180.33,-172.45"/>
+<text text-anchor="middle" x="993.71" y="-217.03" font-family="Times,serif" font-size="14.00">True</text>
+</g>
+<!-- red -->
+<g id="node10" class="node">
+<title>red</title>
+<ellipse fill="none" stroke="black" cx="610.5" cy="-153.23" rx="47.56" ry="18"/>
+<text text-anchor="middle" x="610.5" y="-149.03" font-family="Times,serif" font-size="14.00">Red LED</text>
+</g>
+<!-- is_valid&#45;&gt;red -->
+
+<!-- not_normal&#45;&gt;green -->
+<g id="edge16" class="edge">
+<title>not_normal-&gt;green</title>
+<path fill="none" stroke="black" d="M1261.78,-120.86C1273.5,-100.75 1288.53,-74.96 1299.54,-56.08"/>
+<polygon fill="black" stroke="black" points="1302.58,-57.82 1304.59,-47.41 1296.53,-54.29 1302.58,-57.82"/>
+<text text-anchor="middle" x="1297.71" y="-81.03" font-family="Times,serif" font-size="14.00">True</text>
+</g>
+<!-- is_valid&#45;&gt;red -->
+<g id="edge18" class="edge">
+<title>is_valid-&gt;red</title>
+<path fill="none" stroke="black" d="M705.22,-262.07C687.29,-241.66 653.68,-203.4 631.7,-178.37"/>
+<polygon fill="black" stroke="black" points="634.24,-175.95 625.01,-170.75 628.98,-180.57 634.24,-175.95"/>
+<text text-anchor="middle" x="689.27" y="-217.03" font-family="Times,serif" font-size="14.00">False</text>
+</g>
+<!-- red&#45;&gt;wait_input -->
+<g id="edge19" class="edge">
+<title>red-&gt;wait_input</title>
+<path fill="none" stroke="black" d="M598.71,-171.09C578.91,-200.54 539.75,-264.02 525.5,-324.46 511.55,-383.59 523.14,-454.31 533.08,-496.97"/>
+<polygon fill="black" stroke="black" points="529.74,-498.04 535.5,-506.93 536.54,-496.39 529.74,-498.04"/>
+</g>
+<!-- yellow -->
+<g id="node11" class="node">
+<title>yellow</title>
+<ellipse fill="none" stroke="black" cx="712.5" cy="-1213.68" rx="60.8" ry="18"/>
+<text text-anchor="middle" x="712.5" y="-1209.48" font-family="Times,serif" font-size="14.00">Yellow LED</text>
+</g>
+<!-- green&#45;&gt;init -->
+<g id="edge20" class="edge">
+<title>green-&gt;init</title>
+<path fill="none" stroke="black" d="M1323.08,-47.27C1334.01,-70.34 1351.5,-113.33 1351.5,-152.23 1351.5,-1608.31 1351.5,-1608.31 1351.5,-1608.31 1351.5,-1682.38 1253.59,-1705.01 1183.9,-1711.74"/>
+<polygon fill="black" stroke="black" points="1183.49,-1708.27 1173.83,-1712.63 1184.1,-1715.24 1183.49,-1708.27"/>
+</g><g id="edge28" class="edge">
+<title>warning-&gt;send_config</title>
+<path fill="none" stroke="black" d="M697.25,-1099.75C694.39,-1086.68 690.96,-1071 687.88,-1056.92"/>
+<polygon fill="black" stroke="black" points="691.27,-1056.03 685.71,-1047.01 684.43,-1057.53 691.27,-1056.03"/>
+</g>
+<!-- beginner -->
+<g id="node28" class="node">
+<title>beginner</title>
+<polygon fill="none" stroke="black" points="754.5,-1401.18 651.04,-1342.88 754.5,-1284.58 857.96,-1342.88 754.5,-1401.18"/>
+<text text-anchor="middle" x="754.5" y="-1355.48" font-family="Times,serif" font-size="14.00">Beginner Mode</text>
+<text text-anchor="middle" x="754.5" y="-1338.68" font-family="Times,serif" font-size="14.00">OR</text>
+<text text-anchor="middle" x="754.5" y="-1321.88" font-family="Times,serif" font-size="14.00">Engine Mode</text>
+</g><g id="edge23" class="edge">
+<title>yellow-&gt;warning</title>
+<path fill="none" stroke="black" d="M710.63,-1195.6C709.78,-1187.78 708.73,-1178.16 707.7,-1168.74"/>
+<polygon fill="black" stroke="black" points="711.16,-1168.24 706.6,-1158.68 704.21,-1169 711.16,-1168.24"/>
+</g>
+<!-- check&#45;&gt;beginner -->
+<g id="edge21" class="edge">
+<title>check-&gt;beginner</title>
+<path fill="none" stroke="black" d="M815.91,-1454.45C806.69,-1437.84 794.71,-1416.28 783.78,-1396.6"/>
+<polygon fill="black" stroke="black" points="786.77,-1394.76 778.85,-1387.72 780.65,-1398.16 786.77,-1394.76"/>
+<text text-anchor="middle" x="822.38" y="-1423.48" font-family="Times,serif" font-size="14.00">Check</text>
+</g>
+<!-- warning -->
+<g id="node14" class="node">
+<title>warning</title>
+<ellipse fill="none" stroke="black" cx="703.5" cy="-1129.27" rx="89.87" ry="29.33"/>
+<text text-anchor="middle" x="703.5" y="-1133.47" font-family="Times,serif" font-size="14.00">Save Warning State</text>
+<text text-anchor="middle" x="703.5" y="-1116.67" font-family="Times,serif" font-size="14.00">to Hardware</text>
+</g>
+<!-- check&#45;&gt;warning -->
+<g id="edge25" class="edge">
+<title>check-&gt;warning</title>
+<path fill="none" stroke="black" d="M755.86,-1470.52C714.89,-1459.76 667.64,-1439.46 642.5,-1401.28 592.23,-1324.97 609.01,-1280.7 642.5,-1195.68 647.03,-1184.17 654.65,-1173.48 663,-1164.23"/>
+<polygon fill="black" stroke="black" points="665.73,-1166.44 670.13,-1156.8 660.68,-1161.59 665.73,-1166.44"/>
+<text text-anchor="middle" x="635.34" y="-1161" font-family="Times,serif" font-size="14.00">No Warning</text>
+</g>
+<!-- check&#45;&gt;draw -->
+<g id="edge27" class="edge">
+<title>check-&gt;draw</title>
+<path fill="none" stroke="black" d="M849.48,-1454.53C865.19,-1427.38 885.5,-1384.43 885.5,-1343.88 885.5,-1343.88 885.5,-1343.88 885.5,-535.31 885.5,-499.78 894.4,-459.53 901.12,-434.18"/>
+<polygon fill="black" stroke="black" points="904.57,-434.86 903.84,-424.29 897.82,-433 904.57,-434.86"/>
+</g>
+<!-- check&#45;&gt;end -->
+<g id="edge26" class="edge">
+<title>check-&gt;end</title>
+<path fill="none" stroke="black" d="M862.9,-1455.95C889.55,-1430.29 923.5,-1388.8 923.5,-1343.88 923.5,-1343.88 923.5,-1343.88 923.5,-1072.45 923.5,-789.6 954.6,-720 963.5,-437.29 964.32,-411.16 967.69,-404.27 963.5,-378.46 959.44,-353.49 955.91,-347.52 945.5,-324.46 942.33,-317.45 938.4,-310.14 934.53,-303.45"/>
+<polygon fill="black" stroke="black" points="937.49,-301.59 929.36,-294.8 931.48,-305.18 937.49,-301.59"/>
+<text text-anchor="middle" x="961.98" y="-901.8" font-family="Times,serif" font-size="14.00">Checkmate</text>
+</g>
+<!-- beginner&#45;&gt;yellow --><g id="node18" class="node">
+<title>save_to_web</title>
+<ellipse fill="none" stroke="black" cx="935.5" cy="-29.42" rx="88.68" ry="29.33"/>
+<text text-anchor="middle" x="935.5" y="-33.62" font-family="Times,serif" font-size="14.00">Save Game History</text>
+<text text-anchor="middle" x="935.5" y="-16.82" font-family="Times,serif" font-size="14.00">to online Database</text>
+</g>
+
+<!-- beginner&#45;&gt;yellow -->
+<g id="edge22" class="edge">
+<title>beginner-&gt;yellow</title>
+<path fill="none" stroke="black" d="M738.5,-1293.43C732.66,-1275.75 726.27,-1256.4 721.29,-1241.31"/>
+<polygon fill="black" stroke="black" points="724.55,-1240.02 718.09,-1231.62 717.9,-1242.21 724.55,-1240.02"/>
+<text text-anchor="middle" x="742.71" y="-1253.88" font-family="Times,serif" font-size="14.00">True</text>
+</g>
+<!-- beginner&#45;&gt;warning --><g id="edge35" class="edge">
+<title>disp_stats_web-&gt;save_to_web</title>
+<path fill="none" stroke="black" d="M935.5,-123.67C935.5,-107.45 935.5,-86.91 935.5,-69.24"/>
+<polygon fill="black" stroke="black" points="939,-69.22 935.5,-59.22 932,-69.22 939,-69.22"/>
+</g>
+
+<!-- beginner&#45;&gt;warning -->
+<g id="edge24" class="edge">
+<title>beginner-&gt;warning</title>
+<path fill="none" stroke="black" d="M776.92,-1296.92C788.55,-1267.05 797.51,-1227.6 782.5,-1195.68 776.28,-1182.46 765.93,-1170.99 754.74,-1161.51"/>
+<polygon fill="black" stroke="black" points="756.9,-1158.76 746.89,-1155.27 752.54,-1164.24 756.9,-1158.76"/>
+<text text-anchor="middle" x="805.27" y="-1209.48" font-family="Times,serif" font-size="14.00">False</text>
+</g>
+<!-- draw&#45;&gt;end -->
+
+<!-- draw&#45;&gt;end -->
+<g id="edge30" class="edge">
+<title>draw-&gt;end</title>
+<path fill="none" stroke="black" d="M909.78,-390.3C911.45,-368.89 914.36,-331.34 916.36,-305.61"/>
+<polygon fill="black" stroke="black" points="919.87,-305.62 917.15,-295.38 912.89,-305.08 919.87,-305.62"/>
+<text text-anchor="middle" x="928.71" y="-338.26" font-family="Times,serif" font-size="14.00">True</text>
+</g>
+<!-- end&#45;&gt;pre_init -->
+<g id="edge36" class="edge">
+<title>end-&gt;pre_init</title>
+<path fill="none" stroke="black" d="M943.41,-293.65C974.17,-315.08 1022.5,-356.72 1022.5,-406.88 1022.5,-858.59 1022.5,-858.59 1022.5,-858.59 1022.5,-956.51 969.5,-974.52 969.5,-1072.45 969.5,-1608.31 969.5,-1608.31 969.5,-1608.31 969.5,-1653.87 922.78,-1681.6 881.49,-1697.21"/>
+<polygon fill="black" stroke="black" points="880.18,-1693.96 871.96,-1700.64 882.55,-1700.54 880.18,-1693.96"/>
+<text text-anchor="middle" x="1022.86" y="-1021.83" font-family="Times,serif" font-size="14.00">Reset Button</text>
+<text text-anchor="middle" x="1022.86" y="-1005.03" font-family="Times,serif" font-size="14.00">Pressed</text>
+</g>
+<!-- draw&#45;&gt;init -->
+<g id="edge29" class="edge">
+<title>draw-&gt;init</title>
+<path fill="none" stroke="black" d="M917.16,-422.57C941.09,-461.18 1008.21,-574.93 1036.5,-679.56 1082.24,-848.76 1070.5,-897.18 1070.5,-1072.45 1070.5,-1608.31 1070.5,-1608.31 1070.5,-1608.31 1070.5,-1633.11 1081.06,-1658.76 1091.94,-1678.62"/>
+<polygon fill="black" stroke="black" points="1088.92,-1680.38 1096.93,-1687.31 1094.99,-1676.89 1088.92,-1680.38"/>
+<text text-anchor="middle" x="1085.27" y="-1069.25" font-family="Times,serif" font-size="14.00">False</text>
+</g>
+<!-- disp_stats_board -->
+<g id="node16" class="node">
+<title>disp_stats_board</title>
+<ellipse fill="none" stroke="black" cx="779.5" cy="-153.23" rx="69.72" ry="29.33"/>
+<text text-anchor="middle" x="779.5" y="-157.43" font-family="Times,serif" font-size="14.00">Display Game</text>
+<text text-anchor="middle" x="779.5" y="-140.63" font-family="Times,serif" font-size="14.00">Stats on Board</text>
+</g>
+<!-- end&#45;&gt;disp_stats_board -->
+<g id="edge33" class="edge">
+<title>end-&gt;disp_stats_board</title>
+<path fill="none" stroke="black" d="M899.75,-259.62C878.51,-241 843.35,-210.19 816.52,-186.68"/>
+<polygon fill="black" stroke="black" points="818.67,-183.9 808.84,-179.95 814.05,-189.17 818.67,-183.9"/>
+</g>
+<!-- disp_stats_web -->
+<g id="node17" class="node">
+<title>disp_stats_web</title>
+<ellipse fill="none" stroke="black" cx="935.5" cy="-153.23" rx="68.44" ry="29.33"/>
+<text text-anchor="middle" x="935.5" y="-157.43" font-family="Times,serif" font-size="14.00">Display Game</text>
+<text text-anchor="middle" x="935.5" y="-140.63" font-family="Times,serif" font-size="14.00">Stats Online</text>
+</g>
+<!-- end&#45;&gt;disp_stats_web -->
+<g id="edge34" class="edge">
+<title>end-&gt;disp_stats_web</title>
+<path fill="none" stroke="black" d="M920.9,-258.85C923.28,-241.75 927.02,-214.94 930.12,-192.74"/>
+<polygon fill="black" stroke="black" points="933.62,-192.99 931.54,-182.6 926.69,-192.02 933.62,-192.99"/>
+</g>
+<!-- save_to_web --><g id="node22" class="node">
+<title>empty_queue</title>
+<ellipse fill="none" stroke="black" cx="695.5" cy="-29.42" rx="63.06" ry="29.33"/>
+<text text-anchor="middle" x="695.5" y="-33.62" font-family="Times,serif" font-size="14.00">Empty Move</text>
+<text text-anchor="middle" x="695.5" y="-16.82" font-family="Times,serif" font-size="14.00">Queue</text>
+</g>
+
+<!-- disp_stats_web&#45;&gt;save_to_web -->
+
+<!-- timer -->
+<g id="node21" class="node">
+<title>timer</title>
+<ellipse fill="none" stroke="black" cx="307.5" cy="-277.05" rx="100.82" ry="29.33"/>
+<text text-anchor="middle" x="307.5" y="-281.25" font-family="Times,serif" font-size="14.00">Attempt Reconnection</text>
+<text text-anchor="middle" x="307.5" y="-264.45" font-family="Times,serif" font-size="14.00">for 30 Sec</text>
+</g>
+<!-- blue_disc&#45;&gt;timer -->
+<g id="edge39" class="edge">
+<title>blue_disc-&gt;timer</title>
+<path fill="none" stroke="black" d="M79.4,-378.81C87.84,-360.68 101.26,-338.03 119.97,-324.46 144.01,-307.02 173.86,-296.09 202.62,-289.26"/>
+<polygon fill="black" stroke="black" points="203.74,-292.6 212.74,-287.01 202.22,-285.76 203.74,-292.6"/>
+<text text-anchor="middle" x="177.26" y="-338.26" font-family="Times,serif" font-size="14.00">Queue Moves Made</text>
+</g>
+
+<g id="node30" class="node">
+<title>connect</title>
+<polygon fill="none" stroke="black" points="444.5,-194.93 363.91,-153.23 444.5,-111.53 525.09,-153.23 444.5,-194.93"/>
+<text text-anchor="middle" x="444.5" y="-157.43" font-family="Times,serif" font-size="14.00">Connection</text>
+<text text-anchor="middle" x="444.5" y="-140.63" font-family="Times,serif" font-size="14.00">Successful</text>
+</g>
+<!-- not_normal&#45;&gt;init -->
+<g id="edge17" class="edge">
+<title>not_normal-&gt;init</title>
+<path fill="none" stroke="black" d="M1268.03,-182.64C1285.72,-206.08 1306.5,-241.05 1306.5,-276.05 1306.5,-1608.31 1306.5,-1608.31 1306.5,-1608.31 1306.5,-1666.87 1237.03,-1693.35 1181.88,-1705.16"/>
+<polygon fill="black" stroke="black" points="1180.88,-1701.79 1171.77,-1707.19 1182.26,-1708.65 1180.88,-1701.79"/>
+<text text-anchor="middle" x="1321.27" y="-957.62" font-family="Times,serif" font-size="14.00">False</text>
+</g><g id="edge41" class="edge">
+<title>wifi_disc-&gt;timer</title>
+<path fill="none" stroke="black" d="M238.57,-378.31C236.07,-361.72 235.61,-340.92 243.97,-324.46 246.63,-319.24 250.18,-314.46 254.25,-310.12"/>
+<polygon fill="black" stroke="black" points="256.66,-312.66 261.52,-303.25 251.85,-307.57 256.66,-312.66"/>
+<text text-anchor="middle" x="301.26" y="-338.26" font-family="Times,serif" font-size="14.00">Queue Moves Made</text>
+</g><g id="edge45" class="edge">
+<title>timer-&gt;wait_input</title>
+<path fill="none" stroke="black" d="M341.92,-304.89C347.81,-310.8 353.35,-317.42 357.5,-324.46 383.69,-368.97 354.88,-395.53 385.25,-437.29 411.6,-473.52 455.81,-499.25 490.81,-515.24"/>
+<polygon fill="black" stroke="black" points="489.39,-518.44 499.95,-519.29 492.23,-512.04 489.39,-518.44"/>
+<text text-anchor="middle" x="447.12" y="-420.48" font-family="Times,serif" font-size="14.00">Connection Lost</text>
+<text text-anchor="middle" x="447.12" y="-403.68" font-family="Times,serif" font-size="14.00">Playing Without</text>
+<text text-anchor="middle" x="447.12" y="-386.88" font-family="Times,serif" font-size="14.00">Web-App Connection</text>
+</g><g id="edge42" class="edge">
+<title>timer-&gt;connect</title>
+<path fill="none" stroke="black" d="M338.24,-248.71C358.76,-230.47 385.85,-206.38 407.54,-187.09"/>
+<polygon fill="black" stroke="black" points="410.11,-189.49 415.26,-180.23 405.46,-184.26 410.11,-189.49"/>
+<text text-anchor="middle" x="412.65" y="-217.03" font-family="Times,serif" font-size="14.00">Reconnected</text>
+</g><g id="edge44" class="edge">
+<title>empty_queue-&gt;init</title>
+<path fill="none" stroke="black" d="M752.33,-42.35C816.34,-56.4 923.08,-81.64 1012.5,-111.63 1056.81,-126.49 1109.5,-105.5 1109.5,-152.23 1109.5,-858.59 1109.5,-858.59 1109.5,-858.59 1109.5,-978.47 1115.5,-1008.38 1115.5,-1128.27 1115.5,-1608.31 1115.5,-1608.31 1115.5,-1608.31 1115.5,-1630.57 1115.5,-1655.45 1115.5,-1675.52"/>
+<polygon fill="black" stroke="black" points="1112,-1675.53 1115.5,-1685.53 1119,-1675.53 1112,-1675.53"/>
+<text text-anchor="middle" x="1194.87" y="-910.2" font-family="Times,serif" font-size="14.00">Web-App Fully Synchronized</text>
+<text text-anchor="middle" x="1194.87" y="-893.4" font-family="Times,serif" font-size="14.00">With Game State</text>
+</g><g id="edge47" class="edge">
+<title>cheat-&gt;red</title>
+<path fill="none" stroke="black" d="M610.5,-324.18C610.5,-291.58 610.5,-220.76 610.5,-181.61"/>
+<polygon fill="black" stroke="black" points="614,-181.47 610.5,-171.47 607,-181.47 614,-181.47"/>
+</g>
+<!-- connect&#45;&gt;empty_queue -->
+<g id="edge43" class="edge">
+<title>connect-&gt;empty_queue</title>
+<path fill="none" stroke="black" d="M485.1,-132.52C528.16,-111.63 596.31,-78.55 643.32,-55.74"/>
+<polygon fill="black" stroke="black" points="644.96,-58.83 652.42,-51.32 641.9,-52.54 644.96,-58.83"/>
+</g>
+</g>
+</svg>

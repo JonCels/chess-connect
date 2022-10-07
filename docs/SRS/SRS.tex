@@ -285,7 +285,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
     The normal operation of the chess board involves configuring game mode and settings, reading the physical positions and identifiers (magnetic strength) of the pieces, 
     lighting up corresponding LEDs and determining legal moves on the micro-controller. There will be three game modes: Normal Mode (no LED feedback), Engine Mode (best moves 
     calculated by a chess engine and displayed by an LCD display) and Beginner Mode (legal moves displayed by LED when a piece is picked up). The micro-controller will also be 
-    simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of ``best'' moves from the server. The server will be calculating these 
+    simultaneously transmitting data to the server via Bluetooth and receiving responses in the form of "best" moves from the server. The server will be calculating these 
     best moves in real time depending on the configuration of the pieces on the board sent from the chess board, and sending it back over Bluetooth every time it is queried
     while the game is in ``Engine Mode''. The server will also be communicating all of this information to a web application where users can tune in and watch the pieces and see
     game stats in real time.
@@ -294,7 +294,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \subsubsection{Finite State Machine}{
 \begin{figure}[H]
     \begin{center}
-      \includegraphics[scale=0.5]{chess-connect-FSM.png}
+      \includegraphics[scale=0.9]{chess-connect-FSM.pdf}
+      \vspace*{-60mm}
       \caption{Finite State Machine Detailing Normal System Behaviour}
       \label{Fig_FSM} 
     \end{center}
