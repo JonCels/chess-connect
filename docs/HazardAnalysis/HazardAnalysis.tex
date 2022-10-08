@@ -3,6 +3,28 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{amsmath, mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{xr}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{xfrac}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{fullpage}
+\usepackage{titlesec}
+\usepackage[shortlabels]{enumitem}
+\usepackage[round]{natbib}
+\usepackage{array}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -69,8 +91,53 @@ you could assume a part will never fail, but it is generally better to include
 this potential failure mode.}
 
 \section{Failure Mode and Effect Analysis}
-
-\wss{Include your FMEA table here}
+{The following table (Table 2) is a breakdown of the failure modes and and effects analysis (FMEA) for the Chess Connect system.}
+\begin{table}[ht]
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{2.5cm} | 
+          >{\centering\arraybackslash}m{2cm} | 
+          >{\centering\arraybackslash}m{3cm} |
+          >{\centering\arraybackslash}m{2cm} |
+          >{\centering\arraybackslash}m{3cm} |
+          >{\centering\arraybackslash}m{1.5cm} |
+          >{\centering\arraybackslash}m{1cm} |}
+        \hline
+        \rowcolor[gray]{0.9}
+        Component & Failure & Causes & Detection & Recommended Action & Probability of Occurence & Ref. \\
+        \hline
+        Web Application & Loss of Internet connection
+        & \begin{enumerate}[label=(\alph*)]
+            \item Internet outage 
+            \item Loss of power
+            \item Internet time-out 
+        \end{enumerate} & Ping the Internet and wait for the response & Alert the user to check Internet connection & 0.3 & TBD \\
+        \hline
+        Microcontroller & Bad inputs &
+        \begin{enumerate}[label=(\alph*)]
+            \item If a player knocks down multiple pieces in their turn 
+            \item Loss of power
+            \item Faulty components and/or connections 
+        \end{enumerate} & Monitoring inputs & Prompt the user to return the system to previous state and redo the turn & 0.4 & TBD \\ 
+        \hline
+        Microcontroller & Loss of Bluetooth connection & \begin{enumerate}[label=(\alph*)]
+            \item Distance between microcontroller and host is too large
+            \item Physical barriers between microcontroller and host
+            \item Failed to initialise connection
+        \end{enumerate} & Continuously monitor Bluetooth connection & Prompt user to re-establish connection before continuing & 0.2 & TBD \\
+        \hline
+        Hall Sensor & Bad inputs & \begin{enumerate}[label=(\alph*)]
+            \item Sensitivity loss over a period of time
+            \item Interference from external magnetic objects
+            \item Distance between sensor and object too large
+        \end{enumerate} & Monitoring Hall sensor inputs & \begin{enumerate}[label=(\alph*)]
+            \item Prompt the user to clear area of obstacles from the board
+            \item The sensor should be replaced after the recommended use time
+        \end{enumerate} & 0.1 & TBD \\
+        \hline
+        \end{tabular}
+    \caption{Failure Mode and Effects Analysis}
+    \end{table}
 
 \section{Safety and Security Requirements}
 
