@@ -58,7 +58,8 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
+10/09/2022 & Alexander Van Kralingen & Updated Introduction, Scope, System Boundaries and Critical Assumptions\\
+10/09/2022 & Alexander Van Kralingen & Fixed FMEA table placement\\
 Date2 & Name(s) & Description of changes\\
 ... & ... & ...\\
 \bottomrule
@@ -75,24 +76,46 @@ Date2 & Name(s) & Description of changes\\
 
 \wss{You are free to modify this template.}
 
-\section{Introduction}
+\section{Introduction}{
+    Creating a product designed for consumer use requires a robust hazard identification and mitigation strategy before the product is released to the public. A hazard can be defined as any source of potential damage, harm or adverse health effects on something or someone \cite{CCOHS}. A hazard for the \progname{} system is anyhting that could either harm the user or cause system failure.
+}
 
-\wss{You can include your definition of what a hazard is here.}
+\section{Scope and Purpose of Hazard Analysis}{
+    In this document, the potential cause for hazards will be explored in detail, as well as methods for preemptive detection, and recommended actions to take should the hazard still present itself. Its purpose is to identify potential sources for harm or failure and address them before they are presented in the finished product.
+}
 
-\section{Scope and Purpose of Hazard Analysis}
+\section{System Boundaries and Components}{
+    The \progname{} system is comprised of three main components:
+    \begin{enumerate}
+        \item The hardware including the chess pieces, board, microcontroller and all electronic components:
+        \begin{itemize}
+            \item LEDs
+            \item Hall-Effect sensors
+            \item LCD screen
+            \item Connecting wires
+            \item Power adapter
+        \end{itemize}
+        \item The nearby server to recieve data through a Bluetooth connection.
+        \item The hosted Web Application used to connect to the game remotely.
+    \end{enumerate}
 
-\section{System Boundaries and Components}
+    The boundary of this system begins at the chess board and ends at the Web Application. The distance between the chess board and the server is spanned by a Bluetooth connection, and the server to the Web-App by Wi-Fi. The user will cross the system boundary by interacting with the hardware and the Web-App, however everything in between will be isolated within the system.
+}
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+The assumptions made in this document are meant to constrain the hazards to those present within typical operation. These assumptions are as follows:
+\begin{enumerate}
+    \item The chess board is operated in a dry environment.
+    \item The server present will be capable of both Bluetooth and Wi-Fi connections.
+    \item The user is not intentionally trying to disconnect the electronics within the board.
+    \item The Web-App hosting platform will remain up and running without interruption.
+\end{enumerate}
 
 \section{Failure Mode and Effect Analysis}
 {The following table (Table 2) is a breakdown of the failure modes and and effects analysis (FMEA) for the Chess Connect system.}
-\begin{table}[ht]
+\begin{table}[!htbp]
+    \caption{Failure Mode and Effects Analysis}
     \centering
         \setlength{\leftmargini}{0.4cm}
         \begin{tabular}{| >{\centering\arraybackslash}m{2.5cm} | 
@@ -136,9 +159,8 @@ this potential failure mode.}
         \end{enumerate} & 0.1 & TBD \\
         \hline
         \end{tabular}
-    \caption{Failure Mode and Effects Analysis}
     \end{table}
-
+    \newpage
 \section{Safety and Security Requirements}
 
 \wss{Newly discovered requirements.  These should also be added to the SRS.  (A
@@ -148,5 +170,8 @@ rationale design process how and why to fake it.)}
 
 \wss{Which safety requirements will be implemented as part of the capstone timeline?
 Which requirements will be implemented in the future?}
+\newpage
 
+\bibliographystyle {plainnat}
+\bibliography {../../refs/References}
 \end{document}
