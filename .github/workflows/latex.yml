@@ -10,7 +10,6 @@ on:
   # Triggers the workflow pull request events but only for the "main" branch
   pull_request:
     types:
-      - opened
       - closed
     branches: 
       - "main" 
@@ -169,10 +168,10 @@ jobs:
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git add .
+          git add -A
           git commit -m "Generated new .pdf files in docs subfolders"
         continue-on-error: true
-          
+        
       - name: Pushing to the protected branch ${{ github.ref_name }}
         uses: CasperWA/push-protected@v2
         if: ${{ success() && github.event.pull_request.merged == true }}
