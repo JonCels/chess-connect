@@ -26,11 +26,12 @@ jobs:
         branch: ["Documentation/DD", "Documentation/DEMO", "Documentation/DP", "Documentation/EXPODEMO", "Documentation/FINALDEMO", "Documentation/FINALDOC", "Documentation/HA", "Documentation/POC", "Documentation/PSAG", "Documentation/SRS", "Documentation/VNVP", "Documentation/VNVR"]
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ matrix.branch }}
 
-      - name: Sync main with Documentation branches
+      - name: Sync main with ${{ matrix.branch }}
         run: |
           echo "Merging main into ${{ matrix.branch }}"
-          git checkout ${{ matrix.branch }}
           git merge main
           git add -A
           git commit -m "Merging main into ${{ matrix.branch }}"
