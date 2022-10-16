@@ -26,6 +26,11 @@ jobs:
       matrix: 
         branch: ["Documentation/DD", "Documentation/DEMO", "Documentation/DP", "Documentation/EXPODEMO", "Documentation/FINALDEMO", "Documentation/FINALDOC", "Documentation/HA", "Documentation/POC", "Documentation/PSAG", "Documentation/SRS", "Documentation/VNVP", "Documentation/VNVR"]
     steps:
+      - name: 'Checkout main'
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          
       - name: 'Checkout ${{ matrix.branch }}'
         uses: actions/checkout@v3
         with:
@@ -35,8 +40,7 @@ jobs:
         run: |
           echo "Merging main into ${{ matrix.branch }}"
           git fetch origin main --depth 1
-          git merge --ff-only --no-edit -v main
-        continue-on-error: true
+          git merge --ff-only --no-edit -v origin/main
       
       - name: Pushing to the protected branch ${{ github.ref_name }}
         uses: CasperWA/push-protected@v2
