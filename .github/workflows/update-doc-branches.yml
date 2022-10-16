@@ -1,0 +1,48 @@
+# Uses:
+# https://github.com/marketplace/actions/push-to-status-check-protected-branches
+
+name: Update Documentation Branches after Merge to Main
+on:
+  # Triggers the workflow pull request events but only for the "main" branch
+  push:
+    branches: 
+      - "main" 
+    paths: 
+      - "**.tex"
+      - "**.yml"
+  pull_request:
+    types:
+      - closed
+    branches: 
+      - "main" 
+    paths: 
+      - "**.tex"
+      
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix: 
+        branch: ["Documentation/DD", "Documentation/DEMO", "Documentation/DP", "Documentation/EXPODEMO", "Documentation/FINALDEMO", "Documentation/FINALDOC", "Documentation/HA", "Documentation/POC", "Documentation/PSAG", "Documentation/SRS", "Documentation/VNVP", "Documentation/VNVR"]
+    steps:
+      - name: 'Checkout main'
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Merge main -> ${{ matrix.branch }}
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: main
+          target_branch: ${{ matrix.branch }}
+          github_token: ${{ secrets.AUTO_PAT }}
+      
+      - name: Pushing to the protected branch ${{ github.ref_name }}
+        uses: CasperWA/push-protected@v2
+        with:
+          token: ${{ secrets.AUTO_PAT }}
+          branch: ${{ matrix.branch }}
+          unprotect_reviews: true
+        continue-on-error: true
