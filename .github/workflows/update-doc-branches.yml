@@ -30,17 +30,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: main
-          
-      - name: 'Checkout ${{ matrix.branch }}'
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ matrix.branch }}
 
       - name: Sync ${{ matrix.branch }} with main
         run: |
           echo "Merging main into ${{ matrix.branch }}"
-          git fetch origin main --depth 1
-          git merge --ff-only --no-edit -v origin/main
+          git switch ${{ matrix.branch }}
+          git merge --ff-only --no-edit -v main
       
       - name: Pushing to the protected branch ${{ github.ref_name }}
         uses: CasperWA/push-protected@v2
