@@ -21,6 +21,7 @@ on:
 jobs:
   sync-branches:
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix: 
         branch: ["Documentation/DD", "Documentation/DEMO", "Documentation/DP", "Documentation/EXPODEMO", "Documentation/FINALDEMO", "Documentation/FINALDOC", "Documentation/HA", "Documentation/POC", "Documentation/PSAG", "Documentation/SRS", "Documentation/VNVP", "Documentation/VNVR"]
@@ -40,7 +41,7 @@ jobs:
       
       - name: Pushing to the protected branch ${{ github.ref_name }}
         uses: CasperWA/push-protected@v2
-        if: ${{ steps.merge_${{ matrix.branch }}.outcome == success }}
+        if: format(steps.merge_{0}.outcome, matrix.branch) == success
         with:
           token: ${{ secrets.AUTO_PAT }}
           branch: ${{ matrix.branch }}
