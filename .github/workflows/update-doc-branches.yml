@@ -31,11 +31,13 @@ jobs:
         with:
           ref: main
 
-      - name: Sync ${{ matrix.branch }} with main
-        run: |
-          echo "Merging main into ${{ matrix.branch }}"
-          git switch ${{ matrix.branch }}
-          git merge --ff-only --no-edit -v main
+      - name: Merge main -> ${{ matrix.branch }}
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: main
+          target_branch: ${{ matrix.branch }}
+          github_token: ${{ secrets.AUTO_PAT }}
       
       - name: Pushing to the protected branch ${{ github.ref_name }}
         uses: CasperWA/push-protected@v2
