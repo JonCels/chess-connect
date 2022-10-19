@@ -125,16 +125,19 @@ implementation and hazard prevention.}
 \begin{table}[!htbp]
     \centering
         \setlength{\leftmargini}{0.4cm}
-        \begin{tabular}{| >{\centering\arraybackslash}m{2.5cm} | 
+        \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
           >{\centering\arraybackslash}m{2cm} | 
           >{\centering\arraybackslash}m{4cm} |
           >{\centering\arraybackslash}m{2cm} |
           >{\centering\arraybackslash}m{3cm} |
-          >{\centering\arraybackslash}m{1.5cm}|}
+          >{\centering\arraybackslash}m{1cm}|
+          >{\centering\arraybackslash}m{1cm}|}
         \hline
         \rowcolor[gray]{0.9}
-        Component & Failure & Causes & Detection & Recommended Action & Likelihood \\
+        Component & Failure & Causes & Detection & Recommended Action 
+        & Likelihood & Requirements\\
         \hline
+
         Web Application & Loss of internet connection
         & \begin{enumerate}[label=(\alph*)]
             \item Internet outage
@@ -143,8 +146,9 @@ implementation and hazard prevention.}
         \end{enumerate} 
         & Ping the Internet and wait for the response 
         & Alert the user to check Internet connection 
-        & 0.4 \\
+        & 0.4 & SR3, SR4\\
         \hline
+
         Web Application & Connection lost between server and client
         & \begin{enumerate}[label=(\alph*)]
             \item Deployment hosting platform fails
@@ -152,8 +156,9 @@ implementation and hazard prevention.}
         \end{enumerate} 
         & Loss of connection to the platform
         & Alert the user of the issue and wait accordingly
-        & 0.1 \\
+        & 0.1 & SR3, SR4\\
         \hline
+
         Microcontroller & Unable to detect starting game state &
         \begin{enumerate}[label=(\alph*)]
             \item A player begins with the pieces in the incorrect location
@@ -161,8 +166,9 @@ implementation and hazard prevention.}
         \end{enumerate} 
         & Strict guidelines programmed in the microcontroller to prevent
         & Prompt user to make appropriate changes to pieces or board state
-        & 0.2 \\ 
+        & 0.2 & SR5\\ 
         \hline
+
         Microcontroller & Unable to follow game state &
         \begin{enumerate}[label=(\alph*)]
             \item A player makes two moves in a row
@@ -171,8 +177,9 @@ implementation and hazard prevention.}
         \end{enumerate} 
         & Edge cases programmed on the controller
         & Prompt user to make appropriate action to the board
-        & 0.3 \\ 
+        & 0.3 & SR5\\ 
         \hline
+
         Microcontroller & Loss of Bluetooth connection & \begin{enumerate}[label=(\alph*)]
             \item Distance between microcontroller and host is too large
             \item Physical barriers between microcontroller and host
@@ -181,8 +188,19 @@ implementation and hazard prevention.}
         \end{enumerate} 
         & Continuously monitor Bluetooth connection 
         & Prompt the user to re-establish connection before continuing 
-        & 0.1 \\
+        & 0.1 & SR3, SR4\\
         \hline
+
+        Microcontroller & Loss of Power & \begin{enumerate}[label=(\alph*)]
+            \item Board is unplugged
+            \item Cable connection failure
+            \item Power surge
+        \end{enumerate} 
+        & N/A
+        & Store game state in local flash memory
+        & 0.1 & SR3\\
+        \hline
+
         Hall Sensor & Bad inputs & \begin{enumerate}[label=(\alph*)]
             \item Sensitivity loss over a period of time
             \item Interference from external magnetic objects
@@ -191,8 +209,10 @@ implementation and hazard prevention.}
         & \begin{enumerate}[label=(\alph*)]
             \item Prompt the user to clear area of obstacles from the board
             \item The sensor should be replaced after the recommended use time
-        \end{enumerate} & 0.1 \\
+        \end{enumerate} 
+        & 0.1 & SR5\\
         \hline
+
         \end{tabular}
         \caption{Failure Mode and Effects Analysis}
     \end{table}
