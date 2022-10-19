@@ -25,6 +25,7 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage[round]{natbib}
 \usepackage{array}
+\usepackage{geometry}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -123,16 +124,19 @@ occur. Likelihood is a scale to detail the frequency and probability-of-occurenc
 in the event of a failure. All of these methods are used to enhance requirement 
 implementation and hazard prevention.} 
 
+\newgeometry{left=0.3cm, top=0.1cm}
+\thispagestyle{empty}
+\renewcommand{\arraystretch}{0.5}
 \begin{table}[!htbp]
     \centering
-        \setlength{\leftmargini}{0.4cm}
-        \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
+        \setlength{\leftmargini}{0.6cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
           >{\centering\arraybackslash}m{2cm} | 
           >{\centering\arraybackslash}m{4cm} |
           >{\centering\arraybackslash}m{2cm} |
           >{\centering\arraybackslash}m{3cm} |
-          >{\centering\arraybackslash}m{1cm}|
-          >{\centering\arraybackslash}m{1cm}|}
+          >{\centering\arraybackslash}m{2cm}|
+          >{\centering\arraybackslash}m{2cm}|}
         \hline
         \rowcolor[gray]{0.9}
         Component & Failure & Causes & Detection & Recommended Action 
@@ -217,7 +221,8 @@ implementation and hazard prevention.}
         \end{tabular}
         \caption{Failure Mode and Effects Analysis}
     \end{table}
-    \newpage
+\restoregeometry
+\newpage
 \section{Safety and Security Requirements}
 
 \subsection{Access Requirements}
