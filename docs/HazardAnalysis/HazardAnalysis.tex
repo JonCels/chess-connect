@@ -58,10 +58,10 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-08/09/2022 & Arshdeep Aujla & Added table for FMEA\\
+10/09/2022 & Arshdeep Aujla & Added table for FMEA\\
 10/09/2022 & Alexander Van Kralingen & Updated Introduction, Scope, System Boundaries and Critical Assumptions\\
 10/09/2022 & Alexander Van Kralingen & Fixed FMEA table placement\\
-Date2 & Name(s) & Description of changes\\
+10/19/2022 & Joshua Chapman & FMEA table edits and description changed\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -115,17 +115,13 @@ The assumptions made in this document are meant to constrain the hazards to thos
 
 \section{Failure Modes and Effects Analysis}
 {The failure modes and effects analysis is used to identify and analyze potential 
-hazards to the system. Causes of failures are discussed and likelihood of occurence
-is calculated. Detection of hazards and recommended actions are decided based on the
-given information. All of these methods are used to enhance requirement implementation
-and hazard prevention.} 
+hazards to the system. Causes of failure discuss existing hazards that will have
+negative effects on the system. Hazard detection details the methods used to distinguish
+failures.Recommende actions explains the behavior of the system when the failures
+occur. Likelihood is a scale to detail the frequency and probability-of-occurence
+in the event of a failure. All of these methods are used to enhance requirement 
+implementation and hazard prevention.} 
 
-\subsection{Hazards Out of Scope} 
-{The following hazards are out of scope}
-
-\subsection{Failure Modes \& Effects Analysis Table}
-{The following table (Table 2) is a breakdown of the failure modes and and effects 
-analysis (FMEA) for the Chess Connect system.}
 \begin{table}[!htbp]
     \centering
         \setlength{\leftmargini}{0.4cm}
@@ -137,33 +133,62 @@ analysis (FMEA) for the Chess Connect system.}
           >{\centering\arraybackslash}m{1.5cm}|}
         \hline
         \rowcolor[gray]{0.9}
-        Component & Failure & Causes & Detection & Recommended Action & Probability of Occurence \\
+        Component & Failure & Causes & Detection & Recommended Action & Likelihood \\
         \hline
-        Web Application & Loss of Internet connection
+        Web Application & Loss of internet connection
         & \begin{enumerate}[label=(\alph*)]
-            \item Internet outage 
-            \item Loss of power
+            \item Internet outage
             \item Internet time-out 
-        \end{enumerate} & Ping the Internet and wait for the response & Alert the user to check Internet connection & 0.3 \\
+            \item Board is taken out of connection range
+        \end{enumerate} 
+        & Ping the Internet and wait for the response 
+        & Alert the user to check Internet connection 
+        & 0.4 \\
         \hline
-        Microcontroller & Bad inputs &
+        Web Application & Connection lost between server and client
+        & \begin{enumerate}[label=(\alph*)]
+            \item Deployment hosting platform fails
+            \item Platform is taken down for maintenance
+        \end{enumerate} 
+        & Loss of connection to the platform
+        & Alert the user of the issue and wait accordingly
+        & 0.1 \\
+        \hline
+        Microcontroller & Unable to detect starting game state &
         \begin{enumerate}[label=(\alph*)]
-            \item If a player knocks down multiple pieces in their turn 
-            \item Loss of power
-            \item Faulty components and/or connections 
-        \end{enumerate} & Monitoring inputs & Prompt the user to return the system to previous state and redo the turn & 0.4 \\ 
+            \item A player begins with the pieces in the incorrect location
+            \item Player does not follow the correct starting protocol
+        \end{enumerate} 
+        & Strict guidelines programmed in the microcontroller to prevent
+        & Prompt user to make appropriate changes to pieces or board state
+        & 0.2 \\ 
+        \hline
+        Microcontroller & Unable to follow game state &
+        \begin{enumerate}[label=(\alph*)]
+            \item A player makes two moves in a row
+            \item A player makes an illegal move
+            \item Loss of power to system
+        \end{enumerate} 
+        & Edge cases programmed on the controller
+        & Prompt user to make appropriate action to the board
+        & 0.3 \\ 
         \hline
         Microcontroller & Loss of Bluetooth connection & \begin{enumerate}[label=(\alph*)]
             \item Distance between microcontroller and host is too large
             \item Physical barriers between microcontroller and host
             \item Failed to initialise connection
-        \end{enumerate} & Continuously monitor Bluetooth connection & Prompt the user to re-establish connection before continuing & 0.2 \\
+            \item Packet loss from board to server
+        \end{enumerate} 
+        & Continuously monitor Bluetooth connection 
+        & Prompt the user to re-establish connection before continuing 
+        & 0.1 \\
         \hline
         Hall Sensor & Bad inputs & \begin{enumerate}[label=(\alph*)]
             \item Sensitivity loss over a period of time
             \item Interference from external magnetic objects
             \item Distance between sensor and object too large
-        \end{enumerate} & Monitoring Hall sensor inputs & \begin{enumerate}[label=(\alph*)]
+        \end{enumerate} & Monitoring Hall sensor inputs 
+        & \begin{enumerate}[label=(\alph*)]
             \item Prompt the user to clear area of obstacles from the board
             \item The sensor should be replaced after the recommended use time
         \end{enumerate} & 0.1 \\
