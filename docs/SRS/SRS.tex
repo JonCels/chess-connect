@@ -70,6 +70,7 @@
 2022-10-05 & Arshdeep Aujla & Characteristics of Intended User, Stakeholders\\
 2022-10-05 & Arshdeep Aujla & Reflection\\
 2022-10-05 & Alexander Van Kralingen & Added FSM\\
+2022-10-19 & Jonathan Cels & Added new hazard requirements\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -737,6 +738,9 @@ N/A
 \paragraph{Integrity Requirements}
 \begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
     \item The product will not store game data after a game has concluded.
+    \item The system shall locally maintain the current game state, making no changes until a connection is restablished.
+    \item The system shall alert the user that a connection has been lost.
+    \item The system shall prompt the user to take an appropriate hazard-specific action.
 \end{enumerate}
 
 \paragraph{Privacy Requirements}
