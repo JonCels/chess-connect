@@ -168,7 +168,7 @@ jobs:
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git add .
+          git add -A
           git commit -m "Generated new .pdf files in docs subfolders"
         continue-on-error: true
         
