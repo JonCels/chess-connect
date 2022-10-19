@@ -58,9 +58,10 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-10/09/2022 & Arshdeep Aujla & Added table for FMEA\\
-10/09/2022 & Alexander Van Kralingen & Updated Introduction, Scope, System Boundaries and Critical Assumptions\\
-10/09/2022 & Alexander Van Kralingen & Fixed FMEA table placement\\
+2022-10-09 & Arshdeep Aujla & Added table for FMEA\\
+2022-10-09 & Alexander Van Kralingen & Updated Introduction, Scope, System Boundaries and Critical Assumptions\\
+2022-10-09 & Alexander Van Kralingen & Fixed FMEA table placement\\
+2022-10-19 & Jonathan Cels & Added requirements\\
 2022-10-19 & Joshua Chapman & FMEA table edits and description changed\\
 ... & ... & ...\\
 \bottomrule
@@ -219,8 +220,31 @@ implementation and hazard prevention.}
     \newpage
 \section{Safety and Security Requirements}
 
-\wss{Newly discovered requirements.  These should also be added to the SRS.  (A
-rationale design process how and why to fake it.)}
+\subsection{Access Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent]
+    \item Only the \progname{} team are able to modify the software system.
+\end{enumerate}
+
+\subsection{Integrity Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item The product will not store game data after a game has concluded.
+    \item The system shall locally maintain the current game state, making no changes until a connection is restablished.
+    \item The system shall alert the user that a connection has been lost.
+    \item The system shall prompt the user to take an appropriate hazard-specific action.
+\end{enumerate}
+
+\subsection{Privacy Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item The product will not store or collect user data.
+\end{enumerate}
+
+\subsection{Audit Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+    \item Requirements shall be easy to follow and verify against both the system and the VnV plan in order to facilitate regular inspections.
+\end{enumerate}
+
+\subsection{Immunity Requirements}
+N/A
 
 \section{Roadmap}
 
