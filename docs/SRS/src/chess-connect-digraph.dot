@@ -1,0 +1,94 @@
+digraph Chess_Connect {
+        // http://magjac.com/graphviz-visual-editor/
+        // graph title
+        label=" "
+        labelloc = "t"; // place the label at the top (b seems to be default)
+        fontname = "times-bold"
+        fontsize = 25
+        
+        // States
+        pwr_off [label="Power Off"]
+        pre_init [label="WAIT FOR START" color=green fontcolor=green]
+        init [label="Read Board\nState"]
+        send_config [label="Send Piece Configuration\nto Web-App"]
+        calc [label="Run Chess Engine\nCalculations"]
+        disp_moves_in_web [label="Display Moves\non Web-App"]
+        disp_moves_on_board [label="Send Moves to\nBoard, Light LEDs"]
+        wait_input [label="Wait for\nUser Input" color=blue fontcolor=blue]
+        wait_placement [label="Wait for New\nPiece Location"]
+        red [label="Red LED"]
+        yellow [label="Yellow LED"]
+        green [label="Green LED"]
+        check [label="Check for\nCheck/Checkmate"]
+        warning [label="Save Warning State\nto Hardware"]
+        end [label="END GAME" color=red fontcolor=red]
+        disp_stats_board [label="Display Game\nStats on Board"]
+        disp_stats_web [label="Display Game\nStats Online"]
+        save_to_web [label="Save Game History\nto online Database"]
+        blue_disc [label="Bluetooth\nDisconnection"]
+        wifi_disc [label="Internet Connection\nLost"]
+        timer [label="Attempt Reconnection\nfor 30 Sec"]
+        empty_queue [label="Empty Move\nQueue"]
+        cheat [label="Cheating Occurred"]
+        
+        // Conditions
+        engine [label="Engine\nMode" shape="diamond"]
+        is_init [label="Is Initial\nState?" shape="diamond"]
+        not_normal [label="not Normal\nMode" shape="diamond"]
+        is_valid [label="Is Valid?" shape="diamond"]
+        beginner [label="Beginner Mode\nOR\nEngine Mode" shape="diamond"]
+        draw [label="Draw" shape="diamond"]
+        connect [label="Connection\nSuccessful" shape="diamond"]
+        
+        // Same rank subgraphs
+        subgraph{rank=same; pwr_off; pre_init; init;}
+        //subgraph{rank=same; send_config; calc; engine;}
+        
+        // Edges
+        pwr_off -> pre_init [label="Power Button\nPressed"]
+        pre_init -> init [label="Inputs:\n-Game Mode Selection\n-Start Game"]
+        init -> is_init
+        is_init -> send_config [label="True"]
+        is_init -> check [label="False"]
+        send_config -> calc -> disp_moves_in_web
+        disp_moves_in_web -> wait_input
+        calc -> engine
+        engine -> disp_moves_on_board [label="True"]
+        engine -> wait_input [label="False"]
+        disp_moves_on_board -> wait_input
+        wait_input -> wait_placement [label="User Picks\nUp Piece"]
+        wait_placement -> is_valid [label="Piece Placed\nDown"]
+        is_valid -> not_normal [label="True"]
+        not_normal -> green [label="True"]
+        not_normal -> init [label="False"]
+        is_valid -> red [label="False"]
+        red -> wait_input
+        green -> init
+        check -> beginner [label="Check"]
+        beginner -> yellow [label="True"]
+        yellow -> warning
+        beginner -> warning [label="False"]
+        check -> warning [headlabel="No Warning"]
+        check -> end [label="Checkmate"]
+        check -> draw
+        warning -> send_config
+        draw -> init [label="False"]
+        draw -> end [label="True"]
+        wait_input -> draw [label="Draw Button\nPressed"]
+        wait_input -> end [label="Resign Button\nPressed"]
+        end -> disp_stats_board
+        end -> disp_stats_web
+        disp_stats_web -> save_to_web
+        end -> pre_init [label="Reset Button\nPressed"]
+        wait_input -> pre_init [label="Reset Button\nPressed"]
+        wait_input -> blue_disc
+        blue_disc -> timer [label="Queue Moves Made"]
+        wait_input -> wifi_disc
+        wifi_disc -> timer [label="Queue Moves Made"]
+        timer -> connect [label="Reconnected"]
+        connect -> empty_queue
+        empty_queue -> init [label="Web-App Fully Synchronized\nWith Game State"]
+        timer -> wait_input [label="Connection Lost\nPlaying Without\nWeb-App Connection"]
+        wait_input -> cheat -> red
+        
+}
