@@ -1,7 +1,7 @@
 # Uses:
 # https://github.com/marketplace/actions/push-to-status-check-protected-branches
 
-name: Update Documentation Branches after Merge to Main
+name: Sync Documentation/* branches with main
 on:
   # Triggers the workflow pull request events but only for the "main" branch
   # Allows you to run this workflow manually from the Actions tab
