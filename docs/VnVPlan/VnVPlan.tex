@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -28,9 +29,9 @@
 \section{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\toprule {\bf Date} & {\bf Developer(s)} & {\bf Change}\\
 \midrule
-Date 1 & 1.0 & Notes\\
+2022-10-31 & Jonathan Cels & NFR Testing\\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
@@ -213,41 +214,88 @@ How test will be performed:
 \wss{Tests related to usability could include conducting a usability test and
   survey.}
 
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
-
+\subsubsection{Look and Feel}
+\paragraph{Style}
 \begin{enumerate}
+    \item{NFT1 \\}
 
-\item{test-id1\\}
-
-Type: 
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
-
+        Type: Structural, Static, Manual
+                            
+        Initial State: Users have not seen the product before, and the product is in its initial game state.
+                            
+        Input/Condition: Users are asked to identify the product.
+                            
+        Output/Result: The majority of users are able to successfully identify the product as a chess set without any outside assistance within 10 seconds.
+                            
+        How test will be performed: A test group of people who do not play chess regularly are asked to identify the product immediately after it is revealed to them.
+            The time it takes for them to identify the product will be recorded. The subjects must identify the product as a chess set within 10 seconds or less, averaged
+            over the number of people in the test group.
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Usability and Humanity}
+\paragraph{Learnability}
+\begin{enumerate}
+    \item{NFT2 \\}
 
-...
+        Type: Structural, Static, Manual
+                            
+        Initial State: Product is in normal mode, a game has started, and the users have not interacted with the product before. 
+                            
+        Input/Condition: Users are asked to use the product and move one specified piece from one square to another specified square on the board.
+                            
+        Output/Result: The majority of users understand which piece they moved and to where, and are able to identify that the web application 
+            has reflected their move in the virtual model within 30 seconds of studying the visual representation of the board state.
+                            
+        How test will be performed: A test group of people who do not play chess regularly are asked to move pieces on the chessboard. They are 
+            then asked to identify the move they just made as reflected in the web application model. The subjects must identify that the piece they
+            moved on the board has also been moved on the web application's virtual model within 30 seconds or less, averaged over the number of people
+            in the test group.
+                        
+    \item{NFT3 \\}
+
+        Type: Functional, Dynamic, Manual, Static etc.
+                            
+        Initial State: The product shall be representing the state of the game that is in progress. The pieces shall be in a legal position according to 
+            the rules of chess. The pieces shall not all be in their starting positions, and there is at least one of each type of piece 
+            (pawn, knight, bishop, rook, queen, king) on the board.
+                            
+        Input: Users are asked to identify the names of different pieces and squares based on their visual appearance in both the 
+            physical product and the web application.
+                            
+        Output: The majority of users are able to identify the names of pieces and squares based on their likeliness to historically used symbols and shapes.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to identify each of the pieces 
+            and squares from an in-progress game of chess using the system. The justification for this is to avoid piece identification based on their starting 
+            positions. The majority of the group should be able to visually identify every piece and square within 2 minutes of seeing the position for the first time.
+\end{enumerate}
+
+\subsubsection{Performance}
+\paragraph{Speed and Latency}
+\begin{enumerate}
+    \item{NFT4 \\}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: 
+                            
+        Input/Condition: 
+                            
+        Output/Result: 
+                            
+        How test will be performed: 
+                        
+    \item{NFT5 \\}
+
+        Type: Functional, Dynamic, Manual, Static etc.
+                            
+        Initial State: 
+                            
+        Input:
+                            
+        Output: 
+                            
+        How test will be performed: 
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
