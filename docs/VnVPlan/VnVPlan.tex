@@ -743,6 +743,139 @@ Then after it has ran we will check to see if the appropriate Web Application se
 
   \end{enumerate}
    
+  \subsubsection{Beginner Mode}
+
+  \begin{enumerate}
+
+    \item{BB-1\\}
+
+    Type: Structural, Static, Manual
+                        
+    Initial State: The game is in the Game Active State.
+                        
+    Input: A piece has been moved to a square.
+                        
+    Output: The system stores the position, colour, and type of piece in the micro-controller.
+                        
+    Test Case Derivation: The system should contain the position, colour, and type in the micro-controller
+    after a piece has been moved to a square.
+
+    How test will be performed: The function that accesses the micro-controller will be run using the appropriate inputs.
+    Then after it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
+
+    \item{BB-2\\}
+
+    Type: Structural, Static, Manual
+                        
+    Initial State: The game is in Beginner Mode.
+                        
+    Input: The user picks up a piece.
+                        
+    Output: Allow user to view all legal moves with green LED
+    lights on valid squares.
+                        
+    Test Case Derivation: .
+
+    How test will be performed: The function that accesses the legal moves and LEDs will be run using the appropriate inputs.
+    Then after it has ran we will check to see if the correct legal moves are shown with green LED lights.  
+
+    \item{BB-3\\}
+
+    Type: Structural, Static, Manual
+                        
+    Initial State: The game is in Beginner Mode.
+                        
+    Input: The player makes an illegal move.
+                        
+    Output: The tile that the piece is moved onto will display a red LED
+    light.
+                        
+    Test Case Derivation: .
+
+    How test will be performed: The function that accesses the legal moves and LEDs will be run using the appropriate inputs.
+    Then after it has ran we will display a red LED light if the output is not within the legal moves.  
+
+    \item{BB-4\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The user will hold down the Resign button for ENDTIME seconds.
+                        
+    Output: The game state will change to the Game Inactive State.
+                        
+    Test Case Derivation: The game shall be in the Game Inactive State due to the Resign button being pressed.
+    
+    How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+    Then after it has ran we will check to see if the game state is in the Game Inactive State.
+
+    \item{BB-5\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in the Game Active State.
+                        
+    Input: Both users will hold down the Draw button for ENDTIME seconds each located on their side of the board.
+                        
+    Output: The game state will change to the Game Inactive State.
+                        
+    Test Case Derivation: The game shall be in the Game Inactive State due to the Draw buttons being pressed.
+    
+    How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+    Then after it has ran we will check to see if the game state is in the Game Inactive State.
+
+    \item{BD-1\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The system shall send the micro-controller output over the chosen data transfer
+    method as an input to the web application.
+                        
+    Output: The web application shall receive the micro-controller output sent over the chosen data transfer
+    method.
+                        
+    Test Case Derivation: The web application should receive new information regarding the board state over the chosen data transfer method. 
+
+    How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
+    will be run using the appropriate inputs. Then after it has ran we will check to see if the appropriate information has been received.
+
+    \item{BA-1\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in Beginner Mode.
+                        
+    Input: The user clicks to view the instructions regarding the rules of chess.
+                        
+    Output: The web application displays a detailed set of rules on how to to play chess.
+                        
+    Test Case Derivation: . 
+
+    How test will be performed: The function that displays the rules
+    will be run using the appropriate inputs. Then after it has ran we will check to see if the web application is displaying the rules.
+
+    \item{BA-2\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The web application shall receive the micro-controller output sent over the chosen data transfer
+    method.
+                        
+    Output: The web application will display the updated game board configuration with the data
+    of the previous move
+                        
+    Test Case Derivation: The web application should update the board configuration after receiving new information about the board state. 
+
+    How test will be performed: The function that updates the game board configuration
+    will be run using the appropriate inputs. Then after it has ran we will check to see if the board state has been updated.
+
+  \end{enumerate}
+
 
 \subsection{Tests for Nonfunctional Requirements}
 
