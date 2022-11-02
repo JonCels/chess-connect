@@ -281,39 +281,39 @@ How test will be performed:
 
 \begin{enumerate}
 
-\item{GA-0\\}
-
-  Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-    be automatic}
-            
-  Initial State: 
-            
-  Input: 
-            
-  Output: \wss{The expected result for the given inputs}
-  
-  Test Case Derivation: \wss{Justify the expected value given in the Output field}
-  
-  How test will be performed:
-
 \item{GA-1\\}
 
-Type: Structural, Static, Manual
+Type: Functional, Dynamic, Manual
                     
 Initial State: The game is in the Game Active State.
                     
-Input: The user will press the New/Resign/Draw button.
+Input: The user will press the Resign/Draw button.
                     
 Output: The system will be changed to the Game Inactive State.
                     
-Test Case Derivation: The game shall be in the Game Inactive State due to the New/Resign/Draw button being pressed.
+Test Case Derivation: The game shall be in the Game Inactive State due to the Resign/Draw button being pressed.
 
 How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-Then after it has ran we will check to see if the game state has been modified.
+After it has ran we will check to see if the game state has been modified.
+
+\item{GA-2\\}
+
+Type: Functional, Dynamic, Manual
+                    
+Initial State: The game is in the Game Active State.
+                    
+Input: The user will press the New Game button.
+                    
+Output: The system will be unchanged.
+                    
+Test Case Derivation: The game shall remain in the Game Active State after the New Game button is pressed.
+
+How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+After it has ran we will check to see that the game state has not been modified.
 
 \item{GA-3\\}
 
-Type: Structural, Static, Manual
+Type: Functional, Dynamic, Manual
                     
 Initial State: The game is in the Game Active State.
                     
@@ -321,44 +321,45 @@ Input: The user will switch to one of the user modes (Normal Mode, Engine Mode, 
 
 Output: The system will be changed to the selected user mode.
                     
-Test Case Derivation: The game shall be in the selected user mode due to the user mode appropriate switch being pressed.
+Test Case Derivation: The game shall be in the selected user mode due to the appropriate user mode switch being pressed.
 
 How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
-Then after it has ran we will check to see if the user mode has been modified.
+After it has ran we will check to see if the user mode has been modified.
 
-\item{GA-4\\}
+% \item{GA-4\\}
 
-Type: Structural, Static, Manual
+% Type: Functional, Dynamic, Manual
                     
-Initial State: The game is in a user mode.
+% Initial State: The game is in a user mode.
                     
-Input: The game is changed to a different user mode.
+% Input: The game is changed to a different user mode.
 
-Output: The system will follow the Chess Board section based on the user mode.
+% Output: The system will follow the functional requirements 
+% section according to the currently selected user mode.
                     
-Test Case Derivation: The game shall follow the Chess Board section based on the selected user mode.
+% Test Case Derivation: The game shall follow the instructions that are appropriate to the current user mode.
 
-How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
-Then after it has ran we will check to see if the appropriate Chess Board section is being followed.
+% How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+% After it has ran we will check to see if the appropriate Chess Board section is being followed.
 
-\item{GA-5\\}
+% \item{GA-5\\}
 
-Type: Structural, Static, Manual
+% Type: Functional, Dynamic, Manual
                     
-Initial State: The game is in a user mode.
+% Initial State: The game is in a user mode.
                     
-Input: The game is changed to a different user mode.
+% Input: The game is changed to a different user mode.
 
-Output: The system will follow the Data Transfer section based on the user mode.
+% Output: The system will follow the Data Transfer section based on the user mode.
                     
-Test Case Derivation: The game shall follow the Data Transfer section based on the selected user mode.
+% Test Case Derivation: The game shall follow the Data Transfer section based on the selected user mode.
 
-How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
-Then after it has ran we will check to see if the appropriate Data Transfer section is being followed.
+% How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+% After it has ran we will check to see if the appropriate Data Transfer section is being followed.
 
 \item{GA-6\\}
 
-Type: Structural, Static, Manual
+Type: Functional, Dynamic, Manual
                     
 Initial State: The game is in the Game Inactive State.
                     
@@ -366,14 +367,14 @@ Input: The game is changed to the Game Active State.
 
 Output: The game state will be reset to the starting position.
                     
-Test Case Derivation: The game shall be reset to the starting position due to it entering the Game Active State.
+Test Case Derivation: The game shall be reset to the default starting position due to it entering the Game Active State.
 
 How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
-Then after it has ran we will check to see if the game state has been reset to the starting position.
+After it has ran we will check to see if the board state has been reset to the starting position.
 
 \item{GA-7\\}
 
-Type: Structural, Static, Manual
+Type: Functional, Dynamic, Manual
                     
 Initial State: The game is in the Game Active State.
                     
@@ -381,26 +382,26 @@ Input: The game results in a stalemate or checkmate.
 
 Output: The game state will be changed to the Game Inactive State.
                     
-Test Case Derivation: The game shall be changed to the Game Inactive state due a stalemate or checkmate.
+Test Case Derivation: The game shall be changed to the Game Inactive state due a stalemate or checkmate ending the game.
 
 How test will be performed: The function that modifies the game state will be run using the appropriate inputs.
-Then after it has ran we will check to see if the game state has been changed to the Game Inactive State.
+After it has ran we will check to see if the game state has been changed to the Game Inactive State based on the
+the checkmate or stalemate termination type.
 
-\item{GA-8\\}
+% \item{GA-8\\}
 
-Type: Structural, Static, Manual
+% Type: Functional, Dynamic, Manual
                     
-Initial State: The game is in a user mode.
+% Initial State: The game is in a user mode.
                     
-Input: The game is changed to a different user mode.
+% Input: The game is changed to a different user mode.
 
-Output: The system will follow the Web Application section based on the user mode.
+% Output: The system will follow the Web Application section based on the user mode.
                     
-Test Case Derivation: The game shall follow the Web Application section based on the selected user mode.
+% Test Case Derivation: The game shall follow the Web Application section based on the selected user mode.
 
-How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
-Then after it has ran we will check to see if the appropriate Web Application section is being followed.
-
+% How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+% After it has ran we will check to see if the appropriate Web Application section is being followed.
 
 \end{enumerate}
 
@@ -410,7 +411,7 @@ Then after it has ran we will check to see if the appropriate Web Application se
 
   \item{GI-1\\}
 
-  Type: Structural, Static, Manual
+  Type: Functional, Dynamic, Manual
                       
   Initial State: The game is in the Game Inactive State.
                       
@@ -418,14 +419,15 @@ Then after it has ran we will check to see if the appropriate Web Application se
                       
   Output: The system will be changed to the Game Active State.
                       
-  Test Case Derivation: The game shall be in the Game Active State due to the New Game button being pressed.
+  Test Case Derivation: The game shall be in the Game Active State due to the New Game button being pressed,
+  starting the game at the default position.
   
   How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-  Then after it has ran we will check to see if the game state has been modified.
+  After it has ran we will check to see if the game state has been modified to the Game Active State.
 
   \item{GI-2\\}
 
-  Type: Structural, Static, Manual
+  Type: Functional, Dynamic, Manual
                       
   Initial State: The game is in the Game Inactive State.
                       
@@ -436,11 +438,11 @@ Then after it has ran we will check to see if the appropriate Web Application se
   Test Case Derivation: The game state shall be unchanged due to the user mode appropriate switch being pressed in the Game Inactive State.
   
   How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
-  Then after it has ran we will check to see if the game state has been modified.
+  After it has ran we will check to see if the game state has been unmodified.
 
   \item{GI-3\\}
 
-  Type: Structural, Static, Manual
+  Type: Functional, Dynamic, Manual
                       
   Initial State: The game is in the Game Inactive State.
                       
@@ -451,11 +453,11 @@ Then after it has ran we will check to see if the appropriate Web Application se
   Test Case Derivation: The game shall be in the Game Inactive State due to the Resign/Draw button having no effect.
   
   How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-  Then after it has ran we will check to see if the game state is unchanged.
+  After it has ran we will check to see if the game state is unchanged.
 
   \item{GI-4\\}
 
-  Type: Structural, Static, Manual
+  Type: Functional, Dynamic, Manual
                       
   Initial State: The game is in the Game Inactive State.
                       
@@ -463,14 +465,15 @@ Then after it has ran we will check to see if the appropriate Web Application se
                       
   Output: The board state is not sent to the web application.
                       
-  Test Case Derivation: The game shall be in the Game Inactive State due to the Resign/Draw button having no effect.
+  Test Case Derivation: The board state will not be sent due to the Resign/Draw button having no effect
+  as it is in the Game Inactive State.
   
   How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-  Then after it has ran we will check to see if the game state is unchanged.
+  After it has ran we will check to see if the game state is unchanged.
 
   \item{GI-5\\}
 
-  Type: Structural, Static, Manual
+  Type: Functional, Dynamic, Manual
                       
   Initial State: The game is in the Game Active State.
                       
@@ -482,7 +485,7 @@ Then after it has ran we will check to see if the appropriate Web Application se
   Test Case Derivation: The game shall output the final game and message due to the game being terminated.
   
   How test will be performed: The function that handles actions after game termination will be run using the appropriate inputs.
-  Then after it has ran we will check to see if the final game and message with termination type are displayed.
+  After it has ran we will check to see if the final game and message with termination type are displayed.
 
   \end{enumerate}
 
@@ -492,25 +495,25 @@ Then after it has ran we will check to see if the appropriate Web Application se
 
     \item{NB-1\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                         
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Normal Mode.
                         
     Input: A piece has been moved to a square.
                         
     Output: The system stores the position, colour, and type of piece in the micro-controller.
                         
     Test Case Derivation: The system should contain the position, colour, and type in the micro-controller
-    after a piece has been moved to a square.
+    after a piece has been moved to a square in order to track the board state for the web application.
 
     How test will be performed: The function that accesses the micro-controller will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
+    After it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
 
     \item{NB-2\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Normal Mode.
                         
     Input: The user will hold down the Resign button for ENDTIME seconds.
                         
@@ -519,13 +522,13 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The game shall be in the Game Inactive State due to the Resign button being pressed.
     
     How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the game state is in the Game Inactive State.
+    After it has ran we will check to see if the game state is in the Game Inactive State.
 
     \item{NB-3\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Normal Mode.
                         
     Input: Both users will hold down the Draw button for ENDTIME seconds each located on their side of the board.
                         
@@ -534,13 +537,13 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The game shall be in the Game Inactive State due to the Draw buttons being pressed.
     
     How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the game state is in the Game Inactive State.
+    After it has ran we will check to see if the game state is in the Game Inactive State.
 
     \item{ND-1\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Normal Mode.
                         
     Input: The system shall send the micro-controller output over the chosen data transfer
     method as an input to the web application.
@@ -551,30 +554,30 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The web application should receive new information regarding the board state over the chosen data transfer method. 
 
     How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
-    will be run using the appropriate inputs. Then after it has ran we will check to see if the appropriate information has been received.
+    will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
 
     \item{NA-2\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Normal Mode.
                         
     Input: The web application shall receive the micro-controller output sent over the chosen data transfer
     method.
                         
     Output: The web application will display the updated game board configuration with the data
-    of the previous move
+    of the previous move.
                         
     Test Case Derivation: The web application should update the board configuration after receiving new information about the board state. 
 
     How test will be performed: The function that updates the game board configuration
-    will be run using the appropriate inputs. Then after it has ran we will check to see if the board state has been updated.
+    will be run using the appropriate inputs. After it has ran we will check to see if the board state has been updated.
 
     \item{NA-3\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Normal Mode.
                         
     Input: The game has been terminated through method of stalemate, checkmate, resignation, or draw.
                         
@@ -584,8 +587,8 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The web application should display a message signifying user of the method of game termination
     and the game should modify state if the game has ended.
 
-    How test will be performed: The function that checks to see if any of the game termination methods are in effect
-    will be run using the appropriate inputs. Then after it has ran we will out the termination method of change the
+    How test will be performed: The function that checks to see if any of the game termination method in effect
+    will be run using the appropriate inputs. After it has ran we will output the termination method and change the
     game state to the Game Inactive State.
 
   \end{enumerate}
@@ -596,9 +599,9 @@ Then after it has ran we will check to see if the appropriate Web Application se
 
     \item{EB-1\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                         
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Engine Mode.
                         
     Input: A piece has been moved to a square.
                         
@@ -608,28 +611,28 @@ Then after it has ran we will check to see if the appropriate Web Application se
     after a piece has been moved to a square.
 
     How test will be performed: The function that accesses the micro-controller will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
+    After it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
 
     \item{EB-2\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Engine Mode.
                         
     Input: The user will hold down the Resign button for ENDTIME seconds.
                         
     Output: The game state will change to the Game Inactive State.
                         
-    Test Case Derivation: The game shall be in the Game Inactive State due to the Resign button being pressed.
+    Test Case Derivation: The game shall be in the Game Inactive State due to the Resign button being pressed for ENDTIME seconds, signifying that the game should end.
     
     How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the game state is in the Game Inactive State.
+    After it has ran we will check to see if the game state is in the Game Inactive State.
 
     \item{EB-3\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Engine Mode.
                         
     Input: Both users will hold down the Draw button for ENDTIME seconds each located on their side of the board.
                         
@@ -638,11 +641,11 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The game shall be in the Game Inactive State due to the Draw buttons being pressed.
     
     How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the game state is in the Game Inactive State.
+    After it has ran we will check to see if the game state is in the Game Inactive State.
 
     \item{EB-4\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
     Initial State: The game is in Engine Mode.
                         
@@ -650,16 +653,17 @@ Then after it has ran we will check to see if the appropriate Web Application se
                         
     Output: The LCD display shows the top engine moves.
                         
-    Test Case Derivation: 
+    Test Case Derivation: The top engine moves need to be transmitted
+    to the LCD display in order to show both users the best moves for a position.
     
     How test will be performed: The function that displays characters on the LCD display will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the requested characters are correctly displayed.
+    After it has ran we will check to see if the requested characters are correctly displayed.
 
     \item{ED-1\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Engine Mode.
                         
     Input: The system shall send the micro-controller output over the chosen data transfer
     method as an input to the web application.
@@ -670,13 +674,13 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The web application should receive new information regarding the board state over the chosen data transfer method. 
 
     How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
-    will be run using the appropriate inputs. Then after it has ran we will check to see if the appropriate information has been received.
+    will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
 
     \item{ED-2\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Engine Mode.
                         
     Input: The system shall send the web application engine moves to the LCD display over the
     chosen data transfer method.
@@ -687,13 +691,13 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The LCD display should receive the top engine moves over the chosen data transfer method. 
 
     How test will be performed: The function that checks to see if any information is being transmitted from the web application 
-    using the appropriate inputs. Then after it has ran we will check to see if the appropriate information has been received by the LCD display.
+    using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received by the LCD display.
 
     \item{EA-2\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Engine Mode.
                         
     Input: The web application shall receive the micro-controller output sent over the chosen data transfer
     method.
@@ -704,11 +708,11 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The web application should update the board configuration after receiving new information about the board state. 
 
     How test will be performed: The function that updates the game board configuration
-    will be run using the appropriate inputs. Then after it has ran we will check to see if the board state has been updated.
+    will be run using the appropriate inputs. After it has ran we will check to see if the board state has been updated.
 
     \item{EA-5\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
     Initial State: The game is in Engine Mode.
                         
@@ -720,14 +724,14 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The chess engine should update the board configuration after receiving new information about the board state. 
 
     How test will be performed: The function that calculates the engine moves
-    will be run using the appropriate inputs. Then after it has ran we will check to see if the correct engine moves are plays
+    will be run using the appropriate inputs. After it has ran we will check to see if the correct engine moves are played
     by comparing the results to the identical engine on an online platform.
 
     \item{EA-6\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Engine Mode.
                         
     Input: The game has been terminated through method of stalemate, checkmate, resignation, or draw.
                         
@@ -738,7 +742,7 @@ Then after it has ran we will check to see if the appropriate Web Application se
     and the game should modify state if the game has ended.
 
     How test will be performed: The function that checks to see if any of the game termination methods are in effect
-    will be run using the appropriate inputs. Then after it has ran we will out the termination method of change the
+    will be run using the appropriate inputs. After it has ran we will out the termination method of change the
     game state to the Game Inactive State.
 
   \end{enumerate}
@@ -749,9 +753,9 @@ Then after it has ran we will check to see if the appropriate Web Application se
 
     \item{BB-1\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                         
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Beginner Mode.
                         
     Input: A piece has been moved to a square.
                         
@@ -761,11 +765,11 @@ Then after it has ran we will check to see if the appropriate Web Application se
     after a piece has been moved to a square.
 
     How test will be performed: The function that accesses the micro-controller will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
+    After it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
 
     \item{BB-2\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                         
     Initial State: The game is in Beginner Mode.
                         
@@ -774,14 +778,15 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Output: Allow user to view all legal moves with green LED
     lights on valid squares.
                         
-    Test Case Derivation: .
+    Test Case Derivation: This is needed to ensure users provide legal inputs to the system,
+    and also provide visual feedback to accelerate learning.
 
     How test will be performed: The function that accesses the legal moves and LEDs will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the correct legal moves are shown with green LED lights.  
+    After it has ran we will check to see if the correct legal moves are shown with green LED lights.  
 
     \item{BB-3\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                         
     Initial State: The game is in Beginner Mode.
                         
@@ -790,16 +795,17 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Output: The tile that the piece is moved onto will display a red LED
     light.
                         
-    Test Case Derivation: .
+    Test Case Derivation: This is needed to prevent users from providing illegal inputs to the system
+    to minimize errors, and also provide visual feedback to accelerate learning.
 
     How test will be performed: The function that accesses the legal moves and LEDs will be run using the appropriate inputs.
-    Then after it has ran we will display a red LED light if the output is not within the legal moves.  
+    After it has ran we will display a red LED light if the output is not within the legal moves.  
 
     \item{BB-4\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Beginner Mode.
                         
     Input: The user will hold down the Resign button for ENDTIME seconds.
                         
@@ -808,13 +814,13 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The game shall be in the Game Inactive State due to the Resign button being pressed.
     
     How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the game state is in the Game Inactive State.
+    After it has ran we will check to see if the game state is in the Game Inactive State.
 
     \item{BB-5\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Beginner Mode.
                         
     Input: Both users will hold down the Draw button for ENDTIME seconds each located on their side of the board.
                         
@@ -823,13 +829,13 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The game shall be in the Game Inactive State due to the Draw buttons being pressed.
     
     How test will be performed: The function that changes the game state will be run using the appropriate inputs.
-    Then after it has ran we will check to see if the game state is in the Game Inactive State.
+    After it has ran we will check to see if the game state is in the Game Inactive State.
 
     \item{BD-1\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Beginner Mode.
                         
     Input: The system shall send the micro-controller output over the chosen data transfer
     method as an input to the web application.
@@ -840,11 +846,11 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The web application should receive new information regarding the board state over the chosen data transfer method. 
 
     How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
-    will be run using the appropriate inputs. Then after it has ran we will check to see if the appropriate information has been received.
+    will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
 
     \item{BA-1\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
     Initial State: The game is in Beginner Mode.
                         
@@ -852,16 +858,17 @@ Then after it has ran we will check to see if the appropriate Web Application se
                         
     Output: The web application displays a detailed set of rules on how to to play chess.
                         
-    Test Case Derivation: . 
+    Test Case Derivation: TIt is necessary for users to have a set of instructions as reference while
+    using the application in Beginner Mode.
 
     How test will be performed: The function that displays the rules
-    will be run using the appropriate inputs. Then after it has ran we will check to see if the web application is displaying the rules.
+    will be run using the appropriate inputs. After it has ran we will check to see if the web application is displaying the rules.
 
     \item{BA-2\\}
 
-    Type: Structural, Static, Manual
+    Type: Functional, Dynamic, Manual
                       
-    Initial State: The game is in the Game Active State.
+    Initial State: The game is in Beginner Mode.
                         
     Input: The web application shall receive the micro-controller output sent over the chosen data transfer
     method.
@@ -872,7 +879,7 @@ Then after it has ran we will check to see if the appropriate Web Application se
     Test Case Derivation: The web application should update the board configuration after receiving new information about the board state. 
 
     How test will be performed: The function that updates the game board configuration
-    will be run using the appropriate inputs. Then after it has ran we will check to see if the board state has been updated.
+    will be run using the appropriate inputs. After it has ran we will check to see if the board state has been updated.
 
   \end{enumerate}
 
