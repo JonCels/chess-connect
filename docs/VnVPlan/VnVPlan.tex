@@ -371,26 +371,140 @@ Test Case Derivation: The game shall be reset to the starting position due to it
 How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
 Then after it has ran we will check to see if the game state has been reset to the starting position.
 
+\item{GA-7\\}
+
+Type: Structural, Static, Manual
+                    
+Initial State: The game is in the Game Active State.
+                    
+Input: The game results in a stalemate or checkmate.
+
+Output: The game state will be changed to the Game Inactive State.
+                    
+Test Case Derivation: The game shall be changed to the Game Inactive state due a stalemate or checkmate.
+
+How test will be performed: The function that modifies the game state will be run using the appropriate inputs.
+Then after it has ran we will check to see if the game state has been changed to the Game Inactive State.
+
+\item{GA-8\\}
+
+Type: Structural, Static, Manual
+                    
+Initial State: The game is in a user mode.
+                    
+Input: The game is changed to a different user mode.
+
+Output: The system will follow the Web Application section based on the user mode.
+                    
+Test Case Derivation: The game shall follow the Web Application section based on the selected user mode.
+
+How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+Then after it has ran we will check to see if the appropriate Web Application section is being followed.
+
+
 \end{enumerate}
 
 \subsubsection{Game Inactive State}
 
 \begin{enumerate}
 
-  \item{NM-1\\}
-  
+  \item{GI-1\\}
+
   Type: Structural, Static, Manual
                       
   Initial State: The game is in the Game Inactive State.
                       
-  Input: The game is changed to the Game Active State.
-  
-  Output: The game state will be reset to the starting position.
+  Input: The user will press the New Game button.
                       
-  Test Case Derivation: The game shall be reset to the starting position due to it entering the Game Active State.
+  Output: The system will be changed to the Game Active State.
+                      
+  Test Case Derivation: The game shall be in the Game Active State due to the New Game button being pressed.
   
-  How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
-  Then after it has ran we will check to see if the game state has been reset to the starting position.
+  How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+  Then after it has ran we will check to see if the game state has been modified.
+
+  \item{GI-2\\}
+
+  Type: Structural, Static, Manual
+                      
+  Initial State: The game is in the Game Inactive State.
+                      
+  Input: The user will  try to switch to one of the user modes (Normal Mode, Engine Mode, Beginner Mode).
+  
+  Output: The system will be unchanged to the selected user mode.
+                      
+  Test Case Derivation: The game state shall be unchanged due to the user mode appropriate switch being pressed in the Game Inactive State.
+  
+  How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+  Then after it has ran we will check to see if the game state has been modified.
+
+  \item{GI-3\\}
+
+  Type: Structural, Static, Manual
+                      
+  Initial State: The game is in the Game Inactive State.
+                      
+  Input: The user will press the Resign/Draw button.
+                      
+  Output: The system will be unchanged.
+                      
+  Test Case Derivation: The game shall be in the Game Inactive State due to the Resign/Draw button having no effect.
+  
+  How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+  Then after it has ran we will check to see if the game state is unchanged.
+
+  \item{GI-4\\}
+
+  Type: Structural, Static, Manual
+                      
+  Initial State: The game is in the Game Inactive State.
+                      
+  Input: The user will move a piece.
+                      
+  Output: The board state is not sent to the web application.
+                      
+  Test Case Derivation: The game shall be in the Game Inactive State due to the Resign/Draw button having no effect.
+  
+  How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+  Then after it has ran we will check to see if the game state is unchanged.
+
+  \item{GI-5\\}
+
+  Type: Structural, Static, Manual
+                      
+  Initial State: The game is in the Game Active State.
+                      
+  Input: The game is terminated.
+                      
+  Output: The display the final game and message with the game termination type (stalemate,
+  checkmate, resignation, draw).
+                      
+  Test Case Derivation: The game shall output the final game and message due to the game being terminated.
+  
+  How test will be performed: The function that handles actions after game termination will be run using the appropriate inputs.
+  Then after it has ran we will check to see if the final game and message with termination type are displayed.
+
+  \end{enumerate}
+
+  \subsubsection{Normal Mode}
+
+  \begin{enumerate}
+
+    \item{NM-1\\}
+
+    Type: Structural, Static, Manual
+                        
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The game is terminated.
+                        
+    Output: The display the final game and message with the game termination type (stalemate,
+    checkmate, resignation, draw).
+                        
+    Test Case Derivation: The game shall output the final game and message due to the game being terminated.
+    
+    How test will be performed: The function that handles actions after game termination will be run using the appropriate inputs.
+    Then after it has ran we will check to see if the final game and message with termination type are displayed.  
 
   \end{enumerate}
 
