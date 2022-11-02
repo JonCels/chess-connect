@@ -28,13 +28,17 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Developer(s)} & {\bf Change}\\
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 2022-10-31 & Jonathan Cels & NFR Testing\\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
+\end{table}
 
 \newpage
 
@@ -217,7 +221,7 @@ How test will be performed:
 \subsubsection{Look and Feel}
 \paragraph{Style}
 \begin{enumerate}
-    \item{NFT1 \\}
+    \item{NFT1}
 
         Type: Structural, Static, Manual
                             
@@ -235,7 +239,7 @@ How test will be performed:
 \subsubsection{Usability and Humanity}
 \paragraph{Learnability}
 \begin{enumerate}
-    \item{NFT2 \\}
+    \item{NFT2}
 
         Type: Structural, Static, Manual
                             
@@ -251,7 +255,7 @@ How test will be performed:
             moved on the board has also been moved on the web application's virtual model within 30 seconds or less, averaged over the number of people
             in the test group.
                         
-    \item{NFT3 \\}
+    \item{NFT3}
 
         Type: Functional, Dynamic, Manual, Static etc.
                             
@@ -272,29 +276,33 @@ How test will be performed:
 \subsubsection{Performance}
 \paragraph{Speed and Latency}
 \begin{enumerate}
-    \item{NFT4 \\}
+    \item{NFT4}
 
         Type: Structural, Static, Manual
                             
-        Initial State: 
+        Initial State: The product is in normal mode, and a game has started.
                             
-        Input/Condition: 
+        Input/Condition: Users are asked to pick up a piece and suspend it midair without placing it down.
                             
-        Output/Result: 
+        Output/Result: The board shall visually indicate where the held piece is able to move according to the rules of chess within a specific time frame.
                             
-        How test will be performed: 
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to pick up a specific piece and 
+        suspend hold it. The system will give visual indicators of where the held piece is able to move according to the rules of chess. The time between when 
+        they pick up the piece and when the visual response occurs is measured and recorded. This process is repeated 5 times per user. The individual and average
+        times are recorded. The response times are then averaged over the entire test group. The average response time of the entire test group must be less than 
+        3 seconds.
                         
-    \item{NFT5 \\}
+    \item{NFT5}
 
-        Type: Functional, Dynamic, Manual, Static etc.
+        Type: Structural, Static, Manual
                             
-        Initial State: 
+        Initial State: The results of the previous test, NFT4, have been measured and recorded.
                             
-        Input:
+        Input/Condition: The results of NFT4.
                             
-        Output: 
+        Output/Result: The maximum recorded time of any individual response is within a specific time frame.
                             
-        How test will be performed: 
+        How test will be performed: The times measured in the previous test, NFT4, will be inspected. The maximum recorded individual time must be less than 10 seconds.
 \end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
