@@ -272,11 +272,7 @@ How test will be performed:
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
-
-\subsubsection{Module 1}
+\subsubsection{Game Active State}
 
 \wss{Include a blurb here to explain why the subsections below cover the module.
   References to the MIS would be good.  You will want tests from a black box
@@ -285,43 +281,118 @@ How test will be performed:
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{GA-0\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+  Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+    be automatic}
+            
+  Initial State: 
+            
+  Input: 
+            
+  Output: \wss{The expected result for the given inputs}
+  
+  Test Case Derivation: \wss{Justify the expected value given in the Output field}
+  
+  How test will be performed:
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\item{GA-1\\}
 
-How test will be performed: 
-					
-\item{test-id2\\}
+Type: Structural, Static, Manual
+                    
+Initial State: The game is in the Game Active State.
+                    
+Input: The user will press the New/Resign/Draw button.
+                    
+Output: The system will be changed to the Game Inactive State.
+                    
+Test Case Derivation: The game shall be in the Game Inactive State due to the New/Resign/Draw button being pressed.
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+Then after it has ran we will check to see if the game state has been modified.
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\item{GA-3\\}
 
-How test will be performed: 
+Type: Structural, Static, Manual
+                    
+Initial State: The game is in the Game Active State.
+                    
+Input: The user will switch to one of the user modes (Normal Mode, Engine Mode, Beginner Mode).
 
-\item{...\\}
-    
+Output: The system will be changed to the selected user mode.
+                    
+Test Case Derivation: The game shall be in the selected user mode due to the user mode appropriate switch being pressed.
+
+How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+Then after it has ran we will check to see if the user mode has been modified.
+
+\item{GA-4\\}
+
+Type: Structural, Static, Manual
+                    
+Initial State: The game is in a user mode.
+                    
+Input: The game is changed to a different user mode.
+
+Output: The system will follow the Chess Board section based on the user mode.
+                    
+Test Case Derivation: The game shall follow the Chess Board section based on the selected user mode.
+
+How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+Then after it has ran we will check to see if the appropriate Chess Board section is being followed.
+
+\item{GA-5\\}
+
+Type: Structural, Static, Manual
+                    
+Initial State: The game is in a user mode.
+                    
+Input: The game is changed to a different user mode.
+
+Output: The system will follow the Data Transfer section based on the user mode.
+                    
+Test Case Derivation: The game shall follow the Data Transfer section based on the selected user mode.
+
+How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+Then after it has ran we will check to see if the appropriate Data Transfer section is being followed.
+
+\item{GA-6\\}
+
+Type: Structural, Static, Manual
+                    
+Initial State: The game is in the Game Inactive State.
+                    
+Input: The game is changed to the Game Active State.
+
+Output: The game state will be reset to the starting position.
+                    
+Test Case Derivation: The game shall be reset to the starting position due to it entering the Game Active State.
+
+How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
+Then after it has ran we will check to see if the game state has been reset to the starting position.
+
 \end{enumerate}
 
-\subsubsection{Module 2}
+\subsubsection{Game Inactive State}
 
-...
+\begin{enumerate}
+
+  \item{NM-1\\}
+  
+  Type: Structural, Static, Manual
+                      
+  Initial State: The game is in the Game Inactive State.
+                      
+  Input: The game is changed to the Game Active State.
+  
+  Output: The game state will be reset to the starting position.
+                      
+  Test Case Derivation: The game shall be reset to the starting position due to it entering the Game Active State.
+  
+  How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
+  Then after it has ran we will check to see if the game state has been reset to the starting position.
+
+  \end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
