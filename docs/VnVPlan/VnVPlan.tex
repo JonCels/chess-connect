@@ -640,6 +640,107 @@ Then after it has ran we will check to see if the appropriate Web Application se
     How test will be performed: The function that changes the game state will be run using the appropriate inputs.
     Then after it has ran we will check to see if the game state is in the Game Inactive State.
 
+    \item{EB-4\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in Engine Mode.
+                        
+    Input: The top engine moves are transmitted to the LCD display from the web application.
+                        
+    Output: The LCD display shows the top engine moves.
+                        
+    Test Case Derivation: 
+    
+    How test will be performed: The function that displays characters on the LCD display will be run using the appropriate inputs.
+    Then after it has ran we will check to see if the requested characters are correctly displayed.
+
+    \item{ED-1\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The system shall send the micro-controller output over the chosen data transfer
+    method as an input to the web application.
+                        
+    Output: The web application shall receive the micro-controller output sent over the chosen data transfer
+    method.
+                        
+    Test Case Derivation: The web application should receive new information regarding the board state over the chosen data transfer method. 
+
+    How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
+    will be run using the appropriate inputs. Then after it has ran we will check to see if the appropriate information has been received.
+
+    \item{ED-2\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The system shall send the web application engine moves to the LCD display over the
+    chosen data transfer method.
+                        
+    Output: The LCD display shall receive the web application output sent over the chosen data transfer
+    method.
+                        
+    Test Case Derivation: The LCD display should receive the top engine moves over the chosen data transfer method. 
+
+    How test will be performed: The function that checks to see if any information is being transmitted from the web application 
+    using the appropriate inputs. Then after it has ran we will check to see if the appropriate information has been received by the LCD display.
+
+    \item{EA-2\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The web application shall receive the micro-controller output sent over the chosen data transfer
+    method.
+                        
+    Output: The web application will display the updated game board configuration with the data
+    of the previous move
+                        
+    Test Case Derivation: The web application should update the board configuration after receiving new information about the board state. 
+
+    How test will be performed: The function that updates the game board configuration
+    will be run using the appropriate inputs. Then after it has ran we will check to see if the board state has been updated.
+
+    \item{EA-5\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in Engine Mode.
+                        
+    Input: The system shall use the chess engine to evaluate the position and calculate the best
+    engine moves.
+                        
+    Output: The system shall display the calculated engine moves on the web application.
+                        
+    Test Case Derivation: The chess engine should update the board configuration after receiving new information about the board state. 
+
+    How test will be performed: The function that calculates the engine moves
+    will be run using the appropriate inputs. Then after it has ran we will check to see if the correct engine moves are plays
+    by comparing the results to the identical engine on an online platform.
+
+    \item{EA-6\\}
+
+    Type: Structural, Static, Manual
+                      
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The game has been terminated through method of stalemate, checkmate, resignation, or draw.
+                        
+    Output: The web application will display a message with the method of game termination and the
+    system shall change to the Game Inactive State.
+                        
+    Test Case Derivation: The web application should display a message signifying user of the method of game termination
+    and the game should modify state if the game has ended.
+
+    How test will be performed: The function that checks to see if any of the game termination methods are in effect
+    will be run using the appropriate inputs. Then after it has ran we will out the termination method of change the
+    game state to the Game Inactive State.
+
   \end{enumerate}
    
 
