@@ -370,22 +370,53 @@ How test will be performed:
             or equal to 1.
 \end{enumerate}
 
-\paragraph{Reliability and Availability}
+\paragraph{Capacity}
 \begin{enumerate}
     \item{NFT10}
 
         Type: Structural, Static, Manual
                             
-        Initial State: 
+        Initial State: The product is in the initial game state and is in engine mode.
                             
-        Input/Condition: Users are instructed to play a full game of chess using the \progname{} system.
+        Input/Condition: Moves are made until the game state is in one of a set of predetermined computationally complicated chess positions.
                             
-        Output/Result: The web application will properly reflect the moves made on the physical product the majority of the time.
+        Output/Result: The level of memory used by the web application shall be no more than 1 Gigabyte (GB) at any measured point.
                             
-        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to play a full game of chess. 
-            Their moves and the web application response will be recorded and compared against each other. The number of discrepancies between the physical 
-            moves and moves made on the web application will be recorded. The number of discrepancies averaged over the entire test group must be less than 
-            or equal to 1.
+        How test will be performed: Moves will be made until the game state is in one of a set of predetermined computationally complicated chess positions. 
+            The engine will then be using the maximum amount of memory to compute the best possible moves for the position. The amount of memory used will be 
+            measured and recorded using windows task manager. The amount of memory must never exceed 1 GB at any measured point.
+\end{enumerate}
+
+\subsubsection{Security}
+\paragraph{Integrity}
+\begin{enumerate}
+    \item{NFT11}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode and a chess game is in progress on the system.
+                            
+        Input/Condition: The Bluetooth connection is severed between the web application and the product.
+                            
+        Output/Result: The web application indicates that the Bluetooth connection has been lost.
+                            
+        How test will be performed: A game of chess is being played when the Bluetooth option is switched off on the server, severing the connection.
+            The web application must display an alert that the Bluetooth connection has been lost.
+\end{enumerate}
+
+\begin{enumerate}
+    \item{NFT12}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode and a chess game is in progress on the system.
+                            
+        Input/Condition: The power connection to the system is severed.
+                            
+        Output/Result: The system stores the game state in local memory until power is restored.
+                            
+        How test will be performed: A game of chess is being played when the power is switched off. The power is then restored after 5 or more seconds. A single
+            move is made and the state of the game is tested against the web application. The state of the game should be unchanged from before power was lost.
 \end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
