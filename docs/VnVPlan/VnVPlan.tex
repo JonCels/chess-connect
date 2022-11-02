@@ -290,7 +290,7 @@ How test will be performed:
             hold it. The system will give visual indicators of where the held piece is able to move according to the rules of chess. The time between when 
             they pick up the piece and when the visual response occurs is measured and recorded. This process is repeated 5 times per user. The individual and average
             times are recorded. The response times are then averaged over the entire test group. The average response time of the entire test group must be less than 
-            AVERAGE\_HELP\_TIME 3s.
+            AVERAGE\_HELP\_TIME 0.5s.
                         
     \item{NFT5}
 
@@ -303,7 +303,7 @@ How test will be performed:
         Output/Result: The maximum recorded time of any individual response is within a specific time frame.
                             
         How test will be performed: The times measured in the previous test, NFT4, will be inspected. The maximum recorded individual time must be less than 
-            MAXIMUM\_HELP\_TIME 10s.
+            MAXIMUM\_HELP\_TIME 2s.
 
     \item{NFT6}
 
@@ -324,18 +324,68 @@ How test will be performed:
     \item{NFT7}
 
         Type: Structural, Static, Manual
+                                
+        Initial State: The results of the previous test, NFT6, have been measured and recorded.
+                            
+        Input/Condition: The results of NFT6.
+                            
+        Output/Result: The maximum recorded time of any individual response is within a specific time frame.
+                            
+        How test will be performed: The times measured in the previous test, NFT6, will be inspected. The maximum recorded individual time must be less than 
+            MAXIMUM\_RESPONSE\_TIME 10s.
+\end{enumerate}
+
+\paragraph{Health and Safety}
+\begin{enumerate}
+    \item{NFT8}
+
+        Type: Structural, Static, Manual
                             
         Initial State: The product is in normal mode, and a game has started.
                             
-        Input/Condition: Users are asked to pick up a piece and suspend it midair without placing it down.
+        Input/Condition: 10 wires are chosen as a sample.
                             
-        Output/Result: The board shall visually indicate where the held piece is able to move according to the rules of chess within a specific time frame.
+        Output/Result: The maximum power on any single wire shall be within the required limit.
                             
-        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to pick up a specific piece and 
-        suspend hold it. The system will give visual indicators of where the held piece is able to move according to the rules of chess. The time between when 
-        they pick up the piece and when the visual response occurs is measured and recorded. This process is repeated 5 times per user. The individual and average
-        times are recorded. The response times are then averaged over the entire test group. The average response time of the entire test group must be less than 
-        3 seconds.
+        How test will be performed: A sample of 10 wires are chosen arbitrarily from across the entire system. The voltage and amperage of 
+            each wire in the sample are measured and recorded. The power shall then be calculated and recorded. The maximum power of any wire
+            in the sample must not exceed the safe limits determined in the Canadian Electrical Code \cite{CanadianElectricalCode2021}.
+\end{enumerate}
+
+\paragraph{Precision and Accuracy}
+\begin{enumerate}
+    \item{NFT9}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in the initial game state.
+                            
+        Input/Condition: Users are instructed to play a full game of chess using the \progname{} system.
+                            
+        Output/Result: The web application will properly reflect the moves made on the physical product the majority of the time.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to play a full game of chess. 
+            Their moves and the web application response will be recorded and compared against each other. The number of discrepancies between the physical 
+            moves and moves made on the web application will be recorded. The number of discrepancies averaged over the entire test group must be less than 
+            or equal to 1.
+\end{enumerate}
+
+\paragraph{Reliability and Availability}
+\begin{enumerate}
+    \item{NFT10}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: 
+                            
+        Input/Condition: Users are instructed to play a full game of chess using the \progname{} system.
+                            
+        Output/Result: The web application will properly reflect the moves made on the physical product the majority of the time.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to play a full game of chess. 
+            Their moves and the web application response will be recorded and compared against each other. The number of discrepancies between the physical 
+            moves and moves made on the web application will be recorded. The number of discrepancies averaged over the entire test group must be less than 
+            or equal to 1.
 \end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
