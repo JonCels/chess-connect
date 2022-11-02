@@ -18,8 +18,8 @@
 
 \begin{document}
 
-\title{Project Title: System Verification and Validation Plan for \progname{}} 
-\author{Author Name}
+\title{Project Title: System Verification and Validation Plan for Chess Connect} 
+\author{\authname}
 \date{\today}
 	
 \maketitle
@@ -35,7 +35,7 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 2022-10-31 & Jonathan Cels & NFR Testing\\
-Date 2 & 1.1 & Notes\\
+2022-10-31 & Arshdeep Aujla & Added section 3\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -76,26 +76,27 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 \section{General Information}
 
 \subsection{Summary}
-
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The project name is Chess Connect. It is comprised of software and hardware components. The hardware will consist of a reactive chess set 
+connected to a microcontroller. The microcontroller will relay information on the chess board in the form of LEDs of the possible moves the user can make.
+The software component of this project will consist of a web application that will reflect all of the chess piece's location on the physical board.
 
 \subsection{Objectives}
-
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The following objectives are the qualities that are the most important for the project.
+\begin{itemize}
+  \item The hardware should reflect relevent information on the LEDs on the chess board
+  \item The software component should reflect the physical chess board in near-real time
+  \item The movement of the chess pieces should be recorded by the hardware
+\end{itemize}
 
 \subsection{Relevant Documentation}
-
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (MG, MIS, etc).  You can include these even
-  before they are written, since by the time the project is done, they will be
-  written.}
-
-\citet{SRS}
+The following documents are relevent to this project.
+\begin{itemize}
+  \item SRS
+  \item Hazard Analysis
+  \item Requirements Document
+  \item Design Document
+  \item VnV Report
+\end{itemize}
 
 \section{Plan}
 
