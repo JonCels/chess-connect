@@ -111,20 +111,20 @@ The following documents are relevent to this project.
  Alexander Van Kralingen & Web application connection tests\\
  & GitHub integration testing\\
  \hline
- Jonathan Cels & Microcontroller program testing\\
- & Chess API integration testing\\
- & Communication protocol testing\\
- \hline
- Rupinder Nagra & Chess API integration testing\\ 
- & Web application connection tests\\
- \hline
  Arshdeep Aujla & Sensor accuracy testing\\
  & Microcontroller program testing\\
  & Touchscreen UI latency tests\\
  \hline
+ Jonathan Cels & Microcontroller program testing\\
+ & Chess API integration testing\\
+ & Communication protocol testing\\
+ \hline
  Joshua Chapman& Power distribution design and integration testing\\
  & Microcontroller program testing\\
  & Communication protocol testing\\
+ \hline
+ Rupinder Nagra & Chess API integration testing\\ 
+ & Web application connection tests\\
  \hline
 \end{tabular}
 %You, your classmates and the course instructor.  Maybe your supervisor.
@@ -132,29 +132,51 @@ The following documents are relevent to this project.
 %for the project.  A table is a good way to summarize this information.
 
 \subsection{SRS Verification Plan}
+%List any approaches you intend to use for SRS verification.  This may just
+%be ad hoc feedback from reviewers, like your classmates, or you may have
+%something more rigorous/systematic in mind..
 
-\wss{List any approaches you intend to use for SRS verification.  This may just
-  be ad hoc feedback from reviewers, like your classmates, or you may have
-  something more rigorous/systematic in mind..}
-
-\wss{Remember you have an SRS checklist}
+%Remember you have an SRS checklist
 
 \subsection{Design Verification Plan}
+\textbf{Hardware Design Verification} begins with LTSpice and Multisim design software
+packages. The designed circuits are simulated in the software and tested. Testing
+includes the expected conditions of the inputs and verifying that expected outputs
+are returned. Edge cases are simulated to verify safety and failure conditions of
+the circuits. 
+\newline
+\newline
+\textbf{Software Design Verification} utilizes the compiler to verify code correctness. 
+Arduino intergrated development environments contain the tools to compile and check for 
+errors. Code walkthroughs are performed by collaborators that did not write the program. 
+This includes detailed inspection and a report describing the function of the code 
+based on their perspective. This tests the quality of writing and functionality of 
+the code. 
 
-\wss{Plans for design verification}
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Remember you have MG and MIS checklists}
+%Plans for design verification}
+%The review will include reviews by your classmates}
+%Remember you have MG and MIS checklists}
 
 \subsection{Implementation Verification Plan}
-
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
-
-\wss{In this section you would also give any details of any plans for static verification of
-  the implementation.  Potential techniques include code walkthroughs, code
-  inspection, static analyzers, etc.}
+\textbf{Hardware Implementation Verification} begins with individual components. First 
+the power supply is tested with a voltemeter for accuracy and precision. Then, 
+the microcontroller is powered on and each individual I/O is tested for correctness. 
+Inputs will be powered via the power and readings are verified for correctness relative 
+to the power supply. Outputs are verified using the voltemeter to measure. 
+Finally, sensors and circuits are tested using the IO of the microcontroller. This allows
+for accurate and detailed inspection of the components and verifies their correctness. 
+\newline 
+\newline 
+\textbf{Software Implementation Verification} requires the hardware to be tested and 
+assembled before beginning. The software is downloaded to the controller and the inputs 
+and outputs are configured one-by-one. Functionality of code is tested with unit tests
+from section 5.1 with the appropriate hardware. Once each section is unit tested, the
+sub-systems can begin to combine to test completness of full systems. 
+%You should at least point to the tests listed in this document and the unit
+%testing plan.
+%In this section you would also give any details of any plans for static verification of
+%the implementation.  Potential techniques include code walkthroughs, code
+%inspection, static analyzers, etc.
 
 \subsection{Automated Testing and Verification Tools}
 
