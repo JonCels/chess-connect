@@ -72,6 +72,7 @@
 2022-10-05 & Alexander Van Kralingen & Added FSM\\
 2022-10-19 & Jonathan Cels & Added new hazard requirements\\
 2022-10-23 & Alexander Van Kralingen & Fixed FSM, added diagram source code\\
+2022-11-02 & Jonathan Cels & Changed some NFRs\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -652,13 +653,11 @@ format. The application will be constrained to a 2-dimensional model of the hard
     \item The software application game state will model the game state on the \progname{} hardware with a high degree of accuracy. 
     The level of accuracy shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr}
     of the VnV Plan.
-        
 \end{enumerate}
 
 \paragraph{Reliability and Availability Requirements}
 \begin{enumerate}[{PR}1., leftmargin=2\parindent, resume]
-    \item The product shall be available with a high degree of uptime. The level of availability shall be described following the procedure 
-    given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+    \item The product shall be available with a minimum of 95\% uptime. 
 \end{enumerate}
 
 \paragraph{Robustness or Fault-Tolerance Requirements}
@@ -690,7 +689,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \paragraph{Expected Physical Environment}
 \begin{enumerate}[{OE}1., leftmargin=2\parindent]
     \item The hardware and software systems shall be close enough to each other to facilitate communication. The degree of proximity required 
-    shall be described following the procedure given in Section 5.2.\thevnvSectionNfr\stepcounter{vnvSectionNfr} of the VnV Plan.
+    will be 20 meters or less.
     \item The area shall be clear of potentially dangerous or harmful environmental factors.
 \end{enumerate}
 

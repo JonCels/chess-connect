@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -27,13 +28,19 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+2022-10-31 & Jonathan Cels & NFR Testing\\
+2022-10-31 & Arshdeep Aujla & Added section 3\\
+2022-11-02 & Joshua Chapman & Section 4.1, 4.2, 4.3, 4.5\\
+2022-11-02 & Alexander Van Kralingen & Completed Section 4.4, 4.6, 4.7\\
 \bottomrule
 \end{tabularx}
+\end{table}
 
 \newpage
 
@@ -73,70 +80,129 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 \section{General Information}
 
 \subsection{Summary}
-
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The project name is Chess Connect. It is comprised of software and hardware components. The hardware will consist of a reactive chess set 
+connected to a microcontroller. The microcontroller will relay information on the chess board in the form of LEDs of the possible moves the user can make.
+The software component of this project will consist of a web application that will reflect all of the chess piece's location on the physical board.
 
 \subsection{Objectives}
-
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The following objectives are the qualities that are the most important for the project.
+\begin{itemize}
+  \item The hardware should reflect relevent information on the LEDs on the chess board
+  \item The software component should reflect the physical chess board in near-real time
+  \item The movement of the chess pieces should be recorded by the hardware
+\end{itemize}
 
 \subsection{Relevant Documentation}
-
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.}
-
-\citet{SRS}
+The following documents are relevent to this project.
+\begin{itemize}
+  \item SRS
+  \item Hazard Analysis
+  \item Requirements Document
+  \item Design Document
+  \item VnV Report
+  \item MIS
+  \item MG
+\end{itemize}
 
 \section{Plan}
-
-\wss{Introduce this section.   You can provide a roadmap of the sections to
-  come.}
+This section discusses the general plans for hardware and software testing. The 
+responsibilities of members are assigned and requirements verifications are discussed. 
+Design and implementation verification include high-level plans to execute hardware 
+and software systems. Automated testing techniques and tools are outlined. 
+A detailed software validation plan discusses the external tools required for 
+completeness. 
+%Introduce this section.   You can provide a roadmap of the sections to come.
 
 \subsection{Verification and Validation Team}
 
-\wss{Your teammates.  Maybe your supervisor.
-  You shoud do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+\begin{tabular}{ |p{4.5cm}||p{9cm}|  }
+ \hline
+ Alexander Van Kralingen & Web application connection tests\\
+ & GitHub integration testing\\
+ & Microcontroller code testing\\
+ \hline
+ Arshdeep Aujla & Sensor accuracy testing\\
+ & Microcontroller hardware \& code testing\\
+ & Touchscreen UI latency tests\\
+ \hline
+ Jonathan Cels & Microcontroller code testing\\
+ & Chess API integration testing\\
+ & Communication protocol testing\\
+ \hline
+ Joshua Chapman& Power distribution design and integration testing\\
+ & Microcontroller hardware \& code testing\\
+ & Communication protocol testing\\
+ \hline
+ Rupinder Nagra & Chess API integration testing\\ 
+ & Web application connection tests\\
+ & Web application functionality testing\\
+ \hline
+\end{tabular}
+%You, your classmates and the course instructor.  Maybe your supervisor.
+%You shoud do more than list names.  You should say what each person's role is
+%for the project.  A table is a good way to summarize this information.
 
 \subsection{SRS Verification Plan}
+SRS verification is performed by the teammates throughout the design and testing 
+process. They will reference requirements and consider the results throughout design. 
+Teammates will periodically verify this completeness throughout the design process. 
+The verification and validation report will reference an associated requirement for 
+each test. This allows for tracking of individual requirement fullfilment 
+throughout the process. 
+%List any approaches you intend to use for SRS verification.  This may just
+%be ad hoc feedback from reviewers, like your classmates, or you may have
+%something more rigorous/systematic in mind..
 
-\wss{List any approaches you intend to use for SRS verification.  This may include
-  ad hoc feedback from reviewers, like your classmates, or you may plan for 
-  something more rigorous/systematic.}
-
-\wss{Maybe create an SRS checklist?}
+%Remember you have an SRS checklist
 
 \subsection{Design Verification Plan}
-
-\wss{Plans for design verification}
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
+\textbf{Hardware Design Verification} begins with LTSpice and Multisim design software
+packages. The designed circuits are simulated in the software and tested accordingly.
+Testingincludes simulating inputs and verifying that expected outputs are returned. 
+Edge cases are simulated to verify safety and failure conditions of the circuits. 
+\newline
+\newline
+\textbf{Software Design Verification} utilizes the compiler to verify code correctness. 
+Arduino intergrated development environments contain the tools to compile and check for 
+errors. Code walkthroughs are performed by collaborators that did not write the program. 
+This includes detailed inspection and a report describing the function of the code 
+based on their perspective. This tests the readability and functionality of 
+the code. 
+%Plans for design verification}
+%The review will include reviews by your classmates}
+%Remember you have MG and MIS checklists}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-\wss{The verification and validation plan is an artifact that should also be verified.}
+The Verification and Validation Plan verification will include reviewing the \href{file:../Checklists/VnV-Checklist.pdf}{Verification and Validation Plan checklist} and adjusting this document accordingly. The verification will also include considering feedback from issues created by another team, as well as from the TA assigned to this project. Comments and improvements will be implemented after completing revision 0 of this document.
+%The verification and validation plan is an artifact that should also be verified.
 
-\wss{The review will include reviews by your classmates}
+%The review will include reviews by your classmates
 
-\wss{Create a checklists?}
+%Create a checklists?
 
 \subsection{Implementation Verification Plan}
+\textbf{Hardware Implementation Verification} begins with individual components. First 
+the power supply is tested with a voltemeter for accuracy and precision. Then, 
+the microcontroller is powered on and each individual I/O is tested for correctness. 
+Inputs will be powered via the power supply and readings are verified for correctness 
+using custom testing software installed on the controller. Outputs are verified using 
+the voltemeter to measure correctness relative to the controller value. Finally, 
+sensors and circuits are tested using the IO of the microcontroller. This allows
+for accurate and detailed inspection of the components and verifies their correctness. 
+\newline 
+\newline 
+\textbf{Software Implementation Verification} requires the hardware to be tested and 
+assembled before beginning. The software is downloaded to the controller and the inputs 
+and outputs are configured one-by-one. Functionality of code is tested with unit tests
+from section 5.1 with the appropriate hardware. Once each section is unit tested, the
+sub-systems can begin to combine to test completness of full systems and their functionality.
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
-
-\wss{In this section you would also give any details of any plans for static verification of
-  the implementation.  Potential techniques include code walkthroughs, code
-  inspection, static analyzers, etc.}
+%You should at least point to the tests listed in this document and the unit
+%testing plan.
+%In this section you would also give any details of any plans for static verification of
+%the implementation.  Potential techniques include code walkthroughs, code
+%inspection, static analyzers, etc.
 
 \subsection{Automated Testing and Verification Tools}
 
@@ -149,48 +215,51 @@ Automated testing will be carried out for the software involved with this projec
       \item \href{https://marketplace.visualstudio.com/items?itemName=ms-python.flake8}{Flake8} to be used for Python
     \end{itemize}
 
-  \item \textbf{Unit Tests:} Detailed in \hyperref[UnitTests]{Section \ref*{UnitTests}}, unit tests will be performed for Python and Javascript code.
+  \item \textbf{Unit Tests:} Detailed in \hyperref[UnitTests]{Section \ref*{UnitTests}}, unit tests will be performed for Python, Javascript and C code.
     \begin{itemize}
-      \item \href{https://github.com/testing-library/react-testing-library}{React Testing Library} will be used for Javascript
-      \item \href{https://docs.pytest.org/en/7.2.x/}{PyTest} will be used for Python
+      \item \href{https://github.com/testing-library/react-testing-library}{React Testing Library} will be used for Javascript unit tests.
+      \item \href{https://docs.pytest.org/en/7.2.x/}{PyTest} will be used for Python unit tests.
+      \item \href{https://aceunit.sourceforge.net/}{AceUnit} will be used for C unit tests.
     \end{itemize}
 
-  \item \textbf{Dynamic Analysis Tool:} Rather than creating unit tests for the C code, memory leaks and access errors will be caught using \href{https://valgrind.org/}{ValGrind}.
+  \item \textbf{Dynamic Analysis Tool:} in addition to creating unit tests for the C code, memory leaks and access errors will be caught using \href{https://valgrind.org/}{ValGrind}.
+  
 \end{itemize}
 
-In addition to the automated testing, dynamic analysis will be performed on the hardware to debug and verify the C code. The debugging platform used is \href{https://www.google.com}{idk}.
+
+\textbf{Debuggers:} Dynamic analysis will also be performed on the code through debuggers to verify the system and unit tests, as well as normal operation. These tools will be used extensively to bring all unit tests to a successful state, and to determine the root cause of any inconsistent behaviour from the hardware.
+  \begin{itemize}
+    \item The broswer's (Chrome, Firefox, etc.) built in debugger will be used for stepping through the Javascript code on the web application.
+    \item \href{https://docs.python.org/3/library/pdb.html}{pdb} will be used for Python debugging.
+    \item \href{https://docs.arduino.cc/tutorials/zero/debugging-with-zero}{Arduino Zero Built-in Debugger Interface} will be used for debugging embedded C code.
+  \end{itemize}
 
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+%What tools are you using for automated testing.  Likely a unit testing framework and maybe a profiling tool, like ValGrind.  Other possible tools include a static analyzer, make, continuous integration tools, test coverage tools, etc.  Explain your plans for summarizing code coverage metrics. Linters are another important class of tools.  For the programming language you select, you should look at the available linters.  There may also be tools that verify that coding standards have been respected, like flake9 for Python.
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+%If you have already done this in the development plan, you can point to that document.
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+%The details of this section will likely evolve as you get closer to the implementation.
 
 
 
 \subsection{Software Validation Plan}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+Software will be validated by reviewing the requirements in the \href{file:../SRS/SRS.pdf}{Software Requirement Specifications} document and ensuring the software matches the expected performance and behaviour. The chess engine software integration will be validated by comparing it alongside an established online chess engine running the same Stockfish build as is selected for \progname{}, and comparing the recommended moves. One webside that may be used is \href{https://www.365chess.com/analysis_board.php}{365Chess.com}.
+\newline
+\newline
+Feedback from members of the team that are assigned to another area of the system will be called to verify the software is performing adequately. For example, a member working on the web app may come to test the hardware to ensure the sequences and behaviour is intuitive and user friendly. Feedback and comments from the professor and TA assigned to this project will also be considered when making ajustments to the software.
+\newline
+\newline
+Unit tests will be created that capture both normal-use and failure modes to validate the software as well. Unit tests will be integrated in a Github workflow to ensure that changes are never made to the software that conflict with other areas of the code. Failing unit tests will be used as direction to change parts of the software back to a valid state of operation.
 
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
+%If there is any external data that can be used for validation, you should point to it here.  If there are no plans for validation, you should state that here.
 
-\wss{This section might reference back to the SRS verification section.}
+%You might want to use review sessions with the stakeholder to check that the requirements document captures the right requirements.  Maybe task based inspection?
 
-\section{System Test Description}
+%This section might reference back to the SRS verification section.
+
+\section{System Test Description} \label{SystemTests}
 	
 \subsection{Tests for Functional Requirements}
 
@@ -259,11 +328,10 @@ How test will be performed:
 \wss{Static tests, review, inspections, and walkthroughs, will not follow the
 format for the tests given below.}
 
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
-
+\subsubsection{Look and Feel}
+\paragraph{Style}
 \begin{enumerate}
+    \item{NFT1}
 
 \item{test-id1\\}
 
@@ -291,9 +359,188 @@ How test will be performed:
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Usability and Humanity}
+\paragraph{Learnability}
+\begin{enumerate}
+    \item{NFT2}
 
-...
+        Type: Structural, Static, Manual
+                            
+        Initial State: Product is in normal mode, a game has started, and the users have not interacted with the product before. 
+                            
+        Input/Condition: Users are asked to use the product and move one specified piece from one square to another specified square on the board.
+                            
+        Output/Result: The majority of users understand which piece they moved and to where, and are able to identify that the web application 
+            has reflected their move in the virtual model within 30 seconds of studying the visual representation of the board state.
+                            
+        How test will be performed: A test group of people who do not play chess regularly are asked to move pieces on the chessboard. They are 
+            then asked to identify the move they just made as reflected in the web application model. The subjects must identify that the piece they
+            moved on the board has also been moved on the web application's virtual model within 30 seconds or less, averaged over the number of people
+            in the test group.
+                        
+    \item{NFT3}
+
+        Type: Functional, Dynamic, Manual, Static etc.
+                            
+        Initial State: The product shall be representing the state of the game that is in progress. The pieces shall be in a legal position according to 
+            the rules of chess. The pieces shall not all be in their starting positions, and there is at least one of each type of piece 
+            (pawn, knight, bishop, rook, queen, king) on the board.
+                            
+        Input: Users are asked to identify the names of different pieces and squares based on their visual appearance in both the 
+            physical product and the web application.
+                            
+        Output: The majority of users are able to identify the names of pieces and squares based on their likeliness to historically used symbols and shapes.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to identify each of the pieces 
+            and squares from an in-progress game of chess using the system. The justification for this is to avoid piece identification based on their starting 
+            positions. The majority of the group should be able to visually identify every piece and square within 2 minutes of seeing the position for the first time.
+\end{enumerate}
+
+\subsubsection{Performance}
+\paragraph{Speed and Latency}
+\begin{enumerate}
+    \item{NFT4}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode, and a game has started.
+                            
+        Input/Condition: Users are asked to pick up a piece and suspend it midair without placing it down.
+                            
+        Output/Result: The board shall visually indicate where the held piece is able to move according to the rules of chess within a specific time frame.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to pick up a specific piece and 
+            hold it. The system will give visual indicators of where the held piece is able to move according to the rules of chess. The time between when 
+            they pick up the piece and when the visual response occurs is measured and recorded. This process is repeated 5 times per user. The individual and average
+            times are recorded. The response times are then averaged over the entire test group. The average response time of the entire test group must be less than 
+            0.5 seconds.
+                        
+    \item{NFT5}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The results of the previous test, NFT4, have been measured and recorded.
+                            
+        Input/Condition: The results of NFT4.
+                            
+        Output/Result: The maximum recorded time of any individual response is within a specific time frame.
+                            
+        How test will be performed: The times measured in the previous test, NFT4, will be inspected. The maximum recorded individual time must be less than 
+            1 second.
+
+    \item{NFT6}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode, and a game has started.
+                            
+        Input/Condition: Users are asked to pick up a piece and legally move it to a square according to the rules of chess.
+                            
+        Output/Result: The web application shall reflect their move in the virtual model within a specific time frame.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to pick up a specific piece and 
+            legally move it to another square according to the rules of chess. The web application will reflect their move in the virtual model. The time between 
+            when they place down the piece and when the web application response occurs is measured and recorded. This process is repeated 5 times per user. The 
+            individual and average times are recorded. The response times are then averaged over the entire test group. The average response time of the entire
+            test group must be less than 2 seconds.
+
+    \item{NFT7}
+
+        Type: Structural, Static, Manual
+                                
+        Initial State: The results of the previous test, NFT6, have been measured and recorded.
+                            
+        Input/Condition: The results of NFT6.
+                            
+        Output/Result: The maximum recorded time of any individual response is within a specific time frame.
+                            
+        How test will be performed: The times measured in the previous test, NFT6, will be inspected. The maximum recorded individual time must be less than 
+            5 seconds.
+\end{enumerate}
+
+\paragraph{Health and Safety}
+\begin{enumerate}
+    \item{NFT8}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode, and a game has started.
+                            
+        Input/Condition: 10 wires are chosen as a sample.
+                            
+        Output/Result: The maximum power on any single wire shall be within the required limit.
+                            
+        How test will be performed: A sample of 10 wires are chosen arbitrarily from across the entire system. The voltage and amperage of 
+            each wire in the sample are measured and recorded. The power shall then be calculated and recorded. The maximum power of any wire
+            in the sample must not exceed the safe limits determined in the Canadian Electrical Code \cite{CanadianElectricalCode2021}.
+\end{enumerate}
+
+\paragraph{Precision and Accuracy}
+\begin{enumerate}
+    \item{NFT9}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in the initial game state.
+                            
+        Input/Condition: Users are instructed to play a full game of chess using the \progname{} system.
+                            
+        Output/Result: The web application will properly reflect the moves made on the physical product the majority of the time.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to play a full game of chess. 
+            Their moves and the web application response will be recorded and compared against each other. The number of discrepancies between the physical 
+            moves and moves made on the web application will be recorded. The number of discrepancies averaged over the entire test group must be less than 
+            or equal to 1.
+\end{enumerate}
+
+\paragraph{Capacity}
+\begin{enumerate}
+    \item{NFT10}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in the initial game state and is in engine mode.
+                            
+        Input/Condition: Moves are made until the game state is in one of a set of predetermined computationally complicated chess positions.
+                            
+        Output/Result: The level of memory used by the web application shall be no more than 1 Gigabyte (GB) at any measured point.
+                            
+        How test will be performed: Moves will be made until the game state is in one of a set of predetermined computationally complicated chess positions. 
+            The engine will then be using the maximum amount of memory to compute the best possible moves for the position. The amount of memory used will be 
+            measured and recorded using windows task manager. The amount of memory must never exceed 1 GB at any measured point.
+\end{enumerate}
+
+\subsubsection{Security}
+\paragraph{Integrity}
+\begin{enumerate}
+    \item{NFT11}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode and a chess game is in progress on the system.
+                            
+        Input/Condition: The Bluetooth connection is severed between the web application and the product.
+                            
+        Output/Result: The web application indicates that the Bluetooth connection has been lost.
+                            
+        How test will be performed: A game of chess is being played when the Bluetooth option is switched off on the server, severing the connection.
+            The web application must display an alert that the Bluetooth connection has been lost.
+\end{enumerate}
+
+\begin{enumerate}
+    \item{NFT12}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode and a chess game is in progress on the system.
+                            
+        Input/Condition: The power connection to the system is severed.
+                            
+        Output/Result: The system stores the game state in local memory until power is restored.
+                            
+        How test will be performed: A game of chess is being played when the power is switched off. The power is then restored after 5 or more seconds. A single
+            move is made and the state of the game is tested against the web application. The state of the game should be unchanged from before power was lost.
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
