@@ -37,6 +37,7 @@
 2022-10-31 & Jonathan Cels & NFR Testing\\
 2022-10-31 & Arshdeep Aujla & Added section 3\\
 2022-11-02 & Joshua Chapman & Section 4.1,4.2,4.3,4.4\\
+2022-11-02 & Rupinder Nagra & Section 5.1\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -270,38 +271,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
   How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
   After it has ran we will check to see if the user mode has been modified.
   
-  % \item{GA-4\\}
-  
-  % Type: Functional, Dynamic, Manual
-                      
-  % Initial State: The game is in a user mode.
-                      
-  % Input: The game is changed to a different user mode.
-  
-  % Output: The system will follow the functional requirements 
-  % section according to the currently selected user mode.
-                      
-  % Test Case Derivation: The game shall follow the instructions that are appropriate to the current user mode.
-  
-  % How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
-  % After it has ran we will check to see if the appropriate Chess Board section is being followed.
-  
-  % \item{GA-5\\}
-  
-  % Type: Functional, Dynamic, Manual
-                      
-  % Initial State: The game is in a user mode.
-                      
-  % Input: The game is changed to a different user mode.
-  
-  % Output: The system will follow the Data Transfer section based on the user mode.
-                      
-  % Test Case Derivation: The game shall follow the Data Transfer section based on the selected user mode.
-  
-  % How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
-  % After it has ran we will check to see if the appropriate Data Transfer section is being followed.
-  
-  \item{GA-6\\}
+  \item{GA-4\\}
   
   Type: Functional, Dynamic, Manual
                       
@@ -316,7 +286,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
   How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
   After it has ran we will check to see if the board state has been reset to the starting position.
   
-  \item{GA-7\\}
+  \item{GA-5\\}
   
   Type: Functional, Dynamic, Manual
                       
@@ -331,21 +301,6 @@ Each of the user modes include distinct actions due to the purposes of each mode
   How test will be performed: The function that modifies the game state will be run using the appropriate inputs.
   After it has ran we will check to see if the game state has been changed to the Game Inactive State based on the
   the checkmate or stalemate termination type.
-  
-  % \item{GA-8\\}
-  
-  % Type: Functional, Dynamic, Manual
-                      
-  % Initial State: The game is in a user mode.
-                      
-  % Input: The game is changed to a different user mode.
-  
-  % Output: The system will follow the Web Application section based on the user mode.
-                      
-  % Test Case Derivation: The game shall follow the Web Application section based on the selected user mode.
-  
-  % How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
-  % After it has ran we will check to see if the appropriate Web Application section is being followed.
   
   \end{enumerate}
   
@@ -474,7 +429,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Normal Mode.
                           
-      Input: Both users will hold down the Draw button for ENDTIME seconds each located on their side of the board.
+      Input: Both users will press the Draw button within an interval of ENDTIME seconds each located on their side of the board.
                           
       Output: The game state will change to the Game Inactive State.
                           
@@ -489,25 +444,22 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Normal Mode.
                           
-      Input: The system shall send the micro-controller output over the chosen data transfer
-      method as an input to the web application.
+      Input: The system shall send the micro-controller output over Bluetooth as an input to the web application.
                           
-      Output: The web application shall receive the micro-controller output sent over the chosen data transfer
-      method.
+      Output: The web application shall receive the micro-controller output sent over Bluetooth.
                           
-      Test Case Derivation: The web application should receive new information regarding the board state over the chosen data transfer method. 
+      Test Case Derivation: The web application should receive new information regarding the board state over Bluetooth. 
   
       How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
       will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
   
-      \item{NA-2\\}
+      \item{NA-1\\}
   
       Type: Functional, Dynamic, Manual
                         
       Initial State: The game is in Normal Mode.
                           
-      Input: The web application shall receive the micro-controller output sent over the chosen data transfer
-      method.
+      Input: The web application shall receive the micro-controller output sent over Bluetooth.
                           
       Output: The web application will display the updated game board configuration with the data
       of the previous move.
@@ -517,7 +469,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
       How test will be performed: The function that updates the game board configuration
       will be run using the appropriate inputs. After it has ran we will check to see if the board state has been updated.
   
-      \item{NA-3\\}
+      \item{NA-2\\}
   
       Type: Functional, Dynamic, Manual
                         
@@ -578,7 +530,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Engine Mode.
                           
-      Input: Both users will hold down the Draw button for ENDTIME seconds each located on their side of the board.
+      Input: Both users will press the Draw button within an interval of ENDTIME seconds each located on their side of the board.
                           
       Output: The game state will change to the Game Inactive State.
                           
@@ -609,13 +561,11 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Engine Mode.
                           
-      Input: The system shall send the micro-controller output over the chosen data transfer
-      method as an input to the web application.
+      Input: The system shall send the micro-controller output over Bluetooth as an input to the web application.
                           
-      Output: The web application shall receive the micro-controller output sent over the chosen data transfer
-      method.
+      Output: The web application shall receive the micro-controller output sent over Bluetooth.
                           
-      Test Case Derivation: The web application should receive new information regarding the board state over the chosen data transfer method. 
+      Test Case Derivation: The web application should receive new information regarding the board state over Bluetooth. 
   
       How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
       will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
@@ -626,25 +576,22 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Engine Mode.
                           
-      Input: The system shall send the web application engine moves to the LCD display over the
-      chosen data transfer method.
+      Input: The system shall send the web application engine moves to the LCD display over Bluetooth.
                           
-      Output: The LCD display shall receive the web application output sent over the chosen data transfer
-      method.
+      Output: The LCD display shall receive the web application output sent over Bluetooth.
                           
-      Test Case Derivation: The LCD display should receive the top engine moves over the chosen data transfer method. 
+      Test Case Derivation: The LCD display should receive the top engine moves over Bluetooth. 
   
       How test will be performed: The function that checks to see if any information is being transmitted from the web application 
       using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received by the LCD display.
   
-      \item{EA-2\\}
+      \item{EA-1\\}
   
       Type: Functional, Dynamic, Manual
                         
       Initial State: The game is in Engine Mode.
                           
-      Input: The web application shall receive the micro-controller output sent over the chosen data transfer
-      method.
+      Input: The web application shall receive the micro-controller output sent over Bluetooth.
                           
       Output: The web application will display the updated game board configuration with the data
       of the previous move
@@ -654,7 +601,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
       How test will be performed: The function that updates the game board configuration
       will be run using the appropriate inputs. After it has ran we will check to see if the board state has been updated.
   
-      \item{EA-5\\}
+      \item{EA-2\\}
   
       Type: Functional, Dynamic, Manual
                         
@@ -671,7 +618,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
       will be run using the appropriate inputs. After it has ran we will check to see if the correct engine moves are played
       by comparing the results to the identical engine on an online platform.
   
-      \item{EA-6\\}
+      \item{EA-3\\}
   
       Type: Functional, Dynamic, Manual
                         
@@ -719,8 +666,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
                           
       Input: The user picks up a piece.
                           
-      Output: Allow user to view all legal moves with green LED
-      lights on valid squares.
+      Output: User views all legal moves with green LED lights on valid squares.
                           
       Test Case Derivation: This is needed to ensure users provide legal inputs to the system,
       and also provide visual feedback to accelerate learning.
@@ -766,7 +712,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Beginner Mode.
                           
-      Input: Both users will hold down the Draw button for ENDTIME seconds each located on their side of the board.
+      Input: Both users will press the Draw button within an interval of ENDTIME seconds each located on their side of the board.
                           
       Output: The game state will change to the Game Inactive State.
                           
@@ -781,13 +727,11 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Beginner Mode.
                           
-      Input: The system shall send the micro-controller output over the chosen data transfer
-      method as an input to the web application.
+      Input: The system shall send the micro-controller output over Bluetooth as an input to the web application.
                           
-      Output: The web application shall receive the micro-controller output sent over the chosen data transfer
-      method.
+      Output: The web application shall receive the micro-controller output sent over Bluetooth.
                           
-      Test Case Derivation: The web application should receive new information regarding the board state over the chosen data transfer method. 
+      Test Case Derivation: The web application should receive new information regarding the board state over Bluetooth. 
   
       How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
       will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
@@ -814,8 +758,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Beginner Mode.
                           
-      Input: The web application shall receive the micro-controller output sent over the chosen data transfer
-      method.
+      Input: The web application shall receive the micro-controller output sent over Bluetooth.
                           
       Output: The web application will display the updated game board configuration with the data
       of the previous move
