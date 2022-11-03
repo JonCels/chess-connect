@@ -6,6 +6,7 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage{array}
 \usepackage{float}
+\usepackage{longtable}
 
 \hypersetup{
     colorlinks,
@@ -52,12 +53,6 @@
 
 \tableofcontents
 
-\listoftables
-\wss{Remove this section if it isn't needed}
-
-\listoffigures
-\wss{Remove this section if it isn't needed}
-
 \newpage
 
 \section{Symbols, Abbreviations and Acronyms}
@@ -75,14 +70,9 @@
 \wss{symbols, abbreviations or acronyms --- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
 
-\wss{Remove this section if it isn't needed}
-
 \newpage
 
 \pagenumbering{arabic}
-
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
 
 \section{General Information}
 
@@ -1028,40 +1018,102 @@ Each of the user modes include distinct actions due to the purposes of each mode
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-\begin{table}[H]
-    \centering
-        \setlength{\leftmargini}{0.4cm}
-        \begin{tabularx}{\linewidth}{|X|X|}
-        \hline
-        Test & Requirement\\
-        \hline
-        NFT1 & LF3\\
-        \hline
-        NFT2 & UH5\\
-        \hline
-        NFT3 & UH6\\
-        \hline
-        NFT4 & PR1\\
-        \hline
-        NFT5 & PR2\\
-        \hline
-        NFT6 & PR3\\
-        \hline
-        NFT7 & PR4\\
-        \hline
-        NFT8 & PR6\\
-        \hline
-        NFT9 & PR7\\
-        \hline
-        NFT10 & PR10\\
-        \hline
-        NFT11 & SR4\\
-        \hline
-        NFT12 & SR3\\
-        \hline
-        \end{tabularx}
-    \label{Table}
-\end{table}
+\begin{longtable}{| p{.20\textwidth} | p{.80\textwidth} |}
+    \hline
+    Test & Requirement\\
+    \hline
+    GA-1 & GA1\\
+    \hline
+    GA-2 & GA2\\
+    \hline
+    GA-3 & GA3\\
+    \hline
+    GA-4 & GA6\\
+    \hline
+    GA-5 & GA7\\
+    \hline
+    GI-1 & GI1\\
+    \hline
+    GI-2 & GI2\\
+    \hline
+    GI-3 & GI3\\
+    \hline
+    GI-4 & GI4\\
+    \hline
+    GI-5 & GI5, GI6\\
+    \hline
+    NB-1 & NB1\\
+    \hline
+    NB-2 & NB2\\
+    \hline
+    NB-3 & NB3\\
+    \hline
+    ND-1 & ND1\\
+    \hline
+    NA-1 & NA1, NA2\\
+    \hline
+    NA-2 & NA3\\
+    \hline
+    EB-1 & EB1\\
+    \hline
+    EB-2 & EB2\\
+    \hline
+    EB-3 & EB3\\
+    \hline
+    EB-4 & EB4\\
+    \hline
+    ED-1 & ED1\\
+    \hline
+    ED-2 & ED2\\
+    \hline
+    EA-1 & EA1, EA2\\
+    \hline
+    EA-2 & EA3, EA4, EA5\\
+    \hline
+    EA-3 & EA6\\
+    \hline
+    BB-1 & BB1\\
+    \hline
+    BB-2 & BB2\\
+    \hline
+    BB-3 & BB3\\
+    \hline
+    BB-4 & BB4\\
+    \hline
+    BB-5 & BB5\\
+    \hline
+    BD-1 & BD1\\
+    \hline
+    BA-1 & BA1\\
+    \hline
+    BA-2 & BA2\\
+    \hline
+    NFT1 & LF3\\
+    \hline
+    NFT2 & UH5\\
+    \hline
+    NFT3 & UH6\\
+    \hline
+    NFT4 & PR1\\
+    \hline
+    NFT5 & PR2\\
+    \hline
+    NFT6 & PR3\\
+    \hline
+    NFT7 & PR4\\
+    \hline
+    NFT8 & PR6\\
+    \hline
+    NFT9 & PR7\\
+    \hline
+    NFT10 & PR10\\
+    \hline
+    NFT11 & SR4\\
+    \hline
+    NFT12 & SR3\\
+    \hline
+\caption{Traceability Matrix}
+\end{longtable}
 
 % \section{Unit Test Description}
 
