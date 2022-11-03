@@ -18,7 +18,7 @@
 
 \begin{document}
 
-\title{Project Title: System Verification and Validation Plan for Chess Connect} 
+\title{Project Title: System Verification and Validation Plan for \progname{}} 
 \author{\authname}
 \date{\today}
 	
@@ -36,7 +36,8 @@
 \midrule
 2022-10-31 & Jonathan Cels & NFR Testing\\
 2022-10-31 & Arshdeep Aujla & Added section 3\\
-2022-11-02 & Joshua Chapman & Section 4.1,4.2,4.3,4.4\\
+2022-11-02 & Joshua Chapman & Section 4.1, 4.2, 4.3, 4.5\\
+2022-11-02 & Alexander Van Kralingen & Completed Section 4.4, 4.6, 4.7\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -64,8 +65,10 @@
   \bottomrule
 \end{tabular}\\
 
-\wss{symbols, abbreviations or acronyms -- you can simply reference the SRS
+\wss{symbols, abbreviations or acronyms --- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
+
+\wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -169,6 +172,15 @@ the code.
 %The review will include reviews by your classmates}
 %Remember you have MG and MIS checklists}
 
+\subsection{Verification and Validation Plan Verification Plan}
+
+The Verification and Validation Plan verification will include reviewing the \href{file:../Checklists/VnV-Checklist.pdf}{Verification and Validation Plan checklist} and adjusting this document accordingly. The verification will also include considering feedback from issues created by another team, as well as from the TA assigned to this project. Comments and improvements will be implemented after completing revision 0 of this document.
+%The verification and validation plan is an artifact that should also be verified.
+
+%The review will include reviews by your classmates
+
+%Create a checklists?
+
 \subsection{Implementation Verification Plan}
 \textbf{Hardware Implementation Verification} begins with individual components. First 
 the power supply is tested with a voltemeter for accuracy and precision. Then, 
@@ -194,25 +206,60 @@ sub-systems can begin to combine to test completness of full systems and their f
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+Automated testing will be carried out for the software involved with this project. Unit tests will be created to test the functionality fo each function created for the program. A minimum of one "successful" test will be written to describe the intended program execution, and one or more "unsuccessful" tests will be written to test the robustness of the program. This will ensure complete code coverage for the software. There are 3 main classes of tests that will be run involving the different aspects \progname{}:
+\begin{itemize}
+  \item \textbf{Linting:} Performed on Python and Javascript code. This will be integrated into VS Code to assist in local development; this will be run as a Github Workflow as a non-blocking check before building the software.
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+    \begin{itemize}
+      \item \href{https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint}{ESLint} to be used for Javascript
+      \item \href{https://marketplace.visualstudio.com/items?itemName=ms-python.flake8}{Flake8} to be used for Python
+    \end{itemize}
+
+  \item \textbf{Unit Tests:} Detailed in \hyperref[UnitTests]{Section \ref*{UnitTests}}, unit tests will be performed for Python, Javascript and C code.
+    \begin{itemize}
+      \item \href{https://github.com/testing-library/react-testing-library}{React Testing Library} will be used for Javascript unit tests.
+      \item \href{https://docs.pytest.org/en/7.2.x/}{PyTest} will be used for Python unit tests.
+      \item \href{https://aceunit.sourceforge.net/}{AceUnit} will be used for C unit tests.
+    \end{itemize}
+
+  \item \textbf{Dynamic Analysis Tool:} in addition to creating unit tests for the C code, memory leaks and access errors will be caught using \href{https://valgrind.org/}{ValGrind}.
+  
+\end{itemize}
+
+
+\textbf{Debuggers:} Dynamic analysis will also be performed on the code through debuggers to verify the system and unit tests, as well as normal operation. These tools will be used extensively to bring all unit tests to a successful state, and to determine the root cause of any inconsistent behaviour from the hardware.
+  \begin{itemize}
+    \item The broswer's (Chrome, Firefox, etc.) built in debugger will be used for stepping through the Javascript code on the web application.
+    \item \href{https://docs.python.org/3/library/pdb.html}{pdb} will be used for Python debugging.
+    \item \href{https://docs.arduino.cc/tutorials/zero/debugging-with-zero}{Arduino Zero Built-in Debugger Interface} will be used for debugging embedded C code.
+  \end{itemize}
+
+
+%What tools are you using for automated testing.  Likely a unit testing framework and maybe a profiling tool, like ValGrind.  Other possible tools include a static analyzer, make, continuous integration tools, test coverage tools, etc.  Explain your plans for summarizing code coverage metrics. Linters are another important class of tools.  For the programming language you select, you should look at the available linters.  There may also be tools that verify that coding standards have been respected, like flake9 for Python.
+
+%If you have already done this in the development plan, you can point to that document.
+
+%The details of this section will likely evolve as you get closer to the implementation.
+
+
 
 \subsection{Software Validation Plan}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+Software will be validated by reviewing the requirements in the \href{file:../SRS/SRS.pdf}{Software Requirement Specifications} document and ensuring the software matches the expected performance and behaviour. The chess engine software integration will be validated by comparing it alongside an established online chess engine running the same Stockfish build as is selected for \progname{}, and comparing the recommended moves. One webside that may be used is \href{https://www.365chess.com/analysis_board.php}{365Chess.com}.
+\newline
+\newline
+Feedback from members of the team that are assigned to another area of the system will be called to verify the software is performing adequately. For example, a member working on the web app may come to test the hardware to ensure the sequences and behaviour is intuitive and user friendly. Feedback and comments from the professor and TA assigned to this project will also be considered when making ajustments to the software.
+\newline
+\newline
+Unit tests will be created that capture both normal-use and failure modes to validate the software as well. Unit tests will be integrated in a Github workflow to ensure that changes are never made to the software that conflict with other areas of the code. Failing unit tests will be used as direction to change parts of the software back to a valid state of operation.
 
-\section{System Test Description}
+%If there is any external data that can be used for validation, you should point to it here.  If there are no plans for validation, you should state that here.
+
+%You might want to use review sessions with the stakeholder to check that the requirements document captures the right requirements.  Maybe task based inspection?
+
+%This section might reference back to the SRS verification section.
+
+\section{System Test Description} \label{SystemTests}
 	
 \subsection{Tests for Functional Requirements}
 
@@ -221,12 +268,12 @@ sub-systems can begin to combine to test completness of full systems and their f
   level of document structure can be removed.}
 
 \wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good.}
+  cover the requirements.  References to the SRS would be good here.}
 
 \subsubsection{Area of Testing1}
 
 \wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good.  If a section
+  cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
 		
@@ -272,27 +319,44 @@ How test will be performed:
 
 \wss{The nonfunctional requirements for accuracy will likely just reference the
   appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.}
+  reporting the relative error for these tests.  Not all projects will
+  necessarily have nonfunctional requirements related to accuracy}
 
 \wss{Tests related to usability could include conducting a usability test and
-  survey.}
+  survey.  The survey will be in the Appendix.}
+
+\wss{Static tests, review, inspections, and walkthroughs, will not follow the
+format for the tests given below.}
 
 \subsubsection{Look and Feel}
 \paragraph{Style}
 \begin{enumerate}
     \item{NFT1}
 
-        Type: Structural, Static, Manual
-                            
-        Initial State: Users have not seen the product before, and the product is in its initial game state.
-                            
-        Input/Condition: Users are asked to identify the product.
-                            
-        Output/Result: The majority of users are able to successfully identify the product as a chess set without any outside assistance within 10 seconds.
-                            
-        How test will be performed: A test group of people who do not play chess regularly are asked to identify the product immediately after it is revealed to them.
-            The time it takes for them to identify the product will be recorded. The subjects must identify the product as a chess set within 10 seconds or less, averaged
-            over the number of people in the test group.
+\item{test-id1\\}
+
+Type: Functional, Dynamic, Manual, Static etc.
+					
+Initial State: 
+					
+Input/Condition: 
+					
+Output/Result: 
+					
+How test will be performed: 
+					
+\item{test-id2\\}
+
+Type: Functional, Dynamic, Manual, Static etc.
+					
+Initial State: 
+					
+Input: 
+					
+Output: 
+					
+How test will be performed: 
+
 \end{enumerate}
 
 \subsubsection{Usability and Humanity}
@@ -483,12 +547,12 @@ How test will be performed:
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
 
-\section{Unit Test Description}
+\section{Unit Test Description} \label{UnitTests}
 
-\wss{Reference your MIS and explain your overall philosophy for test case
-  selection.}  
-\wss{This section should not be filled in until after the MIS has
-  been completed.}
+\wss{Reference your MIS (detailed design document) and explain your overall
+  philosophy for test case selection.}  
+\wss{This section should not be filled in until after the MIS (detailed design
+  document) has been completed.}
 
 \subsection{Unit Testing Scope}
 
@@ -617,5 +681,29 @@ Their values are defined in this section for easy maintenance.
 \subsection{Usability Survey Questions?}
 
 \wss{This is a section that would be appropriate for some projects.}
+
+\newpage{}
+\section*{Appendix --- Reflection}
+
+The information in this section will be used to evaluate the team members on the
+graduate attribute of Lifelong Learning.  Please answer the following questions:
+
+\newpage{}
+\section*{Appendix --- Reflection}
+
+The information in this section will be used to evaluate the team members on the
+graduate attribute of Lifelong Learning.  Please answer the following questions:
+
+\begin{enumerate}
+  \item What knowledge and skills will the team collectively need to acquire to
+  successfully complete the verification and validation of your project?
+  Examples of possible knowledge and skills include dynamic testing knowledge,
+  static testing knowledge, specific tool usage etc.  You should look to
+  identify at least one item for each team member.
+  \item For each of the knowledge areas and skills identified in the previous
+  question, what are at least two approaches to acquiring the knowledge or
+  mastering the skill?  Of the identified approaches, which will each team
+  member pursue, and why did they make this choice?
+\end{enumerate}
 
 \end{document}
