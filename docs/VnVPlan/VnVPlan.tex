@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{longtable}
 \usepackage[shortlabels]{enumitem}
 \usepackage{array}
 \usepackage{float}
@@ -1040,12 +1041,75 @@ How test will be performed:
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-\begin{table}[H]
-    \centering
-        \setlength{\leftmargini}{0.4cm}
-        \begin{tabularx}{\linewidth}{|X|X|}
+\begin{longtable}{| p{.20\textwidth} | p{.80\textwidth} |}
         \hline
         Test & Requirement\\
+        \hline
+        GA-1 & GA1\\
+        \hline
+        GA-2 & GA2\\
+        \hline
+        GA-3 & GA3\\
+        \hline
+        GA-4 & GA6\\
+        \hline
+        GA-5 & GA7\\
+        \hline
+        GI-1 & GI1\\
+        \hline
+        GI-2 & GI2\\
+        \hline
+        GI-3 & GI3\\
+        \hline
+        GI-4 & GI4\\
+        \hline
+        GI-5 & GI5, GI6\\
+        \hline
+        NB-1 & NB1\\
+        \hline
+        NB-2 & NB2\\
+        \hline
+        NB-3 & NB3\\
+        \hline
+        ND-1 & ND1\\
+        \hline
+        NA-1 & NA1, NA2\\
+        \hline
+        NA-2 & NA3\\
+        \hline
+        EB-1 & EB1\\
+        \hline
+        EB-2 & EB2\\
+        \hline
+        EB-3 & EB3\\
+        \hline
+        EB-4 & EB4\\
+        \hline
+        ED-1 & ED1\\
+        \hline
+        ED-2 & ED2\\
+        \hline
+        EA-1 & EA1, EA2\\
+        \hline
+        EA-2 & EA3, EA4, EA5\\
+        \hline
+        EA-3 & EA6\\
+        \hline
+        BB-1 & BB1\\
+        \hline
+        BB-2 & BB2\\
+        \hline
+        BB-3 & BB3\\
+        \hline
+        BB-4 & BB4\\
+        \hline
+        BB-5 & BB5\\
+        \hline
+        BD-1 & BD1\\
+        \hline
+        BA-1 & BA1\\
+        \hline
+        BA-2 & BA2\\
         \hline
         NFT1 & LF3\\
         \hline
@@ -1071,9 +1135,8 @@ How test will be performed:
         \hline
         NFT12 & SR3\\
         \hline
-        \end{tabularx}
-    \label{Table}
-\end{table}
+  \caption{Traceability Matrix}
+\end{longtable}
 
 % \section{Unit Test Description}
 
