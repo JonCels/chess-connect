@@ -3,6 +3,11 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\usepackage{array}
+\usepackage{float}
+\usepackage{longtable}
+
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -18,7 +23,7 @@
 \begin{document}
 
 \title{Project Title: System Verification and Validation Plan for \progname{}} 
-\author{Author Name}
+\author{\authname}
 \date{\today}
 	
 \maketitle
@@ -27,23 +32,26 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+2022-10-31 & Jonathan Cels & NFR Testing\\
+2022-10-31 & Arshdeep Aujla & Added section 3\\
+2022-11-02 & Jonathan Cels & Traceability matrix\\
+2022-11-02 & Joshua Chapman & Section 4.1,4.2,4.3,4.4\\
+2022-11-02 & Rupinder Nagra & Section 5.1\\
+2022-11-02 & Joshua Chapman & Section 4.1, 4.2, 4.3, 4.5\\
+2022-11-02 & Alexander Van Kralingen & Completed Section 4.4, 4.6, 4.7\\
 \bottomrule
 \end{tabularx}
+\end{table}
 
 \newpage
 
 \tableofcontents
-
-\listoftables
-\wss{Remove this section if it isn't needed}
-
-\listoffigures
-\wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -55,320 +63,1173 @@ Date 2 & 1.1 & Notes\\
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   T & Test\\
+  GB & Gigabyte\\
   \bottomrule
 \end{tabular}\\
 
-\wss{symbols, abbreviations or acronyms -- you can simply reference the SRS
+\wss{symbols, abbreviations or acronyms --- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
 
 \newpage
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
-
 \section{General Information}
 
 \subsection{Summary}
-
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The project name is Chess Connect. It is comprised of software and hardware components. The hardware will consist of a reactive chess set 
+connected to a microcontroller. The microcontroller will relay information on the chess board in the form of LEDs of the possible moves the user can make.
+The software component of this project will consist of a web application that will reflect all of the chess piece's location on the physical board.
 
 \subsection{Objectives}
-
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The following objectives are the qualities that are the most important for the project.
+\begin{itemize}
+  \item The hardware should reflect relevent information on the LEDs on the chess board
+  \item The software component should reflect the physical chess board in near-real time
+  \item The movement of the chess pieces should be recorded by the hardware
+\end{itemize}
 
 \subsection{Relevant Documentation}
-
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (MG, MIS, etc).  You can include these even
-  before they are written, since by the time the project is done, they will be
-  written.}
-
-\citet{SRS}
+The following documents are relevent to this project.
+\begin{itemize}
+  \item SRS
+  \item Hazard Analysis
+  \item Requirements Document
+  \item Design Document
+  \item VnV Report
+  \item MIS
+  \item MG
+\end{itemize}
 
 \section{Plan}
-
-\wss{Introduce this section.   You can provide a roadmap of the sections to
-  come.}
+This section discusses the general plans for hardware and software testing. The 
+responsibilities of members are assigned and requirements verifications are discussed. 
+Design and implementation verification include high-level plans to execute hardware 
+and software systems. Automated testing techniques and tools are outlined. 
+A detailed software validation plan discusses the external tools required for 
+completeness. 
+%Introduce this section.   You can provide a roadmap of the sections to come.
 
 \subsection{Verification and Validation Team}
 
-\wss{You, your classmates and the course instructor.  Maybe your supervisor.
-  You shoud do more than list names.  You should say what each person's role is
-  for the project.  A table is a good way to summarize this information.}
+\begin{tabular}{ |p{4.5cm}||p{9cm}|  }
+ \hline
+ Alexander Van Kralingen & Web application connection tests\\
+ & GitHub integration testing\\
+ & Microcontroller code testing\\
+ \hline
+ Arshdeep Aujla & Sensor accuracy testing\\
+ & Microcontroller hardware \& code testing\\
+ & Touchscreen UI latency tests\\
+ \hline
+ Jonathan Cels & Microcontroller code testing\\
+ & Chess API integration testing\\
+ & Communication protocol testing\\
+ \hline
+ Joshua Chapman& Power distribution design and integration testing\\
+ & Microcontroller hardware \& code testing\\
+ & Communication protocol testing\\
+ \hline
+ Rupinder Nagra & Chess API integration testing\\ 
+ & Web application connection tests\\
+ & Web application functionality testing\\
+ \hline
+\end{tabular}
+%You, your classmates and the course instructor.  Maybe your supervisor.
+%You shoud do more than list names.  You should say what each person's role is
+%for the project.  A table is a good way to summarize this information.
 
 \subsection{SRS Verification Plan}
+SRS verification is performed by the teammates throughout the design and testing 
+process. They will reference requirements and consider the results throughout design. 
+Teammates will periodically verify this completeness throughout the design process. 
+The verification and validation report will reference an associated requirement for 
+each test. This allows for tracking of individual requirement fullfilment 
+throughout the process. 
+%List any approaches you intend to use for SRS verification.  This may just
+%be ad hoc feedback from reviewers, like your classmates, or you may have
+%something more rigorous/systematic in mind..
 
-\wss{List any approaches you intend to use for SRS verification.  This may just
-  be ad hoc feedback from reviewers, like your classmates, or you may have
-  something more rigorous/systematic in mind..}
-
-\wss{Remember you have an SRS checklist}
+%Remember you have an SRS checklist
 
 \subsection{Design Verification Plan}
+\textbf{Hardware Design Verification} begins with LTSpice and Multisim design software
+packages. The designed circuits are simulated in the software and tested accordingly.
+Testingincludes simulating inputs and verifying that expected outputs are returned. 
+Edge cases are simulated to verify safety and failure conditions of the circuits. 
+\newline
+\newline
+\textbf{Software Design Verification} utilizes the compiler to verify code correctness. 
+Arduino intergrated development environments contain the tools to compile and check for 
+errors. Code walkthroughs are performed by collaborators that did not write the program. 
+This includes detailed inspection and a report describing the function of the code 
+based on their perspective. This tests the readability and functionality of 
+the code. 
+%Plans for design verification}
+%The review will include reviews by your classmates}
+%Remember you have MG and MIS checklists}
 
-\wss{Plans for design verification}
+\subsection{Verification and Validation Plan Verification Plan}
 
-\wss{The review will include reviews by your classmates}
+The Verification and Validation Plan verification will include reviewing the \href{file:../Checklists/VnV-Checklist.pdf}{Verification and Validation Plan checklist} and adjusting this document accordingly. The verification will also include considering feedback from issues created by another team, as well as from the TA assigned to this project. Comments and improvements will be implemented after completing revision 0 of this document.
+%The verification and validation plan is an artifact that should also be verified.
 
-\wss{Remember you have MG and MIS checklists}
+%The review will include reviews by your classmates
+
+%Create a checklists?
 
 \subsection{Implementation Verification Plan}
+\textbf{Hardware Implementation Verification} begins with individual components. First 
+the power supply is tested with a voltemeter for accuracy and precision. Then, 
+the microcontroller is powered on and each individual I/O is tested for correctness. 
+Inputs will be powered via the power supply and readings are verified for correctness 
+using custom testing software installed on the controller. Outputs are verified using 
+the voltemeter to measure correctness relative to the controller value. Finally, 
+sensors and circuits are tested using the IO of the microcontroller. This allows
+for accurate and detailed inspection of the components and verifies their correctness. 
+\newline 
+\newline 
+\textbf{Software Implementation Verification} requires the hardware to be tested and 
+assembled before beginning. The software is downloaded to the controller and the inputs 
+and outputs are configured one-by-one. Functionality of code is tested with unit tests
+from section 5.1 with the appropriate hardware. Once each section is unit tested, the
+sub-systems can begin to combine to test completness of full systems and their functionality.
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
-
-\wss{In this section you would also give any details of any plans for static verification of
-  the implementation.  Potential techniques include code walkthroughs, code
-  inspection, static analyzers, etc.}
+%You should at least point to the tests listed in this document and the unit
+%testing plan.
+%In this section you would also give any details of any plans for static verification of
+%the implementation.  Potential techniques include code walkthroughs, code
+%inspection, static analyzers, etc.
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+Automated testing will be carried out for the software involved with this project. Unit tests will be created to test the functionality fo each function created for the program. A minimum of one "successful" test will be written to describe the intended program execution, and one or more "unsuccessful" tests will be written to test the robustness of the program. This will ensure complete code coverage for the software. There are 3 main classes of tests that will be run involving the different aspects \progname{}:
+\begin{itemize}
+  \item \textbf{Linting:} Performed on Python and Javascript code. This will be integrated into VS Code to assist in local development; this will be run as a Github Workflow as a non-blocking check before building the software.
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+    \begin{itemize}
+      \item \href{https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint}{ESLint} to be used for Javascript
+      \item \href{https://marketplace.visualstudio.com/items?itemName=ms-python.flake8}{Flake8} to be used for Python
+    \end{itemize}
+
+  \item \textbf{Unit Tests:} Detailed in \hyperref[UnitTests]{Section \ref*{UnitTests}}, unit tests will be performed for Python, Javascript and C code.
+    \begin{itemize}
+      \item \href{https://github.com/testing-library/react-testing-library}{React Testing Library} will be used for Javascript unit tests.
+      \item \href{https://docs.pytest.org/en/7.2.x/}{PyTest} will be used for Python unit tests.
+      \item \href{https://aceunit.sourceforge.net/}{AceUnit} will be used for C unit tests.
+    \end{itemize}
+
+  \item \textbf{Dynamic Analysis Tool:} in addition to creating unit tests for the C code, memory leaks and access errors will be caught using \href{https://valgrind.org/}{ValGrind}.
+  
+\end{itemize}
+
+
+\textbf{Debuggers:} Dynamic analysis will also be performed on the code through debuggers to verify the system and unit tests, as well as normal operation. These tools will be used extensively to bring all unit tests to a successful state, and to determine the root cause of any inconsistent behaviour from the hardware.
+  \begin{itemize}
+    \item The broswer's (Chrome, Firefox, etc.) built in debugger will be used for stepping through the Javascript code on the web application.
+    \item \href{https://docs.python.org/3/library/pdb.html}{pdb} will be used for Python debugging.
+    \item \href{https://docs.arduino.cc/tutorials/zero/debugging-with-zero}{Arduino Zero Built-in Debugger Interface} will be used for debugging embedded C code.
+  \end{itemize}
+
+
+%What tools are you using for automated testing.  Likely a unit testing framework and maybe a profiling tool, like ValGrind.  Other possible tools include a static analyzer, make, continuous integration tools, test coverage tools, etc.  Explain your plans for summarizing code coverage metrics. Linters are another important class of tools.  For the programming language you select, you should look at the available linters.  There may also be tools that verify that coding standards have been respected, like flake9 for Python.
+
+%If you have already done this in the development plan, you can point to that document.
+
+%The details of this section will likely evolve as you get closer to the implementation.
+
+
 
 \subsection{Software Validation Plan}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+Software will be validated by reviewing the requirements in the \href{file:../SRS/SRS.pdf}{Software Requirement Specifications} document and ensuring the software matches the expected performance and behaviour. The chess engine software integration will be validated by comparing it alongside an established online chess engine running the same Stockfish build as is selected for \progname{}, and comparing the recommended moves. One webside that may be used is \href{https://www.365chess.com/analysis_board.php}{365Chess.com}.
+\newline
+\newline
+Feedback from members of the team that are assigned to another area of the system will be called to verify the software is performing adequately. For example, a member working on the web app may come to test the hardware to ensure the sequences and behaviour is intuitive and user friendly. Feedback and comments from the professor and TA assigned to this project will also be considered when making ajustments to the software.
+\newline
+\newline
+Unit tests will be created that capture both normal-use and failure modes to validate the software as well. Unit tests will be integrated in a Github workflow to ensure that changes are never made to the software that conflict with other areas of the code. Failing unit tests will be used as direction to change parts of the software back to a valid state of operation.
 
-\section{System Test Description}
+%If there is any external data that can be used for validation, you should point to it here.  If there are no plans for validation, you should state that here.
+
+%You might want to use review sessions with the stakeholder to check that the requirements document captures the right requirements.  Maybe task based inspection?
+
+%This section might reference back to the SRS verification section.
+
+\section{System Test Description} \label{SystemTests}
 	
 \subsection{Tests for Functional Requirements}
 
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
+The following functional requirements are split into subsections 
+that describe the Active and Inactive states of the
+system, and the behaviour for the different user modes of the application.
+Each of the user modes include distinct actions due to the purposes of each mode. 
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good.}
-
-\subsubsection{Area of Testing1}
-
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
-		
-\paragraph{Title for Test}
-
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-
-\end{enumerate}
-
-\subsubsection{Area of Testing2}
-
-...
+  \subsubsection{Game Active State}
+  
+  \begin{enumerate}
+  
+  \item{GA-1\\}
+  
+  Type: Functional, Dynamic, Manual
+                      
+  Initial State: The game is in the Game Active State.
+                      
+  Input: The user will press the Resign/Draw button.
+                      
+  Output: The system will be changed to the Game Inactive State.
+                      
+  Test Case Derivation: The game shall be in the Game Inactive State due to the Resign/Draw button being pressed.
+  
+  How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+  After it has ran we will check to see if the game state has been modified.
+  
+  \item{GA-2\\}
+  
+  Type: Functional, Dynamic, Manual
+                      
+  Initial State: The game is in the Game Active State.
+                      
+  Input: The user will press the New Game button.
+                      
+  Output: The system will be unchanged.
+                      
+  Test Case Derivation: The game shall remain in the Game Active State after the New Game button is pressed.
+  
+  How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+  After it has ran we will check to see that the game state has not been modified.
+  
+  \item{GA-3\\}
+  
+  Type: Functional, Dynamic, Manual
+                      
+  Initial State: The game is in the Game Active State.
+                      
+  Input: The user will switch to one of the user modes (Normal Mode, Engine Mode, Beginner Mode).
+  
+  Output: The system will be changed to the selected user mode.
+                      
+  Test Case Derivation: The game shall be in the selected user mode due to the appropriate user mode switch being pressed.
+  
+  How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+  After it has ran we will check to see if the user mode has been modified.
+  
+  \item{GA-4\\}
+  
+  Type: Functional, Dynamic, Manual
+                      
+  Initial State: The game is in the Game Inactive State.
+                      
+  Input: The game is changed to the Game Active State.
+  
+  Output: The game state will be reset to the starting position.
+                      
+  Test Case Derivation: The game shall be reset to the default starting position due to it entering the Game Active State.
+  
+  How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
+  After it has ran we will check to see if the board state has been reset to the starting position.
+  
+  \item{GA-5\\}
+  
+  Type: Functional, Dynamic, Manual
+                      
+  Initial State: The game is in the Game Active State.
+                      
+  Input: The game results in a stalemate or checkmate.
+  
+  Output: The game state will be changed to the Game Inactive State.
+                      
+  Test Case Derivation: The game shall be changed to the Game Inactive state due a stalemate or checkmate ending the game.
+  
+  How test will be performed: The function that modifies the game state will be run using the appropriate inputs.
+  After it has ran we will check to see if the game state has been changed to the Game Inactive State based on the
+  the checkmate or stalemate termination type.
+  
+  \end{enumerate}
+  
+  \subsubsection{Game Inactive State}
+  
+  \begin{enumerate}
+  
+    \item{GI-1\\}
+  
+    Type: Functional, Dynamic, Manual
+                        
+    Initial State: The game is in the Game Inactive State.
+                        
+    Input: The user will press the New Game button.
+                        
+    Output: The system will be changed to the Game Active State.
+                        
+    Test Case Derivation: The game shall be in the Game Active State due to the New Game button being pressed,
+    starting the game at the default position.
+    
+    How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+    After it has ran we will check to see if the game state has been modified to the Game Active State.
+  
+    \item{GI-2\\}
+  
+    Type: Functional, Dynamic, Manual
+                        
+    Initial State: The game is in the Game Inactive State.
+                        
+    Input: The user will  try to switch to one of the user modes (Normal Mode, Engine Mode, Beginner Mode).
+    
+    Output: The system will be unchanged to the selected user mode.
+                        
+    Test Case Derivation: The game state shall be unchanged due to the user mode appropriate switch being pressed in the Game Inactive State.
+    
+    How test will be performed: The function that changes the user mode will be run using the appropriate inputs.
+    After it has ran we will check to see if the game state has been unmodified.
+  
+    \item{GI-3\\}
+  
+    Type: Functional, Dynamic, Manual
+                        
+    Initial State: The game is in the Game Inactive State.
+                        
+    Input: The user will press the Resign/Draw button.
+                        
+    Output: The system will be unchanged.
+                        
+    Test Case Derivation: The game shall be in the Game Inactive State due to the Resign/Draw button having no effect.
+    
+    How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+    After it has ran we will check to see if the game state is unchanged.
+  
+    \item{GI-4\\}
+  
+    Type: Functional, Dynamic, Manual
+                        
+    Initial State: The game is in the Game Inactive State.
+                        
+    Input: The user will move a piece.
+                        
+    Output: The board state is not sent to the web application.
+                        
+    Test Case Derivation: The board state will not be sent due to the Resign/Draw button having no effect
+    as it is in the Game Inactive State.
+    
+    How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+    After it has ran we will check to see if the game state is unchanged.
+  
+    \item{GI-5\\}
+  
+    Type: Functional, Dynamic, Manual
+                        
+    Initial State: The game is in the Game Active State.
+                        
+    Input: The game is terminated.
+                        
+    Output: The display the final game and message with the game termination type (stalemate,
+    checkmate, resignation, draw).
+                        
+    Test Case Derivation: The game shall output the final game and message due to the game being terminated.
+    
+    How test will be performed: The function that handles actions after game termination will be run using the appropriate inputs.
+    After it has ran we will check to see if the final game and message with termination type are displayed.
+  
+    \end{enumerate}
+  
+    \subsubsection{Normal Mode}
+  
+    \begin{enumerate}
+  
+      \item{NB-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                          
+      Initial State: The game is in Normal Mode.
+                          
+      Input: A piece has been moved to a square.
+                          
+      Output: The system stores the position, colour, and type of piece in the micro-controller.
+                          
+      Test Case Derivation: The system should contain the position, colour, and type in the micro-controller
+      after a piece has been moved to a square in order to track the board state for the web application.
+  
+      How test will be performed: The function that accesses the micro-controller will be run using the appropriate inputs.
+      After it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
+  
+      \item{NB-2\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Normal Mode.
+                          
+      Input: The user will hold down the Resign button for ENDTIME seconds.
+                          
+      Output: The game state will change to the Game Inactive State.
+                          
+      Test Case Derivation: The game shall be in the Game Inactive State due to the Resign button being pressed.
+      
+      How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+      After it has ran we will check to see if the game state is in the Game Inactive State.
+  
+      \item{NB-3\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Normal Mode.
+                          
+      Input: Both users will press the Draw button within an interval of ENDTIME seconds each located on their side of the board.
+                          
+      Output: The game state will change to the Game Inactive State.
+                          
+      Test Case Derivation: The game shall be in the Game Inactive State due to the Draw buttons being pressed.
+      
+      How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+      After it has ran we will check to see if the game state is in the Game Inactive State.
+  
+      \item{ND-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Normal Mode.
+                          
+      Input: The system shall send the micro-controller output over Bluetooth as an input to the web application.
+                          
+      Output: The web application shall receive the micro-controller output sent over Bluetooth.
+                          
+      Test Case Derivation: The web application should receive new information regarding the board state over Bluetooth. 
+  
+      How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
+      will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
+  
+      \item{NA-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Normal Mode.
+                          
+      Input: The web application shall receive the micro-controller output sent over Bluetooth.
+                          
+      Output: The web application will display the updated game board configuration with the data
+      of the previous move.
+                          
+      Test Case Derivation: The web application should update the board configuration after receiving new information about the board state. 
+  
+      How test will be performed: The function that updates the game board configuration
+      will be run using the appropriate inputs. After it has ran we will check to see if the board state has been updated.
+  
+      \item{NA-2\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Normal Mode.
+                          
+      Input: The game has been terminated through method of stalemate, checkmate, resignation, or draw.
+                          
+      Output: The web application will display a message with the method of game termination and the
+      system shall change to the Game Inactive State.
+                          
+      Test Case Derivation: The web application should display a message signifying user of the method of game termination
+      and the game should modify state if the game has ended.
+  
+      How test will be performed: The function that checks to see if any of the game termination method in effect
+      will be run using the appropriate inputs. After it has ran we will output the termination method and change the
+      game state to the Game Inactive State.
+  
+    \end{enumerate}
+  
+    \subsubsection{Engine Mode}
+  
+    \begin{enumerate}
+  
+      \item{EB-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                          
+      Initial State: The game is in Engine Mode.
+                          
+      Input: A piece has been moved to a square.
+                          
+      Output: The system stores the position, colour, and type of piece in the micro-controller.
+                          
+      Test Case Derivation: The system should contain the position, colour, and type in the micro-controller
+      after a piece has been moved to a square.
+  
+      How test will be performed: The function that accesses the micro-controller will be run using the appropriate inputs.
+      After it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
+  
+      \item{EB-2\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Engine Mode.
+                          
+      Input: The user will hold down the Resign button for ENDTIME seconds.
+                          
+      Output: The game state will change to the Game Inactive State.
+                          
+      Test Case Derivation: The game shall be in the Game Inactive State due to the Resign button being pressed for ENDTIME seconds, signifying that the game should end.
+      
+      How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+      After it has ran we will check to see if the game state is in the Game Inactive State.
+  
+      \item{EB-3\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Engine Mode.
+                          
+      Input: Both users will press the Draw button within an interval of ENDTIME seconds each located on their side of the board.
+                          
+      Output: The game state will change to the Game Inactive State.
+                          
+      Test Case Derivation: The game shall be in the Game Inactive State due to the Draw buttons being pressed.
+      
+      How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+      After it has ran we will check to see if the game state is in the Game Inactive State.
+  
+      \item{EB-4\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Engine Mode.
+                          
+      Input: The top engine moves are transmitted to the LCD display from the web application.
+                          
+      Output: The LCD display shows the top engine moves.
+                          
+      Test Case Derivation: The top engine moves need to be transmitted
+      to the LCD display in order to show both users the best moves for a position.
+      
+      How test will be performed: The function that displays characters on the LCD display will be run using the appropriate inputs.
+      After it has ran we will check to see if the requested characters are correctly displayed.
+  
+      \item{ED-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Engine Mode.
+                          
+      Input: The system shall send the micro-controller output over Bluetooth as an input to the web application.
+                          
+      Output: The web application shall receive the micro-controller output sent over Bluetooth.
+                          
+      Test Case Derivation: The web application should receive new information regarding the board state over Bluetooth. 
+  
+      How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
+      will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
+  
+      \item{ED-2\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Engine Mode.
+                          
+      Input: The system shall send the web application engine moves to the LCD display over Bluetooth.
+                          
+      Output: The LCD display shall receive the web application output sent over Bluetooth.
+                          
+      Test Case Derivation: The LCD display should receive the top engine moves over Bluetooth. 
+  
+      How test will be performed: The function that checks to see if any information is being transmitted from the web application 
+      using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received by the LCD display.
+  
+      \item{EA-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Engine Mode.
+                          
+      Input: The web application shall receive the micro-controller output sent over Bluetooth.
+                          
+      Output: The web application will display the updated game board configuration with the data
+      of the previous move
+                          
+      Test Case Derivation: The web application should update the board configuration after receiving new information about the board state. 
+  
+      How test will be performed: The function that updates the game board configuration
+      will be run using the appropriate inputs. After it has ran we will check to see if the board state has been updated.
+  
+      \item{EA-2\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Engine Mode.
+                          
+      Input: The system shall use the chess engine to evaluate the position and calculate the best
+      engine moves.
+                          
+      Output: The system shall display the calculated engine moves on the web application.
+                          
+      Test Case Derivation: The chess engine should update the board configuration after receiving new information about the board state. 
+  
+      How test will be performed: The function that calculates the engine moves
+      will be run using the appropriate inputs. After it has ran we will check to see if the correct engine moves are played
+      by comparing the results to the identical engine on an online platform.
+  
+      \item{EA-3\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Engine Mode.
+                          
+      Input: The game has been terminated through method of stalemate, checkmate, resignation, or draw.
+                          
+      Output: The web application will display a message with the method of game termination and the
+      system shall change to the Game Inactive State.
+                          
+      Test Case Derivation: The web application should display a message signifying user of the method of game termination
+      and the game should modify state if the game has ended.
+  
+      How test will be performed: The function that checks to see if any of the game termination methods are in effect
+      will be run using the appropriate inputs. After it has ran we will out the termination method of change the
+      game state to the Game Inactive State.
+  
+    \end{enumerate}
+     
+    \subsubsection{Beginner Mode}
+  
+    \begin{enumerate}
+  
+      \item{BB-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                          
+      Initial State: The game is in Beginner Mode.
+                          
+      Input: A piece has been moved to a square.
+                          
+      Output: The system stores the position, colour, and type of piece in the micro-controller.
+                          
+      Test Case Derivation: The system should contain the position, colour, and type in the micro-controller
+      after a piece has been moved to a square.
+  
+      How test will be performed: The function that accesses the micro-controller will be run using the appropriate inputs.
+      After it has ran we will check to see if the position, colour, and type of piece are stored in the micro-controller.  
+  
+      \item{BB-2\\}
+  
+      Type: Functional, Dynamic, Manual
+                          
+      Initial State: The game is in Beginner Mode.
+                          
+      Input: The user picks up a piece.
+                          
+      Output: User views all legal moves with green LED lights on valid squares.
+                          
+      Test Case Derivation: This is needed to ensure users provide legal inputs to the system,
+      and also provide visual feedback to accelerate learning.
+  
+      How test will be performed: The function that accesses the legal moves and LEDs will be run using the appropriate inputs.
+      After it has ran we will check to see if the correct legal moves are shown with green LED lights.  
+  
+      \item{BB-3\\}
+  
+      Type: Functional, Dynamic, Manual
+                          
+      Initial State: The game is in Beginner Mode.
+                          
+      Input: The player makes an illegal move.
+                          
+      Output: The tile that the piece is moved onto will display a red LED
+      light.
+                          
+      Test Case Derivation: This is needed to prevent users from providing illegal inputs to the system
+      to minimize errors, and also provide visual feedback to accelerate learning.
+  
+      How test will be performed: The function that accesses the legal moves and LEDs will be run using the appropriate inputs.
+      After it has ran we will display a red LED light if the output is not within the legal moves.  
+  
+      \item{BB-4\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Beginner Mode.
+                          
+      Input: The user will hold down the Resign button for ENDTIME seconds.
+                          
+      Output: The game state will change to the Game Inactive State.
+                          
+      Test Case Derivation: The game shall be in the Game Inactive State due to the Resign button being pressed.
+      
+      How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+      After it has ran we will check to see if the game state is in the Game Inactive State.
+  
+      \item{BB-5\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Beginner Mode.
+                          
+      Input: Both users will press the Draw button within an interval of ENDTIME seconds each located on their side of the board.
+                          
+      Output: The game state will change to the Game Inactive State.
+                          
+      Test Case Derivation: The game shall be in the Game Inactive State due to the Draw buttons being pressed.
+      
+      How test will be performed: The function that changes the game state will be run using the appropriate inputs.
+      After it has ran we will check to see if the game state is in the Game Inactive State.
+  
+      \item{BD-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Beginner Mode.
+                          
+      Input: The system shall send the micro-controller output over Bluetooth as an input to the web application.
+                          
+      Output: The web application shall receive the micro-controller output sent over Bluetooth.
+                          
+      Test Case Derivation: The web application should receive new information regarding the board state over Bluetooth. 
+  
+      How test will be performed: The function that checks to see if any information is being transmitted from the micro-controller
+      will be run using the appropriate inputs. After it has ran we will check to see if the appropriate information has been received.
+  
+      \item{BA-1\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Beginner Mode.
+                          
+      Input: The user clicks to view the instructions regarding the rules of chess.
+                          
+      Output: The web application displays a detailed set of rules on how to to play chess.
+                          
+      Test Case Derivation: TIt is necessary for users to have a set of instructions as reference while
+      using the application in Beginner Mode.
+  
+      How test will be performed: The function that displays the rules
+      will be run using the appropriate inputs. After it has ran we will check to see if the web application is displaying the rules.
+  
+      \item{BA-2\\}
+  
+      Type: Functional, Dynamic, Manual
+                        
+      Initial State: The game is in Beginner Mode.
+                          
+      Input: The web application shall receive the micro-controller output sent over Bluetooth.
+                          
+      Output: The web application will display the updated game board configuration with the data
+      of the previous move
+                          
+      Test Case Derivation: The web application should update the board configuration after receiving new information about the board state. 
+  
+      How test will be performed: The function that updates the game board configuration
+      will be run using the appropriate inputs. After it has ran we will check to see if the board state has been updated.
+  
+    \end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.}
-
-\wss{Tests related to usability could include conducting a usability test and
-  survey.}
-
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
-
+\subsubsection{Look and Feel}
+\paragraph{Style}
 \begin{enumerate}
-
-\item{test-id1\\}
-
-Type: 
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
-
+    \item{NFT1}
+    
+        Type: Structural, Static, Manual
+                            
+        Initial State: Users have not seen the product before, and the product is in its initial game state.
+                            
+        Input/Condition: Users are asked to identify the product.
+                            
+        Output/Result: The majority of users are able to successfully identify the product as a chess set without any outside assistance within 10 seconds.
+                            
+        How test will be performed: A test group of people who do not play chess regularly are asked to identify the product immediately after it is revealed to them.
+            The time it takes for them to identify the product will be recorded. The subjects must identify the product as a chess set within 10 seconds or less, averaged
+            over the number of people in the test group.
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Usability and Humanity}
+\paragraph{Learnability}
+\begin{enumerate}
+    \item{NFT2}
 
-...
+        Type: Structural, Static, Manual
+                            
+        Initial State: Product is in normal mode, a game has started, and the users have not interacted with the product before. 
+                            
+        Input/Condition: Users are asked to use the product and move one specified piece from one square to another specified square on the board.
+                            
+        Output/Result: The majority of users understand which piece they moved and to where, and are able to identify that the web application 
+            has reflected their move in the virtual model within 30 seconds of studying the visual representation of the board state.
+                            
+        How test will be performed: A test group of people who do not play chess regularly are asked to move pieces on the chessboard. They are 
+            then asked to identify the move they just made as reflected in the web application model. The subjects must identify that the piece they
+            moved on the board has also been moved on the web application's virtual model within 30 seconds or less, averaged over the number of people
+            in the test group.
+                        
+    \item{NFT3}
+
+        Type: Functional, Dynamic, Manual, Static etc.
+                            
+        Initial State: The product shall be representing the state of the game that is in progress. The pieces shall be in a legal position according to 
+            the rules of chess. The pieces shall not all be in their starting positions, and there is at least one of each type of piece 
+            (pawn, knight, bishop, rook, queen, king) on the board.
+                            
+        Input: Users are asked to identify the names of different pieces and squares based on their visual appearance in both the 
+            physical product and the web application.
+                            
+        Output: The majority of users are able to identify the names of pieces and squares based on their likeliness to historically used symbols and shapes.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to identify each of the pieces 
+            and squares from an in-progress game of chess using the system. The justification for this is to avoid piece identification based on their starting 
+            positions. The majority of the group should be able to visually identify every piece and square within 2 minutes of seeing the position for the first time.
+\end{enumerate}
+
+\subsubsection{Performance}
+\paragraph{Speed and Latency}
+\begin{enumerate}
+    \item{NFT4}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode, and a game has started.
+                            
+        Input/Condition: Users are asked to pick up a piece and suspend it midair without placing it down.
+                            
+        Output/Result: The board shall visually indicate where the held piece is able to move according to the rules of chess within a specific time frame.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to pick up a specific piece and 
+            hold it. The system will give visual indicators of where the held piece is able to move according to the rules of chess. The time between when 
+            they pick up the piece and when the visual response occurs is measured and recorded. This process is repeated 5 times per user. The individual and average
+            times are recorded. The response times are then averaged over the entire test group. The average response time of the entire test group must be less than 
+            0.5 seconds.
+                        
+    \item{NFT5}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The results of the previous test, NFT4, have been measured and recorded.
+                            
+        Input/Condition: The results of NFT4.
+                            
+        Output/Result: The maximum recorded time of any individual response is within a specific time frame.
+                            
+        How test will be performed: The times measured in the previous test, NFT4, will be inspected. The maximum recorded individual time must be less than 
+            1 second.
+
+    \item{NFT6}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode, and a game has started.
+                            
+        Input/Condition: Users are asked to pick up a piece and legally move it to a square according to the rules of chess.
+                            
+        Output/Result: The web application shall reflect their move in the virtual model within a specific time frame.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to pick up a specific piece and 
+            legally move it to another square according to the rules of chess. The web application will reflect their move in the virtual model. The time between 
+            when they place down the piece and when the web application response occurs is measured and recorded. This process is repeated 5 times per user. The 
+            individual and average times are recorded. The response times are then averaged over the entire test group. The average response time of the entire
+            test group must be less than 2 seconds.
+
+    \item{NFT7}
+
+        Type: Structural, Static, Manual
+                                
+        Initial State: The results of the previous test, NFT6, have been measured and recorded.
+                            
+        Input/Condition: The results of NFT6.
+                            
+        Output/Result: The maximum recorded time of any individual response is within a specific time frame.
+                            
+        How test will be performed: The times measured in the previous test, NFT6, will be inspected. The maximum recorded individual time must be less than 
+            5 seconds.
+\end{enumerate}
+
+\paragraph{Health and Safety}
+\begin{enumerate}
+    \item{NFT8}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode, and a game has started.
+                            
+        Input/Condition: 10 wires are chosen as a sample.
+                            
+        Output/Result: The maximum power on any single wire shall be within the required limit.
+                            
+        How test will be performed: A sample of 10 wires are chosen arbitrarily from across the entire system. The voltage and amperage of 
+            each wire in the sample are measured and recorded. The power shall then be calculated and recorded. The maximum power of any wire
+            in the sample must not exceed the safe limits determined in the Canadian Electrical Code \cite{CanadianElectricalCode2021}.
+\end{enumerate}
+
+\paragraph{Precision and Accuracy}
+\begin{enumerate}
+    \item{NFT9}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in the initial game state.
+                            
+        Input/Condition: Users are instructed to play a full game of chess using the \progname{} system.
+                            
+        Output/Result: The web application will properly reflect the moves made on the physical product the majority of the time.
+                            
+        How test will be performed: A test group of people who have played chess in the past or play chess regularly are asked to play a full game of chess. 
+            Their moves and the web application response will be recorded and compared against each other. The number of discrepancies between the physical 
+            moves and moves made on the web application will be recorded. The number of discrepancies averaged over the entire test group must be less than 
+            or equal to 1.
+\end{enumerate}
+
+\paragraph{Capacity}
+\begin{enumerate}
+    \item{NFT10}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in the initial game state and is in engine mode.
+                            
+        Input/Condition: Moves are made until the game state is in one of a set of predetermined computationally complicated chess positions.
+                            
+        Output/Result: The level of memory used by the web application shall be no more than 1 Gigabyte (GB) at any measured point.
+                            
+        How test will be performed: Moves will be made until the game state is in one of a set of predetermined computationally complicated chess positions. 
+            The engine will then be using the maximum amount of memory to compute the best possible moves for the position. The amount of memory used will be 
+            measured and recorded using windows task manager. The amount of memory must never exceed 1 GB at any measured point.
+\end{enumerate}
+
+\subsubsection{Security}
+\paragraph{Integrity}
+\begin{enumerate}
+    \item{NFT11}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode and a chess game is in progress on the system.
+                            
+        Input/Condition: The Bluetooth connection is severed between the web application and the product.
+                            
+        Output/Result: The web application indicates that the Bluetooth connection has been lost.
+                            
+        How test will be performed: A game of chess is being played when the Bluetooth option is switched off on the server, severing the connection.
+            The web application must display an alert that the Bluetooth connection has been lost.
+\end{enumerate}
+
+\begin{enumerate}
+    \item{NFT12}
+
+        Type: Structural, Static, Manual
+                            
+        Initial State: The product is in normal mode and a chess game is in progress on the system.
+                            
+        Input/Condition: The power connection to the system is severed.
+                            
+        Output/Result: The system stores the game state in local memory until power is restored.
+                            
+        How test will be performed: A game of chess is being played when the power is switched off. The power is then restored after 5 or more seconds. A single
+            move is made and the state of the game is tested against the web application. The state of the game should be unchanged from before power was lost.
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
+\begin{longtable}{| p{.20\textwidth} | p{.80\textwidth} |}
+    \hline
+    Test & Requirement\\
+    \hline
+    GA-1 & GA1\\
+    \hline
+    GA-2 & GA2\\
+    \hline
+    GA-3 & GA3\\
+    \hline
+    GA-4 & GA6\\
+    \hline
+    GA-5 & GA7\\
+    \hline
+    GI-1 & GI1\\
+    \hline
+    GI-2 & GI2\\
+    \hline
+    GI-3 & GI3\\
+    \hline
+    GI-4 & GI4\\
+    \hline
+    GI-5 & GI5, GI6\\
+    \hline
+    NB-1 & NB1\\
+    \hline
+    NB-2 & NB2\\
+    \hline
+    NB-3 & NB3\\
+    \hline
+    ND-1 & ND1\\
+    \hline
+    NA-1 & NA1, NA2\\
+    \hline
+    NA-2 & NA3\\
+    \hline
+    EB-1 & EB1\\
+    \hline
+    EB-2 & EB2\\
+    \hline
+    EB-3 & EB3\\
+    \hline
+    EB-4 & EB4\\
+    \hline
+    ED-1 & ED1\\
+    \hline
+    ED-2 & ED2\\
+    \hline
+    EA-1 & EA1, EA2\\
+    \hline
+    EA-2 & EA3, EA4, EA5\\
+    \hline
+    EA-3 & EA6\\
+    \hline
+    BB-1 & BB1\\
+    \hline
+    BB-2 & BB2\\
+    \hline
+    BB-3 & BB3\\
+    \hline
+    BB-4 & BB4\\
+    \hline
+    BB-5 & BB5\\
+    \hline
+    BD-1 & BD1\\
+    \hline
+    BA-1 & BA1\\
+    \hline
+    BA-2 & BA2\\
+    \hline
+    NFT1 & LF3\\
+    \hline
+    NFT2 & UH5\\
+    \hline
+    NFT3 & UH6\\
+    \hline
+    NFT4 & PR1\\
+    \hline
+    NFT5 & PR2\\
+    \hline
+    NFT6 & PR3\\
+    \hline
+    NFT7 & PR4\\
+    \hline
+    NFT8 & PR6\\
+    \hline
+    NFT9 & PR7\\
+    \hline
+    NFT10 & PR10\\
+    \hline
+    NFT11 & SR4\\
+    \hline
+    NFT12 & SR3\\
+    \hline
+\caption{Traceability Matrix}
+\end{longtable}
 
-\section{Unit Test Description}
+% \section{Unit Test Description}
 
-\wss{Reference your MIS and explain your overall philosophy for test case
-  selection.}  
-\wss{This section should not be filled in until after the MIS has
-  been completed.}
+% \wss{Reference your MIS and explain your overall philosophy for test case
+%   selection.}  
+% \wss{This section should not be filled in until after the MIS has
+%   been completed.}
 
-\subsection{Unit Testing Scope}
+% \subsection{Unit Testing Scope}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+% \wss{What modules are outside of the scope.  If there are modules that are
+%   developed by someone else, then you would say here if you aren't planning on
+%   verifying them.  There may also be modules that are part of your software, but
+%   have a lower priority for verification than others.  If this is the case,
+%   explain your rationale for the ranking of module importance.}
 
-\subsection{Tests for Functional Requirements}
+% \subsection{Tests for Functional Requirements}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+% \wss{Most of the verification will be through automated unit testing.  If
+%   appropriate specific modules can be verified by a non-testing based
+%   technique.  That can also be documented in this section.}
 
-\subsubsection{Module 1}
+% \subsubsection{Module 1}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+% \wss{Include a blurb here to explain why the subsections below cover the module.
+%   References to the MIS would be good.  You will want tests from a black box
+%   perspective and from a white box perspective.  Explain to the reader how the
+%   tests were selected.}
 
-\begin{enumerate}
+% \begin{enumerate}
 
-\item{test-id1\\}
+% \item{test-id1\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: \wss{The expected result for the given inputs}
+% Output: \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+% Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+% How test will be performed: 
 					
-\item{test-id2\\}
+% \item{test-id2\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: \wss{The expected result for the given inputs}
+% Output: \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+% Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+% How test will be performed: 
 
-\item{...\\}
+% \item{...\\}
     
-\end{enumerate}
+% \end{enumerate}
 
-\subsubsection{Module 2}
+% \subsubsection{Module 2}
 
-...
+% ...
 
-\subsection{Tests for Nonfunctional Requirements}
+% \subsection{Tests for Nonfunctional Requirements}
 
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
+% \wss{If there is a module that needs to be independently assessed for
+%   performance, those test cases can go here.  In some projects, planning for
+%   nonfunctional tests of units will not be that relevant.}
 
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
+% \wss{These tests may involve collecting performance data from previously
+%   mentioned functional tests.}
 
-\subsubsection{Module ?}
+% \subsubsection{Module ?}
 		
-\begin{enumerate}
+% \begin{enumerate}
 
-\item{test-id1\\}
+% \item{test-id1\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input/Condition: 
+% Input/Condition: 
 					
-Output/Result: 
+% Output/Result: 
 					
-How test will be performed: 
+% How test will be performed: 
 					
-\item{test-id2\\}
+% \item{test-id2\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
+% Type: Functional, Dynamic, Manual, Static etc.
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: 
+% Output: 
 					
-How test will be performed: 
+% How test will be performed: 
 
-\end{enumerate}
+% \end{enumerate}
 
-\subsubsection{Module ?}
+% \subsubsection{Module ?}
 
-...
+% ...
 
-\subsection{Traceability Between Test Cases and Modules}
+% \subsection{Traceability Between Test Cases and Modules}
 
-\wss{Provide evidence that all of the modules have been considered.}
+% \wss{Provide evidence that all of the modules have been considered.}
 				
 \bibliographystyle{plainnat}
 
@@ -376,17 +1237,34 @@ How test will be performed:
 
 \newpage
 
-\section{Appendix}
+\section*{Appendix --- Reflection}
 
-This is where you can place additional information.
+The information in this section will be used to evaluate the team members on the
+graduate attribute of Lifelong Learning.  Please answer the following questions:
 
-\subsection{Symbolic Parameters}
+\begin{enumerate}
+  \item \textbf{Arduino Zero Built-in Debugger Interface} is 
+  necessary to simulate and test the arduino code on the microcontroller. 
+  Learning the software requires reading documentation for installing 
+  and operating the debugger. As well, interpreting the outputs from 
+  the debugger requires practice. Joshua Chapman will be taking this
+  responsibility.
+  \item \textbf{React Testing Library} is used for testing web 
+  application code. All coding in the web application will be done 
+  using javascript and react. Documentation for using the library will be read
+  and experimented to develop a thorough understanding.
+   Rupinder Nagra and Jonathan Cels will be taking this responsibility. 
+  \item \textbf{Pytest} is used to perform unit tests on python code
+  for custom microcontroller programming and bluetooth connection. Documentation to 
+  use the desired functionality will be read. Additionally, a learning period will 
+  be required to properly learn the outputs of the unit tester. 
+  Jonathan Cels and Arsheep Aujla will be taking this responsibility.
+  \item \textbf{Flake8} simplifies the Github workflow by performing non-blocking 
+  checks on integrated code. Integrating it into Github will require reading 
+  documentation and practicing before important deadlines. Alexander Van Kralingen 
+  will be taking this responsibility.
+\end{enumerate}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
 
-\subsection{Usability Survey Questions?}
-
-\wss{This is a section that would be appropriate for some projects.}
 
 \end{document}
