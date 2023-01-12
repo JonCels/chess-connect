@@ -46,7 +46,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
+2023-01-11 & Arshdeep Aujla & Introduction, Purpose, User Interface, Other Considered Designs \\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
@@ -84,19 +84,24 @@ This section records information for easy reference.
 \pagenumbering{arabic}
 
 \section{Introduction}
-This document outlines 
-\wss{Include references to your other documentation}
+This document outlines the system design portion of this project's design documentation. Design documentation 
+is intended to separate the project into modular components to increase the project's understandability and reusability. \\
+Other useful documents for this project are the following:
+\begin{itemize}
+  \item SRS
+  \item HA
+  \item VnV
+\end{itemize}
 
 \section{Purpose}
-
-The purpose of this document is to outline a detailed system design.
+The purpose of this document is to outline a detailed system design. The system design includes system variables, user interfaces, a timeline for completion, and designs of many 
+different components such as hardware, electrical componets, and communication protocols. This document also includes references to an intesive list of the project's
+mechanical and electrical components. \\
 Other documents relating to design are the following:
-\begin{enumerate}
+\begin{itemize}
   \item Software Architecture Document
   \item Detailed Design Document
-
-\wss{Point to your other design documents}
-
+\end{itemize}
 \section{Scope}
 
 \wss{Include a figure that show the System Context (showing the boundary between
@@ -133,8 +138,21 @@ your system and the environment around it.)}
 
 \section{User Interfaces}
 
-\wss{Design of user interface for software and hardware.  Attach an appendix if
-needed. Drawings, Sketches, Figma}
+\subsection*{Hardware Interface}
+The user will interact with two main components of the hardware.
+\begin{itemize}
+  \item Magnetic chess pieces
+  \item Physical chess board containing sensors
+\end{itemize}
+They will interact with the chess pieces and chess board as they would in a normal chess game. The chess board reflects a standard chess board, with 
+LEDs in the center of each square. They would move the chess pieces on the board and remove them in according to the rules of chess. If the device
+is set to beginner mode, the LEDs will light up in according to which available moves are available for that chess piece. They would interact with the LEDs
+by using them as a guide for potential moves to make.
+
+\subsection*{Software Interface}
+The users will interact with the software component of this device through a web application. They would need a device with an internet connection and and internet browser
+to view the application. The user will interact with this interface by visual viewing the chess board status in real time including a visualization of the chess piece locations.
+They will also be able to turn on and off beginner mode in this interface through clicking an interactive button in the web application. 
 
 \section{Design of Hardware}
 
@@ -178,6 +196,16 @@ interaction with, the user interface}
 \section{Communication Protocols}
 
 \section{Reflection}
+
+\subsection*{Project Limitations}
+
+\subsection*{Other Considered Designs}
+One problem that we had to overcome in our design is that there are not enough input and output pins in one microcontoller for all of the components.
+One solution we considered was having multiple microcontrollers for this project to ensure there is one input pin for each input sensor and one output pin for each output.
+This design would be beneficial in the way of simplicity of code. The tradeoff would be the complexity in cordinating the communitcation between multiple microcontrollers and the 
+web application. A second option to solve this problem is to use multiplexing to reduce the number of input and output pins needed for a large number of compnents. 
+This option requires more complex code, but only requires one microcontroller device. We chose to implement the multiplexing option becasue it only used one device which saves money,
+as well as eliminates the need to coordinate between multiple microcontrollers. 
 
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Problem Analysis and Design.  Please answer the following questions:
