@@ -47,7 +47,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 2023-01-11 & Arshdeep Aujla & Introduction, Purpose, User Interface, Other Considered Designs \\
-2023-01-16 & 1.1 & Notes\\
+2023-01-16 & Joshua Chapman & Scope\\
 \bottomrule
 \end{tabularx}
 
@@ -114,25 +114,42 @@ chess websites and platforms are also out of the scope of Chess Connect.
 \begin{figure}[H]
   \begin{center}
     \includegraphics[scale=0.45]{scope.jpg}
-    \caption{System Context}
+    \caption{System Scope}
     \label{Fig_Scope} 
   \end{center}
 \end{figure}
-
-
-
 %Include a figure that show the System Context showing the boundary between
 %your system and the environment around it.
 
 \section{Project Overview}
 
 \subsection{Normal Behaviour}
+Chess Connect is to be used by chess players of all skill levels to learn, improve,
+and share their in-person chess games. Beginner mode displays all possible moves
+by individual pieces to learn the rules of chess. As well, when an action is made
+that breaks the rules, appropriate direction is given to the players. Advanced mode
+provides players with moves from an intelligent chess engine. Players are provided
+best possible moves on the board to train their skills. All games are broadcast to
+an external server that stores and can share games with existing chess platforms.
 
 \subsection{Undesired Event Handling}
-
-\wss{How you will approach undesired events}
+When an unexpected event occurs, chess connect will always return to the most 
+appropriate safe state. When an action during a game, the on-board LCD screen 
+displays the error and provides instructions to correct the mistake and proceed 
+normally. When an error occurs in the communication between sub-systems, all 
+activememory is stored and a default error screen appears on the LCD screen to 
+inform the players.
+%\wss{How you will approach undesired events}
 
 \subsection{Component Diagram}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.45]{wiring_diagram.pdf}
+    \caption{Electrical Wiring Diagram}
+    \label{Fig_Wiring_Dgm} 
+  \end{center}
+\end{figure}
 
 \subsection{Connection Between Requirements and Design} \label{SecConnection}
 
