@@ -15,7 +15,10 @@
     linkcolor=red,
     urlcolor=blue
 }
-
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{caption}
+\usepackage{enumitem}
 \input{../../Comments}
 \input{../../Common}
 
@@ -46,8 +49,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-2023-01-11 & Arshdeep Aujla & Introduction, Purpose, User Interface, Other Considered Designs \\
-Date 2 & 1.1 & Notes\\
+2023-01-11 & Arshdeep Aujla & Added Introduction, Purpose, User Interface, Other Considered Designs \\
+2023-01-17 & Arshdeep Aujla & Added Hardware \\
 \bottomrule
 \end{tabularx}
 
@@ -160,20 +163,91 @@ They will also be able to turn on and off beginner mode in this interface throug
 Please refer to Appendix B for a detailed list of aquired mechanical components.
 
 \subsection*{Finite State Machines}
-Line 1\
+Line 1 \\
+
+Line2
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{line2}
+  \caption{Caption}
+\end{figure}
 
 \begin{itemize}
-  \item Case 1: King
-  \item Case 2: Queen
-  \item Case 3: Bishop
-  \item Case 4: Knight
-  \item Case 5: Rook
-  \item Case 6: Pawn
+  \item Case 1: King 
+  \begin{minipage}{\linewidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{king}
+    \captionof{figure}{Transfer from R1 to R2 whenK1=1}
+\end{minipage}
+  \item Case 2: Queen   
+  \begin{minipage}{\linewidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{queen}
+    \captionof{figure}{Transfer from R1 to R2 whenK1=1}
+\end{minipage}
+  \item Case 3: Bishop   
+  \begin{minipage}{\linewidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{bishop}
+    \captionof{figure}{Transfer from R1 to R2 whenK1=1}
+\end{minipage}
+  \item Case 4: Knight   
+  \begin{minipage}{\linewidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{knight}
+    \captionof{figure}{Transfer from R1 to R2 whenK1=1}
+\end{minipage}
+  \item Case 5: Rook   
+  \begin{minipage}{\linewidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{rook}
+    \captionof{figure}{Transfer from R1 to R2 whenK1=1}
+\end{minipage}
+  \item Case 6: Pawn   
+  \begin{minipage}{\linewidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{pawn}
+    \captionof{figure}{Transfer from R1 to R2 whenK1=1}
+\end{minipage}
 \end{itemize}
 
 \subsection*{Truth Table for LEDs}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1\textwidth]{truth_table}
+  \caption{Caption}
+\end{figure}
 
 \subsection*{Deriving Boolean Expressions}
+Line 3
+
+\begin{enumerate}
+  \item a =
+  \item b =
+  \item c =
+  \item d =
+  \item e =
+  \item f =
+  \item g =
+  \item h =
+  \item i =
+  \item j =
+  \item k =
+  \item l =
+  \item m =
+  \item n =
+  \item o =
+  \item p =
+  \item q =
+  \item r =
+  \item s =
+  \item t =
+  \item u =
+  \item v =
+  \item w =
+  \item x =
+  \item y =
+\end{enumerate}
 
 \section{Design of Electrical Components}
 \subsection*{Aquired Components}
