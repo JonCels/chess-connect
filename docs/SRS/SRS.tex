@@ -467,7 +467,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \begin{enumerate}[{GA}1., leftmargin=2\parindent]
     \item Pressing the Resign/Draw button will change the system to the Game Inactive State.
     \item Pressing the New Game button will have no effect.
-    \item Allow users to switch between user modes, choosing Normal Mode, Engine Mode, or Beginner Mode by using the User Mode switch on the side of the board.
+    \item Allow users to switch between user modes, choosing Normal Mode, Engine Mode, or Beginner Mode by using the button on the Game Active screen. 
     \item The chess board follows the \textbf{Chess Board} section for the respective user mode being played.
 \end{enumerate}
 
@@ -487,7 +487,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \paragraph{Chess Board}
 \begin{enumerate}[{GI}1., leftmargin=2\parindent]
     \item Pressing the New Game button will change the system to the Game Active State.
-    \item Using the User Mode switch at the side of the board will have no effect until the system is in the Game Active State.
+    \item Using the User Mode button will have no effect until the system is in the Game Active State.
     \item Pressing the Resign/Draw button will have no effect.
 \end{enumerate}
 
@@ -506,8 +506,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \paragraph{Chess Board}
 \begin{enumerate}[{NB}1., leftmargin=2\parindent]
     \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board. 
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on the LCD screen.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on the LCD screen.  
 \end{enumerate}
 
 \paragraph{Data Transfer}
@@ -526,8 +526,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \paragraph{Chess Board}
 \begin{enumerate}[{EB}1., leftmargin=2\parindent]
     \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on the LCD screen
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on the LCD screen
     \item The system shall show the top engine moves on the LCD display.
 \end{enumerate}
 
@@ -552,9 +552,9 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \begin{enumerate}[{BB}1., leftmargin=2\parindent]
     \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
     \item When a user picks up a piece, allow them to view all legal moves with green LED lights on valid squares.
-    \item If an illegal move is made, the tile that the piece is moved onto will display a red LED light.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on their side of the board.
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on their side of the board.
+    \item If an illegal move is made, the LCD screen will halt play and request a correct action.
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on the LCD screen.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on the LCD screen. 
 \end{enumerate}
 
 \paragraph{Data Transfer}

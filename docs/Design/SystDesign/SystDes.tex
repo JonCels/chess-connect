@@ -8,6 +8,20 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\usepackage{amsmath, mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{colortbl}
+\usepackage{xr}
+\usepackage{longtable}
+\usepackage{xfrac}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{titlesec}
+\usepackage{array}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -49,8 +63,9 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-2023-01-11 & Arshdeep Aujla & Added Introduction, Purpose, User Interface, Other Considered Designs \\
+2023-01-11 & Arshdeep Aujla & Introduction, Purpose, User Interface, Other Considered Designs \\
 2023-01-17 & Arshdeep Aujla & Added Design of Hardware \\
+2023-01-18 & Joshua Chapman & Scope, Project Overview, System Variables, Timeline\\
 \bottomrule
 \end{tabularx}
 
@@ -106,38 +121,181 @@ Other documents relating to design are the following:
   \item Detailed Design Document
 \end{itemize}
 \section{Scope}
+The Chess Connect system includes a physical chess board and associated software 
+application to aid in the learning and sharing of in-person chess games. 
+Mechanical design of the chess board and electrical systems are included in the 
+scope. Design of the user interface and communication between the systems is also
+included. 
+Not included is the design of the chess AI being used as a learning tool. Exisiting
+chess websites and platforms are also out of the scope of Chess Connect.
 
-\wss{Include a figure that show the System Context (showing the boundary between
-your system and the environment around it.)}
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.45]{scope.jpg}
+    \caption{System Scope}
+    \label{Fig_Scope} 
+  \end{center}
+\end{figure}
+%Include a figure that show the System Context showing the boundary between
+%your system and the environment around it.
 
 \section{Project Overview}
 
-\subsection{Normal Behaviour}
+\subsection{Normal Behaviour}{
+The normal operation of the chess board involves configuring game mode and settings, reading the physical 
+positions and identifiers (magnetic strength) of the pieces, lighting up corresponding LEDs and determining 
+legal moves on the micro-controller. There will be three game modes: Normal Mode (no LED feedback), Engine 
+Mode (best moves calculated by a chess engine and displayed by an LCD display) and Beginner Mode (legal moves
+ displayed by LED when a piece is picked up). The micro-controller will also be simultaneously transmitting 
+ data to the server via Bluetooth and receiving responses in the form of ``best'' moves from the server. The 
+ server will be calculating these best moves in real time depending on the configuration of the pieces on the 
+ board sent from the chess board, and sending it back over Bluetooth every time it is queriedwhile the game is
+  in ``Engine Mode''. The server will also be communicating all of this information to a web application where 
+  users can tune in and watch the pieces and seegame stats in real time.
+}
 
 \subsection{Undesired Event Handling}
-
-\wss{How you will approach undesired events}
+When an unexpected event occurs, chess connect will always return to the most 
+appropriate safe state. When an action during a game, the on-board LCD screen 
+displays the error and provides instructions to correct the mistake and proceed 
+normally. When an error occurs in the communication between sub-systems, all 
+activememory is stored and a default error screen appears on the LCD screen to 
+inform the players.
+%\wss{How you will approach undesired events}
 
 \subsection{Component Diagram}
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.45]{wiring_diagram.pdf}
+    \caption{Electrical Wiring Diagram}
+    \label{Fig_Wiring_Dgm} 
+  \end{center}
+\end{figure}
+
 \subsection{Connection Between Requirements and Design} \label{SecConnection}
 
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-  requirements with a password.}
+Requirements GA1, GA2, GA3, GA4, GI1, GI2, GI3, NB2, NB3, EB2, EB3, EB4, BB3, BB4, BB5 describe a variety of 
+buttons to support game flow and modes. Too many physical buttons were required so an LCD screen was placed on 
+the side of the board to accomodate the large number of functions. 
+\\ \\
+Requirements GI5, GI6, ND1, NA1, ED1, ED2, EA1, BD1 dictated decisions for specific information to be 
+communicated from the board to the Web Application. Serial Communication was chosen to display a custom 
+string to communicate the necessary game state, errors and best moves between the board and the application. 
+\\ \\
+Requirements NB1, EB1, BB1 describe the memory performance required of the hardware to store game data of 
+entire games. Design satisfies this requirement with the addition of two processors to share the memory load
+and processing load.
+\\ \\
+Requirement BB2 outlined the implementation of LEDs requiring fast response times. Due to communication 
+protocols, screens and sensors are already consuming processor time, a second processor was added with faster 
+processing speed to handle the LEDs and sensors exclusively.
+%wss{The intention of this section is to document decisions that are made
+%  ``between'' the requirements and the design.  To satisfy some requirements,
+ % design decisions need to be made.  Rather than make these decisions implicit,
+  %they are explicitly recorded here.  For instance, if a program has security
+  %requirements, a specific design decision may be made to satisfy those
+  %requirements with a password.}
 
 \section{System Variables}
-
-\wss{Include this section for Mechatronics projects}
-
+%\wss{Include this section for Mechatronics projects}
 \subsection{Monitored Variables}
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{9cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Variable & Units & Description\\
+      \hline
+      s\_a\{1-8\} & Volts & States of tiles a1 - a8 on the board. They are analog signals 
+      converted to digital and the state of the tile is determined. The possible states of 
+      each tile is empty, black/white pawn, black/white rook, black/white knight, 
+      black/white bishop, black/white queen, black/white king. \\
+      \hline
+      s\_b\{1-8\} & Volts & States of tiles b1 - b8 on the board. " " \\
+      \hline
+      s\_c\{1-8\} & Volts & States of tiles c1 - c8 on the board. " " \\
+      \hline
+      s\_d\{1-8\} & Volts & States of tiles d1 - d8 on the board. " " \\
+      \hline
+      s\_e\{1-8\} & Volts & States of tiles e1 - e8 on the board. " " \\
+      \hline
+      s\_f\{1-8\} & Volts & States of tiles f1 - f8 on the board. " " \\
+      \hline
+      s\_g\{1-8\} & Volts & States of tiles g1 - g8 on the board. " " \\
+      \hline
+      lcd\_x\_pos & Volts & Positive X coordinate of the resistive touch screen.\\
+      \hline
+      lcd\_x\_neg & Volts & Negative X coordinate of the resistive touch screen.\\
+      \hline
+      lcd\_y\_pos & Volts & Positive Y coordinate of the resistive touch screen.\\
+      \hline
+      lcd\_y\_neg & Volts & Negative Y coordinate of the resistive touch screen.\\
+      \hline
+      bluetooth\_rx & Volts & Serial communication receive channel via bluetooth to the web application.
+      Best moves from the chess engine are sent to the chess board via this channel. \\
+      \hline 
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
 \subsection{Controlled Variables}
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{9cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Variable & Units & Description\\
+      \hline 
+      hall\_power\{1-8\} & Volts & Eight sources of power to the eight columns of sensors under the board. 
+      The power will be pulse width modulated to multiplex the signals of the hall sensors.\\
+      \hline 
+      LED\_row\_pos\{1-9\} & Volts & Nine power supplies are delivered to the nine rows of LEDs. When a 
+      corresponding ground is supplied to a column, an individual LED can be lit.\\
+      \hline
+      LED\_col\_gnd\{1-9\} & Volts & Nine ground supplies are delivered to the nine columns of LEDs. When a 
+      corresponding power is supplied to a row, an individual LED can be lit.\\
+      \hline 
+      LCD\_Display\{0-7\} & Volts & Eight bits of information are sent to the LCD screen to display a variety
+      of images. \\
+      \hline 
+      bluetooth\_tx & Volts & Serial communication transmit channel via bluetooth to the web application. 
+      The current game state and errors are sent via this channel. \\
+      \hline
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
 \subsection{Constants Variables}
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{5cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{5cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Constant & Unit & Value\\
+      \hline
+      Chess board width & inches & 12\\
+     \hline
+     Chess board length & inches & 12\\
+     \hline
+     Chess board tile width & inches & 1.5\\
+     \hline 
+     Chess board tile length & inches & 1.5\\ 
+     \hline 
+     Supply Power to Board & Volts & 110 VAC\\
+     \hline
+      \end{tabular}
+  \label{Table}
+  \end{table}
 
 \section{User Interfaces}
 
@@ -280,8 +438,46 @@ circuit diagrams, etc}
 \wss{If appropriate}
 
 \section{Timeline}
-
-\wss{Schedule of tasks and who is responsible}
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{10cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{1.5cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Task & Member & Date\\
+      \hline 
+      Learning the library of the LCD screen & Josh & Jan 23\\
+      \hline
+      Learning the library of the bluetooth module for web app communication & Jonathan & Jan 23\\
+      \hline 
+      Installing the hall sensors and LEDs to the bottom of the chess board & Arshdeep & Jan 23\\
+      \hline
+      Complete design and implementation of web application & Rupinder & Jan 30\\
+      \hline 
+      Solder sensors and LEDs to the appropriate Arduino & Arsheep & Jan 30\\
+      \hline 
+      Configure power supply for arduinos and confirm safety of the system from wall power & Josh & Jan 30\\
+      \hline
+      Implementing a chess library into the arduino Mega & Alex & Jan 30\\
+      \hline 
+      Implement communication protocols for bluetooth and serial communication onto the processors & Jonathan
+      & Jan 30\\
+      \hline 
+      Complete communication protocol packet from web app to arduino & Rupinder & Feb 7\\
+      \hline 
+      Run tests with the completed piece tracking code with completed board & Alex & Feb 7\\
+      \hline 
+      Revision 0 Demonstration. Completed by this time will be piece recognition, LED response, communication 
+      between processors, bluetooth communication, web application and LCD screen design
+      & Josh, Arsheep, Alex, Rupinder, Jonathan & Feb 13\\
+      \hline
+      
+      \end{tabular}
+  \label{Table}
+  \end{table}
+%\wss{Schedule of tasks and who is responsible}
 
 % \bibliographystyle {plainnat}
 % \bibliography{../../../refs/References}
@@ -297,20 +493,28 @@ interaction with, the user interface}
 
 \section{Mechanical Hardware}
 \begin{itemize}
-  \item Arduino Mega
+  \item 20" Chess Board
+  \item Self Contained Box to hide hardware
 \end{itemize}
 
 \section{Electrical Components}
 \begin{itemize}
-  \item 64 LEDs
-  \item 64 1000ohm resistors
+  \item Arduino Mega 2560
+  \item Teensy 4.1 
+  \item 3.5" Touchscreen Display
+  \item HC-05 Bluetooth Module
+  \item AC-DC converter for 
+  \item 81 green LEDs
+  \item 81 1000ohm resistors
   \item 64 HALL sensors
   \item 64 1mF capacitors
-  \item 3 breadboards
-  \item 300 pieces of wire
+  \item 30 ft, 20 AWG wire
 \end{itemize}
 
 \section{Communication Protocols}
+\begin{itemize}
+  \item Serial Communication
+\end{itemize}
 
 \section{Reflection}
 
