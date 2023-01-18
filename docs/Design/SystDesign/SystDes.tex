@@ -61,8 +61,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 2023-01-11 & Arshdeep Aujla & Introduction, Purpose, User Interface, Other Considered Designs \\
-2023-01-16 & Joshua Chapman & Scope\\
-2023-01-18 & Joshua Chapman & Project Overview, System Variables\\
+2023-01-16 & Joshua Chapman & Scope, Project Overview, System Variables, Timeline\\
 \bottomrule
 \end{tabularx}
 
@@ -334,8 +333,46 @@ circuit diagrams, etc}
 \wss{If appropriate}
 
 \section{Timeline}
-
-\wss{Schedule of tasks and who is responsible}
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{10cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{1.5cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Task & Member & Date\\
+      \hline 
+      Learning the library of the LCD screen & Josh & Jan 23\\
+      \hline
+      Learning the library of the bluetooth module for web app communication & Jonathan & Jan 23\\
+      \hline 
+      Installing the hall sensors and LEDs to the bottom of the chess board & Arshdeep & Jan 23\\
+      \hline
+      Complete design and implementation of web application & Rupinder & Jan 30\\
+      \hline 
+      Solder sensors and LEDs to the appropriate Arduino & Arsheep & Jan 30\\
+      \hline 
+      Configure power supply for arduinos and confirm safety of the system from wall power & Josh & Jan 30\\
+      \hline
+      Implementing a chess library into the arduino Mega & Alex & Jan 30\\
+      \hline 
+      Implement communication protocols for bluetooth and serial communication onto the processors & Jonathan
+      & Jan 30\\
+      \hline 
+      Complete communication protocol packet from web app to arduino & Rupinder & Feb 7\\
+      \hline 
+      Run tests with the completed piece tracking code with completed board & Alex & Feb 7\\
+      \hline 
+      Revision 0 Demonstration. Completed by this time will be piece recognition, LED response, communication 
+      between processors, bluetooth communication, web application and LCD screen design
+      & Josh, Arsheep, Alex, Rupinder, Jonathan & Feb 13\\
+      \hline
+      
+      \end{tabular}
+  \label{Table}
+  \end{table}
+%\wss{Schedule of tasks and who is responsible}
 
 % \bibliographystyle {plainnat}
 % \bibliography{../../../refs/References}
@@ -351,7 +388,8 @@ interaction with, the user interface}
 
 \section{Mechanical Hardware}
 \begin{itemize}
-  \item Arduino Mega
+  \item 20" Chess Board
+  \item Self Contained Box to hide hardware
 \end{itemize}
 
 \section{Electrical Components}
@@ -366,10 +404,12 @@ interaction with, the user interface}
   \item 64 HALL sensors
   \item 64 1mF capacitors
   \item 30 ft, 20 AWG wire
-  \item 
 \end{itemize}
 
 \section{Communication Protocols}
+\begin{itemize}
+  \item Serial Communication
+\end{itemize}
 
 \section{Reflection}
 
