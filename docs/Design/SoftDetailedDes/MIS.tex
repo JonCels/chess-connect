@@ -54,7 +54,7 @@ urlcolor=cyan          % color of external links
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
+1/17/2023 & 1.0 & Notes\\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
@@ -109,6 +109,9 @@ character & char & a single symbol or digit\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+boolean & bool & true (value of 1) or false (value of 0)\\
+enumeration & enum & keywords assigned an integer value in order of declaration beginning at 0\\
+structure & Piece & C++ struct data-type containing PieceType enumeration and int colour (0 for white, 1 for black)\\
 \bottomrule
 \end{tabular} 
 \end{center}
@@ -168,7 +171,8 @@ The following table is taken directly from the Module Guide document for this pr
 \subsection{Uses}
 Arduino.h
 SoftwareSerial.h
-ChessBoard.cpp
+ChessBoard.h
+PieceIdentification.h
 
 \subsection{Syntax}
 
@@ -182,27 +186,122 @@ None
 \subsection{Semantics}
 
 \subsubsection{State Variables}{
-  gameMode := enumeration \{ beginner, normal, engine \}\\
-  gameState := enumeration \{ init, play, end, reset \}\\
+  gameMode := enum \{ beginner, normal, engine \}\\
+  gameState := enum \{ init, play, end, reset \}\\
+  boardState := \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string}
+  playerWarning := enum \{ check, checkmate, stalemate \}\\
 }
 
 \subsubsection{Environment Variables}{
-  HALL\_PINS: input pins receiving signal fomr Hall-effect sensors
-  LED\_PINS: output pins lighting up the LEDs on the board
-  
+  HALL\_PINS: input pin addresses for receiving signal from Hall-effect sensors\\
+  LED\_PINS: output pin addresses for lighting up the LEDs on the board\\
+  rx\_from\_Teensy: input pin for communication with Teensy controller\\
+  tx\_from\_Teensy: output pin for communication with Teensy controller\\
 }
 
 \subsubsection{Assumptions}{
-  setup() will run before any other function.
+  \begin{itemize}
+    \item setup() will run before any other function.
+    \item Connection exists between both controllers and remains constant
+  \end{itemize}
+  
 }
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent setup():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: initialize serial connection; read board state; game state set to "init"
+\item exception: TeensyConnectionFailed
+\end{itemize}
+
+\noindent loop():
+\begin{itemize}
+\item transition: \begin{itemize}
+  \item Main control loop.
+  \item Polling sensors to update boardState FEN string.
+  \item Checking for check/checkmate/stalemate signal from Web App to update playerWarning.
+  \item Change gameState based on user input button presses (game start, draw, reset).
+  \item Change gameMode based on user input button presses (beginner, normal, engine).
+\end{itemize}
+\item exception: TeensyConnectionFailed
+\end{itemize}
+
+\noindent changeGameState():
+\begin{itemize}
+\item transition: initialize serial connection; read board state; game state set to "init"
+\item exception: TeensyConnectionFailed
+\end{itemize}
+
+\noindent lightLED():
+\begin{itemize}
+\item output: LED\_pin := HIGH ($\mathbb{Z} := 1$) or LOW  ($\mathbb{Z} := 0$).
+\item exception: TeensyConnectionFailed
+\end{itemize}
+
+
+\wss{A module without environment variables or state variables is unlikely to
+  have a state transition.  In this case a state transition can only occur if
+  the module is changing the state of another module.}
+
+\wss{Modules rarely have both a transition and an output.  In most cases you
+  will have one or the other.}
+
+\subsubsection{Local Functions}{
+  setup \\
+  loop \\
+  lightLED \\
+}
+
+\wss{As appropriate} \wss{These functions are for the purpose of specification.
+  They are not necessarily something that is going to be implemented
+  explicitly.  Even if they are implemented, they are not exported; they only
+  have local scope.}
+
+\section{MIS of PieceIdentification Module} \label{PieceIdentificationModule}
+
+\subsection{PieceIdentification}
+
+\subsection{Uses}
+Arduino.h
+SoftwareSerial.h
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}{
+  None
+}
+
+\subsubsection{Exported Access Programs}
+None
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}{
+  None
+}
+
+\subsubsection{Environment Variables}{
+  None
+  
+}
+
+\subsubsection{Assumptions}{
+  Hall-effect sensors will give accurate readings.
+}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent readSensors():
+\begin{itemize}
+\item output: Piece
+\item exception: SensorOffline
+\end{itemize}
+
+\noindent waitPiece():
+\begin{itemize}
+\item output: Piece
+\item exception: SensorOffline
 \end{itemize}
 
 \wss{A module without environment variables or state variables is unlikely to
@@ -231,8 +330,9 @@ None
 \wss{Short name for the module}
 
 \subsection{Uses}
-Arduino.h
-SoftwareSerial.h
+Arduino.h\\
+SoftwareSerial.h\\
+PieceIdentification.h\\
 
 \subsection{Syntax}
 
@@ -241,7 +341,6 @@ int numRows := Chess board rows \\
 int numCols := Chess board columns \\
 int RX\_PIN := receiving pin of the serial communication module \\
 int TX\_PIN := sending pin of the serial communication module \\
-
 int LED\_PINS[8][8] := 2-D array controlling the LED output pins \\
 int HALL\_PINS[8][8] := 2-D array controlling the Hall-effect sensor input pins \\
 }
@@ -254,12 +353,19 @@ int HALL\_PINS[8][8] := 2-D array controlling the Hall-effect sensor input pins 
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 movePiece & {int, int, int, int, PieceType} & boolean & - \\
+\midrule
 removePiece & {int, int} & Piece & - \\
+\midrule
 isCheck & {int, int} & bool & - \\
+\midrule
 isCheckmate & {int, int} & bool & - \\
+\midrule
 boardToFEN & - & string & - \\
+\midrule
 sendFEN & string & - & - \\
+\midrule
 recieveMoves & - & Colour & - \\
+\midrule
 lightSquare & {int, int, Colour} & - & - \\
 \hline
 \end{tabular}

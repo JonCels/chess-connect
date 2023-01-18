@@ -1,6 +1,6 @@
-#include <piece-identification.h>
+#include <PieceIdentification.h>
 
-int8_t ReadSensors(int sensor = 0)
+int ReadSensors(int sensor = 0)
 {
     if (sensor > 0 and sensor <= 30)
     {

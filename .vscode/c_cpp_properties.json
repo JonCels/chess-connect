@@ -3,7 +3,13 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/usr/include",
+                "/usr/include/x86_64-linux-gnu",
+                "/usr/include/linux",
+                "/usr/lib/gcc/x86_64-linux-gnu/11/include",
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/src/lib/arduino"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

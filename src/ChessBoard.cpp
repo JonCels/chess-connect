@@ -1,11 +1,11 @@
+#include <string.h>
 #include <Arduino.h>
 #include <SoftwareSerial.h>
+#include <PieceIdentification.h>
 
 const int numRows = 8;
 const int numCols = 8;
 
-const int RX_PIN = 2; // RX pin of the Bluetooth module
-const int TX_PIN = 3; // TX pin of the Bluetooth module
 
 // Pins to control the LEDs
 const int LED_PINS[numRows][numCols] = {
@@ -30,25 +30,6 @@ const int HALL_PINS[numRows][numCols] = {
     {122, 123, 124, 125, 126, 127, 128, 129}};
 
 SoftwareSerial bluetooth(RX_PIN, TX_PIN); // create a SoftwareSerial object
-
-// Enum to represent the different types of chess pieces
-enum PieceType
-{
-    NONE,
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK,
-    QUEEN,
-    KING
-};
-
-// Structure to represent a chess piece
-struct Piece
-{
-    PieceType type;
-    int color; // 0 for white, 1 for black
-};
 
 // 2D array to represent the chess board
 Piece board[numRows][numCols];
