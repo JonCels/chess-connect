@@ -59,8 +59,13 @@ urlcolor=cyan          % color of external links
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
+<<<<<<< HEAD
+2023-01-17 & Alexander Van Kralingen & Detailed Modules used by Arduino Mega 2560\\
+2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
+=======
 2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
 2023-01-17 & Alexander Van Kralingen & Detailed Modules used by Arduino Mega 2560\\
+>>>>>>> Documentation/DD
 2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 \bottomrule
 \end{tabularx}
@@ -120,8 +125,15 @@ The following table summarizes the primitive data types used by \progname.
 \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
 \midrule
 character & char & a single symbol or digit\\
+<<<<<<< HEAD
+integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
+natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
+real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+boolean & bool & true (value of 1) or false (value of 0)\\
+=======
 integer & int & a number without a fractional component in (-$\infty$, $\infty$) \\
 boolean & boolean & true (value of 1) or false (value of 0)\\
+>>>>>>> Documentation/DD
 enumeration & enum & keywords assigned an integer value in order of declaration beginning at 0\\
 structure & Piece & C++ struct data-type containing PieceType enumeration and int colour (0 for white, 1 for black)\\
 \bottomrule
@@ -160,6 +172,9 @@ The following table is taken directly from the Module Guide document for this pr
 & Web Application Output Module\\
 & Piece Identification Module \\
 & Communication Module\\
+& Teensy Input from Mega Module\\
+& Teensy Input Bluetooth from Web App Module\\
+& Teensy Output Bluetooth from Web App Module\\
 \midrule
 
 \multirow{5}{0.3\textwidth}{Software Decision Module} 
@@ -185,6 +200,7 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsection{Uses}
 Arduino\\
+Software Serial\\
 Chess Board\\
 Piece Identification\\
 Communication\\
@@ -359,6 +375,7 @@ None
 \subsection{Chess Board}
 
 \subsection{Uses}
+Arduino\\
 Piece Identification\\
 
 \subsubsection{Exported Constants}{
@@ -956,6 +973,159 @@ SoftwareSerial.h
         \noindent evaluatePosition(string):
         \begin{itemize}
             \item output: String containing 3 possible moves, calculated by a chess engine from the FEN input string
+            \item exception: none
+        \end{itemize}
+
+    \subsubsection{Local Functions}
+    N/A
+
+    \newpage
+
+    \section{Teensy Input from Mega Module} \label{TeensyToMegaRx}
+        \subsection{Module}
+        Teensy Input from Mega Module
+    
+        \subsection{Uses}
+        Receives game state information from the Arduino Mega in the form of a FEN string. 
+    
+        \subsection{Syntax}
+        \subsubsection{Exported Constants}
+        \#define baud rate \#The baud rate of the serial communication system\\
+        \#define stringFormat \#The format of the string remains constant to perform proper 
+        communication between the two Arduinos.
+        
+        \subsubsection{Exported Access Programs}
+            \begin{center}
+            \begin{tabular}{p{4cm} p{3cm} p{3cm} p{2.5cm}}
+            \hline
+            \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+            \hline
+            copyFen & string & string & \\
+            collectMode & string & binary & \\
+            \hline
+            \end{tabular}
+            \end{center}
+    
+        \subsection{Semantics}
+        \subsubsection{State Variables}
+        local game state \\
+        local game mode
+    
+        \subsubsection{Environment Variables}
+        N/A
+    
+        \subsubsection{Assumptions}
+        The size of the string passed from the Arduino Mega aligns with the designed format. \\
+    
+        \subsubsection{Access Routine Semantics}
+            \noindent receiveGameState(pin):
+            \begin{itemize}
+                \item Input: A serial line of data from an Rx pin
+                \item Output: A string containing the FEN of the game state
+                \item exception: none
+            \end{itemize}
+    
+        \subsubsection{Local Functions}
+        N/A
+    
+    \newpage
+    
+    \section{Teensy Input from Web App Module} \label{TeensyToWaRx}
+        \subsection{Module}
+        Teensy Input via bluetooth from the Web Application
+    
+        \subsection{Uses}
+        Receives best moves from the game engine contained in the Web Application.
+    
+        \subsection{Syntax}
+        \subsubsection{Exported Constants}
+        \#define baud rate \#The baud rate of the serial communication system\\
+        \#define stringFormat \#The format of the string remains constant to perform proper 
+        communication between the two Arduinos.
+        
+        \subsubsection{Exported Access Programs}
+            \begin{center}
+            \begin{tabular}{p{4cm} p{3cm} p{3cm} p{2.5cm}}
+            \hline
+            \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+            \hline
+            copyBestMove & string & string & \\
+            \hline
+            \end{tabular}
+            \end{center}
+    
+        \subsection{Semantics}
+        \subsubsection{State Variables}
+        local bestMove1 \\
+        local bestMove2 \\
+        local bestMove3 
+    
+        \subsubsection{Environment Variables}
+        N/A
+    
+        \subsubsection{Assumptions}
+        The size of the string passed from the Web Application aligns with the designed format. \\
+        The Web Application will always be able to return best moves with the given data. 
+    
+        \subsubsection{Access Routine Semantics}
+            \noindent receiveBestMove(pin):
+            \begin{itemize}
+                \item output: String containing 3 possible moves, calculated by a chess engine from the FEN input string
+                \item exception: none
+            \end{itemize}
+    
+        \subsubsection{Local Functions}
+        N/A
+    
+
+\newpage
+
+\section{Teensy Output to Web App Module} \label{TeensyToWaTx}
+    \subsection{Module}
+    Teensy Output via bluetooth to the Web Application
+
+    \subsection{Uses}
+    Sends current game state and game mode to the Web Application via Bluetooth
+
+    \subsection{Syntax}
+    \subsubsection{Exported Constants}
+    \#define baud rate \#The baud rate of the serial communication system\\
+    \#define stringFormat \#The format of the string remains constant to perform proper 
+    communication between the two Arduinos.
+    
+    \subsubsection{Exported Access Programs}
+        \begin{center}
+        \begin{tabular}{p{4cm} p{3cm} p{3cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        copyFEN & string & string & \\
+        copyGameMode & string & string & \\
+        \hline
+        \end{tabular}
+        \end{center}
+
+    \subsection{Semantics}
+    \subsubsection{State Variables}
+    local lastGameState \\
+    local currGameState 
+
+    \subsubsection{Environment Variables}
+    N/A
+
+    \subsubsection{Assumptions}
+    The size of the string passed to the Web Application aligns with the designed format that 
+    the web application is expecting \\
+
+    \subsubsection{Access Routine Semantics}
+        \noindent sendCurrState(pin):
+        \begin{itemize}
+            \item output: String containing the current game state
+            \item exception: none
+        \end{itemize}
+        \noindent sendCurrMode(pin):
+        \begin{itemize}
+            \item output: String containing the current game mode
             \item exception: none
         \end{itemize}
 
