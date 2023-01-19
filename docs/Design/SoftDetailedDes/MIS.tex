@@ -161,18 +161,16 @@ The following table is taken directly from the Module Guide document for this pr
 ~\newpage
 
 
-\section{MIS of ArduinoController Module} \label{ArduinoControllerModule}
+\section{MIS of Arduino Controller Module} \label{ArduinoControllerModule}
 
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
-
-\subsection{ArduinoController}
+\subsection{Arduino Controller}
 
 \subsection{Uses}
 Arduino.h
 SoftwareSerial.h
 ChessBoard.h
 PieceIdentification.h
+Communication.h
 
 \subsection{Syntax}
 
@@ -188,6 +186,7 @@ None
 \subsubsection{State Variables}{
   gameMode := enum \{ beginner, normal, engine \}\\
   gameState := enum \{ init, play, end, reset \}\\
+  userAction := enum \{ wait\_white, wait\_black, piece\_lifted, remove\_piece, promoting, valid\_move, invalid\_move, draw, resign, reset \}\\
   boardState := \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string}
   playerWarning := enum \{ check, checkmate, stalemate \}\\
 }
@@ -221,16 +220,27 @@ None
   \item Main control loop.
   \item Polling sensors to update boardState FEN string.
   \item Checking for check/checkmate/stalemate signal from Web App to update playerWarning.
-  \item Change gameState based on user input button presses (game start, draw, reset).
-  \item Change gameMode based on user input button presses (beginner, normal, engine).
+  \item Wait for userAction based on Hall-effect sensor inputs.
 \end{itemize}
 \item exception: TeensyConnectionFailed
 \end{itemize}
 
 \noindent changeGameState():
 \begin{itemize}
-\item transition: initialize serial connection; read board state; game state set to "init"
-\item exception: TeensyConnectionFailed
+\item transition: Change gameState based on user input button presses (game start, draw, reset).
+\item exception: InvalidAction
+\end{itemize}
+
+\noindent changeGameMode():
+\begin{itemize}
+\item transition: Change gameMode based on user input button presses (beginner, normal, engine).
+\item exception: InvalidAction
+\end{itemize}
+
+\noindent completeUserAction():
+\begin{itemize}
+\item transition: Update boardState based on completed userAction
+\item exception: InvalidAction, UnknownAction
 \end{itemize}
 
 \noindent lightLED():
@@ -239,32 +249,16 @@ None
 \item exception: TeensyConnectionFailed
 \end{itemize}
 
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
-
 \subsubsection{Local Functions}{
-  setup \\
-  loop \\
-  lightLED \\
+  None
 }
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+\section{MIS of Piece Identification Module} \label{PieceIdentificationModule}
 
-\section{MIS of PieceIdentification Module} \label{PieceIdentificationModule}
-
-\subsection{PieceIdentification}
+\subsection{Piece Identification}
 
 \subsection{Uses}
 Arduino.h
-SoftwareSerial.h
 
 \subsection{Syntax}
 
@@ -298,9 +292,10 @@ None
 \item exception: SensorOffline
 \end{itemize}
 
-\noindent waitPiece():
+\noindent waitForPiece():
 \begin{itemize}
-\item output: Piece
+\item transition: Waiting to send signal based on a sensor transition from\\$HALL\_PIN[\mathbb{Z}][\mathbb{Z}] := \mathbb{R} \Rightarrow 0$
+\item output: bool value of $(Piece Not Placed \Rightarrow false | Piece Placed \Rightarrow true)$
 \item exception: SensorOffline
 \end{itemize}
 
@@ -312,9 +307,6 @@ None
   will have one or the other.}
 
 \subsubsection{Local Functions}{
-  setup \\
-  loop \\
-  lightLED \\
 }
 
 \wss{As appropriate} \wss{These functions are for the purpose of specification.
@@ -323,15 +315,14 @@ None
   have local scope.}
 
 
-\section{MIS of ChessBoard Module} \label{ChessBoardModule} 
+\section{MIS of Chess Board Module} \label{ChessBoardModule} 
 
-\subsection{ChessBoard}
+\subsection{Chess Board}
 
 \wss{Short name for the module}
 
 \subsection{Uses}
 Arduino.h\\
-SoftwareSerial.h\\
 PieceIdentification.h\\
 
 \subsection{Syntax}
@@ -339,10 +330,8 @@ PieceIdentification.h\\
 \subsubsection{Exported Constants}{
 int numRows := Chess board rows \\
 int numCols := Chess board columns \\
-int RX\_PIN := receiving pin of the serial communication module \\
-int TX\_PIN := sending pin of the serial communication module \\
-int LED\_PINS[8][8] := 2-D array controlling the LED output pins \\
-int HALL\_PINS[8][8] := 2-D array controlling the Hall-effect sensor input pins \\
+int LED\_PINS[numRows][numCols] := 2-D array controlling the LED output pins \\
+int HALL\_PINS[numRows][numCols] := 2-D array controlling the Hall-effect sensor input pins \\
 }
 
 \subsubsection{Exported Access Programs}
@@ -352,7 +341,7 @@ int HALL\_PINS[8][8] := 2-D array controlling the Hall-effect sensor input pins 
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-movePiece & {int, int, int, int, PieceType} & boolean & - \\
+movePiece & {int, int, int, int, PieceType} & boolean & InvalidMove \\
 \midrule
 removePiece & {int, int} & Piece & - \\
 \midrule
@@ -381,7 +370,7 @@ lightSquare & {int, int, Colour} & - & - \\
 }
 
 \subsubsection{Environment Variables}{
-  HALL\_PINS: input pins receiving signal fomr Hall-effect sensors\\
+  HALL\_PINS: input pins receiving signal from Hall-effect sensors\\
   LED\_PINS: output pins lighting up the LEDs on the board\\
   serialToTeensy: serial communication to and from the Teensy controller\\
 }
@@ -421,6 +410,70 @@ pieceToChar: converting the piece type into the FEN-string character representat
   They are not necessarily something that is going to be implemented
   explicitly.  Even if they are implemented, they are not exported; they only
   have local scope.}
+
+
+\section{MIS of Communication Module} \label{CommunicationModule}
+
+\subsection{Communication}
+
+\subsection{Uses}
+Arduino.h
+SoftwareSerial.h
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}{
+  None
+}
+
+\subsubsection{Exported Access Programs}
+None
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}{
+  command := The decoded message to update values (game state, game mode, light specific LED, etc.).\\
+}
+
+\subsubsection{Environment Variables}{
+  messageEncoder := The string formatting to send a message to the Teensy Controller via Serial Communication.\\
+  messageDecoder := The string formatting to read a message from the Teensy Controller via Serial Communication.\\
+}
+
+\subsubsection{Assumptions}{
+  \begin{itemize}
+    \item Communication string format remains consistent
+    \item Connection exists between both controllers and remains constant
+  \end{itemize}
+  
+}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent encodeMessage():
+\begin{itemize}
+\item output: Translate game state or action into encoded string to be read by Teensy or the Web Application
+\item exception: UnknownAction
+\end{itemize}
+
+\noindent decodeMessage():
+\begin{itemize}
+\item output: Translate encoded message from Teensy or the Web Application and convert into state change command
+\item exception: UnknownCommand
+\end{itemize}
+
+\noindent processCommand():
+\begin{itemize}
+\item transition: Command received from Web Application or Teensy controller will be used to change the chess board accordingly.
+\item --> This could be to change the game state, game mode, player warning (check, checkmate, stalemate) or to light appropriate LED's
+\item exception: InvalidCommand
+\end{itemize}
+
+\subsubsection{Local Functions}{
+  None
+}
+
+
 
 \newpage
 \newpage

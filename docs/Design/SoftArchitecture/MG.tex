@@ -199,7 +199,9 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+\multirow{3}{0.3\textwidth}{Arduino Controller Module} & Piece Identification Module \\
+& Chess Board Module\\
+& Communication Module\\
 \midrule
 
 \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
@@ -253,6 +255,42 @@ to be implemented.
   system. This module provides the interface between the hardware and the
   software. So, the system can use it to display outputs or to accept inputs.
 \item[Implemented By:] OS
+\end{description}
+
+\subsubsection{Arduino Controller Module}
+\begin{description}
+\item[Secrets:] The logic for changing game state and reading user actions.
+\item[Services:] Reads inputs from sensors and communication pins. Writes to outputs to turn on/off LED's and communicate information to the Teensy Controller and Web Application.
+\item[Implemented By:] Arduino Mega 2560 Rev3 Controller
+\end{description}
+
+\subsubsection{Piece Identification Module}
+\begin{description}
+\item[Secrets:] The values read by the Hall-effect sensors that are translated into the Piece data type.
+\item[Services:] Translates sensor values into pieces and positions on the chess board. Provides Piece identification data types to the rest of the program.
+\item[Implemented By:] Arduino Controller Module, Chess Board Module
+\end{description}
+
+\subsubsection{Chess Board Module}
+\begin{description}
+\item[Secrets:] Contained within this module are: 
+  \begin{itemize}
+    \item the valid move logic for chess pieces; 
+    \item The translation of the piece configuration on the chess board into a \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string} \item Checking for checkmate
+  \end{itemize}
+\item[Services:] Handles all of the logic used in the game of chess. This module processes commands recieved from the Web Application and Teensy Controller into actions to be implemented within the game and gives feedback related to valid moves and the game/board state.
+\item[Implemented By:] Arduino Controller Module
+\end{description}
+
+\subsubsection{Communication Module}
+\begin{description}
+\item[Secrets:] Contained within this module are: 
+  \begin{itemize}
+    \item the valid move logic for chess pieces; 
+    \item The translation of the piece configuration on the chess board into a \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string} \item Checking for checkmate
+  \end{itemize}
+\item[Services:] Handles all of the logic used in the game of chess. This module processes commands recieved from the Web Application and Teensy Controller into actions to be implemented within the game and gives feedback related to valid moves and the game/board state.
+\item[Implemented By:] Arduino Controller Module
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
