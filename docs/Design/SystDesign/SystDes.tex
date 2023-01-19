@@ -79,13 +79,20 @@ This section records information for easy reference.
 
 \subsection{Abbreviations and Acronyms}
 
+\subsection{Abbreviations and Acronyms}
+
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
+  M & Module \\
+  MG & Module Guide \\
+  R & Requirement\\
+  SC & Scientific Computing \\
+  SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
-  \wss{...} & \wss{...}\\
+  UC & Unlikely Change \\
   \bottomrule
 \end{tabular}\\
 
@@ -462,7 +469,17 @@ The digit '0' means LED is OFF and '1' means LED is ON.
 
 \section{Design of Communication Protocols}
 
-\wss{If appropriate}
+\subsection{Arduino Mega to Teensy}
+The two processors communicate to share game state, game mode and move information for smooth 
+performance. Arduino Mega collects data and forms the current game state from the sensors given. 
+Once the current game state is formed it is sent via serial communication to the Teensy 
+processor. The string is in the form of FEN@Game Mode@Resign. 
+\subsection{Web Application to Teensy}
+The processor and the web application communicate to share current game state, game mode and 
+best moves from the engine. The Teensy sends a string in from of FEN@Game Mode to the web application
+to perform best move calculations. Once the web application finds the best moves, it will send a
+string in the form of bestMove1@bestMove2@bestMove3 back to the Teensy.
+%\wss{If appropriate}
 
 \section{Timeline}
 \begin{table}[H]
@@ -545,11 +562,6 @@ board display, where the player can see the current state of the game and make
   \item 64 HALL sensors
   \item 64 1mF capacitors
   \item 30 ft, 20 AWG wire
-\end{itemize}
-
-\section{Communication Protocols}
-\begin{itemize}
-  \item Serial Communication
 \end{itemize}
 
 \section{Reflection}
