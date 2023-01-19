@@ -50,21 +50,35 @@ urlcolor=cyan          % color of external links
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\addcontentsline{toc}{section}{Table of Revisions}
+\section*{Table of Revisions}
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
+2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 \bottomrule
 \end{tabularx}
+\end{table}
 
 ~\newpage
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \wss{give url}
-
-\wss{Also add any additional symbols, abbreviations or acronyms}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l} 
+  \toprule		
+  \textbf{symbol} & \textbf{description}\\
+  \midrule 
+  M & Module \\
+  MIS & Module Interface Specification \\
+  R & Requirement\\
+  \cite{FEN} & Forsyth-Edwards Notation\\
+  \bottomrule
+\end{tabular}\\
 
 \newpage
 
@@ -181,7 +195,7 @@ The following table is taken directly from the Module Guide document for this pr
 
     \subsection{Semantics}
     \subsubsection{State Variables}
-    \textbf{inputString:} string \#String containing FEN string, user mode, game 
+    \textbf{inputString:} string \#String containing \cite{FEN} string, user mode, game 
     termination state, and delimiting characters
 
     \subsubsection{Environment Variables}
