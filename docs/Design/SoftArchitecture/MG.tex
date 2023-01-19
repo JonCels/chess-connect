@@ -34,7 +34,7 @@
 \begin{document}
 
 \title{Module Guide for \progname{}} 
-\author{Author Name}
+\author{\authname}
 \date{\today}
 
 \maketitle
@@ -43,13 +43,19 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\addcontentsline{toc}{section}{Table of Revisions}
+\section*{Table of Revisions}
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
+2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 \bottomrule
 \end{tabularx}
+\end{table}
 
 \newpage
 
@@ -72,9 +78,8 @@ This section records information for easy reference.
   R & Requirement\\
   SC & Scientific Computing \\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  FEN & Forsyth-Edwards Notation\\
   \bottomrule
 \end{tabular}\\
 
@@ -275,18 +280,7 @@ to be implemented.
 \item[Implemented By:] OS
 \end{description}
 
-\subsection{Behaviour-Hiding Module}
-
-\begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
-\end{description}
-
+\subsection{Behaviour-Hiding Modules}
     \subsubsection{Web Application Input Module (\mref{mInput})}
     \begin{description}
     \item[Secrets:] Input data.
@@ -308,22 +302,8 @@ to be implemented.
     \item[Implemented By:] \progname\ (React.js framework, Bluetooth)
     \end{description}
 
-\subsubsection{Etc.}
-
 
 \subsection{Software Decision Module}
-
-\begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
-\end{description}
-
     \subsubsection{User Mode Module \mref{mMode}}
     \begin{description}
     \item[Secrets:] User mode logic and data.
