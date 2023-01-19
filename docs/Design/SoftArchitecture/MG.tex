@@ -72,15 +72,12 @@ This section records information for easy reference.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   AC & Anticipated Change\\
-  DAG & Directed Acyclic Graph \\
   M & Module \\
   MG & Module Guide \\
   OS & Operating System \\
   R & Requirement\\
-  SC & Scientific Computing \\
-  SRS & Software Requirements Specification\\
   UC & Unlikely Change \\
-  FEN & Forsyth-Edwards Notation\\
+  \cite{FEN} & Forsyth-Edwards Notation\\
   \bottomrule
 \end{tabular}\\
 
@@ -97,7 +94,6 @@ This section records information for easy reference.
 \pagenumbering{arabic}
 
 \section{Introduction}
-
 Decomposing a system into modules is a commonly accepted approach to developing
 software.  A module is a work assignment for a programmer or programming
 team~\citep{ParnasEtAl1984}.  We advocate a decomposition
@@ -384,6 +380,9 @@ to be implemented.
     \item[Services:] Uses the board state to calculate 3 possible moves.
     \item[Implemented By:] \progname\ (Node.js libraries and Stockfish)
     \end{description}
+
+
+
 
 \section{Traceability Matrix} \label{SecTM}
 This section shows two traceability matrices: between the modules and the
