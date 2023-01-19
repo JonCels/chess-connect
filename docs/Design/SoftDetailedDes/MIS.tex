@@ -135,21 +135,27 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding} & ~ \\
+
+\multirow{3}{0.3\textwidth}{Hardware Hiding Module}
+& Arduino Controller Module \\ 
+& Arduino Module \\
+& Software Serial Module \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{5}{0.3\textwidth}{Behaviour-Hiding Module} 
+& Web Application Input Module\\
+& Display Module\\
+& Web Application Output Module\\
+& Piece Identification Module \\
+& Communication Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{5}{0.3\textwidth}{Software Decision Module} 
+& User Mode Module\\
+& Board Module\\
+& Web Application Game State Module\\
+& Engine Module\\
+& Chess Board Module\\
 \bottomrule
 
 \end{tabular}
@@ -184,7 +190,7 @@ None
 \subsection{Semantics}
 {
   \begin{center}
-  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+  \begin{tabular}{p{4cm} p{3cm} p{3cm} p{4cm}}
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
   \hline
@@ -290,7 +296,7 @@ None
 
 \subsubsection{Exported Access Programs}{
   \begin{center}
-  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+  \begin{tabular}{p{4cm} p{3cm} p{2cm} p{4cm}}
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
   \hline
@@ -358,7 +364,7 @@ int HALL\_PINS[numRows][numCols] : 2-D array controlling the Hall-effect sensor 
 
 \subsection{Semantics}{
   \begin{center}
-  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+  \begin{tabular}{p{6cm} p{4cm} p{2cm} p{3cm}}
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
   \hline
@@ -464,7 +470,7 @@ SoftwareSerial.h
 
 \subsubsection{Exported Access Programs}{
   \begin{center}
-  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+  \begin{tabular}{p{4cm} p{2cm} p{2cm} p{4cm}}
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
   \hline
