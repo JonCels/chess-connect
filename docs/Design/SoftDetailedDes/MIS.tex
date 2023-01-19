@@ -54,7 +54,7 @@ urlcolor=cyan          % color of external links
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-1/17/2023 & 1.0 & Notes\\
+1/17/2023 & 1.0 & Detailed Modules used by Arduino Mega 2560\\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
@@ -166,11 +166,11 @@ The following table is taken directly from the Module Guide document for this pr
 \subsection{Arduino Controller}
 
 \subsection{Uses}
-Arduino.h
-SoftwareSerial.h
-ChessBoard.h
-PieceIdentification.h
-Communication.h
+Arduino\\
+Software Serial\\
+Chess Board\\
+Piece Identification\\
+Communication\\
 
 \subsection{Syntax}
 
@@ -182,6 +182,27 @@ Communication.h
 None
 
 \subsection{Semantics}
+{
+  \begin{center}
+  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  setup & - & - & TeensyConnectionFailed \\
+  \midrule
+  loop & - & - & TeensyConnectionFailed \\
+  \midrule
+  changeGameState & gameState & gameState & InvalidAction \\
+  \midrule
+  changeGameMode & gameMode & string & InvalidAction \\
+  \midrule
+  competeUserAction & string & userAction & InvalidAction, UnknownAction \\
+  \midrule
+  lightLED & {int, int} & int & - \\
+  \hline
+  \end{tabular}
+  \end{center}
+}
 
 \subsubsection{State Variables}{
   gameMode := enum \{ beginner, normal, engine \}\\
@@ -207,12 +228,6 @@ None
 }
 
 \subsubsection{Access Routine Semantics}
-
-\noindent setup():
-\begin{itemize}
-\item transition: initialize serial connection; read board state; game state set to "init"
-\item exception: TeensyConnectionFailed
-\end{itemize}
 
 \noindent loop():
 \begin{itemize}
@@ -250,15 +265,22 @@ None
 \end{itemize}
 
 \subsubsection{Local Functions}{
-  None
+  
+\noindent setup():
+\begin{itemize}
+\item transition: initialize serial connection; read board state; game state set to "init"
+\item exception: TeensyConnectionFailed
+\end{itemize}
+
 }
 
 \section{MIS of Piece Identification Module} \label{PieceIdentificationModule}
 
 \subsection{Piece Identification}
 
-\subsection{Uses}
-Arduino.h
+\subsection{Uses}{
+  None
+}
 
 \subsection{Syntax}
 
@@ -266,8 +288,19 @@ Arduino.h
   None
 }
 
-\subsubsection{Exported Access Programs}
-None
+\subsubsection{Exported Access Programs}{
+  \begin{center}
+  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  readSensors & {int} & Piece & SensorOffline \\
+  \midrule
+  waitForPiece & {int, int, Piece} & bool & PieceMissingTimeout \\
+  \hline
+  \end{tabular}
+  \end{center}
+}
 
 \subsection{Semantics}
 
@@ -276,8 +309,7 @@ None
 }
 
 \subsubsection{Environment Variables}{
-  None
-  
+  sensorInput: readings from various hall-effect sensors
 }
 
 \subsubsection{Assumptions}{
@@ -296,24 +328,12 @@ None
 \begin{itemize}
 \item transition: Waiting to send signal based on a sensor transition from\\$HALL\_PIN[\mathbb{Z}][\mathbb{Z}] := \mathbb{R} \Rightarrow 0$
 \item output: bool value of $(Piece Not Placed \Rightarrow false | Piece Placed \Rightarrow true)$
-\item exception: SensorOffline
+\item exception: PieceMissingTimeout
 \end{itemize}
 
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
-
 \subsubsection{Local Functions}{
+  None
 }
-
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
-
 
 \section{MIS of Chess Board Module} \label{ChessBoardModule} 
 
@@ -322,45 +342,45 @@ None
 \wss{Short name for the module}
 
 \subsection{Uses}
-Arduino.h\\
-PieceIdentification.h\\
+Arduino\\
+Piece Identification\\
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}{
-int numRows := Chess board rows \\
-int numCols := Chess board columns \\
-int LED\_PINS[numRows][numCols] := 2-D array controlling the LED output pins \\
-int HALL\_PINS[numRows][numCols] := 2-D array controlling the Hall-effect sensor input pins \\
+int numRows : Chess board rows \\
+int numCols : Chess board columns \\
+int LED\_PINS[numRows][numCols] : 2-D array controlling the LED output pins \\
+int HALL\_PINS[numRows][numCols] : 2-D array controlling the Hall-effect sensor input pins \\
 }
 
-\subsubsection{Exported Access Programs}
+\subsubsection{Exported Access Programs}{
+  None
+}
 
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-movePiece & {int, int, int, int, PieceType} & boolean & InvalidMove \\
-\midrule
-removePiece & {int, int} & Piece & - \\
-\midrule
-isCheck & {int, int} & bool & - \\
-\midrule
-isCheckmate & {int, int} & bool & - \\
-\midrule
-boardToFEN & - & string & - \\
-\midrule
-sendFEN & string & - & - \\
-\midrule
-recieveMoves & - & Colour & - \\
-\midrule
-lightSquare & {int, int, Colour} & - & - \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
+\subsection{Semantics}{
+  \begin{center}
+  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  movePiece & {int, int, int, int, PieceType} & boolean & InvalidMove \\
+  \midrule
+  removePiece & {int, int} & Piece & InvalidMove \\
+  \midrule
+  isCheckmateCheckOrStalemate & {int, int} & bool & - \\
+  \midrule
+  boardToFEN & - & string & - \\
+  \midrule
+  recieveMoves & - & Colour & InvalidMove \\
+  \midrule
+  lightSquare & {int, int, Colour} & - & DigitalWriteFailed \\
+  \midrule
+  pieceToChar & Piece & char & - \\
+  \hline
+  \end{tabular}
+  \end{center}
+}
 
 \subsubsection{State Variables}{
   gameMode := enumeration\\
@@ -388,11 +408,41 @@ lightSquare & {int, int, Colour} & - & - \\
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent movePiece():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: Update Piece type and colour on the "to" square, while removing the piece from the "from" square.
+\item exception: InvalidMove
+\end{itemize}
+
+\noindent removePiece():
+\begin{itemize}
+\item transition: Update Piece type and colour on the "to" square, while removing the piece from the "from" square. Remove the piece taken by the opponent.
+\item output: returns the Piece that was removed.
+\item exception: InvalidMove
+\end{itemize}
+
+\noindent isCheckmateCheckOrStalemate():
+\begin{itemize}
+\item transition: Update game state based on a command sent from the Web Application.
+\item exception: None
+\end{itemize}
+
+\noindent boardToFEN():
+\begin{itemize}
+\item output: FEN string representation of the current board state.
+\item exception: None
+\end{itemize}
+
+\noindent recieveMoves():
+\begin{itemize}
+\item transition: Process best moves recieved from the web application and light appropriate LED's.
+\item exception: InvalidMove
+\end{itemize}
+
+\noindent lightSquare():
+\begin{itemize}
+\item transition: Light appropriate LED's based on various conditions such as game mode, game state, check/mate/stalemate warning, etc.
+\item exception: DigitalWriteFailed
 \end{itemize}
 
 \wss{A module without environment variables or state variables is unlikely to
@@ -404,7 +454,12 @@ lightSquare & {int, int, Colour} & - & - \\
 
 \subsubsection{Local Functions}
 
-pieceToChar: converting the piece type into the FEN-string character representation.
+\noindent pieceToChar():
+\begin{itemize}
+\item output: Converting the Piece type into the FEN-string character representation.
+\item exception: None
+\end{itemize}
+
 
 \wss{As appropriate} \wss{These functions are for the purpose of specification.
   They are not necessarily something that is going to be implemented
@@ -426,18 +481,31 @@ SoftwareSerial.h
   None
 }
 
-\subsubsection{Exported Access Programs}
-None
+\subsubsection{Exported Access Programs}{
+  \begin{center}
+  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  encodeMessage & string & - & UnknownAction \\
+  \midrule
+  decodeMessage & - & string & UnknownCommand \\
+  \midrule
+  processCommand & string & string & InvalidCommand \\
+  \hline
+  \end{tabular}
+  \end{center}
+}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}{
-  command := The decoded message to update values (game state, game mode, light specific LED, etc.).\\
+  command: The decoded message to update values (game state, game mode, light specific LED, etc.).\\
 }
 
 \subsubsection{Environment Variables}{
-  messageEncoder := The string formatting to send a message to the Teensy Controller via Serial Communication.\\
-  messageDecoder := The string formatting to read a message from the Teensy Controller via Serial Communication.\\
+  messageEncoder: The string formatting to send a message to the Teensy Controller via Serial Communication.\\
+  messageDecoder: The string formatting to read a message from the Teensy Controller via Serial Communication.\\
 }
 
 \subsubsection{Assumptions}{
