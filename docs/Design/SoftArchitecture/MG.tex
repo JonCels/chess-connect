@@ -43,13 +43,20 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\addcontentsline{toc}{section}{Table of Revisions}
+\section*{Table of Revisions}
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 1/17/2023 & 1.0 & Detailed Modules used by Arduino Mega 2560\\
-Date 2 & 1.1 & Notes\\
+2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
+2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 \bottomrule
 \end{tabularx}
+\end{table}
 
 \newpage
 
@@ -72,9 +79,8 @@ This section records information for easy reference.
   R & Requirement\\
   SC & Scientific Computing \\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  FEN & Forsyth-Edwards Notation\\
   \bottomrule
 \end{tabular}\\
 
@@ -125,7 +131,7 @@ potential readers of this document are as follows:
   important for a maintainer to update the relevant sections of the document
   after changes have been made.
 \item Designers: Once the module guide has been written, it can be used to
-  check for consistency, feasibility, and flexibility. Designers can verify the
+  check for consistency, feasibility and flexibility. Designers can verify the
   system in various ways, such as consistency among modules, feasibility of the
   decomposition, and flexibility of the design.
 \end{itemize}
@@ -192,6 +198,13 @@ actually be implemented.
 \item [\refstepcounter{mnum} \mthemnum \label{mCB}:] Chess Board Module
 \item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Communication Module
 \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Software Serial Module
+\item [\refstepcounter{mnum} \mthemnum \label{mInput}:] Web Application Input Module
+\item [\refstepcounter{mnum} \mthemnum \label{mDisplay}:] Display Module
+\item [\refstepcounter{mnum} \mthemnum \label{mOutput}:] Web Application Output Module
+\item [\refstepcounter{mnum} \mthemnum \label{mMode}:] User Mode Module
+\item [\refstepcounter{mnum} \mthemnum \label{mBoard}:] Board Module
+\item [\refstepcounter{mnum} \mthemnum \label{mGame}:] Web Application Game State Module
+\item [\refstepcounter{mnum} \mthemnum \label{mEngine}:] Engine Module
 \end{description}
 
 The Hardware-Hiding module is implemented by the microcontroller as firmware that controls all of the hardware components. This is implemented by the kernel to also run embedded software loaded onto the controller. The Arduino and SoftwareSerial modules are present in the Arduino framework and will not be recreated for this project.
@@ -210,17 +223,22 @@ The Hardware-Hiding module is implemented by the microcontroller as firmware tha
 & Communication Module\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} 
+& Web Application Input Module\\
+& Display Module\\
+& Web Application Output Module\\
 & ?\\
 & ?\\
 & ?\\ 
 & ?\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} 
+& User Mode Module\\
+& Board Module\\
+& Web Application Game State Module\\
+& Engine Module\\
+& ?\\
 & ?\\
 & ?\\
 \bottomrule
@@ -234,7 +252,16 @@ The Hardware-Hiding module is implemented by the microcontroller as firmware tha
 
 The design of the system is intended to satisfy the requirements developed in
 the SRS. In this stage, the system is decomposed into modules. The connection
-between requirements and modules is listed in Table~\ref{TblRT}.
+between requirements and modules is listed in Table \ref{TblRT}.
+
+\wss{The intention of this section is to document decisions that are made
+  ``between'' the requirements and the design.  To satisfy some requirements,
+  design decisions need to be made.  Rather than make these decisions implicit,
+  they are explicitly recorded here.  For instance, if a program has security
+  requirements, a specific design decision may be made to satisfy those
+  requirements with a password.  In scientific examples, the choice of algorithm
+could potentially go here, if that is a decision that is exposed by the
+interface.}
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -310,48 +337,59 @@ to be implemented.
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
+\subsection{Behaviour-Hiding Modules}
+    \subsubsection{Web Application Input Module (\mref{mInput})}
+    \begin{description}
+    \item[Secrets:] Input data.
+    \item[Services:] Takes in input data of current board state to provide to other modules.
+    \item[Implemented By:] \progname\ (Node.js libraries, Bluetooth)
+    \end{description}
+    
+    \subsubsection{Display Module \mref{mDisplay}} 
+    \begin{description}
+    \item[Secrets:] Graphics output data.
+    \item[Services:] Allows users to view the current board configuration of the system.
+    \item[Implemented By:] \progname\ (React.js framework)
+    \end{description}
 
-\begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
-\end{description}
-
-\subsubsection{Input Format Module (\mref{mInput})}
-
-\begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
-\end{description}
-
-\subsubsection{Etc.}
+    \subsubsection{Web Application Output Module \mref{mOutput}} 
+    \begin{description}
+    \item[Secrets:] None.
+    \item[Services:] Takes game state and engine moves, encodes the data, and transmits it.
+    \item[Implemented By:] \progname\ (React.js framework, Bluetooth)
+    \end{description}
 
 
 \subsection{Software Decision Module}
+    \subsubsection{User Mode Module \mref{mMode}}
+    \begin{description}
+    \item[Secrets:] User mode logic and data.
+    \item[Services:] Handles switching between user modes and communicating with mode-specific modules.
+    \item[Implemented By:] \progname\ (React.js framework)
+    \end{description}
 
-\begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
-\end{description}
+    \subsubsection{Board Module \mref{mBoard}}
+    \begin{description}
+    \item[Secrets:] Board data.
+    \item[Services:] Stores and modifies board state information.
+    \item[Implemented By:] \progname\ (React.js framework)
+    \end{description}
 
-\subsubsection{Etc.}
+    \subsubsection{Web Application Game State Module \mref{mGame}}
+    \begin{description}
+    \item[Secrets:] Game state and data.
+    \item[Services:] Handles checking the game state (none, check, checkmate, stalemate).
+    \item[Implemented By:] \progname\ (React.js framework, Node.js libraries)
+    \end{description}
+    
+    \subsubsection{Engine Module \mref{mEngine}}
+    \begin{description}
+    \item[Secrets:] Chess engine moves.
+    \item[Services:] Uses the board state to calculate 3 possible moves.
+    \item[Implemented By:] \progname\ (Node.js libraries and Stockfish)
+    \end{description}
 
 \section{Traceability Matrix} \label{SecTM}
-
 This section shows two traceability matrices: between the modules and the
 requirements and between the modules and the anticipated changes.
 
@@ -420,7 +458,5 @@ because they use modules from the lower levels.
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
-
-\newpage{}
 
 \end{document}
