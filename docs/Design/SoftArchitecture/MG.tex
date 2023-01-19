@@ -34,7 +34,7 @@
 \begin{document}
 
 \title{Module Guide for \progname{}} 
-\author{Author Name}
+\author{\authname}
 \date{\today}
 
 \maketitle
@@ -308,6 +308,27 @@ to be implemented.
     \item[Implemented By:] \progname\ (React.js framework, Bluetooth)
     \end{description}
 
+    \subsubsection{Teensy Input from Mega Module \mref{TeensyToMegaRx}} 
+    \begin{description}
+    \item[Secrets:] None.
+    \item[Services:] Receives game state information from the Arduino Mega in the form of a FEN string. 
+    \item[Implemented By:] \progname\ (Serial Communication)
+    \end{description}
+
+    \subsubsection{Teensy Input Bluetooth from Web Application Module \mref{TeensyToWaRx}} 
+    \begin{description}
+    \item[Secrets:] None.
+    \item[Services:] Receives check, mate and draw info from the web application and best move information.
+    \item[Implemented By:] \progname\ (Serial Communication, Bluetooth)
+    \end{description}
+
+    \subsubsection{Teensy Output Bluetooth to Web Application Module \mref{TeensyToWaTx}} 
+    \begin{description}
+    \item[Secrets:] FEN String of Game State and game mode
+    \item[Services:] Collects game state and mode from the board and send to Web Application
+    \item[Implemented By:] \progname\ (Serial Communication, Bluetooth)
+    \end{description}
+
 \subsubsection{Etc.}
 
 
@@ -375,6 +396,8 @@ R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot
 R9 & \mref{mVerifyOut}\\
 R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
 R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+R12 & \mref{TeensyToMegaRx} \mref{TeensyToWaRx} \mref{TeensyToWaTx}\\
+
 \bottomrule
 \end{tabular}
 \caption{Trace Between Requirements and Modules}
