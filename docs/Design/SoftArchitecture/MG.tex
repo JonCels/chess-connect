@@ -51,6 +51,7 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
+1/17/2023 & 1.0 & Detailed Modules used by Arduino Mega 2560\\
 2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
 2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 \bottomrule
@@ -151,6 +152,10 @@ change.
   \item[\refstepcounter{acnum} \actheacnum \label{acFontAndPieces}:] User options to change the font and board size.
   \item[\refstepcounter{acnum} \actheacnum \label{acGUI}:] The GUI and interface design.
   \item[\refstepcounter{acnum} \actheacnum \label{acTimers}:] The amount of time for a move to be reflected on the web application.
+\item[\refstepcounter{acnum} \actheacnum \label{acHES}:] The pin configuration for Hall-effect sensors
+\item[\refstepcounter{acnum} \actheacnum \label{acLED}:] The pin configuration for LEDs
+\item[\refstepcounter{acnum} \actheacnum \label{acTGS}:] Transition logic between the various game states
+\item[\refstepcounter{acnum} \actheacnum \label{acHUA}:] Handling different user actions
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
@@ -167,6 +172,8 @@ decisions will be changed.
   \item[\refstepcounter{ucnum} \uctheucnum] The interface functionality of the system.
   \item[\refstepcounter{ucnum} \uctheucnum] The rules and values related to the game itself.
   \item[\refstepcounter{ucnum} \uctheucnum] The purpose of the system to allow users to play a game of chess against an opponent.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucVML}:] Valid chess move logic.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucDTD}:] Data type definition locations may be shifted between different modules.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -178,6 +185,12 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Arduino Controler Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAM}:] Arduino Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPI}:] Piece Identification Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCB}:] Chess Board Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Communication Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Software Serial Module
 \item [\refstepcounter{mnum} \mthemnum \label{mInput}:] Web Application Input Module
 \item [\refstepcounter{mnum} \mthemnum \label{mDisplay}:] Display Module
 \item [\refstepcounter{mnum} \mthemnum \label{mOutput}:] Web Application Output Module
@@ -187,6 +200,8 @@ actually be implemented.
 \item [\refstepcounter{mnum} \mthemnum \label{mEngine}:] Engine Module
 \end{description}
 
+The Hardware-Hiding module is implemented by the microcontroller as firmware that controls all of the hardware components. This is implemented by the kernel to also run embedded software loaded onto the controller. The Arduino and SoftwareSerial modules are present in the Arduino framework and will not be recreated for this project.
+
 
 \begin{table}[h!]
 \centering
@@ -195,27 +210,26 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+\multirow{3}{0.3\textwidth}{Hardware Hiding Module}
+& Arduino Controller Module \\ 
+& Arduino Module \\
+& Software Serial Module \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} 
+\multirow{5}{0.3\textwidth}{Behaviour-Hiding Module} 
 & Web Application Input Module\\
 & Display Module\\
 & Web Application Output Module\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+& Piece Identification Module \\
+& Communication Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} 
+\multirow{5}{0.3\textwidth}{Software Decision Module} 
 & User Mode Module\\
 & Board Module\\
 & Web Application Game State Module\\
 & Engine Module\\
-& ?\\
-& ?\\
-& ?\\
+& Chess Board Module\\
 \bottomrule
 
 \end{tabular}
@@ -254,6 +268,53 @@ to be implemented.
 \item[Implemented By:] OS
 \end{description}
 
+\subsubsection{Arduino Controller Module (\mref{mAC})}
+\begin{description}
+\item[Secrets:] The logic for changing game state and reading user actions.
+\item[Services:] Reads inputs from sensors and writes to outputs to turn on/off LED's. Main overarching module that runs and controls all other modules to coordinate the logic and messages with the game state.
+\item[Implemented By:] Arduino Mega 2560 Rev3 Controller
+\end{description}
+
+\subsubsection{Arduino Module (\mref{mAM})}
+\begin{description}
+\item[Secrets:] The Arduino API that allows access to the Hardware Abstraction Layer (HAL).
+\item[Services:] Provides an interface to the hardware through pin assignments and hardware ID's.
+\item[Implemented By:] Arduino Controller Module
+\end{description}
+
+\subsubsection{Piece Identification Module (\mref{mPI})}
+\begin{description}
+\item[Secrets:] The values read by the Hall-effect sensors that are translated into the Piece data type.
+\item[Services:] Translates sensor values into pieces and positions on the chess board. Provides Piece identification data types to the rest of the program.
+\item[Implemented By:] Arduino Controller Module, Chess Board Module
+\end{description}
+
+\subsubsection{Chess Board Module (\mref{mCB})}
+\begin{description}
+\item[Secrets:] Contained within this module are: 
+  \begin{itemize}
+    \item the valid move logic for chess pieces; 
+    \item The translation of the piece configuration on the chess board into a \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string} \item Checking for checkmate
+  \end{itemize}
+\item[Services:] Handles all of the logic used in the game of chess. This module processes commands recieved from the Web Application and Teensy Controller into actions to be implemented within the game and gives feedback related to valid moves and the game/board state.
+\item[Implemented By:] Arduino Controller Module
+\end{description}
+
+\subsubsection{Communication Module (\mref{mCM})}
+\begin{description}
+\item[Secrets:] Message encoding string used to send board state, game mode and resignation signal. Message decoding string to interpret best moves, the check/mate/stalemate warning and commands from the Teensy controller.
+\item[Services:] Reads and writes to the communication pins, processes and sends commands to various parts of the embedded software.
+\item[Implemented By:] Arduino Controller Module, Chess Board Module
+\end{description}
+
+\subsubsection{SoftwareSerial Module (\mref{mSS})}
+\begin{description}
+\item[Secrets:] The methods in which the data is encoded, flags used to acknowledge connection, successful data transmission, incoming signal, etc.
+\item[Services:] The Arduino API that allows for sending and receiving various data types through serial communication.
+\item[Implemented By:] Communication Module
+\end{description}
+
+\subsection{Behaviour-Hiding Module}
 \subsection{Behaviour-Hiding Modules}
     \subsubsection{Web Application Input Module (\mref{mInput})}
     \begin{description}
@@ -344,18 +405,10 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acHES} & \mref{mAC}\\
+\acref{acLED} & \mref{mAC}\\
+\acref{acTGS} & \mref{mAC}, \mref{mCB}\\
+\acref{acHUA} & \mref{mAC}, \mref{mCB}, \mref{mCM}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}

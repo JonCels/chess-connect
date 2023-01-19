@@ -19,6 +19,7 @@
 \usepackage[section]{placeins}
 \usepackage{caption}
 \usepackage{fullpage}
+\usepackage{makecell}
 
 \hypersetup{
 bookmarks=true,     % show bookmarks bar?
@@ -58,6 +59,7 @@ urlcolor=cyan          % color of external links
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
+2023-01-17 & Alexander Van Kralingen & Detailed Modules used by Arduino Mega 2560\\
 2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
 2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 \bottomrule
@@ -122,6 +124,9 @@ character & char & a single symbol or digit\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+boolean & bool & true (value of 1) or false (value of 0)\\
+enumeration & enum & keywords assigned an integer value in order of declaration beginning at 0\\
+structure & Piece & C++ struct data-type containing PieceType enumeration and int colour (0 for white, 1 for black)\\
 \bottomrule
 \end{tabular} 
 \end{center}
@@ -145,21 +150,27 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding} & ~ \\
+
+\multirow{3}{0.3\textwidth}{Hardware Hiding Module}
+& Arduino Controller Module \\ 
+& Arduino Module \\
+& Software Serial Module \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{5}{0.3\textwidth}{Behaviour-Hiding Module} 
+& Web Application Input Module\\
+& Display Module\\
+& Web Application Output Module\\
+& Piece Identification Module \\
+& Communication Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{5}{0.3\textwidth}{Software Decision Module} 
+& User Mode Module\\
+& Board Module\\
+& Web Application Game State Module\\
+& Engine Module\\
+& Chess Board Module\\
 \bottomrule
 
 \end{tabular}
@@ -169,6 +180,371 @@ The following table is taken directly from the Module Guide document for this pr
 
 \newpage
 ~\newpage
+
+
+\section{MIS of Arduino Controller Module} \label{ArduinoControllerModule}
+
+\subsection{Arduino Controller}
+
+\subsection{Uses}
+Arduino\\
+Software Serial\\
+Chess Board\\
+Piece Identification\\
+Communication\\
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}{
+  None
+}
+
+\subsubsection{Exported Access Programs}
+None
+
+\subsection{Semantics}
+{
+  \begin{center}
+  \begin{tabular}{p{4cm} p{3cm} p{3cm} p{4cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  setup & - & - & TeensyConnectionFailed \\
+  \midrule
+  loop & - & - & TeensyConnectionFailed \\
+  \midrule
+  changeGameState & gameState & gameState & InvalidAction \\
+  \midrule
+  changeGameMode & gameMode & string & InvalidAction \\
+  \midrule
+  competeUserAction & string & userAction & InvalidAction, UnknownAction \\
+  \midrule
+  lightLED & {int, int} & int & - \\
+  \hline
+  \end{tabular}
+  \end{center}
+}
+
+\subsubsection{State Variables}{
+  gameMode := enum \{ beginner, normal, engine \}\\
+  gameState := enum \{ init, play, end, reset \}\\
+  userAction := enum \{ wait\_white, wait\_black, piece\_lifted, remove\_piece, promoting, valid\_move, invalid\_move, draw, resign, reset \}\\
+  boardState := \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string}
+  playerWarning := enum \{ check, checkmate, stalemate \}\\
+}
+
+\subsubsection{Environment Variables}{
+  HALL\_PINS: input pin addresses for receiving signal from Hall-effect sensors\\
+  LED\_PINS: output pin addresses for lighting up the LEDs on the board\\
+  rx\_from\_Teensy: input pin for communication with Teensy controller\\
+  tx\_from\_Teensy: output pin for communication with Teensy controller\\
+}
+
+\subsubsection{Assumptions}{
+  \begin{itemize}
+    \item setup() will run before any other function.
+    \item Connection exists between both controllers and remains constant
+  \end{itemize}
+  
+}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent loop():
+\begin{itemize}
+\item transition: \begin{itemize}
+  \item Main control loop.
+  \item Polling sensors to update boardState FEN string.
+  \item Checking for check/checkmate/stalemate signal from Web App to update playerWarning.
+  \item Wait for userAction based on Hall-effect sensor inputs.
+\end{itemize}
+\item exception: TeensyConnectionFailed
+\end{itemize}
+
+\noindent changeGameState():
+\begin{itemize}
+\item transition: Change gameState based on user input button presses (game start, draw, reset).
+\item exception: InvalidAction
+\end{itemize}
+
+\noindent changeGameMode():
+\begin{itemize}
+\item transition: Change gameMode based on user input button presses (beginner, normal, engine).
+\item exception: InvalidAction
+\end{itemize}
+
+\noindent completeUserAction():
+\begin{itemize}
+\item transition: Update boardState based on completed userAction
+\item exception: InvalidAction, UnknownAction
+\end{itemize}
+
+\noindent lightLED():
+\begin{itemize}
+\item output: LED\_pin := HIGH ($\mathbb{Z} := 1$) or LOW  ($\mathbb{Z} := 0$).
+\item exception: TeensyConnectionFailed
+\end{itemize}
+
+\subsubsection{Local Functions}{
+  \noindent setup():
+  \begin{itemize}
+  \item transition: initialize serial connection; read board state; game state set to "init"
+  \item exception: TeensyConnectionFailed
+  \end{itemize}
+}
+
+\newpage
+
+\section{MIS of Piece Identification Module} \label{PieceIdentificationModule}
+
+\subsection{Piece Identification}
+
+\subsection{Uses}{
+  None
+}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}{
+  None
+}
+
+\subsubsection{Exported Access Programs}{
+  \begin{center}
+  \begin{tabular}{p{4cm} p{3cm} p{2cm} p{4cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  readSensors & {int} & Piece & SensorOffline \\
+  \midrule
+  waitForPiece & {int, int, Piece} & bool & PieceMissingTimeout \\
+  \hline
+  \end{tabular}
+  \end{center}
+}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}{
+  None
+}
+
+\subsubsection{Environment Variables}{
+  sensorInput: readings from various hall-effect sensors
+}
+
+\subsubsection{Assumptions}{
+  Hall-effect sensors will give accurate readings.
+}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent readSensors():
+\begin{itemize}
+\item output: Piece
+\item exception: SensorOffline
+\end{itemize}
+
+\noindent waitForPiece():
+\begin{itemize}
+\item transition: Waiting to send signal based on a sensor transition from\\$HALL\_PIN[\mathbb{Z}][\mathbb{Z}] := \mathbb{R} \Rightarrow 0$
+\item output: bool value of $(Piece Not Placed \Rightarrow false | Piece Placed \Rightarrow true)$
+\item exception: PieceMissingTimeout
+\end{itemize}
+
+\subsubsection{Local Functions}{
+  None
+}
+
+\newpage
+
+\section{MIS of Chess Board Module} \label{ChessBoardModule} 
+
+\subsection{Chess Board}
+
+\subsection{Uses}
+Arduino\\
+Piece Identification\\
+
+\subsubsection{Exported Constants}{
+int numRows : Chess board rows \\
+int numCols : Chess board columns \\
+int LED\_PINS[numRows][numCols] : 2-D array controlling the LED output pins \\
+int HALL\_PINS[numRows][numCols] : 2-D array controlling the Hall-effect sensor input pins \\
+}
+
+\subsubsection{Exported Access Programs}{
+  None
+}
+
+\subsection{Semantics}{
+  \begin{center}
+  \begin{tabular}{p{6cm} p{4cm} p{2cm} p{3cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  movePiece & {int, int, int, int, PieceType} & boolean & InvalidMove \\
+  \midrule
+  removePiece & {int, int} & Piece & InvalidMove \\
+  \midrule
+  isCheckmateCheckOrStalemate & {int, int} & bool & - \\
+  \midrule
+  boardToFEN & - & string & - \\
+  \midrule
+  recieveMoves & - & Colour & InvalidMove \\
+  \midrule
+  lightSquare & {int, int, Colour} & - & DigitalWriteFailed \\
+  \midrule
+  pieceToChar & Piece & char & - \\
+  \hline
+  \end{tabular}
+  \end{center}
+}
+
+\subsubsection{State Variables}{
+  gameMode := enumeration\\
+  check := boolean\\
+  checkmate := boolean\\
+  draw := boolean\\
+}
+
+\subsubsection{Environment Variables}{
+  HALL\_PINS: input pins receiving signal from Hall-effect sensors\\
+  LED\_PINS: output pins lighting up the LEDs on the board\\
+  serialToTeensy: serial communication to and from the Teensy controller\\
+}
+
+\subsubsection{Assumptions}{
+  \begin{itemize}
+    \item Serial connection between both microcontrollers will remain constant
+    \item All LED pins will remain connected
+    \item Hall-effect sensors will function as intended
+  \end{itemize}
+}
+\noindent movePiece():
+\begin{itemize}
+\item transition: Update Piece type and colour on the "to" square, while removing the piece from the "from" square.
+\item exception: InvalidMove
+\end{itemize}
+
+\noindent removePiece():
+\begin{itemize}
+\item transition: Update Piece type and colour on the "to" square, while removing the piece from the "from" square. Remove the piece taken by the opponent.
+\item output: returns the Piece that was removed.
+\item exception: InvalidMove
+\end{itemize}
+
+\noindent isCheckmateCheckOrStalemate():
+\begin{itemize}
+\item transition: Update game state based on a command sent from the Web Application.
+\item exception: None
+\end{itemize}
+
+\noindent boardToFEN():
+\begin{itemize}
+\item output: FEN string representation of the current board state.
+\item exception: None
+\end{itemize}
+
+\noindent recieveMoves():
+\begin{itemize}
+\item transition: Process best moves recieved from the web application and light appropriate LED's.
+\item exception: InvalidMove
+\end{itemize}
+
+\noindent lightSquare():
+\begin{itemize}
+\item transition: Light appropriate LED's based on various conditions such as game mode, game state, check/mate/stalemate warning, etc.
+\item exception: DigitalWriteFailed
+\end{itemize}
+
+\subsubsection{Local Functions}{
+  \noindent pieceToChar():
+  \begin{itemize}
+  \item output: Converting the Piece type into the FEN-string character representation.
+  \item exception: None
+  \end{itemize}
+}
+
+\newpage
+
+
+\section{MIS of Communication Module} \label{CommunicationModule}
+
+\subsection{Communication}
+
+\subsection{Uses}
+Arduino.h
+SoftwareSerial.h
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}{
+  None
+}
+
+\subsubsection{Exported Access Programs}{
+  \begin{center}
+  \begin{tabular}{p{4cm} p{2cm} p{2cm} p{4cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  encodeMessage & string & - & UnknownAction \\
+  \midrule
+  decodeMessage & - & string & UnknownCommand \\
+  \midrule
+  processCommand & string & string & InvalidCommand \\
+  \hline
+  \end{tabular}
+  \end{center}
+}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}{
+  command: The decoded message to update values (game state, game mode, light specific LED, etc.).\\
+}
+
+\subsubsection{Environment Variables}{
+  messageEncoder: The string formatting to send a message to the Teensy Controller via Serial Communication.\\
+  messageDecoder: The string formatting to read a message from the Teensy Controller via Serial Communication.\\
+}
+
+\subsubsection{Assumptions}{
+  \begin{itemize}
+    \item Communication string format remains consistent
+    \item Connection exists between both controllers and remains constant
+  \end{itemize}
+  
+}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent encodeMessage():
+\begin{itemize}
+\item output: Translate game state or action into encoded string to be read by Teensy or the Web Application
+\item exception: UnknownAction
+\end{itemize}
+
+\noindent decodeMessage():
+\begin{itemize}
+\item output: Translate encoded message from Teensy or the Web Application and convert into state change command
+\item exception: UnknownCommand
+\end{itemize}
+
+\noindent processCommand():
+\begin{itemize}
+\item transition: Command received from Web Application or Teensy controller will be used to change the chess board accordingly.
+\item --> This could be to change the game state, game mode, player warning (check, checkmate, stalemate) or to light appropriate LED's
+\item exception: InvalidCommand
+\end{itemize}
+
+\subsubsection{Local Functions}{
+  None
+}
+
+
+\newpage
 
 \section{MIS of Web Application Input Module} \label{mInput}
 
@@ -181,7 +557,7 @@ The following table is taken directly from the Module Guide document for this pr
 
     \subsection{Syntax}
     \subsubsection{Exported Constants}
-
+    
     \subsubsection{Exported Access Programs}
         \begin{center}
         \begin{tabular}{p{4.5cm} p{3cm} p{4cm} p{2.5cm}}
@@ -192,18 +568,18 @@ The following table is taken directly from the Module Guide document for this pr
         \hline
         \end{tabular}
         \end{center}
-
+    
     \subsection{Semantics}
     \subsubsection{State Variables}
     \textbf{inputString:} string \#String containing \cite{FEN} string, user mode, game 
     termination state, and delimiting characters
 
     \subsubsection{Environment Variables}
-    N/A
+        N/A
 
     \subsubsection{Assumptions}
-    N/A
-
+        N/A
+    
     \subsubsection{Access Routine Semantics}
         \noindent parseInput():
         \begin{itemize}
@@ -228,6 +604,7 @@ The following table is taken directly from the Module Guide document for this pr
         \end{center}
     
         ~\newpage
+    
 
 \section{MIS of Display Module} \label{mDisplay}
 
@@ -590,6 +967,7 @@ The following table is taken directly from the Module Guide document for this pr
     \subsubsection{Local Functions}
     N/A
 
+\newpage
 \newpage
 
 \bibliographystyle {plainnat}
