@@ -66,6 +66,8 @@
 2023-01-11 & Arshdeep Aujla & Introduction, Purpose, User Interface, Other Considered Designs \\
 2023-01-17 & Arshdeep Aujla & Added Design of Hardware \\
 2023-01-18 & Joshua Chapman & Scope, Project Overview, System Variables, Timeline\\
+2023-01-18 & Joshua Chapman & Hardware Design, Communication Protocols, Wiring Diagram\\
+2023-01-18 & Rupinder Nagra & Interface\\
 \bottomrule
 \end{tabularx}
 
@@ -77,13 +79,20 @@ This section records information for easy reference.
 
 \subsection{Abbreviations and Acronyms}
 
+\subsection{Abbreviations and Acronyms}
+
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
+  M & Module \\
+  MG & Module Guide \\
+  R & Requirement\\
+  SC & Scientific Computing \\
+  SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
-  \wss{...} & \wss{...}\\
+  UC & Unlikely Change \\
   \bottomrule
 \end{tabular}\\
 
@@ -164,14 +173,14 @@ inform the players.
 %\wss{How you will approach undesired events}
 
 \subsection{Component Diagram}
-
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[scale=0.45]{wiring_diagram.pdf}
-    \caption{Electrical Wiring Diagram}
-    \label{Fig_Wiring_Dgm} 
+    \includegraphics[scale=0.65]{chess-connect-system-context.png}
+    \caption{Overall System Context}
+    \label{Fig_SystemContext} 
   \end{center}
 \end{figure}
+
 
 \subsection{Connection Between Requirements and Design} \label{SecConnection}
 
@@ -316,7 +325,40 @@ to view the application. The user will interact with this interface by visual vi
 They will also be able to turn on and off beginner mode in this interface through clicking an interactive button in the web application. 
 
 \section{Design of Hardware}
+To build the custom chess board for Chess Connect we designed a modified chess 
+board to fulfill the requirements of the system. The chess board has visible 
+LEDs from below the board that can be seen in the figure below. 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.75]{chess_board.jpg}
+    \caption{Hardware Design}
+    \label{Fig_Hardware_Design} 
+  \end{center}
+\end{figure}
+The chess board will be hollow and contain enough space to contain the 
+electronics. An AC power cable will protrude from the side of the board to 
+connect to an outlet nearby. 
 
+
+
+
+\subsection{Components Acquired}
+Please refer to Appendix B for a detailed list of acquired mechanical components.
+
+\section{Design of Electrical Components}
+\subsection{Components Acquired}
+Please refer to Appendix C for a detailed list of acquired electrical components.
+
+\subsection{Wiring Diagram}
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.45]{wiring_diagram.pdf}
+    \caption{Electrical Wiring Diagram}
+    \label{Fig_Wiring_Dgm} 
+  \end{center}
+\end{figure}
+
+\subsection{LED and Piece Interaction}
 Each square on the chessboard will contain a Hall sensor and a green LED. The LEDs are to indicate where a piece can possibly go, depending on which mode the user is in. For example, 
 if the user is in a beginner’s mode and picks up the White King, then the LEDs surrounding all the squares where the King is picked up from will light up telling the user that the 
 King can be placed on any of those squares. The logic for which LEDs light up depend on a few things:
@@ -419,23 +461,25 @@ The digit '0' means LED is OFF and '1' means LED is ON.
   \includegraphics[width=1\textwidth]{truth_table}
   \caption{Truth Table}
 \end{figure}
-
-\subsection{Components Acquired}
-Please refer to Appendix B for a detailed list of acquired mechanical components.
-
-\section{Design of Electrical Components}
-\subsection{Components Acquired}
-Please refer to Appendix C for a detailed list of acquired electrical components.
-
-\wss{Most relevant for mechatronics projects}
-\wss{Show what will be acquired}
-\wss{Show what will be built, with detail on fabrication and materials}
-\wss{Include appendices as appropriate, possibly with sketches, drawings,
-circuit diagrams, etc}
+%\wss{Most relevant for mechatronics projects}
+%\wss{Show what will be acquired}
+%\wss{Show what will be built, with detail on fabrication and materials}
+%wss{Include appendices as appropriate, possibly with sketches, drawings,
+%circuit diagrams, etc}
 
 \section{Design of Communication Protocols}
 
-\wss{If appropriate}
+\subsection{Arduino Mega to Teensy}
+The two processors communicate to share game state, game mode and move information for smooth 
+performance. Arduino Mega collects data and forms the current game state from the sensors given. 
+Once the current game state is formed it is sent via serial communication to the Teensy 
+processor. The string is in the form of FEN@Game Mode@Resign. 
+\subsection{Web Application to Teensy}
+The processor and the web application communicate to share current game state, game mode and 
+best moves from the engine. The Teensy sends a string in from of FEN@Game Mode to the web application
+to perform best move calculations. Once the web application finds the best moves, it will send a
+string in the form of bestMove1@bestMove2@bestMove3 back to the Teensy.
+%\wss{If appropriate}
 
 \section{Timeline}
 \begin{table}[H]
@@ -487,9 +531,18 @@ circuit diagrams, etc}
 \appendix
 
 \section{Interface}
+An online chess game typically has a user interface that includes a chess 
+board display, where the player can see the current state of the game and make
+ moves. Our web application will only serve as an additional display for the 
+ moves being played on the physical board, simply mirroring the moves with 
+ minimal latency over Bluetooth. The different modes on the physical board 
+ will also be compatible with the moves displayed on the web application. A 
+ web application interface aims to be more intuitive for players that are 
+ accustomed to online chess and might also allow for a more immersive viewing
+ experience for spectators.
 
-\wss{Include additional information related to the appearance of, and
-interaction with, the user interface}
+%\wss{Include additional information related to the appearance of, and
+%interaction with, the user interface}
 
 \section{Mechanical Hardware}
 \begin{itemize}
@@ -509,11 +562,6 @@ interaction with, the user interface}
   \item 64 HALL sensors
   \item 64 1mF capacitors
   \item 30 ft, 20 AWG wire
-\end{itemize}
-
-\section{Communication Protocols}
-\begin{itemize}
-  \item Serial Communication
 \end{itemize}
 
 \section{Reflection}

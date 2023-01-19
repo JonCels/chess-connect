@@ -34,7 +34,11 @@
 \begin{document}
 
 \title{Module Guide for \progname{}} 
-\author{Author Name}
+\author{\authname}
+<<<<<<< HEAD
+\author{\authname}
+=======
+>>>>>>> Documentation/DD
 \date{\today}
 
 \maketitle
@@ -43,13 +47,29 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\addcontentsline{toc}{section}{Table of Revisions}
+\section*{Table of Revisions}
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+<<<<<<< HEAD
+1/17/2023 & 1.0 & Detailed Modules used by Arduino Mega 2560\\
+2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
+2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
+=======
+2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
+2023-01-17 & Alexander Van Kralingen & Detailed Modules used by Arduino Mega 2560\\
+2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
+2023-01-18 & Rupinder Nagra & Introduction, Anticipated and Unlikely Changes, Connection Between Requirements and Design, Use Hierarchy Between Modules\\
+2023-01-18 & Alexander Van Kralingen & Modules, Anticipated and Unlikely Changes, Connection Between Requirements and Design, Module Hierarchy\\
+
+>>>>>>> Documentation/DD
 \bottomrule
 \end{tabularx}
+\end{table}
 
 \newpage
 
@@ -65,16 +85,13 @@ This section records information for easy reference.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   AC & Anticipated Change\\
-  DAG & Directed Acyclic Graph \\
   M & Module \\
   MG & Module Guide \\
+  MIS & Module Interface Specification \\
   OS & Operating System \\
   R & Requirement\\
-  SC & Scientific Computing \\
-  SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  \cite{FEN} & Forsyth-Edwards Notation\\
   \bottomrule
 \end{tabular}\\
 
@@ -92,54 +109,41 @@ This section records information for easy reference.
 
 \section{Introduction}
 
-Decomposing a system into modules is a commonly accepted approach to developing
-software.  A module is a work assignment for a programmer or programming
-team~\citep{ParnasEtAl1984}.  We advocate a decomposition
-based on the principle of information hiding~\citep{Parnas1972a}.  This
-principle supports design for change, because the ``secrets'' that each module
-hides represent likely future changes.  Design for change is valuable in SC,
-where modifications are frequent, especially during initial development as the
-solution space is explored.  
+\subsection{Overview}
 
-Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
+The Chess Connect project allows two users to play a game of chess on a physical board with the information being transmitted to an online web application over Bluetooth.
+Currently, there is no way for players to seamlessly switch between playing on a physical board and playing online, but Chess Connect intends to change this by creating a central platform that will provide flexibility and remove barriers for new players looking to learn the game.
+
+\subsection{Context}
+
+This document is the Module Guide (MG), which is created after the Software Requirements Specification (SRS). 
+The purpose of the Software Requirements Specification document is to present a description of the software system to be developed, including the functional and non-functional requirements for the project. The following MG has a different purpose, where it is instead providing a modular decomposition of the system, showing the modular structure of the application. The MG also describes how the requirements in the SRS are met with the modular structure that is described.
+Along with the MG, it is also necessary to create a Module Interface Specification (MIS) explaining the semantics and syntax of each module. Examples of such semantics and syntax includes the access routines, state variables, inputs/outputs, and exceptions of the modules. This document will further expand on the information provided in the MG.
+
+\subsection{Design Principles}
+
+Information Hiding and Encapsulation are some of the design principles being used to build a modular structure of our application. The project should also assess the software metric of coupling and cohesion. Ideally, the project has high cohesion, and a low degree of coupling.
+Information Hiding is the process of hiding the details of an object or function. This process disassociates the calling code from the internal workings of the object or function being called. This makes it possible to change the hidden portions without having to also change the calling code. Encapsulation is a design principle that makes it easier to enforce information hiding. Encapsulation simply hides the states of an object of a class by preventing direct access to it. 
+A high cohesion signifies that the methods and data within a module are closely related. Low coupling means that there is a low degree of interdependence between the modules of the system. 
+
+
+\subsection{Document Structure}
+	The document structure is organised as follows:
 \begin{itemize}
-\item System details that are likely to change independently should be the
-  secrets of separate modules.
-\item Each data structure is implemented in only one module.
-\item Any other program that requires information stored in a module's data
-  structures must obtain it by calling access programs belonging to that module.
-\end{itemize}
 
-After completing the first stage of the design, the Software Requirements
-Specification (SRS), the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG
-specifies the modular structure of the system and is intended to allow both
-designers and maintainers to easily identify the parts of the software.  The
-potential readers of this document are as follows:
+\item Section 4 lists Anticipated and Unlikely Changes to the system's implementation. This list is used for the Traceability Matrices later in the document.
 
-\begin{itemize}
-\item New project members: This document can be a guide for a new project member
-  to easily understand the overall structure and quickly find the
-  relevant modules they are searching for.
-\item Maintainers: The hierarchical structure of the module guide improves the
-  maintainers' understanding when they need to make changes to the system. It is
-  important for a maintainer to update the relevant sections of the document
-  after changes have been made.
-\item Designers: Once the module guide has been written, it can be used to
-  check for consistency, feasibility and flexibility. Designers can verify the
-  system in various ways, such as consistency among modules, feasibility of the
-  decomposition, and flexibility of the design.
-\end{itemize}
+\item Section 5 presents the Module Hierarchy, listing all the modules and their hierarchy by levels. 
 
-The rest of the document is organized as follows. Section
-\ref{SecChange} lists the anticipated and unlikely changes of the software
-requirements. Section \ref{SecMH} summarizes the module decomposition that
-was constructed according to the likely changes. Section \ref{SecConnection}
-specifies the connections between the software requirements and the
-modules. Section \ref{SecMD} gives a detailed description of the
-modules. Section \ref{SecTM} includes two traceability matrices. One checks
-the completeness of the design against the requirements provided in the SRS. The
-other shows the relation between anticipated changes and the modules. Section
-\ref{SecUse} describes the use relation between modules.
+\item Section 6 describes the Connection Between Requirements and Design, which details how the software requirements are related to the modules. 
+
+\item Section 7 describes the Module Decomposition, detailing the module secrets, services, and implementations. 
+
+\item Section 8 provides the Traceability Matrices. The first matrix connects the functional and nonfunctional requirements to the modules. The second matrix connects anticipated changes from Section 2 to the modules.
+
+\item Section 9 presents the Uses Hierarchy diagram for the application. The model shows the uses relations between modules.
+
+\end{itemize}	
 
 \section{Anticipated and Unlikely Changes} \label{SecChange}
 
@@ -150,33 +154,27 @@ unlikely changes are listed in Section \ref{SecUchange}.
 
 \subsection{Anticipated Changes} \label{SecAchange}
 
-Anticipated changes are the source of the information that is to be hidden
-inside the modules. Ideally, changing one of the anticipated changes will only
-require changing the one module that hides the associated decision. The approach
-adapted here is called design for
-change.
-
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+  \item[\refstepcounter{acnum} \actheacnum \label{acVerification}:] The format in which the data is passed from the hardware to the web application.
+  \item[\refstepcounter{acnum} \actheacnum \label{acBoardState}:] The implementation of the data structure that stores the game board state.
+  \item[\refstepcounter{acnum} \actheacnum \label{acFontAndPieces}:] User options to change the font and board size.
+  \item[\refstepcounter{acnum} \actheacnum \label{acGUI}:] The GUI and interface design.
+  \item[\refstepcounter{acnum} \actheacnum \label{acTimers}:] The amount of time for a move to be reflected on the web application.
+\item[\refstepcounter{acnum} \actheacnum \label{acHES}:] The pin configuration for Hall-effect sensors
+\item[\refstepcounter{acnum} \actheacnum \label{acLED}:] The pin configuration for LEDs
+\item[\refstepcounter{acnum} \actheacnum \label{acTGS}:] Transition logic between the various game states
+\item[\refstepcounter{acnum} \actheacnum \label{acHUA}:] Handling different user actions
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
-The module design should be as general as possible. However, a general system is
-more complex. Sometimes this complexity is not necessary. Fixing some design
-decisions at the system architecture stage can simplify the software design. If
-these decision should later need to be changed, then many parts of the design
-will potentially need to be modified. Hence, it is not intended that these
-decisions will be changed.
-
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+  \item[\refstepcounter{ucnum} \uctheucnum] The user option to play against another user online.
+  \item[\refstepcounter{ucnum} \uctheucnum] The interface functionality of the system.
+  \item[\refstepcounter{ucnum} \uctheucnum] The rules and values related to the game itself.
+  \item[\refstepcounter{ucnum} \uctheucnum] The purpose of the system to allow users to play a game of chess against an opponent.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucVML}:] Valid chess move logic.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucDTD}:] Data type definition locations may be shifted between different modules.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -188,6 +186,12 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Arduino Controler Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAM}:] Arduino Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPI}:] Piece Identification Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCB}:] Chess Board Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Communication Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Software Serial Module
 \item [\refstepcounter{mnum} \mthemnum \label{mInput}:] Web Application Input Module
 \item [\refstepcounter{mnum} \mthemnum \label{mDisplay}:] Display Module
 \item [\refstepcounter{mnum} \mthemnum \label{mOutput}:] Web Application Output Module
@@ -197,6 +201,8 @@ actually be implemented.
 \item [\refstepcounter{mnum} \mthemnum \label{mEngine}:] Engine Module
 \end{description}
 
+The Hardware-Hiding module is implemented by the microcontroller as firmware that controls all of the hardware components. This is implemented by the kernel to also run embedded software loaded onto the controller. The Arduino and SoftwareSerial modules are present in the Arduino framework and will not be recreated for this project.
+
 
 \begin{table}[h!]
 \centering
@@ -205,27 +211,29 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+\multirow{3}{0.3\textwidth}{Hardware Hiding Module}
+& Arduino Controller Module \\ 
+& Arduino Module \\
+& Software Serial Module \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} 
+\multirow{5}{0.3\textwidth}{Behaviour-Hiding Module} 
 & Web Application Input Module\\
 & Display Module\\
 & Web Application Output Module\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+& Piece Identification Module \\
+& Communication Module\\
+& Teensy Input from Mega Module\\
+& Teensy Input Bluetooth from Web App Module\\
+& Teensy Output Bluetooth from Web App Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} 
+\multirow{5}{0.3\textwidth}{Software Decision Module} 
 & User Mode Module\\
 & Board Module\\
 & Web Application Game State Module\\
 & Engine Module\\
-& ?\\
-& ?\\
-& ?\\
+& Chess Board Module\\
 \bottomrule
 
 \end{tabular}
@@ -235,34 +243,24 @@ actually be implemented.
 
 \section{Connection Between Requirements and Design} \label{SecConnection}
 
-The design of the system is intended to satisfy the requirements developed in
-the SRS. In this stage, the system is decomposed into modules. The connection
-between requirements and modules is listed in Table \ref{TblRT}.
-
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-  requirements with a password.  In scientific examples, the choice of algorithm
-could potentially go here, if that is a decision that is exposed by the
-interface.}
+The design satisfies the system requirements developed in the SRS. The Web Application 
+Input module will handle all interactions from the inputs provided by the user, such as the 
+FEN String, the user mode, and whether the game has terminated. The Display module outputs 
+the visual component of the interface, and this module will cover all requirements that have a 
+component of the user directly interacting with the system. The Web Application Board and Game 
+State modules cover the board setup and positions along with checking the end game conditions 
+such as checkmate and stalemate. The look and feel requirements are satisfied by the input and 
+output modules as they define the core areas of user interaction. The usability and humanity 
+requirements are again satisfied by the input and output modules which define the user interaction. 
+Performance requirements are to be satisfied by the combination of all modules, but the key modules 
+that impact performance are software decision hiding modules. The operational and environmental 
+requirements, and the maintainability and support requirements are achieved by all modules. This 
+is because all modules are designed to be operational for the environment (the server and client) 
+and maintained for a set time (end of semester). Security and legal requirements are covered by 
+the entirety of the system. This is because the accessibility of the repository and the JavaScript 
+standard in use affects all modules.
 
 \section{Module Decomposition} \label{SecMD}
-
-Modules are decomposed according to the principle of ``information hiding''
-proposed by \citet{ParnasEtAl1984}. The \emph{Secrets} field in a module
-decomposition is a brief statement of the design decision hidden by the
-module. The \emph{Services} field specifies \emph{what} the module will do
-without documenting \emph{how} to do it. For each module, a suggestion for the
-implementing software is given under the \emph{Implemented By} title. If the
-entry is \emph{OS}, this means that the module is provided by the operating
-system or by standard programming language libraries.  \emph{\progname{}} means the
-module will be implemented by the \progname{} software.
-
-Only the leaf modules in the hierarchy have to be implemented. If a dash
-(\emph{--}) is shown, this means that the module is not a leaf and will not have
-to be implemented.
 
 \subsection{Hardware Hiding Modules (\mref{mHH})}
 
@@ -275,18 +273,53 @@ to be implemented.
 \item[Implemented By:] OS
 \end{description}
 
-\subsection{Behaviour-Hiding Module}
-
+\subsubsection{Arduino Controller Module (\mref{mAC})}
 \begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
+\item[Secrets:] The logic for changing game state and reading user actions.
+\item[Services:] Reads inputs from sensors and writes to outputs to turn on/off LED's. Main overarching module that runs and controls all other modules to coordinate the logic and messages with the game state.
+\item[Implemented By:] \progname (Arduino Mega 2560 Rev3 Controller)
 \end{description}
 
+\subsubsection{Arduino Module (\mref{mAM})}
+\begin{description}
+\item[Secrets:] The Arduino API that allows access to the Hardware Abstraction Layer (HAL).
+\item[Services:] Provides an interface to the hardware through pin assignments and hardware ID's.
+\item[Implemented By:] Arduino.h library
+\end{description}
+
+\subsubsection{Piece Identification Module (\mref{mPI})}
+\begin{description}
+\item[Secrets:] The values read by the Hall-effect sensors that are translated into the Piece data type.
+\item[Services:] Translates sensor values into pieces and positions on the chess board. Provides Piece identification data types to the rest of the program.
+\item[Implemented By:] \progname (c++, Arduino)
+\end{description}
+
+\subsubsection{Chess Board Module (\mref{mCB})}
+\begin{description}
+\item[Secrets:] Contained within this module are: 
+  \begin{itemize}
+    \item the valid move logic for chess pieces; 
+    \item The translation of the piece configuration on the chess board into a \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string} \item Checking for checkmate
+  \end{itemize}
+\item[Services:] Handles all of the logic used in the game of chess. This module processes commands recieved from the Web Application and Teensy Controller into actions to be implemented within the game and gives feedback related to valid moves and the game/board state.
+\item[Implemented By:] \progname (c++, Arduino)
+\end{description}
+
+\subsubsection{Communication Module (\mref{mCM})}
+\begin{description}
+\item[Secrets:] Message encoding string used to send board state, game mode and resignation signal. Message decoding string to interpret best moves, the check/mate/stalemate warning and commands from the Teensy controller.
+\item[Services:] Reads and writes to the communication pins, processes and sends commands to various parts of the embedded software.
+\item[Implemented By:] \progname (c++, Arduino, Bluetooth)
+\end{description}
+
+\subsubsection{Software Serial Module (\mref{mSS})}
+\begin{description}
+\item[Secrets:] The methods in which the data is encoded, flags used to acknowledge connection, successful data transmission, incoming signal, etc.
+\item[Services:] The Arduino API that allows for sending and receiving various data types through serial communication.
+\item[Implemented By:] SoftwareSerial.h library
+\end{description}
+
+\subsection{Behaviour-Hiding Modules}
     \subsubsection{Web Application Input Module (\mref{mInput})}
     \begin{description}
     \item[Secrets:] Input data.
@@ -308,22 +341,7 @@ to be implemented.
     \item[Implemented By:] \progname\ (React.js framework, Bluetooth)
     \end{description}
 
-\subsubsection{Etc.}
-
-
-\subsection{Software Decision Module}
-
-\begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
-\end{description}
-
+\subsection{Software Decision Modules}
     \subsubsection{User Mode Module \mref{mMode}}
     \begin{description}
     \item[Secrets:] User mode logic and data.
@@ -331,7 +349,7 @@ to be implemented.
     \item[Implemented By:] \progname\ (React.js framework)
     \end{description}
 
-    \subsubsection{Board Module \mref{mBoard}}
+    \subsubsection{Web Application Board Module \mref{mBoard}}
     \begin{description}
     \item[Secrets:] Board data.
     \item[Services:] Stores and modifies board state information.
@@ -352,6 +370,8 @@ to be implemented.
     \item[Implemented By:] \progname\ (Node.js libraries and Stockfish)
     \end{description}
 
+
+
 \section{Traceability Matrix} \label{SecTM}
 This section shows two traceability matrices: between the modules and the
 requirements and between the modules and the anticipated changes.
@@ -360,7 +380,7 @@ requirements and between the modules and the anticipated changes.
 % like fref
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\begin{tabular}{p{0.4\textwidth} p{0.4\textwidth}}
 \toprule
 \textbf{Req.} & \textbf{Modules}\\
 \midrule
@@ -375,6 +395,8 @@ R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot
 R9 & \mref{mVerifyOut}\\
 R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
 R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+R12 & \mref{TeensyToMegaRx} \mref{TeensyToWaRx} \mref{TeensyToWaTx}\\
+
 \bottomrule
 \end{tabular}
 \caption{Trace Between Requirements and Modules}
@@ -387,18 +409,10 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acHES} & \mref{mAC}\\
+\acref{acLED} & \mref{mAC}\\
+\acref{acTGS} & \mref{mAC}, \mref{mCB}\\
+\acref{acHUA} & \mref{mAC}, \mref{mCB}, \mref{mCM}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -407,20 +421,9 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 
 \section{Use Hierarchy Between Modules} \label{SecUse}
 
-In this section, the uses hierarchy between modules is
-provided. \citet{Parnas1978} said of two programs A and B that A {\em uses} B if
-correct execution of B may be necessary for A to complete the task described in
-its specification. That is, A {\em uses} B if there exist situations in which
-the correct functioning of A depends upon the availability of a correct
-implementation of B.  Figure \ref{FigUH} illustrates the use relation between
-the modules. It can be seen that the graph is a directed acyclic graph
-(DAG). Each level of the hierarchy offers a testable and usable subset of the
-system, and modules in the higher level of the hierarchy are essentially simpler
-because they use modules from the lower levels.
-
 \begin{figure}[H]
 \centering
-%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+\includegraphics[width=0.7\textwidth]{ModuleHierarchy.png}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
