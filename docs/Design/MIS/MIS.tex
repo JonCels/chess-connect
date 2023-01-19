@@ -156,76 +156,425 @@ The following table is taken directly from the Module Guide document for this pr
 \newpage
 ~\newpage
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
+\section{MIS of Web Application Input Module} \label{mInput}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+    \subsection{Module}
+    Web Application Input
 
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+    \subsection{Uses}
+    \hyperref[mBoard]{Board Module}\\
+    \hyperref[mMode]{User Mode Module}
 
-\subsection{Module}
+    \subsection{Syntax}
+    \subsubsection{Exported Constants}
 
-\wss{Short name for the module}
+    \subsubsection{Exported Access Programs}
+        \begin{center}
+        \begin{tabular}{p{4.5cm} p{3cm} p{4cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        parseInput & string & seq of string & invalidInput \\
+        \hline
+        \end{tabular}
+        \end{center}
 
-\subsection{Uses}
+    \subsection{Semantics}
+    \subsubsection{State Variables}
+    \textbf{inputString:} string \#String containing FEN string, user mode, game 
+    termination state, and delimiting characters
 
+    \subsubsection{Environment Variables}
+    N/A
 
-\subsection{Syntax}
+    \subsubsection{Assumptions}
+    N/A
 
-\subsubsection{Exported Constants}
+    \subsubsection{Access Routine Semantics}
+        \noindent parseInput():
+        \begin{itemize}
+        \item output: sequence of strings. The first is the FEN string, the second is 
+            the user mode, the third is the game termination state.
+        \item exception: invalidInput if any of validFen, validUserMode, 
+            or validGameTermination return false.
+        \end{itemize}
 
-\subsubsection{Exported Access Programs}
+    \subsubsection{Local Functions}
+        \begin{center}
+        \begin{tabular}{p{4.5cm} p{3cm} p{4cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        validFen & string & boolean & \\
+        \hline
+        validUserMode & string & boolean & \\
+        \hline
+        validGameTermination & string & boolean & \\
+        \end{tabular}
+        \end{center}
+    
+        ~\newpage
 
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
-\end{tabular}
-\end{center}
+\section{MIS of Display Module} \label{mDisplay}
 
-\subsection{Semantics}
+    \subsection{Module}
+    Display
 
-\subsubsection{State Variables}
+    \subsection{Uses}
+    \hyperref[mBoard]{Board Module}
 
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+    \subsection{Syntax}
+    \subsubsection{Exported Constants}
 
-\subsubsection{Environment Variables}
+    \subsubsection{Exported Access Programs}
+        \begin{center}
+        \begin{tabular}{p{5cm} p{3.5cm} p{3cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        drawSquare & string & & \\
+        \hline
+        drawBoard & seq of (seq of int) & & \\
+        \hline
+        displayGameTermination & int & & \\
+        \hline
+        setBackground & string & & \\
+        \hline
+        \end{tabular}
+        \end{center}
 
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+    \subsection{Semantics}
+    \subsubsection{State Variables}
+    N/A
 
-\subsubsection{Assumptions}
+    \subsubsection{Environment Variables}
+    N/A
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+    \subsubsection{Assumptions}
+    N/A
 
-\subsubsection{Access Routine Semantics}
+    \subsubsection{Access Routine Semantics}
+        \noindent drawSquare():
+        \begin{itemize}
+            \item output: Draw board square
+            \item exception: none
+        \end{itemize}
 
-\noindent \wss{accessProg}():
-\begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
-\end{itemize}
+        \noindent drawBoard():
+        \begin{itemize}
+            \item transition: Uses drawSquare to display the game board
+            \item exception: none
+        \end{itemize}
 
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
+        \noindent displayGameTermination():
+        \begin{itemize}
+            \item transition: Displays game termination state (checkmate, stalemate, etc.)
+            \item exception: none
+        \end{itemize}
 
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
+        \noindent setBackground():
+        \begin{itemize}
+            \item transition: Sets the background colors of the display.
+            \item exception: none
+        \end{itemize}
 
-\subsubsection{Local Functions}
+    \subsubsection{Local Functions}
+    N/A
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+    \newpage
+
+\section{MIS of Web Application Output Module} \label{mOutput}
+
+    \subsection{Module}
+    Web Application Output
+
+    \subsection{Uses}
+    \hyperref[mEngine]{Engine Module}\\
+    \hyperref[mGame]{Game State Module}
+
+    \subsection{Syntax}
+    \subsubsection{Exported Constants}
+
+    \subsubsection{Exported Access Programs}
+        \begin{center}
+        \begin{tabular}{p{4.5cm} p{4cm} p{3cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        sendData & string & string & \\
+        \hline
+        \end{tabular}
+        \end{center}
+
+    \subsection{Semantics}
+    \subsubsection{State Variables}
+    N/A
+
+    \subsubsection{Environment Variables}
+    N/A
+
+    \subsubsection{Assumptions}
+    N/A
+
+    \subsubsection{Access Routine Semantics}
+        \noindent sendData(string):
+        \begin{itemize}
+            \item output: string \#Encodes game state (none, check, 
+                checkmate, stalemate), and 3 engine-generated moves
+            \item exception: none
+        \end{itemize}
+
+    \subsubsection{Local Functions}
+    N/A
+
+    \newpage
+
+\section{MIS of User Mode Module} \label{mMode}
+
+    \subsection{Module}
+    User Mode
+
+    \subsection{Uses}
+    \hyperref[mEngine]{Engine Module}
+
+    \subsection{Syntax}
+    \subsubsection{Exported Constants}
+
+    \subsubsection{Exported Access Programs}
+        \begin{center}
+        \begin{tabular}{p{4.5cm} p{4cm} p{3cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        getUserMode & & string & \\
+        \hline
+        setUserMode & string & & \\
+        \hline
+        \end{tabular}
+        \end{center}
+
+    \subsection{Semantics}
+    \subsubsection{State Variables}
+    userMode: string \#Represents the current user mode (Normal, Beginner, Engine)
+
+    \subsubsection{Environment Variables}
+    N/A
+
+    \subsubsection{Assumptions}
+    N/A
+
+    \subsubsection{Access Routine Semantics}
+        \noindent getMode():
+        \begin{itemize}
+            \item output: string 
+                \[output := userMode\]
+            \item exception: none
+        \end{itemize}
+
+        \noindent setMode(string):
+        \begin{itemize}
+            \item transition: Sets userMode to the input user mode 
+                \[userMode := input\]
+            \item exception: none
+        \end{itemize}
+
+    \subsubsection{Local Functions}
+    N/A
+
+    \newpage
+
+\section{MIS of Board Module} \label{mBoard}
+
+    \subsection{Module}
+    Board
+
+    \subsection{Uses}
+    \hyperref[mEngine]{Engine Module}\\
+    \hyperref[mGame]{Game State Module}
+
+    \subsection{Syntax}
+    \subsubsection{Exported Constants}
+        \#define letters [`a', `b', `c', `d', `e', `f', `g', `h']\\
+        \#define startFEN = `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'\\
+        \#define boardDimension = 8
+
+    \subsubsection{Exported Access Programs}
+        \begin{center}
+        \begin{tabular}{p{4.5cm} p{4cm} p{3cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        initialize & & & \\
+        \hline
+        getXYPosition & int & tuple of int & invalidIndex\\
+        \hline
+        getPosition & int & tuple of int & \\
+        \hline
+        getFenString & & string & \\
+        \hline
+        setFenString & string & & \\
+        \hline
+        \end{tabular}
+        \end{center}
+
+    \subsection{Semantics}
+    \subsubsection{State Variables}
+    fenString: string \#Stores FEN string of current game position
+
+    \subsubsection{Environment Variables}
+    N/A
+
+    \subsubsection{Assumptions}
+    initialize is called before any other access routine.
+
+    \subsubsection{Access Routine Semantics}
+        \noindent initialize():
+        \begin{itemize}
+            \item transition: \#Initializes fenString to the starting chess board position \\
+                \[fenString := startFEN\]
+            \item exception: none
+        \end{itemize}
+
+        \noindent getXYPosition(int: squareInd):
+        \begin{itemize}
+            \item output: \#X and Y number coordinate for an input square number. 
+                Eg. getXYPosition(14) returns (0, 6). \\
+                \[out := (squareInd\ //\ boardDimension,\ squareInd\ \%\ boardDimension)\]
+            \item exception: none
+        \end{itemize}
+
+        \noindent getPosition(int: squareInd):
+        \begin{itemize}
+            \item output: \#letter and number coordinate for an input square number.
+                Eg. getPosition(14) returns `g7'. \\
+                \begin{multline}
+                    out := `letters[squareInd\ \%\ boardDimension]' \notag\\ 
+                    + `boardDimension - (squareInd\ //\ boardDimension)'
+                \end{multline}
+                
+            \item exception: none
+        \end{itemize}
+
+        \noindent getFenString():
+        \begin{itemize}
+            \item output: \[out := fenString\]
+            \item exception: none
+        \end{itemize}
+
+        \noindent setFenString(string: fen):
+        \begin{itemize}
+            \item transition: \[fenString := fen\]
+            \item exception: none
+        \end{itemize}
+
+    \subsubsection{Local Functions}
+    N/A
+
+    \newpage
+
+\section{MIS of Web Application Game State Module} \label{mGame}
+
+    \subsection{Module}
+    Web Application Game State
+
+    \subsection{Uses}
+    N/A
+
+    \subsection{Syntax}
+    \subsubsection{Exported Constants}
+
+    \subsubsection{Exported Access Programs}
+        \begin{center}
+        \begin{tabular}{p{3.5cm} p{3cm} p{3cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        isCheck & string & boolean & \\
+        \hline
+        isCheckmate & string & boolean & \\
+        \hline
+        isStalemate & string & boolean & \\
+        \hline
+        \end{tabular}
+        \end{center}
+
+    \subsection{Semantics}
+    \subsubsection{State Variables}
+    N/A
+
+    \subsubsection{Environment Variables}
+    N/A
+
+    \subsubsection{Assumptions}
+    N/A
+
+    \subsubsection{Access Routine Semantics}
+        \noindent isCheck():
+        \begin{itemize}
+            \item output: True if the position is `check', false otherwise
+            \item exception: none
+        \end{itemize}
+
+        \noindent isCheckmate():
+        \begin{itemize}
+            \item output: True if the position is `checkmate', false otherwise
+            \item exception: none
+        \end{itemize}
+
+        \noindent isStalemate():
+        \begin{itemize}
+            \item output: True if the position is `stalemate', false otherwise
+            \item exception: none
+        \end{itemize}
+
+    \subsubsection{Local Functions}
+    N/A
+
+\newpage
+
+\section{MIS of Engine Module} \label{mEngine}
+    \subsection{Module}
+    Engine
+
+    \subsection{Uses}
+    N/A
+
+    \subsection{Syntax}
+    \subsubsection{Exported Constants}
+    \#define depth \#How many layers of depth the chess engine should use to evaluate the position
+    \#define maxSearchTime \#The maximum time the chess engine should take to evaluate the position
+    
+    \subsubsection{Exported Access Programs}
+        \begin{center}
+        \begin{tabular}{p{4cm} p{3cm} p{3cm} p{2.5cm}}
+        \hline
+        \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+        \hline
+        evaluatePosition & string & string & \\
+        \hline
+        \end{tabular}
+        \end{center}
+
+    \subsection{Semantics}
+    \subsubsection{State Variables}
+    N/A
+
+    \subsubsection{Environment Variables}
+    N/A
+
+    \subsubsection{Assumptions}
+    The depth and maxSearchTime values will determined experimentally after the system is built. 
+    There is a trade-off between move quality and speed/depth of the search.
+
+    \subsubsection{Access Routine Semantics}
+        \noindent evaluatePosition(string):
+        \begin{itemize}
+            \item output: String containing 3 possible moves, calculated by a chess engine from the FEN input string
+            \item exception: none
+        \end{itemize}
+
+    \subsubsection{Local Functions}
+    N/A
 
 \newpage
 
