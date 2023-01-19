@@ -34,7 +34,7 @@
 \begin{document}
 
 \title{Module Guide for \progname{}} 
-\author{\authname}
+\author{Author Name}
 \date{\today}
 
 \maketitle
@@ -125,7 +125,7 @@ potential readers of this document are as follows:
   important for a maintainer to update the relevant sections of the document
   after changes have been made.
 \item Designers: Once the module guide has been written, it can be used to
-  check for consistency, feasibility, and flexibility. Designers can verify the
+  check for consistency, feasibility and flexibility. Designers can verify the
   system in various ways, such as consistency among modules, feasibility of the
   decomposition, and flexibility of the design.
 \end{itemize}
@@ -188,7 +188,13 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mInput}:] Web Application Input Module
+\item [\refstepcounter{mnum} \mthemnum \label{mDisplay}:] Display Module
+\item [\refstepcounter{mnum} \mthemnum \label{mOutput}:] Web Application Output Module
+\item [\refstepcounter{mnum} \mthemnum \label{mMode}:] User Mode Module
+\item [\refstepcounter{mnum} \mthemnum \label{mBoard}:] Board Module
+\item [\refstepcounter{mnum} \mthemnum \label{mGame}:] Web Application Game State Module
+\item [\refstepcounter{mnum} \mthemnum \label{mEngine}:] Engine Module
 \end{description}
 
 
@@ -202,17 +208,22 @@ actually be implemented.
 {Hardware-Hiding Module} & ~ \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} 
+& Web Application Input Module\\
+& Display Module\\
+& Web Application Output Module\\
 & ?\\
 & ?\\
 & ?\\ 
 & ?\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} 
+& User Mode Module\\
+& Board Module\\
+& Web Application Game State Module\\
+& Engine Module\\
+& ?\\
 & ?\\
 & ?\\
 \bottomrule
@@ -226,7 +237,16 @@ actually be implemented.
 
 The design of the system is intended to satisfy the requirements developed in
 the SRS. In this stage, the system is decomposed into modules. The connection
-between requirements and modules is listed in Table~\ref{TblRT}.
+between requirements and modules is listed in Table \ref{TblRT}.
+
+\wss{The intention of this section is to document decisions that are made
+  ``between'' the requirements and the design.  To satisfy some requirements,
+  design decisions need to be made.  Rather than make these decisions implicit,
+  they are explicitly recorded here.  For instance, if a program has security
+  requirements, a specific design decision may be made to satisfy those
+  requirements with a password.  In scientific examples, the choice of algorithm
+could potentially go here, if that is a decision that is exposed by the
+interface.}
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -267,16 +287,26 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+    \subsubsection{Web Application Input Module (\mref{mInput})}
+    \begin{description}
+    \item[Secrets:] Input data.
+    \item[Services:] Takes in input data of current board state to provide to other modules.
+    \item[Implemented By:] \progname\ (Node.js libraries, Bluetooth)
+    \end{description}
+    
+    \subsubsection{Display Module \mref{mDisplay}} 
+    \begin{description}
+    \item[Secrets:] Graphics output data.
+    \item[Services:] Allows users to view the current board configuration of the system.
+    \item[Implemented By:] \progname\ (React.js framework)
+    \end{description}
 
-\begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
-\end{description}
+    \subsubsection{Web Application Output Module \mref{mOutput}} 
+    \begin{description}
+    \item[Secrets:] None.
+    \item[Services:] Takes game state and engine moves, encodes the data, and transmits it.
+    \item[Implemented By:] \progname\ (React.js framework, Bluetooth)
+    \end{description}
 
 \subsubsection{Etc.}
 
@@ -294,10 +324,35 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+    \subsubsection{User Mode Module \mref{mMode}}
+    \begin{description}
+    \item[Secrets:] User mode logic and data.
+    \item[Services:] Handles switching between user modes and communicating with mode-specific modules.
+    \item[Implemented By:] \progname\ (React.js framework)
+    \end{description}
+
+    \subsubsection{Board Module \mref{mBoard}}
+    \begin{description}
+    \item[Secrets:] Board data.
+    \item[Services:] Stores and modifies board state information.
+    \item[Implemented By:] \progname\ (React.js framework)
+    \end{description}
+
+    \subsubsection{Web Application Game State Module \mref{mGame}}
+    \begin{description}
+    \item[Secrets:] Game state and data.
+    \item[Services:] Handles checking the game state (none, check, checkmate, stalemate).
+    \item[Implemented By:] \progname\ (React.js framework, Node.js libraries)
+    \end{description}
+    
+    \subsubsection{Engine Module \mref{mEngine}}
+    \begin{description}
+    \item[Secrets:] Chess engine moves.
+    \item[Services:] Uses the board state to calculate 3 possible moves.
+    \item[Implemented By:] \progname\ (Node.js libraries and Stockfish)
+    \end{description}
 
 \section{Traceability Matrix} \label{SecTM}
-
 This section shows two traceability matrices: between the modules and the
 requirements and between the modules and the anticipated changes.
 
@@ -374,7 +429,5 @@ because they use modules from the lower levels.
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
-
-\newpage{}
 
 \end{document}
