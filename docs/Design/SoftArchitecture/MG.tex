@@ -51,8 +51,8 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-1/17/2023 & 1.0 & Detailed Modules used by Arduino Mega 2560\\
 2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
+2023-01-17 & Alexander Van Kralingen & Detailed Modules used by Arduino Mega 2560\\
 2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 \bottomrule
 \end{tabularx}
@@ -74,6 +74,7 @@ This section records information for easy reference.
   AC & Anticipated Change\\
   M & Module \\
   MG & Module Guide \\
+  MIS & Module Interface Specification \\
   OS & Operating System \\
   R & Requirement\\
   UC & Unlikely Change \\
@@ -140,12 +141,6 @@ unlikely changes are listed in Section \ref{SecUchange}.
 
 \subsection{Anticipated Changes} \label{SecAchange}
 
-Anticipated changes are the source of the information that is to be hidden
-inside the modules. Ideally, changing one of the anticipated changes will only
-require changing the one module that hides the associated decision. The approach
-adapted here is called design for
-change.
-
 \begin{description}
   \item[\refstepcounter{acnum} \actheacnum \label{acVerification}:] The format in which the data is passed from the hardware to the web application.
   \item[\refstepcounter{acnum} \actheacnum \label{acBoardState}:] The implementation of the data structure that stores the game board state.
@@ -159,13 +154,6 @@ change.
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
-
-The module design should be as general as possible. However, a general system is
-more complex. Sometimes this complexity is not necessary. Fixing some design
-decisions at the system architecture stage can simplify the software design. If
-these decision should later need to be changed, then many parts of the design
-will potentially need to be modified. Hence, it is not intended that these
-decisions will be changed.
 
 \begin{description}
   \item[\refstepcounter{ucnum} \uctheucnum] The user option to play against another user online.
