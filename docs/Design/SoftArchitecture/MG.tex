@@ -51,8 +51,8 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-1/17/2023 & 1.0 & Detailed Modules used by Arduino Mega 2560\\
 2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
+2023-01-17 & Alexander Van Kralingen & Detailed Modules used by Arduino Mega 2560\\
 2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 \bottomrule
 \end{tabularx}
@@ -74,6 +74,7 @@ This section records information for easy reference.
   AC & Anticipated Change\\
   M & Module \\
   MG & Module Guide \\
+  MIS & Module Interface Specification \\
   OS & Operating System \\
   R & Requirement\\
   UC & Unlikely Change \\
@@ -140,12 +141,6 @@ unlikely changes are listed in Section \ref{SecUchange}.
 
 \subsection{Anticipated Changes} \label{SecAchange}
 
-Anticipated changes are the source of the information that is to be hidden
-inside the modules. Ideally, changing one of the anticipated changes will only
-require changing the one module that hides the associated decision. The approach
-adapted here is called design for
-change.
-
 \begin{description}
   \item[\refstepcounter{acnum} \actheacnum \label{acVerification}:] The format in which the data is passed from the hardware to the web application.
   \item[\refstepcounter{acnum} \actheacnum \label{acBoardState}:] The implementation of the data structure that stores the game board state.
@@ -159,13 +154,6 @@ change.
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
-
-The module design should be as general as possible. However, a general system is
-more complex. Sometimes this complexity is not necessary. Fixing some design
-decisions at the system architecture stage can simplify the software design. If
-these decision should later need to be changed, then many parts of the design
-will potentially need to be modified. Hence, it is not intended that these
-decisions will be changed.
 
 \begin{description}
   \item[\refstepcounter{ucnum} \uctheucnum] The user option to play against another user online.
@@ -239,23 +227,24 @@ The Hardware-Hiding module is implemented by the microcontroller as firmware tha
 
 \section{Connection Between Requirements and Design} \label{SecConnection}
 
-The design satisfies the system requirements developed in the SRS. The Input module will handle all interactions from the inputs provided by the user, such as the FEN String, the user mode, and whether the game has terminated. The Display module outputs the visual component of the interface, and this module will cover all requirements that have a component of the user directly interacting with the system. The Board and Game modules cover the board setup and positions along with checking the end game conditions such as Checkmate and Stalemate. The look and feel requirements are satisfied by the input and output modules as they define the core areas of user interaction. The usability and humanity requirements are again satisfied by the input and output modules which define the user interaction. Performance requirements are to be satisfied by the combination of all modules, but the key modules that impact performance are software decision hiding modules. The operational and environmental requirements, and the maintainability and support requirements are achieved by all modules. This is because all modules are designed to be operational for the environment (the server and client) and maintained for a set time (end of semester). Security and legal requirements are covered by the entirety of the system. This is because the accessibility of the repository and the JavaScript standard in use affects all modules.
+The design satisfies the system requirements developed in the SRS. The Web Application 
+Input module will handle all interactions from the inputs provided by the user, such as the 
+FEN String, the user mode, and whether the game has terminated. The Display module outputs 
+the visual component of the interface, and this module will cover all requirements that have a 
+component of the user directly interacting with the system. The Web Application Board and Game 
+State modules cover the board setup and positions along with checking the end game conditions 
+such as checkmate and stalemate. The look and feel requirements are satisfied by the input and 
+output modules as they define the core areas of user interaction. The usability and humanity 
+requirements are again satisfied by the input and output modules which define the user interaction. 
+Performance requirements are to be satisfied by the combination of all modules, but the key modules 
+that impact performance are software decision hiding modules. The operational and environmental 
+requirements, and the maintainability and support requirements are achieved by all modules. This 
+is because all modules are designed to be operational for the environment (the server and client) 
+and maintained for a set time (end of semester). Security and legal requirements are covered by 
+the entirety of the system. This is because the accessibility of the repository and the JavaScript 
+standard in use affects all modules.
 
 \section{Module Decomposition} \label{SecMD}
-
-Modules are decomposed according to the principle of ``information hiding''
-proposed by \citet{ParnasEtAl1984}. The \emph{Secrets} field in a module
-decomposition is a brief statement of the design decision hidden by the
-module. The \emph{Services} field specifies \emph{what} the module will do
-without documenting \emph{how} to do it. For each module, a suggestion for the
-implementing software is given under the \emph{Implemented By} title. If the
-entry is \emph{OS}, this means that the module is provided by the operating
-system or by standard programming language libraries.  \emph{\progname{}} means the
-module will be implemented by the \progname{} software.
-
-Only the leaf modules in the hierarchy have to be implemented. If a dash
-(\emph{--}) is shown, this means that the module is not a leaf and will not have
-to be implemented.
 
 \subsection{Hardware Hiding Modules (\mref{mHH})}
 
@@ -272,21 +261,21 @@ to be implemented.
 \begin{description}
 \item[Secrets:] The logic for changing game state and reading user actions.
 \item[Services:] Reads inputs from sensors and writes to outputs to turn on/off LED's. Main overarching module that runs and controls all other modules to coordinate the logic and messages with the game state.
-\item[Implemented By:] Arduino Mega 2560 Rev3 Controller
+\item[Implemented By:] \progname (Arduino Mega 2560 Rev3 Controller)
 \end{description}
 
 \subsubsection{Arduino Module (\mref{mAM})}
 \begin{description}
 \item[Secrets:] The Arduino API that allows access to the Hardware Abstraction Layer (HAL).
 \item[Services:] Provides an interface to the hardware through pin assignments and hardware ID's.
-\item[Implemented By:] Arduino Controller Module
+\item[Implemented By:] Arduino.h library
 \end{description}
 
 \subsubsection{Piece Identification Module (\mref{mPI})}
 \begin{description}
 \item[Secrets:] The values read by the Hall-effect sensors that are translated into the Piece data type.
 \item[Services:] Translates sensor values into pieces and positions on the chess board. Provides Piece identification data types to the rest of the program.
-\item[Implemented By:] Arduino Controller Module, Chess Board Module
+\item[Implemented By:] \progname (c++, Arduino)
 \end{description}
 
 \subsubsection{Chess Board Module (\mref{mCB})}
@@ -297,24 +286,23 @@ to be implemented.
     \item The translation of the piece configuration on the chess board into a \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string} \item Checking for checkmate
   \end{itemize}
 \item[Services:] Handles all of the logic used in the game of chess. This module processes commands recieved from the Web Application and Teensy Controller into actions to be implemented within the game and gives feedback related to valid moves and the game/board state.
-\item[Implemented By:] Arduino Controller Module
+\item[Implemented By:] \progname (c++, Arduino)
 \end{description}
 
 \subsubsection{Communication Module (\mref{mCM})}
 \begin{description}
 \item[Secrets:] Message encoding string used to send board state, game mode and resignation signal. Message decoding string to interpret best moves, the check/mate/stalemate warning and commands from the Teensy controller.
 \item[Services:] Reads and writes to the communication pins, processes and sends commands to various parts of the embedded software.
-\item[Implemented By:] Arduino Controller Module, Chess Board Module
+\item[Implemented By:] \progname (c++, Arduino, Bluetooth)
 \end{description}
 
-\subsubsection{SoftwareSerial Module (\mref{mSS})}
+\subsubsection{Software Serial Module (\mref{mSS})}
 \begin{description}
 \item[Secrets:] The methods in which the data is encoded, flags used to acknowledge connection, successful data transmission, incoming signal, etc.
 \item[Services:] The Arduino API that allows for sending and receiving various data types through serial communication.
-\item[Implemented By:] Communication Module
+\item[Implemented By:] SoftwareSerial.h library
 \end{description}
 
-\subsection{Behaviour-Hiding Module}
 \subsection{Behaviour-Hiding Modules}
     \subsubsection{Web Application Input Module (\mref{mInput})}
     \begin{description}
@@ -337,8 +325,7 @@ to be implemented.
     \item[Implemented By:] \progname\ (React.js framework, Bluetooth)
     \end{description}
 
-
-\subsection{Software Decision Module}
+\subsection{Software Decision Modules}
     \subsubsection{User Mode Module \mref{mMode}}
     \begin{description}
     \item[Secrets:] User mode logic and data.
@@ -346,7 +333,7 @@ to be implemented.
     \item[Implemented By:] \progname\ (React.js framework)
     \end{description}
 
-    \subsubsection{Board Module \mref{mBoard}}
+    \subsubsection{Web Application Board Module \mref{mBoard}}
     \begin{description}
     \item[Secrets:] Board data.
     \item[Services:] Stores and modifies board state information.
@@ -366,7 +353,6 @@ to be implemented.
     \item[Services:] Uses the board state to calculate 3 possible moves.
     \item[Implemented By:] \progname\ (Node.js libraries and Stockfish)
     \end{description}
-
 
 
 
