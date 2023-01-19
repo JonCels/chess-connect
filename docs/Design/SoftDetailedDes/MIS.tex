@@ -41,7 +41,7 @@ urlcolor=cyan          % color of external links
 
 \title{Module Interface Specification for \progname{}}
 
-\author{\progname}
+\author{\authname}
 
 \date{\today}
 
@@ -101,15 +101,14 @@ found at \url{https://github.com/ChessConnect/chess-connect}.
 
 \section{Notation}
 
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
-
 The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
 with the addition that template modules have been adapted from
 \cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
 \citet{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
 multiple assignment statement and conditional rules follow the form $(c_1
-\Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
+\Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$. 
+String concatenation uses the + symbol between strings surrounded by `', 
+such as `this' + `that'.
 
 The following table summarizes the primitive data types used by \progname. 
 
@@ -121,10 +120,8 @@ The following table summarizes the primitive data types used by \progname.
 \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
 \midrule
 character & char & a single symbol or digit\\
-integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
-natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
-real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
-boolean & bool & true (value of 1) or false (value of 0)\\
+integer & int & a number without a fractional component in (-$\infty$, $\infty$) \\
+boolean & boolean & true (value of 1) or false (value of 0)\\
 enumeration & enum & keywords assigned an integer value in order of declaration beginning at 0\\
 structure & Piece & C++ struct data-type containing PieceType enumeration and int colour (0 for white, 1 for black)\\
 \bottomrule
