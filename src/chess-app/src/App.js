@@ -11,35 +11,36 @@ const container = {
   alignItems: "center"
 }
 
-function lichessCloudEval() {
-  const fenString = "rnbqkbnr/pppp1ppp/8/4N3/8/8/PPPPPPPP/RNBQKB1R b KQkq - 0 2"
+function lichessCloudEval(fen) {
   return new Promise(function (resolve, reject) {
-    fetch("https://lichess.org/api/cloud-eval?fen=" + fenString + "&multiPv=" + "3")
+    fetch("https://lichess.org/api/cloud-eval?fen=" + fen + "&multiPv=" + "3")
       .then((response) => response.json())
       .then((data) => resolve(data["pvs"]));
   }
 )}
 
-function App() {
-
-  const chess = new Chess(
-    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-  )  
-  const difficulty = 1
-  initGame(chess, difficulty)
-  const bestMove = calculateBestMove(chess, difficulty);
-  console.log(bestMove)
+async function getTopThree(fenString) {
   const topThree = []
-  const moveVariations = lichessCloudEval();
-  console.log(moveVariations)
-
+  const moveVariations = await lichessCloudEval(fenString);
   for(let i = 0; i < moveVariations.length; i++) {
     topThree.push(moveVariations[i]["moves"].split(" ").shift())
   }
-  console.log(topThree)
+  return topThree
+}
 
+function App() {
 
-  const [fen, setFen] = useState("start")
+  const fenString = "rnbqkbnr/pp2pppp/2p5/3p4/3PP3/5P2/PPP3PP/RNBQKBNR b KQkq - 0 3"
+  // const chess = new Chess(
+  //   'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+  // )  
+  // const difficulty = 1
+  // initGame(chess, difficulty)
+  // const bestMove = calculateBestMove(chess, difficulty);
+  // console.log(bestMove)
+
+  console.log(getTopThree(fenString))
+  const [fen, setFen] = useState(fenString)
 
   return (
     <div className="App" style={container}>
