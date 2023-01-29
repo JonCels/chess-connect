@@ -1,4 +1,4 @@
-#include <string.h>
+#include <string>
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <PieceIdentification.h>
@@ -8,15 +8,15 @@ const int numCols = 8;
 
 
 // Pins to control the LEDs
-const int LED_PINS[numRows][numCols] = {
-    {2, 3, 4, 5, 6, 7, 8, 9},
-    {10, 11, 12, 13, 14, 15, 16, 17},
-    {18, 19, 20, 21, 22, 23, 24, 25},
-    {26, 27, 28, 29, 30, 31, 32, 33},
-    {34, 35, 36, 37, 38, 39, 40, 41},
-    {42, 43, 44, 45, 46, 47, 48, 49},
-    {50, 51, 52, 53, 54, 55, 56, 57},
-    {58, 59, 60, 61, 62, 63, 64, 65}};
+const int LED_PINS[numRows+1][numCols+1] = {
+    {2, 3, 4, 5, 6, 7, 8, 9, 10},
+    {10, 11, 12, 13, 14, 15, 16, 17, 18},
+    {18, 19, 20, 21, 22, 23, 24, 25, 26},
+    {26, 27, 28, 29, 30, 31, 32, 33, 34},
+    {34, 35, 36, 37, 38, 39, 40, 41, 42},
+    {42, 43, 44, 45, 46, 47, 48, 49, 50},
+    {50, 51, 52, 53, 54, 55, 56, 57, 58},
+    {58, 59, 60, 61, 62, 63, 64, 65, 66}};
 
 // Pins to read the hall-effect sensors
 const int HALL_PINS[numRows][numCols] = {
@@ -47,9 +47,9 @@ void setup()
         }
     }
     // Set the LED pins to output mode
-    for (int i = 0; i < numRows; i++)
+    for (int i = 0; i < numRows+1; i++)
     {
-        for (int j = 0; j < numCols; j++)
+        for (int j = 0; j < numCols+1; j++)
         {
             pinMode(LED_PINS[i][j], OUTPUT);
         }
@@ -105,6 +105,9 @@ void loop()
             else
             {
                 digitalWrite(LED_PINS[i][j], HIGH);
+                digitalWrite(LED_PINS[i][j+1], HIGH);
+                digitalWrite(LED_PINS[i+1][j], HIGH);
+                digitalWrite(LED_PINS[i+1][j+1], HIGH);
             }
         }
     }
@@ -122,6 +125,7 @@ bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promoti
     if (toPiece.type != NONE && fromPiece.color == toPiece.color)
     {
         // Cannot capture own piece
+        // illegalMove(int fromRow, int fromCol, int toRow, int toCol);
         return;
     }
     switch (fromPiece.type)
@@ -343,26 +347,7 @@ std::string boardToFen()
     return fen;
 }
 
-char pieceToChar(Piece piece)
-{
-    switch (piece.type)
-    {
-    case PAWN:
-        return piece.color == 0 ? 'P' : 'p';
-    case KNIGHT:
-        return piece.color == 0 ? 'N' : 'n';
-    case BISHOP:
-        return piece.color == 0 ? 'B' : 'b';
-    case ROOK:
-        return piece.color == 0 ? 'R' : 'r';
-    case QUEEN:
-        return piece.color == 0 ? 'Q' : 'q';
-    case KING:
-        return piece.color == 0 ? 'K' : 'k';
-    default:
-        return ' ';
-    }
-}
+
 
 void sendFen(std::string fen)
 {

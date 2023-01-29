@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <piece-identification.cpp>
+#include <PieceIdentification.h>
 
 void setup() {
   // put your setup code here, to run once:
@@ -8,5 +8,5 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  String id = ReadSensors(analogRead(0), analogRead(1))
+  //String id = ReadSensors(analogRead(0), analogRead(1))
 }

@@ -1,19 +1,7 @@
-#include <string.h>
+#include <string>
 #include <stdio.h>
 #include <stdlib.h>
-
-
-enum COLOUR{
-    white,
-    black        
-};
-
-struct Piece
-{
-    std::string Name;
-    COLOUR Colour;
-    std::string FEN;
-};
+#include <PieceIdentification.h>
 
 struct Position
 {
@@ -21,8 +9,7 @@ struct Position
     int Y;
 };
 
-
-class ChessBoard
+class ArduinoController
 {
 private:
     /* data */
@@ -35,16 +22,16 @@ private:
     
 
 public:
-    ChessBoard(/* args */);
-    ~ChessBoard();
+    ArduinoController(/* args */);
+    ~ArduinoController();
     
 };
 
-ChessBoard::ChessBoard(/* args */)
+ArduinoController::ArduinoController(/* args */)
 {
 }
 
-ChessBoard::~ChessBoard()
+ArduinoController::~ArduinoController()
 {
 }
 
