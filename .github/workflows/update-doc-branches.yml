@@ -13,7 +13,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix: 
-        branch: ["Documentation/DD", "Documentation/DEMO", "Documentation/DP", "Documentation/EXPODEMO", "Documentation/FINALDEMO", "Documentation/FINALDOC", "Documentation/HA", "Documentation/POC", "Documentation/PSAG", "Documentation/SRS", "Documentation/VNVP", "Documentation/VNVR"]
+        branch: ["Documentation"]
     steps:
       - name: 'Checkout main'
         uses: actions/checkout@v3

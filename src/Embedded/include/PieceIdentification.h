@@ -1,5 +1,4 @@
-const int RX_PIN = 2; // RX pin of the SerialCommunication module
-const int TX_PIN = 3; // TX pin of the SerialCommunication module
+
 
 // Enum to represent the different types of chess pieces
 enum PieceType
@@ -28,3 +27,4 @@ struct Piece
 };
 
 Piece ReadSensors(int sensor = 0);
+char pieceToChar(Piece piece);

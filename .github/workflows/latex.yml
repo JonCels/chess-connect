@@ -73,7 +73,7 @@ jobs:
         with:
           root_file: MG.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working_directory: docs/Design/MG
+          working_directory: docs/Design/SoftArchitecture
           
       - name: latexmk MIS
         uses: dante-ev/latex-action@latest
@@ -81,7 +81,15 @@ jobs:
         with:
           root_file: MIS.tex
           args: -pdf -interaction=nonstopmode -shell-escape
-          working_directory: docs/Design/MIS
+          working_directory: docs/Design/SoftDetailedDes
+      
+      - name: latexmk SystDes
+        uses: dante-ev/latex-action@latest
+        if: ${{ steps.filter.outputs.base == 'true' || steps.filter.outputs.design == 'true' }}
+        with:
+          root_file: SystDes.tex
+          args: -pdf -interaction=nonstopmode -shell-escape
+          working_directory: docs/Design/SystDesign
       
       - name: latexmk DevelopmentPlan
         uses: dante-ev/latex-action@latest
