@@ -1,40 +1,5 @@
-#include <string.h>
+#include <ChessBoard.h>
 #include <Arduino.h>
-#include <SoftwareSerial.h>
-#include <PieceIdentification.h>
-
-const int numRows = 8;
-const int numCols = 8;
-
-
-// Pins to control the LEDs
-const int LED_PINS[numRows][numCols] = {
-    {2, 3, 4, 5, 6, 7, 8, 9},
-    {10, 11, 12, 13, 14, 15, 16, 17},
-    {18, 19, 20, 21, 22, 23, 24, 25},
-    {26, 27, 28, 29, 30, 31, 32, 33},
-    {34, 35, 36, 37, 38, 39, 40, 41},
-    {42, 43, 44, 45, 46, 47, 48, 49},
-    {50, 51, 52, 53, 54, 55, 56, 57},
-    {58, 59, 60, 61, 62, 63, 64, 65}};
-
-// Pins to read the hall-effect sensors
-const int HALL_PINS[numRows][numCols] = {
-    {66, 67, 68, 69, 70, 71, 72, 73},
-    {74, 75, 76, 77, 78, 79, 80, 81},
-    {82, 83, 84, 85, 86, 87, 88, 89},
-    {90, 91, 92, 93, 94, 95, 96, 97},
-    {98, 99, 100, 101, 102, 103, 104, 105},
-    {106, 107, 108, 109, 110, 111, 112, 113},
-    {114, 115, 116, 117, 118, 119, 120, 121},
-    {122, 123, 124, 125, 126, 127, 128, 129}};
-
-SoftwareSerial bluetooth(RX_PIN, TX_PIN); // create a SoftwareSerial object
-
-// 2D array to represent the chess board
-Piece board[numRows][numCols];
-
-std::string FEN;
 
 void setup()
 {
@@ -47,9 +12,9 @@ void setup()
         }
     }
     // Set the LED pins to output mode
-    for (int i = 0; i < numRows; i++)
+    for (int i = 0; i < numRows+1; i++)
     {
-        for (int j = 0; j < numCols; j++)
+        for (int j = 0; j < numCols+1; j++)
         {
             pinMode(LED_PINS[i][j], OUTPUT);
         }
@@ -81,17 +46,25 @@ void loop()
                 if (piece.type == NONE)
                 {
                     piece.type = PAWN;
-                    piece.color = 0; // white
+                    piece.colour = 0; // white
                 }
                 else
                 {
                     piece.type = NONE;
-                    piece.color = -1;
+                    piece.colour = -1;
                 }
                 FEN = boardToFen();
             }
         }
     }
+    
+}
+
+class ChessBoard {
+
+}
+
+void LightAllPieces(){
     // Update the LEDs based on the board
     for (int i = 0; i < numRows; i++)
     {
@@ -100,13 +73,28 @@ void loop()
             Piece piece = board[i][j];
             if (piece.type == NONE)
             {
-                digitalWrite(LED_PINS[i][j], LOW);
+                LightSquare(i, j, false);
             }
             else
             {
-                digitalWrite(LED_PINS[i][j], HIGH);
+                LightSquare(i, j, true);
             }
         }
+    }
+}
+
+// If on = true, light square, else turn off light
+void LightSquare(int row, int col, bool on){
+    if (on)
+    {
+        digitalWrite(LED_PINS[row][col], HIGH);
+        digitalWrite(LED_PINS[row][col + 1], HIGH);
+        digitalWrite(LED_PINS[row + 1][col], HIGH);
+        digitalWrite(LED_PINS[row + 1][col + 1], HIGH);
+    }
+    else
+    {
+        digitalWrite(LED_PINS[row][col], LOW);
     }
 }
 
@@ -119,15 +107,19 @@ bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promoti
         // There is no piece to move
         return;
     }
-    if (toPiece.type != NONE && fromPiece.color == toPiece.color)
+    if (toPiece.type != NONE && fromPiece.colour == toPiece.colour)
     {
         // Cannot capture own piece
+        // illegalMove(int fromRow, int fromCol, int toRow, int toCol);
         return;
+    }
+    else if (toPiece.type != NONE && fromPiece.colour != toPiece.colour) {
+
     }
     switch (fromPiece.type)
     {
     case PAWN:
-        if (fromPiece.color == 0)
+        if (fromPiece.colour == 0)
         { // white pawn
             if (fromRow == 1 && toRow == 3 && fromCol == toCol && toPiece.type == NONE)
             {
@@ -195,7 +187,7 @@ bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promoti
         {
             // Pawn has reached the other side of the board, promote it
             fromPiece.type = NONE;
-            toPiece = {promotionType, fromPiece.color};
+            toPiece = {promotionType, fromPiece.colour};
             break;
         }
         // Invalid move for pawn
@@ -343,26 +335,7 @@ std::string boardToFen()
     return fen;
 }
 
-char pieceToChar(Piece piece)
-{
-    switch (piece.type)
-    {
-    case PAWN:
-        return piece.color == 0 ? 'P' : 'p';
-    case KNIGHT:
-        return piece.color == 0 ? 'N' : 'n';
-    case BISHOP:
-        return piece.color == 0 ? 'B' : 'b';
-    case ROOK:
-        return piece.color == 0 ? 'R' : 'r';
-    case QUEEN:
-        return piece.color == 0 ? 'Q' : 'q';
-    case KING:
-        return piece.color == 0 ? 'K' : 'k';
-    default:
-        return ' ';
-    }
-}
+
 
 void sendFen(std::string fen)
 {
