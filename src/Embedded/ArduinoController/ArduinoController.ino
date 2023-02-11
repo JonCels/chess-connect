@@ -106,26 +106,9 @@ int readHall(int adcnum, int rx, int tx) {
 
 void readRow(int row, int rx, int tx) { 
   int i; 
-//  int numSamples = 50;
   
   for (i=0;i<8;i++) { 
     rawStates[row][i] = readHall(i,rx,tx);
-//    int sum = 0;
-//    int divisor = numSamples;
-//    
-//    for (int j=0; j<numSamples; j++){
-//      int rawValue = readHall(i,rx,tx);
-//      if (rawValue > 0 || rawValue < 1000) {
-//        sum += rawValue;
-//      }
-//      else
-//        divisor--;
-//    }
-//    
-//    if(divisor == 0)
-//      divisor = 1;
-//
-//    rawStates[row][i] = sum / divisor;
   }
 }
 

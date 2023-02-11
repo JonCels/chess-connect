@@ -1,7 +1,7 @@
 
 int clk = 18;
 int cs = 21; 
-int delay_const = 1000;
+int delay_const = 2000;
 
 int Row1LedAnode = 31;
 int Row2LedAnode = 32;
@@ -62,7 +62,8 @@ int adjStates[8][8] = {{0,0,0,0,0,0,0,0},
 int readHall(int adcnum, int rx, int tx) { 
   digitalWrite(cs,HIGH);
   digitalWrite(clk, LOW); 
-  digitalWrite(cs, LOW); 
+  digitalWrite(cs, LOW);
+  delayMicroseconds(2);
 
   int commandout = adcnum; 
   commandout |= 0x18; 
@@ -75,23 +76,29 @@ int readHall(int adcnum, int rx, int tx) {
     else {
       digitalWrite(tx, LOW); 
     }
+    delayMicroseconds(2);
+
     commandout <<= 1; 
     digitalWrite(clk,HIGH);
-    digitalWrite(clk,LOW);  
+    delayMicroseconds(2);
+    digitalWrite(clk,LOW);
+    delayMicroseconds(2);
   }
 
   int adcout = 0;
 
   for (int i=0; i<12; i++) {
-    digitalWrite(clk,HIGH); 
-    digitalWrite(clk,LOW); 
+    digitalWrite(clk,HIGH);
+    delayMicroseconds(2);
+    digitalWrite(clk,LOW);
+    delayMicroseconds(2);
 
     adcout <<=1; 
 
     if (digitalRead(rx)) adcout |= 0x1;
   }
-
-  digitalWrite(cs,HIGH); 
+  
+  digitalWrite(cs, HIGH); 
 
   adcout >>= 1;
   return adcout; 
@@ -99,6 +106,7 @@ int readHall(int adcnum, int rx, int tx) {
 
 void readRow(int row, int rx, int tx) { 
   int i; 
+  
   for (i=0;i<8;i++) { 
     rawStates[row][i] = readHall(i,rx,tx);
   }
@@ -173,22 +181,24 @@ void adjust() {
 
 void printHall() {
   int i,j;
-
+  //char columns[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+  
+  Serial.println("\ta\tb\tc\td\te\tf\tg\th");
   for (i=0;i<8;i++) {
+    Serial.print(8-i);
+    Serial.print("\t");
     for (j=0;j<8;j++) { 
       Serial.print(adjStates[i][j]);
       Serial.print("\t"); 
     }
     Serial.print("\n");
+    delay(1);
   }
 }
 
-
-
-
 void setup() 
 { 
-  pinMode(cs, OUTPUT); 
+  pinMode(cs,  OUTPUT); 
   pinMode(arx, INPUT); 
   pinMode(atx, OUTPUT); 
   pinMode(brx, INPUT); 
@@ -205,9 +215,10 @@ void setup()
   pinMode(gtx, OUTPUT); 
   pinMode(hrx, INPUT) ;
   pinMode(htx, OUTPUT); 
-  pinMode(clk,OUTPUT); 
+  pinMode(clk, OUTPUT); 
+  
  // open serial port
- Serial.begin(9600);  
+ Serial.begin(9600);
 }
  
 void loop() 
