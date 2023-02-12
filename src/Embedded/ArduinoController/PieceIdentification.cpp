@@ -1,4 +1,4 @@
-#include <PieceIdentification.h>
+#include "PieceIdentification.h"
 
 Piece IdentifyPiece(int sensor = 0)
 {
@@ -52,7 +52,7 @@ Piece IdentifyPiece(int sensor = 0)
     }
     else
     {
-        return Piece{NO_PIECE, NO_COLOUR};
+        return Piece{};
         //Serial.write(13);
     }
 }
@@ -74,6 +74,6 @@ char pieceToChar(Piece piece)
     case KING:
         return piece.colour == 0 ? 'K' : 'k';
     default:
-        return ' ';
+        return '.';
     }
 }

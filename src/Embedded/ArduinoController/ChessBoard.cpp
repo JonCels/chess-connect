@@ -1,9 +1,23 @@
-#pragma once
-#include <ChessBoard.h>
-#include <PieceIdentification.h>
+#include "ChessBoard.h"
+#include "PieceIdentification.h"
+
+
+
+void initializeChessBoardVariables(){
+    Piece board[numRows][numCols] = {
+        {{ROOK, WHITE}, {KNIGHT, WHITE}, {BISHOP, WHITE}, {QUEEN, WHITE}, {KING, WHITE}, {BISHOP, WHITE}, {KNIGHT, WHITE}, {ROOK, WHITE}},
+        {{PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}},
+        {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+        {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+        {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+        {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+        {{PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}},
+        {{ROOK, BLACK}, {KNIGHT, BLACK}, {BISHOP, BLACK}, {QUEEN, BLACK}, {KING, BLACK}, {BISHOP, BLACK}, {KNIGHT, BLACK}, {ROOK, BLACK}}};
+}
 
 void setupChessBoard()
 {
+  initializeChessBoardVariables();
 }
 
 void loopChessBoard()
@@ -30,7 +44,7 @@ void loopChessBoard()
     //         }
     //     }
     // }
-    FEN = boardToFen();
+    
 }
 
 void LightAllPieces()
@@ -157,7 +171,7 @@ bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promoti
         if (toRow == 0 || toRow == 7)
         {
             // Pawn has reached the other side of the board, promote it
-            toPiece = {promotionType, fromPiece.colour};
+            toPiece = (Piece){promotionType, fromPiece.colour};
             fromPiece = Piece{};
             break;
         }
@@ -271,42 +285,80 @@ bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promoti
     }
 }
 
-std::string boardToFen()
+// Converts a single row of the chess board to a FEN string
+void rowToFen(Piece row[8], char fen[], int &fen_index)
 {
-    std::string fen;
-    for (int row = 7; row >= 0; row--)
+    int empty_count = 0;
+    for (int i = 0; i < 8; ++i)
     {
-        int emptySquares = 0;
-        for (int col = 0; col < 8; col++)
+        if (row[i].type == PieceType::NO_PIECE)
         {
-            Piece piece = board[row][col];
-            if (piece.type == NO_PIECE)
-            {
-                emptySquares++;
-            }
-            else
-            {
-                if (emptySquares > 0)
-                {
-                    fen += std::to_string(emptySquares);
-                    emptySquares = 0;
-                }
-                fen += pieceToChar(piece);
-            }
+            ++empty_count;
         }
-        if (emptySquares > 0)
+        else
         {
-            fen += std::to_string(emptySquares);
-        }
-        if (row > 0)
-        {
-            fen += '/';
+            if (empty_count > 0)
+            {
+                fen[fen_index++] = '0' + empty_count;
+                empty_count = 0;
+            }
+            fen[fen_index++] = pieceToChar(row[i]);
         }
     }
-    return fen;
+    if (empty_count > 0)
+    {
+        fen[fen_index++] = '0' + empty_count;
+    }
 }
 
-void sendFen(std::string fen)
+// Converts a chess board to a FEN string
+void boardToFen(char fen[])
+{
+    int fen_index = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        rowToFen(board[i], fen, fen_index);
+        fen[fen_index++] = '/';
+    }
+    fen[--fen_index] = '\0';
+}
+
+// char* boardToFen()
+// {
+//     std::string fen;
+//     for (int row = 7; row >= 0; row--)
+//     {
+//         int emptySquares = 0;
+//         for (int col = 0; col < 8; col++)
+//         {
+//             Piece piece = board[row][col];
+//             if (piece.type == NO_PIECE)
+//             {
+//                 emptySquares++;
+//             }
+//             else
+//             {
+//                 if (emptySquares > 0)
+//                 {
+//                     fen += std::to_string(emptySquares);
+//                     emptySquares = 0;
+//                 }
+//                 fen += pieceToChar(piece);
+//             }
+//         }
+//         if (emptySquares > 0)
+//         {
+//             fen += std::to_string(emptySquares);
+//         }
+//         if (row > 0)
+//         {
+//             fen += '/';
+//         }
+//     }
+//     return fen;
+// }
+
+void sendFen(char* fen)
 {
     // bluetooth.print(fen);  // send the FEN string over Bluetooth
     // bluetooth.print('\n'); // send a newline character

@@ -1,5 +1,10 @@
-#pragma once
-#include <HallSensors.h>
+#include "HallSensors.h"
+
+int rawStates[8][8];
+
+int adjStates[8][8];
+
+int baseReadings[8][8];
 
 Position detectNewPiece(int col, int row)
 {
@@ -167,9 +172,38 @@ void printHall()
         delay(1);
     }
 }
+void initializeHallVariables(){
+    
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (i == 0 && j == 0)
+            {
+                rawStates[i][j] = 1;
+            }
+            rawStates[i][j] = 0;
+        }
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            adjStates[i][j] = 0;
+        }
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            baseReadings[i][j] = 210;
+        }
+    }
+}
 
 void setupHallSensors()
 {
+    initializeHallVariables();
     pinMode(cs, OUTPUT);
     pinMode(arx, INPUT);
     pinMode(atx, OUTPUT);

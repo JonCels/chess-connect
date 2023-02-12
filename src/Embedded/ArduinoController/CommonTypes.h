@@ -1,64 +1,70 @@
-#pragma once
-#include <string>
+#ifndef COMMON_HEADER_INCLUDED_
+  #define COMMON_HEADER_INCLUDED_
 
-// Enum to represent the different types of chess pieces
-enum PieceType
-{
-    NO_PIECE,
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK,
-    QUEEN,
-    KING
-};
+  #include "Arduino.h"
 
-enum Colour
-{
-    WHITE,
-    BLACK,
-    NO_COLOUR
-};
+  // Enum to represent the different types of chess pieces
+  enum PieceType
+  {
+      NO_PIECE,
+      PAWN,
+      KNIGHT,
+      BISHOP,
+      ROOK,
+      QUEEN,
+      KING
+  };
 
-enum GameMode {
-    BEGINNER_MODE,
-    NORMAL_MODE,
-    ENGINE_MODE
-};
+  enum Colour
+  {
+      WHITE,
+      BLACK,
+      NO_COLOUR
+  };
 
-enum GameState {
-    INIT_GAME,
-    PLAY_GAME,
-    END_GAME,
-    RESET_GAME
-};
+  enum GameMode {
+      BEGINNER_MODE,
+      NORMAL_MODE,
+      ENGINE_MODE
+  };
 
-enum UserAction
-{
-    WAIT_WHITE,
-    WAIT_BLACK,
-    PIECE_LIFTED,
-    REMOVE_PIECE,
-    PROMOTING,
-    VALID_MOVE,
-    INVALID_MOVE,
-    DRAW_ACTION,
-    RESIGN_ACTION,
-    RESET_ACTION,
-    NO_ACTION
-};
+  enum GameState {
+      INIT_GAME,
+      PLAY_GAME,
+      END_GAME,
+      RESET_GAME
+  };
 
-// Struct for returning piece position from functions
-struct Position {
-    int row;
-    int col;
-};
+  enum UserAction
+  {
+      WAIT_WHITE,
+      WAIT_BLACK,
+      PIECE_LIFTED,
+      REMOVE_PIECE,
+      PROMOTING,
+      VALID_MOVE,
+      INVALID_MOVE,
+      DRAW_ACTION,
+      RESIGN_ACTION,
+      RESET_ACTION,
+      NO_ACTION
+  };
 
-// Structure to represent a chess piece
-// Members: PieceType, Colour
-// Default NO_PIECE, NO_COLOUR
-struct Piece
-{
-    PieceType type = PieceType::NO_PIECE;
-    Colour colour = Colour::NO_COLOUR;
-};
+  // Struct for returning piece position from functions
+  struct Position {
+      int row;
+      int col;
+  };
+
+  // Structure to represent a chess piece
+  // Members: PieceType, Colour
+  // Default NO_PIECE, NO_COLOUR
+  struct Piece
+  {
+      PieceType type;
+      Colour colour;
+      Piece() : type(PieceType::NO_PIECE), colour(Colour::NO_COLOUR) {}
+      Piece(PieceType piece, Colour colourType) : type(piece), colour(colourType) {}
+  };
+
+#endif
