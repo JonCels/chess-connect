@@ -1,7 +1,7 @@
 #include <PieceIdentification.h>
 #include <string>
 
-Piece ReadSensors(int sensor = 0)
+Piece IdentifyPiece(int sensor = 0)
 {
     if (sensor > 0 and sensor <= 30)
     {
