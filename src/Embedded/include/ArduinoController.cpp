@@ -3,13 +3,10 @@
 #include <stdlib.h>
 #include <PieceIdentification.h>
 
-#include <Arduino.h>
-#include <SoftwareSerial.h>
-
 
 class ArduinoController
 {
-private:
+public:
     /* data */
     void movePiece(Position start, Position end);
     bool isValidMove(Piece piece);
@@ -18,8 +15,6 @@ private:
     bool isCheckmate();
     std::string translateToFEN();
     
-
-public:
     ArduinoController(/* args */);
     ~ArduinoController();
     
@@ -27,7 +22,7 @@ public:
 
 ArduinoController::ArduinoController(/* args */)
 {
-    SoftwareSerial bluetooth(RX_PIN, TX_PIN); // create a SoftwareSerial object
+    //SoftwareSerial bluetooth(RX_PIN, TX_PIN); // create a SoftwareSerial object
 }
 
 ArduinoController::~ArduinoController()

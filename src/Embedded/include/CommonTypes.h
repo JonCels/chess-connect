@@ -55,6 +55,7 @@ struct Position {
 
 // Structure to represent a chess piece
 // Members: PieceType, Colour
+// Default NO_PIECE, NO_COLOUR
 struct Piece
 {
     PieceType type = PieceType::NO_PIECE;

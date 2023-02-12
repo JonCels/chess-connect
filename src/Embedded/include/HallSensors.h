@@ -69,3 +69,11 @@ int baseReadings[8][8] = {{210, 210, 210, 210, 210, 210, 210, 210},
                         {210, 210, 210, 210, 210, 210, 210, 210},
                         {210, 210, 210, 210, 210, 210, 210, 210},
                         {210, 210, 210, 210, 210, 210, 210, 210}};
+
+Position detectNewPiece(int col, int row);
+int readHall(int adcnum, int rx, int tx);
+void readRow(int row, int rx, int tx);
+void adjust();
+void printHall();
+void setupHallSensors();
+void loopHallSensors();
