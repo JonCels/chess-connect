@@ -1,5 +1,6 @@
 #pragma once
 #include <ChessBoard.h>
+#include <PieceIdentification.h>
 
 void setupChessBoard()
 {

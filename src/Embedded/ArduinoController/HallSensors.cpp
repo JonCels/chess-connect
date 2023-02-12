@@ -1,6 +1,5 @@
 #pragma once
 #include <HallSensors.h>
-#include <PieceIdentification.h>
 
 Position detectNewPiece(int col, int row)
 {

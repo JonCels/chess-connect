@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 // Enum to represent the different types of chess pieces
 enum PieceType

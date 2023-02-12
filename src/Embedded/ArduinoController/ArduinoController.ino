@@ -1,6 +1,6 @@
-#include <../include/HallSensors.h>
-#include <../include/ChessBoard.h>
-#include <../include/PieceIdentification.h>
+#include <HallSensors.h>
+#include <ChessBoard.h>
+#include <PieceIdentification.h>
 
 
 void setup()

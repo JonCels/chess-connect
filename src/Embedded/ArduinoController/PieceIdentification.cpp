@@ -1,5 +1,4 @@
 #include <PieceIdentification.h>
-#include <string>
 
 Piece IdentifyPiece(int sensor = 0)
 {
