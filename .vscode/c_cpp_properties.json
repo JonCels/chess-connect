@@ -6,7 +6,6 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/src/**",
                 "${workspaceFolder}/src/Embedded/include",
-                "${workspaceFolder}/src/Embedded/src",
                 "/usr/include/*",
                 "/usr/include/x86_64-linux-gnu",
                 "/usr/include/linux",

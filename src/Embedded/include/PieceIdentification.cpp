@@ -53,7 +53,7 @@ Piece IdentifyPiece(int sensor = 0)
     }
     else
     {
-        return Piece{NONE, WHITE};
+        return Piece{NO_PIECE, NO_COLOUR};
         //Serial.write(13);
     }
 }

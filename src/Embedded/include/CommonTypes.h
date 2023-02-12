@@ -1,3 +1,5 @@
+#pragma once
+
 // Enum to represent the different types of chess pieces
 enum PieceType
 {
@@ -52,9 +54,9 @@ struct Position {
 };
 
 // Structure to represent a chess piece
-// Members: PieceType, colour (0 for white, 1 for black
+// Members: PieceType, Colour
 struct Piece
 {
-    PieceType type = NO_PIECE;
-    Colour colour = NO_COLOUR;
+    PieceType type = PieceType::NO_PIECE;
+    Colour colour = Colour::NO_COLOUR;
 };

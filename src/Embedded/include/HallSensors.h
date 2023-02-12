@@ -1,3 +1,4 @@
+#pragma once
 #define delay_const 2000
 
 #define clk 97

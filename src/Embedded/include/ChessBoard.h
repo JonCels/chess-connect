@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <PieceIdentification.h>
 #include <CommonTypes.h>
