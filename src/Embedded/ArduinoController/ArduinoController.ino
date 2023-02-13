@@ -270,12 +270,13 @@ bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promoti
     case PAWN:
         if (fromPiece.colour == 0)
         { // white pawn
-            if (fromRow == 1 && toRow == 3 && fromCol == toCol && toPiece.type == NO_PIECE)
+            if (fromRow == 1 && toPiece.type == NO_PIECE)
             {
                 // White pawn can move two squares from the second row
-                toPiece = fromPiece;
-                fromPiece = Piece{};
-                break;
+                //toPiece = fromPiece;
+                //fromPiece = Piece{};
+                lightUp(row3,col fromCol)
+                    break;
             }
             if (fromRow + 1 == toRow && fromCol == toCol && toPiece.type == NO_PIECE)
             {
