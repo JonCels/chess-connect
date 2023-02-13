@@ -2,47 +2,47 @@
 // #include "ChessBoard.h"
 // #include "PieceIdentification.h"
 
-#define delay_const 2000
+int delay_const = 2000;
 
-#define clk 97
-#define cs 94
+int clk = A0;   // 97;   // A0
+int cs = A3;    // 94;    // A3
 
-#define Row1LedAnode 35
-#define Row2LedAnode 41
-#define Row3LedAnode 39
-#define Row4LedAnode 33
-#define Row5LedAnode 29
-#define Row6LedAnode 25
-#define Row7LedAnode 27
-#define Row8LedAnode 37
-#define Row9LedAnode 39
+int Row1LedAnode = 35;
+int Row2LedAnode = 41;
+int Row3LedAnode = 39;
+int Row4LedAnode = 33;
+int Row5LedAnode = 29;
+int Row6LedAnode = 25;
+int Row7LedAnode = 27;
+int Row8LedAnode = 37;
+int Row9LedAnode = 39;
 
-#define aColLedCathode 34
-#define bColLedCathode 28
-#define cColLedCathode 26
-#define dColLedCathode 30
-#define eColLedCathode 24
-#define fColLedCathode 40
-#define gColLedCathode 32
-#define hColLedCathode 36
-#define iColLedCathode 38
+int aColLedCathode = 34;
+int bColLedCathode = 28;
+int cColLedCathode = 26;
+int dColLedCathode = 30;
+int eColLedCathode = 24;
+int fColLedCathode = 40;
+int gColLedCathode = 32;
+int hColLedCathode = 36;
+int iColLedCathode = 38;
 
-#define arx 96
-#define atx 95
-#define brx 93
-#define btx 92
-#define crx 91
-#define ctx 90
-#define drx 89
-#define dtx 88
-#define erx 12
-#define etx 13
-#define frx 10
-#define ftx 11
-#define grx 8
-#define gtx 9
-#define hrx 6
-#define htx 7
+int arx = A1;   //96;   // A1
+int atx = A2;   //95;   // A2
+int brx = A4;   //93;   // A4
+int btx = A5;   //92;   // A5
+int crx = A6;   //91;   // A6
+int ctx = A7;   //90;   // A7
+int drx = A8;   //89;   // A8
+int dtx = A9;   //88;   // A9
+int erx = 12;
+int etx = 13;
+int frx = 10;
+int ftx = 11;
+int grx = 8;
+int gtx = 9;
+int hrx = 6;
+int htx = 7;
 
 // Enum to represent the different types of chess pieces
 enum PieceType
@@ -132,6 +132,8 @@ void sendFen(char *fen);
 const int numRows = 8;
 const int numCols = 8;
 
+char CastlingStatus[5] = "KQkq";
+
 char FEN[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 int rawStates[8][8] = {
@@ -173,6 +175,8 @@ Piece board[numRows][numCols] = {
     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
     {{PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}},
     {{ROOK, BLACK}, {KNIGHT, BLACK}, {BISHOP, BLACK}, {QUEEN, BLACK}, {KING, BLACK}, {BISHOP, BLACK}, {KNIGHT, BLACK}, {ROOK, BLACK}}};
+
+
 
 // ChessBoard Functions
 void setupChessBoard()
@@ -259,6 +263,7 @@ bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promoti
     }
     else if (toPiece.type != NO_PIECE && fromPiece.colour != toPiece.colour)
     {
+
     }
     switch (fromPiece.type)
     {
@@ -479,6 +484,9 @@ void boardToFen()
         rowToFen(board[i], fen_index);
         FEN[fen_index++] = '/';
     }
+
+
+
     FEN[--fen_index] = '\0';
 }
 
@@ -639,7 +647,6 @@ void adjust()
 void printHall()
 {
     int i, j;
-    // char columns[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
     Serial.println("\ta\tb\tc\td\te\tf\tg\th");
     for (i = 0; i < 8; i++)
