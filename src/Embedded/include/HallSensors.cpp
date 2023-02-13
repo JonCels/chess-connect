@@ -172,6 +172,7 @@ void printHall()
         delay(1);
     }
 }
+
 void initializeHallVariables(){
     
     for (int i = 0; i < 8; i++)
@@ -203,7 +204,7 @@ void initializeHallVariables(){
 
 void setupHallSensors()
 {
-    initializeHallVariables();
+    //initializeHallVariables();
     pinMode(cs, OUTPUT);
     pinMode(arx, INPUT);
     pinMode(atx, OUTPUT);
@@ -223,8 +224,6 @@ void setupHallSensors()
     pinMode(htx, OUTPUT);
     pinMode(clk, OUTPUT);
 
-    // open serial port
-    Serial.begin(9600);
 }
 
 void loopHallSensors()
