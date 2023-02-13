@@ -1038,55 +1038,67 @@ void highlightKnightMoves(int row, int col, Colour activeColour)
 
 void highlightBishopMoves(int row, int col, Colour activeColour)
 {
-  // Check for moves in the up-right direction
-  for (int i = row + 1, j = col + 1; i < 8 && j < 8; i++, j++)
+  // Move up and right
+  for (int i = row + 1; i <= 7; i++)
   {
-    if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+    for (int j = 0; j <= 7; j++)
     {
-      lightUp(i, j);
-    }
-    else
-    {
-      break;
+      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+      {
+        lightUp(i, j);
+      }
+      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      {
+        break;
+      }
     }
   }
 
-  // Check for moves in the up-left direction
-  for (int i = row + 1, j = col - 1; i < 8 && j >= 0; i++, j--)
+  // Move up and left
+  for (int i = row + 1; i <= 7; i++)
   {
-    if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+    for (int j = col - 1; j >= 0; j--)
     {
-      lightUp(i, j);
-    }
-    else
-    {
-      break;
+      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+      {
+        lightUp(i, j);
+      }
+      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      {
+        break;
+      }
     }
   }
 
   // Check for moves in the down-right direction
-  for (int i = row - 1, j = col + 1; i >= 0 && j < 8; i--, j++)
+  for (int i = row - 1; i >= 0; i--)
   {
-    if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+    for (int j = 0; j <= 7; j++)
     {
-      lightUp(i, j);
-    }
-    else
-    {
-      break;
+      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+      {
+        lightUp(i, j);
+      }
+      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      {
+        break;
+      }
     }
   }
 
   // Check for moves in the down-left direction
-  for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--)
+  for (int i = row - 1; i >= 0; i--)
   {
-    if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+    for (int j = col - 1; j >= 0; j--)
     {
-      lightUp(i, j);
-    }
-    else
-    {
-      break;
+      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+      {
+        lightUp(i, j);
+      }
+      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      {
+        break;
+      }
     }
   }
 }
