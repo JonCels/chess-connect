@@ -7,25 +7,8 @@ int delay_const = 2000;
 int clk = A0;   // 97;   // A0
 int cs = A3;    // 94;    // A3
 
-int Row1LedAnode = 35;
-int Row2LedAnode = 41;
-int Row3LedAnode = 39;
-int Row4LedAnode = 33;
-int Row5LedAnode = 29;
-int Row6LedAnode = 25;
-int Row7LedAnode = 27;
-int Row8LedAnode = 37;
-int Row9LedAnode = 39;
-
-int aColLedCathode = 34;
-int bColLedCathode = 28;
-int cColLedCathode = 26;
-int dColLedCathode = 30;
-int eColLedCathode = 24;
-int fColLedCathode = 40;
-int gColLedCathode = 32;
-int hColLedCathode = 36;
-int iColLedCathode = 38;
+int anodes[9] = {29,35,25,41,27,31,37,39,33};
+int cathodes[9] = {34,28,26,30,24,40,32,36,38};  
 
 int arx = A1;   //96;   // A1
 int atx = A2;   //95;   // A2
@@ -136,25 +119,59 @@ char CastlingStatus[5] = "KQkq";
 
 char FEN[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-int rawStates[8][8] = {
-    {1, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0}};
+int rawStates[8][8] = {{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0}};
 
-int adjStates[8][8] = {
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0}};
+int adjStates[8][8] = {{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0}};
+
+int newBoardColors[8][8] = {{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0}};
+
+int oldBoardColors[8][8] = {{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0}};
+
+char curBoardPieces[8][8] = {{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'}};
+
+char defBoardPieces[8][8] = {{'r','n','b','q','k','b','n','r'},
+{'p','p','p','p','p','p','p','p'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'0','0','0','0','0','0','0','0'},
+{'P','P','P','P','P','P','P','P'},
+{'R','N','B','Q','K','B','N','R'}};
 
 int baseReadings[8][8] = {
     {210, 210, 210, 210, 210, 210, 210, 210},
@@ -725,18 +742,201 @@ char pieceToChar(Piece piece)
     }
 }
 
+void printColors() {
+  int i,j;
+  //char columns[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+  
+  Serial.println("\ta\tb\tc\td\te\tf\tg\th");
+  for (i=0;i<8;i++) {
+    Serial.print(8-i);
+    Serial.print("\t");
+    for (j=0;j<8;j++) { 
+      Serial.print(newBoardColors[i][j]);
+      Serial.print("\t"); 
+    }
+    Serial.print("\n");
+  }
+}
+void printBoard() {
+  int i,j;
+  //char columns[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+  
+  Serial.println("\ta\tb\tc\td\te\tf\tg\th");
+  for (i=0;i<8;i++) {
+    Serial.print(8-i);
+    Serial.print("\t");
+    for (j=0;j<8;j++) { 
+      Serial.print(curBoardPieces[i][j]);
+      Serial.print("\t"); 
+    }
+    Serial.print("\n");
+  }
+}
+
+void identifyColors() { 
+  int i,j;
+  for (i=0;i<8;i++) { 
+    for (j=0;j<8;j++) { 
+      if (adjStates[i][j] < 140) newBoardColors[i][j] = 0; 
+      else if (adjStates[i][j] > 310) newBoardColors[i][j] = 1;
+      else newBoardColors[i][j] = 2;
+    }
+  }
+}
+
+void updateColors() { 
+  int i,j;
+  for (i=0;i<8;i++) { 
+    for (j=0;j<8;j++) { 
+      oldBoardColors[i][j] = newBoardColors[i][j];
+    }
+  }
+}
+
+//0 is when the game is over and before the game is started. 
+//Enters state when powered on and when game over button is pressed
+//Leaves state when all whites and blacks are in correct spot and the game start is pressed
+
+//1 Game is active and players are thinking (all pieces are on the board) 
+//Enters state when game start is pressed
+//Leaves state when a piece is picked up or if resign or draw is pressed
+
+//2 Piece is picked up, LEDs are lit up accordingly
+//Keeps track of what piece was picked up and what are the possible moves
+//Enters state when piece is picked up
+//Leaves state when the piece is placed again
+int gameState = 0; 
+
+//Start command from LCD
+int gameStartPB = 0; 
+
+//0 for white, 1 for black
+int turns = 0; 
+
+char liftedPiece = ' '; 
+
+int liftedSquare[2] = {0,0};
+
+int gameStartValid () {
+  int valid = 1; 
+  int i;
+  for (i=0;i<8;i++) { 
+    if (newBoardColors[0][i] != 0)valid = 0;
+    if (newBoardColors[1][i] != 0)valid = 0; 
+    
+    if (newBoardColors[6][i] != 1)valid = 0;
+    if (newBoardColors[7][i] != 1)valid = 0;
+  }
+  return valid; 
+}
+
+void assignPieces() { 
+  int i,j;
+  for (i=0;i<8;i++) {
+    for (j=0;j<8;j++) { 
+      curBoardPieces[i][j] = defBoardPieces[i][j]; 
+    }
+  }
+}
+
+void sendFen() { 
+  int k,l; 
+  String fen = "";
+  for (k=0;k<8;k++) { 
+    int itemp = 0; 
+    char ctemp[1]; 
+    for (l=0;l<8;l++) { 
+      if (curBoardPieces[k][l] == '0'){ 
+        itemp += 1; 
+      }
+      else {
+        if (itemp != 0) {
+          itoa(itemp, ctemp,10);
+          fen += ctemp; 
+        }
+        fen += curBoardPieces[k][l];
+        itemp = 0; 
+      }
+    }
+    if (itemp != 0){
+      itoa(itemp,ctemp,10); 
+      fen += ctemp;
+      fen += '/';
+    }
+    else if (k != 7) fen += '/';
+    else fen += ' '; 
+  }
+
+  if (turns%2 == 0) fen += "w "; 
+  else fen += "b "; 
+
+  //adjust later for castling
+  fen += "KQkq - 0 "; 
+
+  char t[1];
+  itoa(turns, t,10);
+  fen += t; 
+
+  Serial.write(fen[k]);
+  Serial.write("\n");
+  
+}
+
+int checkPick() { 
+  int change = 0; 
+  int i,j;
+  for (i=0;i<8;i++) {
+    for (j=0;j<8;j++) { 
+      if (newBoardColors[i][j] != oldBoardColors[i][j]) {
+        liftedPiece = curBoardPieces[i][j];
+        liftedSquare[0] = i;
+        liftedSquare[1] = j; 
+        change = 1; 
+      }
+    }
+  }
+  return change; 
+}
+
+int checkPlace() { 
+  int change = 0; 
+  int i,j;
+  for (i=0;i<8;i++) {
+    for (j=0;j<8;j++) { 
+      if (newBoardColors[i][j] != oldBoardColors[i][j]) {
+        curBoardPieces[i][j] = liftedPiece;
+        curBoardPieces[liftedSquare[0]][liftedSquare[1]] = '0';
+        change = 1; 
+      }
+    }
+  }
+  return change; 
+}
+
+int checkPlace() 
+
+void lightUp(int i, int j) { 
+  digitalWrite(anodes[i],LOW);
+  digitalWrite(anodes[i+1], LOW); 
+  digitalWrite(cathodes[j], HIGH); 
+  digitalWrite(cathodes[j+1], HIGH); 
+}
+
+void flash() { 
+  if (liftedPiece == 'P') { 
+    lightUp(liftedSquare[0]-1,liftedSquare[1]); 
+    lightUp(liftedSquare[0]-2,liftedSquare[1]); 
+  }
+}
+
 void setup()
 {
     setupHallSensors();
     
-    for (int i = 24; i <= 41; i++)
-    {
-        pinMode(i, OUTPUT);
-    }
-
-    for (int i = 24; i <= 41; i+=2)
-    {
-        digitalWrite(i, LOW);
+    for (i=0;i<9;i++) { 
+        pinMode(anodes[i],OUTPUT); 
+        pinMode(cathodes[i], OUTPUT); 
+        digitalWrite(anodes[i],HIGH); 
     }
     
 
@@ -746,25 +946,84 @@ void setup()
 
 int LED_NUM = 24;
 
-void loop()
+
+void loop() 
 {
-    loopHallSensors();
+  readRow(0,arx,atx); 
+  readRow(1,brx,btx);
+  readRow(2,crx,ctx);
+  readRow(3,drx,dtx);
+  readRow(4,erx,etx);
+  readRow(5,frx,ftx);
+  readRow(6,grx,gtx);
+  readRow(7,hrx,htx);
+  adjust(); 
 
-    digitalWrite(LED_NUM, HIGH);
+  identifyColors();
 
-    if(LED_NUM == 40){
-        digitalWrite(LED_NUM-2, LOW);
-        LED_NUM = 24;
+  Serial.print(gameState);
+  Serial.print("\t"); 
+  Serial.print(turns); 
+  Serial.print("\n"); 
+
+  if (gameState ==  0) {  
+    if (gameStartValid()){ //&& gameStartPB) { 
+      assignPieces(); 
+      gameState = 1;
     }
-    else{
-        if (LED_NUM == 24)
-        {
-            digitalWrite(40, LOW);
-            
-        }
-        digitalWrite(LED_NUM-2, LOW);
-        LED_NUM += 2;
-    }
+  }
 
-    delay(delay_const);
+  else if (gameState == 1) { 
+    sendFen(); 
+    if (checkPick()) { 
+      turns += 1;
+      gameState = 2; 
+    }
+  }
+
+  else if (gameState == 2) { 
+    sendFen(); 
+    if (checkPlace()) { 
+      turns += 1; 
+      gameState = 1;
+    }
+    flash(); 
+  }
+  
+  printHall(); 
+  delay(delay_const);
+  Serial.print("\n");
+  Serial.print("\n");
+  printColors(); 
+  delay(delay_const);
+  Serial.print("\n");
+  Serial.print("\n");
+  printBoard(); 
+  delay(delay_const);
+  Serial.print("\n");
+
+  updateColors();
+  delay(delay_const);
 }
+// void loop()
+// {
+//     loopHallSensors();
+
+//     digitalWrite(LED_NUM, HIGH);
+
+//     if(LED_NUM == 40){
+//         digitalWrite(LED_NUM-2, LOW);
+//         LED_NUM = 24;
+//     }
+//     else{
+//         if (LED_NUM == 24)
+//         {
+//             digitalWrite(40, LOW);
+            
+//         }
+//         digitalWrite(LED_NUM-2, LOW);
+//         LED_NUM += 2;
+//     }
+
+//     delay(delay_const);
+// }
