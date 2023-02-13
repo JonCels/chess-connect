@@ -10,10 +10,14 @@ const errFunction = (err) => {
 }
 
 function storeData(str) {
-    console.log(str);
+    // console.log(str);
     data.push(str);
     console.log(data);
     btSerial.write(Buffer.from("From node\r"), errFunction);
+}
+
+function writeArduino(str) {
+    btSerial.write(Buffer.from(str), errFunction);
 }
 
 btSerial.on("found", function(address, name) {
@@ -39,4 +43,4 @@ btSerial.on("found", function(address, name) {
 
 btSerial.inquire();
 
-module.exports = { storeData: storeData }
+module.exports = { data: data, writeArduino: writeArduino }

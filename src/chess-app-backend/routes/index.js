@@ -1,15 +1,20 @@
 var express = require('express');
 var router = express.Router();
-// var { storeData } = require("../utils/bluetooth")
+var { data, writeArduino } = require("../utils/bluetooth")
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  let positions = [
-    "rnbqkb1r/1ppppppp/5n2/p7/P3P3/8/1PPP1PPP/RNBQKBNR w KQkq - 0 3",
-    "rnbqkb1r/1ppppppp/5n2/pB6/P3P3/8/1PPP1PPP/RNBQK1NR b KQkq - 1 3"
-  ]
-  // storeData()
-  res.send({ test: positions[Math.floor(Math.random() * 2)] });
+  let index = data[data.length - 1].indexOf("\r")
+  let strippedString = data[data.length - 1].substring(0,index)
+  let splitString = strippedString.split("@")
+  console.log(splitString)
+  res.send({ test: splitString });
 });
+
+router.post('/', function(req, res, next) {
+  console.log(req.body.engineMove)
+  writeArduino(req.body.engineMove)
+});
+
 
 module.exports = router;
