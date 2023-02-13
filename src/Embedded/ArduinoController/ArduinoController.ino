@@ -125,7 +125,7 @@ void loopChessBoard();
 void LightAllPieces();
 void LightSquare(int row, int col, bool on);
 bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promotionType = NO_PIECE);
-char *boardToFen();
+void boardToFen();
 void sendFen(char *fen);
 
 // Global variable initializations
@@ -153,7 +153,7 @@ int adjStates[8][8] = {
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0}};
-    
+
 int baseReadings[8][8] = {
     {210, 210, 210, 210, 210, 210, 210, 210},
     {210, 210, 210, 210, 210, 210, 210, 210},
@@ -445,7 +445,7 @@ bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promoti
 }
 
 // Converts a single row of the chess board to a FEN string
-void rowToFen(Piece row[8], char fen[], int &fen_index)
+void rowToFen(Piece row[8], int &fen_index)
 {
     int empty_count = 0;
     for (int i = 0; i < 8; ++i)
@@ -458,31 +458,31 @@ void rowToFen(Piece row[8], char fen[], int &fen_index)
         {
             if (empty_count > 0)
             {
-                fen[fen_index++] = '0' + empty_count;
+                FEN[fen_index++] = '0' + empty_count;
                 empty_count = 0;
             }
-            fen[fen_index++] = pieceToChar(row[i]);
+            FEN[fen_index++] = pieceToChar(row[i]);
         }
     }
     if (empty_count > 0)
     {
-        fen[fen_index++] = '0' + empty_count;
+        FEN[fen_index++] = '0' + empty_count;
     }
 }
 
 // Converts a chess board to a FEN string
-void boardToFen(char fen[])
+void boardToFen()
 {
     int fen_index = 0;
     for (int i = 0; i < 8; ++i)
     {
-        rowToFen(board[i], fen, fen_index);
-        fen[fen_index++] = '/';
+        rowToFen(board[i], fen_index);
+        FEN[fen_index++] = '/';
     }
-    fen[--fen_index] = '\0';
+    FEN[--fen_index] = '\0';
 }
 
-void sendFen(char *fen)
+void sendFen()
 {
     // bluetooth.print(fen);  // send the FEN string over Bluetooth
     // bluetooth.print('\n'); // send a newline character
@@ -676,10 +676,8 @@ void setupHallSensors()
     pinMode(hrx, INPUT);
     pinMode(htx, OUTPUT);
     pinMode(clk, OUTPUT);
-
-    // open serial port
-    Serial.begin(9600);
 }
+
 void loopHallSensors()
 {
     readRow(0, arx, atx);
