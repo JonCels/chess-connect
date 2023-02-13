@@ -779,6 +779,7 @@ Piece charToPiece(char pieceChar){
     case 'k':
       return Piece {KING, BLACK};
     default:
+      return Piece{};
   }
 }
 
