@@ -128,6 +128,8 @@ void highlightPawnMoves(int row, int col, Colour activeColour);
 void highlightKnightMoves(int row, int col, Colour activeColour);
 void highlightBishopMoves(int row, int col, Colour activeColour);
 void highlightRookMoves(int row, int col, Colour activeColour);
+void highlightQueenMoves(int row, int col, Colour activeColour);
+void highlightKingMoves(int row, int col, Colour activeColour);
 void flash();
 
 // Global variable initializations
@@ -1167,6 +1169,168 @@ void highlightRookMoves(int row, int col, Colour activeColour)
   }
 }
 
+void highlightQueenMoves(int row, int col, Colour activeColour)
+{
+  // Move up
+  for (int i = row - 1; i >= 0; i--)
+  {
+    if (curBoardPieces[i][col] == '0' || charToPiece(curBoardPieces[i][col]).colour != activeColour)
+    {
+      lightUp(i, col);
+    }
+    else if (charToPiece(curBoardPieces[i][col]).colour == activeColour)
+    {
+      break;
+    }
+  }
+
+  // Move down
+  for (int i = row + 1; i <= 7; i++)
+  {
+    if (curBoardPieces[i][col] == '0' || charToPiece(curBoardPieces[i][col]).colour != activeColour)
+    {
+      lightUp(i, col);
+    }
+    else if (charToPiece(curBoardPieces[i][col]).colour == activeColour)
+    {
+      break;
+    }
+  }
+
+  // Move left
+  for (int j = col - 1; j >= 0; j--)
+  {
+    if (curBoardPieces[row][j] == '0' || charToPiece(curBoardPieces[row][j]).colour != activeColour)
+    {
+      lightUp(row, j);
+    }
+    else if (charToPiece(curBoardPieces[row][j]).colour == activeColour)
+    {
+      break;
+    }
+  }
+
+  // Move right
+  for (int j = col + 1; j <= 7; j++)
+  {
+    if (curBoardPieces[row][j] == '0' || charToPiece(curBoardPieces[row][j]).colour != activeColour)
+    {
+      lightUp(row, j);
+    }
+    else if (charToPiece(curBoardPieces[row][j]).colour == activeColour)
+    {
+      break;
+    }
+  }
+
+  // Move down and right
+  for (int i = row - 1; i >= 0; i--)
+  {
+    for (int j = 0; j <= 7; j++)
+    {
+      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+      {
+        lightUp(i, j);
+      }
+      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      {
+        break;
+      }
+    }
+  }
+
+  // Move down and left
+  for (int i = row - 1; i >= 0; i--)
+  {
+    for (int j = col - 1; j >= 0; j--)
+    {
+      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+      {
+        lightUp(i, j);
+      }
+      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      {
+        break;
+      }
+    }
+  }
+
+  // Move up and right
+  for (int i = row + 1; i <= 7 ; i++)
+  {
+    for (int j = 0; j <= 7; j++)
+    {
+      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+      {
+        lightUp(i, j);
+      }
+      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      {
+        break;
+      }
+    }
+  }
+
+  // Move up and left
+  for (int i = row + 1; i <= 7; i++)
+  {
+    for (int j = col - 1; j >= 0; j--)
+    {
+      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
+      {
+        lightUp(i, j);
+      }
+      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      {
+        break;
+      }
+    }
+  }
+}
+
+void highlightKingMoves(int row, int col, Colour activeColour)
+{
+  // Check the squares directly adjacent to the king
+  if (row > 0)
+  {
+    if (curBoardPieces[row - 1][col] == '0' || charToPiece(curBoardPieces[row - 1][col] ).colour != activeColour)
+    {
+      lightUp(row - 1, col);
+    }
+    if (col > 0 && curBoardPieces[row - 1][col - 1] == '0' || charToPiece(curBoardPieces[row - 1][col - 1] ).colour != activeColour)
+    {
+      lightUp(row - 1, col - 1);
+    }
+    if (col < 7 && curBoardPieces[row - 1][col + 1] == '0' || charToPiece(curBoardPieces[row - 1][col + 1] ).colour != activeColour)
+    {
+      lightUp(row - 1, col + 1);
+    }
+  }
+  if (row < 7)
+  {
+    if (curBoardPieces[row + 1][col] == '0' || charToPiece(curBoardPieces[row + 1][col] ).colour != activeColour)
+    {
+      lightUp(row + 1, col);
+    }
+    if (col > 0 && curBoardPieces[row + 1][col - 1] == '0' || charToPiece(curBoardPieces[row + 1][col - 1] ).colour != activeColour)
+    {
+      lightUp(row + 1, col - 1);
+    }
+    if (col < 7 && curBoardPieces[row + 1][col + 1] == '0' || charToPiece(curBoardPieces[row + 1][col + 1] ).colour != activeColour)
+    {
+      lightUp(row + 1, col + 1);
+    }
+  }
+  if (col > 0 && curBoardPieces[row][col - 1] == '0' || charToPiece(curBoardPieces[row][col - 1] ).colour != activeColour)
+  {
+    lightUp(row, col - 1);
+  }
+  if (col < 7 && curBoardPieces[row][col + 1] == '0' || charToPiece(curBoardPieces[row][col + 1] ).colour != activeColour)
+  {
+    lightUp(row, col + 1);
+  }
+}
+
 void lightUp(int row, int col)
 {
   digitalWrite(anodes[row], LOW);
@@ -1196,10 +1360,10 @@ void flash()
     highlightBishopMoves(fromRow, fromCol, fromPiece.colour);
     return;
   case QUEEN:
-    
+    highlightQueenMoves(fromRow, fromCol, fromPiece.colour);
     return;
   case KING:
-    
+    highlightKingMoves(fromRow, fromCol, fromPiece.colour);
     return;
   }
 }
