@@ -84,7 +84,6 @@ struct Position
 {
   int row;
   int col;
-  Position() : row(0), col(0) {}
   Position(int r, int c) : row(r), col(c) {}
 };
 
@@ -97,6 +96,14 @@ struct Piece
   Colour colour;
   Piece() : type(PieceType::NO_PIECE), colour(Colour::NO_COLOUR) {}
   Piece(PieceType piece, Colour colourType) : type(piece), colour(colourType) {}
+};
+
+struct Square
+{
+  Piece piece;
+  Position position;
+  Square(Position po) : piece(Piece{}), position(po) {}
+  Square(Piece pi, Position po) : piece(pi), position(po) {}
 };
 
 // Function delclarations
@@ -136,9 +143,9 @@ void flash();
 const int numRows = 8;
 const int numCols = 8;
 
-char CastlingStatus[5] = "KQkq";
+char CastlingStatus[9] = "KQkq - 0";
 
-char FEN[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+char FEN[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1";
 
 int rawStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
@@ -214,72 +221,17 @@ Piece board[numRows][numCols] = {
     {{PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}},
     {{ROOK, BLACK}, {KNIGHT, BLACK}, {BISHOP, BLACK}, {QUEEN, BLACK}, {KING, BLACK}, {BISHOP, BLACK}, {KNIGHT, BLACK}, {ROOK, BLACK}}};
 
+
+
 // ChessBoard Functions
 void setupChessBoard()
 {
-  // initializeChessBoardVariables();
+  
 }
 
 void loopChessBoard()
 {
-  // Update the board based on the hall-effect sensors
-  // for (int i = 0; i < numRows; i++)
-  // {
-  //     for (int j = 0; j < numCols; j++)
-  //     {
-  //         if (digitalRead(HALL_PINS[i][j]) == HIGH)
-  //         {
-  //             // Sensor is activated, toggle the piece
-  //             Piece &piece = board[i][j];
-  //             if (piece.type == NO_PIECE)
-  //             {
-  //                 piece.type = PAWN;
-  //                 piece.colour = 0; // white
-  //             }
-  //             else
-  //             {
-  //                 piece.type = NO_PIECE;
-  //                 piece.colour = -1;
-  //             }
-  //         }
-  //     }
-  // }
-}
-
-void LightAllPieces()
-{
-  // Update the LEDs based on the board
-  for (int i = 0; i < numRows; i++)
-  {
-    for (int j = 0; j < numCols; j++)
-    {
-      Piece piece = board[i][j];
-      if (piece.type == NO_PIECE)
-      {
-        LightSquare(i, j, false);
-      }
-      else
-      {
-        LightSquare(i, j, true);
-      }
-    }
-  }
-}
-
-// If on = true, light square, else turn off light
-void LightSquare(int row, int col, bool on)
-{
-  // if (on)
-  // {
-  //     digitalWrite(LED_PINS[row][col], HIGH);
-  //     digitalWrite(LED_PINS[row][col + 1], HIGH);
-  //     digitalWrite(LED_PINS[row + 1][col], HIGH);
-  //     digitalWrite(LED_PINS[row + 1][col + 1], HIGH);
-  // }
-  // else
-  // {
-  //     digitalWrite(LED_PINS[row][col], LOW);
-  // }
+  
 }
 
 bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promotionType = NO_PIECE)
@@ -498,7 +450,7 @@ void rowToFen(Piece row[8], int &fen_index)
     {
       if (empty_count > 0)
       {
-        FEN[fen_index++] = '0' + empty_count;
+        FEN[fen_index++] = (char)('0' + empty_count);
         empty_count = 0;
       }
       FEN[fen_index++] = pieceToChar(row[i]);
@@ -517,10 +469,32 @@ void boardToFen()
   for (int i = 0; i < 8; ++i)
   {
     rowToFen(board[i], fen_index);
-    FEN[fen_index++] = '/';
+    if (i != 7)
+      FEN[fen_index++] = '/';
+    else
+      FEN[fen_index++] = ' ';
   }
 
-  FEN[--fen_index] = '\0';
+  int castle_index = 0;
+  while (CastlingStatus[castle_index])
+  {
+    FEN[fen_index++] = CastlingStatus[castle_index++];
+  }
+
+  FEN[fen_index] = '\0';
+}
+
+void sendFen()
+{
+  int i;
+  boardToFen();
+
+  while (FEN[i])
+  {
+    Serial.write(FEN[i++]);
+  }
+  
+  Serial.write("\n");
 }
 
 // HallSensors Functions
@@ -751,35 +725,36 @@ char pieceToChar(Piece piece)
   }
 }
 
-Piece charToPiece(char pieceChar){
-  switch(pieceChar)
+Piece charToPiece(char pieceChar)
+{
+  switch (pieceChar)
   {
-    case 'P':
-      return Piece {PAWN, WHITE};
-    case 'p':
-      return Piece {PAWN, BLACK};
-    case 'N':
-      return Piece {KNIGHT, WHITE};
-    case 'n':
-      return Piece {KNIGHT, BLACK};
-    case 'B':
-      return Piece {BISHOP, WHITE};
-    case 'b':
-      return Piece {BISHOP, BLACK};
-    case 'R':
-      return Piece {ROOK, WHITE};
-    case 'r':
-      return Piece {ROOK, BLACK};
-    case 'Q':
-      return Piece {QUEEN, WHITE};
-    case 'q':
-      return Piece {QUEEN, BLACK};
-    case 'K':
-      return Piece {KING, WHITE};
-    case 'k':
-      return Piece {KING, BLACK};
-    default:
-      return Piece{};
+  case 'P':
+    return Piece{PAWN, WHITE};
+  case 'p':
+    return Piece{PAWN, BLACK};
+  case 'N':
+    return Piece{KNIGHT, WHITE};
+  case 'n':
+    return Piece{KNIGHT, BLACK};
+  case 'B':
+    return Piece{BISHOP, WHITE};
+  case 'b':
+    return Piece{BISHOP, BLACK};
+  case 'R':
+    return Piece{ROOK, WHITE};
+  case 'r':
+    return Piece{ROOK, BLACK};
+  case 'Q':
+    return Piece{QUEEN, WHITE};
+  case 'q':
+    return Piece{QUEEN, BLACK};
+  case 'K':
+    return Piece{KING, WHITE};
+  case 'k':
+    return Piece{KING, BLACK};
+  default:
+    return Piece{};
   }
 }
 
@@ -903,59 +878,6 @@ void assignPieces()
   }
 }
 
-void sendFen()
-{
-  int k, l;
-  String fen = "";
-  for (k = 0; k < 8; k++)
-  {
-    int itemp = 0;
-    char ctemp[1];
-    for (l = 0; l < 8; l++)
-    {
-      if (curBoardPieces[k][l] == '0')
-      {
-        itemp += 1;
-      }
-      else
-      {
-        if (itemp != 0)
-        {
-          itoa(itemp, ctemp, 10);
-          fen += ctemp;
-        }
-        fen += curBoardPieces[k][l];
-        itemp = 0;
-      }
-    }
-    if (itemp != 0)
-    {
-      itoa(itemp, ctemp, 10);
-      fen += ctemp;
-      fen += '/';
-    }
-    else if (k != 7)
-      fen += '/';
-    else
-      fen += ' ';
-  }
-
-  if (turns % 2 == 0)
-    fen += "w ";
-  else
-    fen += "b ";
-
-  // adjust later for castling
-  fen += "KQkq - 0 ";
-
-  char t[1];
-  itoa(turns, t, 10);
-  fen += t;
-
-  Serial.write(fen[k]);
-  Serial.write("\n");
-}
-
 int checkPick()
 {
   int change = 0;
@@ -995,9 +917,27 @@ int checkPlace()
   return change;
 }
 
+bool lightValidSquare(int row, int col, Colour activeColour)
+{
+  if (curBoardPieces[row][col] == '0')
+  {
+    lightUp(row, col);
+    return true;
+  }
+  else if (charToPiece(curBoardPieces[row][col]).colour != activeColour)
+  {
+    lightUp(row, col);
+    return false;
+  }
+  else
+  {
+    return false;
+  }
+}
+
 void highlightPawnMoves(int row, int col, Colour activeColour)
 {
-  int direction = charToPiece(curBoardPieces[row][col]).colour == WHITE ? -1 : 1;
+  int direction = charToPiece(curBoardPieces[row][col]).colour == WHITE ? 1 : -1;
 
   if (row + direction >= 0 && row + direction <= 7)
   {
@@ -1044,12 +984,7 @@ void highlightBishopMoves(int row, int col, Colour activeColour)
   {
     for (int j = 0; j <= 7; j++)
     {
-      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
-      {
-        lightUp(i, j);
-      }
-      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
-      {
+      if (!lightValidSquare(i, j, activeColour)){
         break;
       }
     }
@@ -1060,11 +995,7 @@ void highlightBishopMoves(int row, int col, Colour activeColour)
   {
     for (int j = col - 1; j >= 0; j--)
     {
-      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
-      {
-        lightUp(i, j);
-      }
-      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      if (!lightValidSquare(i, j, activeColour))
       {
         break;
       }
@@ -1076,11 +1007,7 @@ void highlightBishopMoves(int row, int col, Colour activeColour)
   {
     for (int j = 0; j <= 7; j++)
     {
-      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
-      {
-        lightUp(i, j);
-      }
-      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      if (!lightValidSquare(i, j, activeColour))
       {
         break;
       }
@@ -1092,11 +1019,7 @@ void highlightBishopMoves(int row, int col, Colour activeColour)
   {
     for (int j = col - 1; j >= 0; j--)
     {
-      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
-      {
-        lightUp(i, j);
-      }
-      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      if (!lightValidSquare(i, j, activeColour))
       {
         break;
       }
@@ -1106,58 +1029,38 @@ void highlightBishopMoves(int row, int col, Colour activeColour)
 
 void highlightRookMoves(int row, int col, Colour activeColour)
 {
-  int i, j;
-
-  if(col + 1 < 8){
+  if (col + 1 < 8)
+  {
     // Check moves to the right
-    for (i = col + 1; i < 8; i++)
+    for (int i = col + 1; i < 8; i++)
     {
-      if (curBoardPieces[row][i] == '0' || charToPiece(curBoardPieces[row][i]).colour != activeColour)
+      if (!lightValidSquare(row, i, activeColour))
       {
-        lightUp(row, i);
-      }
-      else
-      {
-        if (charToPiece(curBoardPieces[row][i]).colour == activeColour)
-        {
-          break;
-        }
+        break;
       }
     }
   }
 
-  if(col - 1 >= 0){
+  if (col - 1 >= 0)
+  {
     // Check moves to the left
-    for (i = col - 1; i >= 0; i--)
+    for (int i = col - 1; i >= 0; i--)
     {
-      if (curBoardPieces[row][i] == '0' || charToPiece(curBoardPieces[row][i]).colour != activeColour)
+      if (!lightValidSquare(row, i, activeColour))
       {
-        lightUp(row, i);
-      }
-      else
-      {
-        if (charToPiece(curBoardPieces[row][i]).colour == activeColour)
-        {
-          break;
-        }
+        break;
       }
     }
   }
 
-  if(row - 1 >= 0){
+  if (row - 1 >= 0)
+  {
     // Check moves down
-    for (j = row - 1; j >= 0; j--)
+    for (int i = row - 1; i >= 0; i--)
     {
-      if (curBoardPieces[j][col] == '0' || charToPiece(curBoardPieces[j][col]).colour != activeColour)
+      if (!lightValidSquare(i, col, activeColour))
       {
-        lightUp(j, col);
-      }
-      else
-      {
-        if (charToPiece(curBoardPieces[j][col]).colour == activeColour)
-        {
-          break;
-        }
+        break;
       }
     }
   }
@@ -1165,18 +1068,11 @@ void highlightRookMoves(int row, int col, Colour activeColour)
   if (row + 1 < 8)
   {
     // Check moves up
-    for (j = row + 1; j < 8; j++)
+    for (int i = row + 1; i < 8; i++)
     {
-      if (curBoardPieces[j][col] == '0' || charToPiece(curBoardPieces[j][col]).colour != activeColour)
+      if (!lightValidSquare(i, col, activeColour))
       {
-        lightUp(j, col);
-      }
-      else
-      {
-        if (charToPiece(curBoardPieces[j][col]).colour == activeColour)
-        {
-          break;
-        }
+        break;
       }
     }
   }
@@ -1187,11 +1083,7 @@ void highlightQueenMoves(int row, int col, Colour activeColour)
   // Move up
   for (int i = row - 1; i >= 0; i--)
   {
-    if (curBoardPieces[i][col] == '0' || charToPiece(curBoardPieces[i][col]).colour != activeColour)
-    {
-      lightUp(i, col);
-    }
-    else if (charToPiece(curBoardPieces[i][col]).colour == activeColour)
+    if (!lightValidSquare(i, col, activeColour))
     {
       break;
     }
@@ -1200,37 +1092,25 @@ void highlightQueenMoves(int row, int col, Colour activeColour)
   // Move down
   for (int i = row + 1; i <= 7; i++)
   {
-    if (curBoardPieces[i][col] == '0' || charToPiece(curBoardPieces[i][col]).colour != activeColour)
-    {
-      lightUp(i, col);
-    }
-    else if (charToPiece(curBoardPieces[i][col]).colour == activeColour)
+    if (!lightValidSquare(i, col, activeColour))
     {
       break;
     }
   }
 
   // Move left
-  for (int j = col - 1; j >= 0; j--)
+  for (int i = col - 1; i >= 0; i--)
   {
-    if (curBoardPieces[row][j] == '0' || charToPiece(curBoardPieces[row][j]).colour != activeColour)
-    {
-      lightUp(row, j);
-    }
-    else if (charToPiece(curBoardPieces[row][j]).colour == activeColour)
+    if (!lightValidSquare(row, i, activeColour))
     {
       break;
     }
   }
 
   // Move right
-  for (int j = col + 1; j <= 7; j++)
+  for (int i = col + 1; i <= 7; i++)
   {
-    if (curBoardPieces[row][j] == '0' || charToPiece(curBoardPieces[row][j]).colour != activeColour)
-    {
-      lightUp(row, j);
-    }
-    else if (charToPiece(curBoardPieces[row][j]).colour == activeColour)
+    if (!lightValidSquare(row, i, activeColour))
     {
       break;
     }
@@ -1241,11 +1121,7 @@ void highlightQueenMoves(int row, int col, Colour activeColour)
   {
     for (int j = 0; j <= 7; j++)
     {
-      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
-      {
-        lightUp(i, j);
-      }
-      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      if (!lightValidSquare(i, j, activeColour))
       {
         break;
       }
@@ -1257,11 +1133,7 @@ void highlightQueenMoves(int row, int col, Colour activeColour)
   {
     for (int j = col - 1; j >= 0; j--)
     {
-      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
-      {
-        lightUp(i, j);
-      }
-      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      if (!lightValidSquare(i, j, activeColour))
       {
         break;
       }
@@ -1269,15 +1141,11 @@ void highlightQueenMoves(int row, int col, Colour activeColour)
   }
 
   // Move up and right
-  for (int i = row + 1; i <= 7 ; i++)
+  for (int i = row + 1; i <= 7; i++)
   {
     for (int j = 0; j <= 7; j++)
     {
-      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
-      {
-        lightUp(i, j);
-      }
-      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      if (!lightValidSquare(i, j, activeColour))
       {
         break;
       }
@@ -1289,11 +1157,7 @@ void highlightQueenMoves(int row, int col, Colour activeColour)
   {
     for (int j = col - 1; j >= 0; j--)
     {
-      if (curBoardPieces[i][j] == '0' || charToPiece(curBoardPieces[i][j]).colour != activeColour)
-      {
-        lightUp(i, j);
-      }
-      else if (charToPiece(curBoardPieces[i][j]).colour == activeColour)
+      if (!lightValidSquare(i, j, activeColour))
       {
         break;
       }
@@ -1306,39 +1170,39 @@ void highlightKingMoves(int row, int col, Colour activeColour)
   // Check the squares directly adjacent to the king
   if (row > 0)
   {
-    if (curBoardPieces[row - 1][col] == '0' || charToPiece(curBoardPieces[row - 1][col] ).colour != activeColour)
+    if (curBoardPieces[row - 1][col] == '0' || charToPiece(curBoardPieces[row - 1][col]).colour != activeColour)
     {
       lightUp(row - 1, col);
     }
-    if (col > 0 && curBoardPieces[row - 1][col - 1] == '0' || charToPiece(curBoardPieces[row - 1][col - 1] ).colour != activeColour)
+    if (col > 0 && curBoardPieces[row - 1][col - 1] == '0' || charToPiece(curBoardPieces[row - 1][col - 1]).colour != activeColour)
     {
       lightUp(row - 1, col - 1);
     }
-    if (col < 7 && curBoardPieces[row - 1][col + 1] == '0' || charToPiece(curBoardPieces[row - 1][col + 1] ).colour != activeColour)
+    if (col < 7 && curBoardPieces[row - 1][col + 1] == '0' || charToPiece(curBoardPieces[row - 1][col + 1]).colour != activeColour)
     {
       lightUp(row - 1, col + 1);
     }
   }
   if (row < 7)
   {
-    if (curBoardPieces[row + 1][col] == '0' || charToPiece(curBoardPieces[row + 1][col] ).colour != activeColour)
+    if (curBoardPieces[row + 1][col] == '0' || charToPiece(curBoardPieces[row + 1][col]).colour != activeColour)
     {
       lightUp(row + 1, col);
     }
-    if (col > 0 && curBoardPieces[row + 1][col - 1] == '0' || charToPiece(curBoardPieces[row + 1][col - 1] ).colour != activeColour)
+    if (col > 0 && curBoardPieces[row + 1][col - 1] == '0' || charToPiece(curBoardPieces[row + 1][col - 1]).colour != activeColour)
     {
       lightUp(row + 1, col - 1);
     }
-    if (col < 7 && curBoardPieces[row + 1][col + 1] == '0' || charToPiece(curBoardPieces[row + 1][col + 1] ).colour != activeColour)
+    if (col < 7 && curBoardPieces[row + 1][col + 1] == '0' || charToPiece(curBoardPieces[row + 1][col + 1]).colour != activeColour)
     {
       lightUp(row + 1, col + 1);
     }
   }
-  if (col > 0 && curBoardPieces[row][col - 1] == '0' || charToPiece(curBoardPieces[row][col - 1] ).colour != activeColour)
+  if (col > 0 && curBoardPieces[row][col - 1] == '0' || charToPiece(curBoardPieces[row][col - 1]).colour != activeColour)
   {
     lightUp(row, col - 1);
   }
-  if (col < 7 && curBoardPieces[row][col + 1] == '0' || charToPiece(curBoardPieces[row][col + 1] ).colour != activeColour)
+  if (col < 7 && curBoardPieces[row][col + 1] == '0' || charToPiece(curBoardPieces[row][col + 1]).colour != activeColour)
   {
     lightUp(row, col + 1);
   }
@@ -1446,7 +1310,6 @@ void loop()
   default:
     break;
   }
-  
 
   printHall();
   delay(delay_const);
