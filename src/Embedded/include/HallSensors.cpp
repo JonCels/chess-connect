@@ -75,7 +75,7 @@ int readHall(int adcnum, int rx, int tx)
     return adcout;
 }
 
-void readRow(int row, int rx, int tx)
+void readHallRow(int row, int rx, int tx)
 {
     int i;
 
@@ -226,16 +226,16 @@ void setupHallSensors()
 
 }
 
-void loopHallSensors()
+void readHallSensors()
 {
-    readRow(0, arx, atx);
-    readRow(1, brx, btx);
-    readRow(2, crx, ctx);
-    readRow(3, drx, dtx);
-    readRow(4, erx, etx);
-    readRow(5, frx, ftx);
-    readRow(6, grx, gtx);
-    readRow(7, hrx, htx);
+    readHallRow(0, arx, atx);
+    readHallRow(1, brx, btx);
+    readHallRow(2, crx, ctx);
+    readHallRow(3, drx, dtx);
+    readHallRow(4, erx, etx);
+    readHallRow(5, frx, ftx);
+    readHallRow(6, grx, gtx);
+    readHallRow(7, hrx, htx);
 
     adjust();
 

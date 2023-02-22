@@ -9,9 +9,9 @@
   extern char FEN[100];
 
   // 2D array to represent the chess board
-  extern Piece board[numRows][numCols];
+  extern Piece currentBoard[numRows][numCols];
 
-  void setupChessBoard();
+  void resetChessBoard();
   void loopChessBoard();
   void LightAllPieces();
   void LightSquare(int row, int col, bool on);
