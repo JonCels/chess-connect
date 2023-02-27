@@ -928,7 +928,9 @@ void loop()
     Serial.print("\t");
     Serial.print(turns);
     Serial.print("\t");
-    Serial.println(gameCommand);
+    // Serial.println(gameCommand);
+    Serial.print("\n");
+
 
     if (gameState == 0)
     {
