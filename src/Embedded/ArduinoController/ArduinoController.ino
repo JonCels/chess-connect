@@ -27,61 +27,59 @@ int gtx = 9;
 int hrx = 6;
 int htx = 7;
 
-// Enum to represent the different types of chess pieces
-enum PieceType
+enum GameMode : char
 {
-    NO_PIECE,
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK,
-    QUEEN,
-    KING
+    BEGINNER_MODE = 'B',
+    NORMAL_MODE = 'N',
+    ENGINE_MODE = 'E',
+    NO_MODE = 'M'
 };
 
-// WHITE = 0 , BLACK = 1, NO_COLOUR = 2
+enum GameState : char
+{
+    INIT_GAME = 'i',
+    PLAY_GAME = 'p',
+    RESET_GAME = 'r',
+    WAIT_PICK = 'w',
+    PIECE_LIFTED = 'l',
+    REMOVE_PIECE = 'x',
+    PROMOTING = 'P',
+    VALID_MOVE = 'v',
+    INVALID_MOVE = 'n',
+};
+
+enum GameCommand : char
+{
+    PROMOTE_QUEEN = 'Q',
+    PROMOTE_ROOK = 'R',
+    PROMOTE_BISHOP = 'B',
+    PROMOTE_KNIGHT = 'K',
+    DRAW_ACTION = 'd',
+    RESIGN_ACTION = 'q',
+    RESET_ACTION = 'r',
+    END_GAME = 'e',
+    NO_ACTION = '.'
+};
+
+// Enum to represent the different types of chess pieces
+enum PieceType : char
+{
+    NO_PIECE = '0',
+    PAWN = 'P',
+    KNIGHT = 'N',
+    BISHOP = 'B',
+    ROOK = 'R',
+    QUEEN = 'Q',
+    KING = 'K'
+};
+
+// BLACK is 32 because P + 32 = p
+// Use this to convert to FEN string
 enum Colour
 {
-    WHITE,
-    BLACK,
-    NO_COLOUR
-};
-
-enum GameMode
-{
-    BEGINNER_MODE,
-    NORMAL_MODE,
-    ENGINE_MODE
-};
-
-enum GameState
-{
-    INIT_GAME,
-    PLAY_GAME,
-    END_GAME,
-    RESET_GAME,
-    WAIT_WHITE,
-    WAIT_BLACK,
-    PIECE_LIFTED,
-    REMOVE_PIECE,
-    PROMOTING,
-    VALID_MOVE,
-    INVALID_MOVE,
-    DRAW_ACTION,
-    RESIGN_ACTION,
-    RESET_ACTION,
-    NO_ACTION
-};
-
-// Struct for returning piece position from functions
-// Members: row, col
-// Default: 0, 0
-struct Position
-{
-    int row;
-    int col;
-    Position() : row(0), col(0) {}
-    Position(int r, int c) : row(r), col(c) {}
+    WHITE = 0,
+    BLACK = 32,
+    NO_COLOUR = 64
 };
 
 // Structure to represent a chess piece
@@ -95,18 +93,10 @@ struct Piece
     Piece(PieceType piece, Colour colourType) : type(piece), colour(colourType) {}
 };
 
-struct Square
-{
-    Piece piece;
-    Position position;
-    Square(Position po) : piece(Piece{}), position(po) {}
-    Square(Piece pi, Position po) : piece(pi), position(po) {}
-};
-
 // Function delclarations
 char pieceToChar(Piece piece);
 Piece charToPiece(char pieceChar);
-Position detectNewPiece(int col, int row);
+int* detectNewPiece(int col, int row);
 int readHall(int adcnum, int rx, int tx);
 void readHallRow(int row, int rx, int tx);
 void adjust();
@@ -118,18 +108,18 @@ void resetChessBoard();
 void loopChessBoard();
 void LightAllPieces();
 void LightSquare(int row, int col, bool on);
-bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promotionType = NO_PIECE);
+bool movePiece(int* fromSquare, int * toSquare, PieceType promotionType = NO_PIECE);
 void printColors();
 void printBoard();
 void identifyColors();
 void updateColors();
-int gameStartValid();
+bool gameStartValid();
 void assignPieces();
 void rowToFen(Piece row[8], int &fen_index);
 void boardToFen();
 void sendFen();
-int checkPick();
-int checkPlace();
+bool checkPick();
+bool checkPlace();
 void lightUp(int i, int j);
 bool lightValidSquare(int row, int col, Colour activeColour);
 void flash();
@@ -145,8 +135,11 @@ const int numRows = 8;
 const int numCols = 8;
 
 int turns = 1;
-char whoseTurn = 'w';
-char gameCommand;
+GameMode gameMode = BEGINNER_MODE;
+GameState gameState = INIT_GAME;
+GameCommand gameCommand = NO_ACTION;
+Colour whoseTurn = WHITE;
+bool promoting = false;
 
 char CastlingStatus[5] = "KQkq";
 
@@ -170,41 +163,41 @@ int adjStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0}};
 
-int newBoardColors[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0}};
+// int newBoardColors[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0}};
 
-int oldBoardColors[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0}};
+// int oldBoardColors[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0},
+//                             {0, 0, 0, 0, 0, 0, 0, 0}};
 
-char curBoardPieces[8][8] = {{'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'}};
+// char currentBoard[8][8] = {{'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'}};
 
-char defBoardPieces[8][8] = {{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-                             {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'0', '0', '0', '0', '0', '0', '0', '0'},
-                             {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-                             {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}};
+// char defBoardPieces[8][8] = {{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+//                              {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
+//                              {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+//                              {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}};
 
 int baseReadings[8][8] = {
     {210, 210, 210, 210, 210, 210, 210, 210},
@@ -236,8 +229,9 @@ Piece currentBoard[numRows][numCols] = {
     {{PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}},
     {{ROOK, BLACK}, {KNIGHT, BLACK}, {BISHOP, BLACK}, {QUEEN, BLACK}, {KING, BLACK}, {BISHOP, BLACK}, {KNIGHT, BLACK}, {ROOK, BLACK}}};
 
-Position whiteSquares[16];
-Position blackSquares[16];
+// identify the positions which hold white or black pieces
+int whiteSquares[16][16];
+int blackSquares[16][16];
 
 // ChessBoard Functions
 void resetChessBoard()
@@ -279,9 +273,11 @@ void resetChessBoard()
 
     for (i = 0; i < 16; i++)
     {
-                          // row, col
-        whiteSquares[i] = {i / 8, i % 8};
-        BlackSquares[i] = {i / 8 + 6, i % 8};
+                // row, col
+        whiteSquares[i][i] = i / 8;
+        whiteSquares[i][i] = i % 8;
+        blackSquares[i][i] = i / 8 + 6;
+        blackSquares[i][i] = i % 8;
     }
     
 }
@@ -290,8 +286,13 @@ void loopChessBoard()
 {
 }
 
-bool movePiece(int fromRow, int fromCol, int toRow, int toCol, PieceType promotionType = NO_PIECE)
+bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIECE)
 {
+    int fromRow = fromSquare[0];
+    int fromCol = fromSquare[1];
+    int toRow = toSquare[0];
+    int toCol = toSquare[1];
+
     Piece &fromPiece = currentBoard[fromRow][fromCol];
     Piece &toPiece = currentBoard[toRow][toCol];
 
@@ -532,7 +533,7 @@ void boardToFen()
     }
 
     // w or b
-    FEN[fen_index++] = whoseTurn;
+    FEN[fen_index++] = whoseTurn == WHITE ? 'w' : 'b';
     FEN[fen_index++] = ' ';
 
     int castle_index = 0;
@@ -562,7 +563,8 @@ void boardToFen()
     
     FEN[fen_index++] = ' ';
 
-    FEN[fen_index] = '\r';
+    FEN[fen_index++] = '\r';
+    FEN[fen_index] = '\0';
 }
 
 void sendFen()
@@ -782,55 +784,20 @@ void readHallSensors()
 // PieceIdentification Functions
 char pieceToChar(Piece piece)
 {
-    switch (piece.type)
-    {
-    case PAWN:
-        return piece.colour == Colour::WHITE ? 'P' : 'p';
-    case KNIGHT:
-        return piece.colour == Colour::WHITE ? 'N' : 'n';
-    case BISHOP:
-        return piece.colour == Colour::WHITE ? 'B' : 'b';
-    case ROOK:
-        return piece.colour == Colour::WHITE ? 'R' : 'r';
-    case QUEEN:
-        return piece.colour == Colour::WHITE ? 'Q' : 'q';
-    case KING:
-        return piece.colour == Colour::WHITE ? 'K' : 'k';
-    default:
-        return '.';
-    }
+    return (char)(piece.type + piece.colour);
 }
 
 Piece charToPiece(char pieceChar)
 {
-    switch (pieceChar)
+    if ((int)pieceChar > 90)
     {
-    case 'P':
-        return Piece{PAWN, WHITE};
-    case 'p':
-        return Piece{PAWN, BLACK};
-    case 'N':
-        return Piece{KNIGHT, WHITE};
-    case 'n':
-        return Piece{KNIGHT, BLACK};
-    case 'B':
-        return Piece{BISHOP, WHITE};
-    case 'b':
-        return Piece{BISHOP, BLACK};
-    case 'R':
-        return Piece{ROOK, WHITE};
-    case 'r':
-        return Piece{ROOK, BLACK};
-    case 'Q':
-        return Piece{QUEEN, WHITE};
-    case 'q':
-        return Piece{QUEEN, BLACK};
-    case 'K':
-        return Piece{KING, WHITE};
-    case 'k':
-        return Piece{KING, BLACK};
-    default:
-        return Piece{};
+        // if char is lowercase
+        return Piece{(PieceType)pieceChar, BLACK};
+    }
+    else
+    {
+        // if char is uppercase
+        return Piece{(PieceType)pieceChar, WHITE};
     }
 }
 
@@ -845,7 +812,7 @@ void printColors()
         Serial.print("\t");
         for (j = 0; j < 8; j++)
         {
-            Serial.print(newBoardColors[i][j]);
+            Serial.print(currentBoard[i][j].colour);
             Serial.print("\t");
         }
         Serial.print("\n");
@@ -863,39 +830,10 @@ void printBoard()
         Serial.print("\t");
         for (j = 0; j < 8; j++)
         {
-            Serial.print(curBoardPieces[i][j]);
+            Serial.print(pieceToChar(currentBoard[i][j]));
             Serial.print("\t");
         }
         Serial.print("\n");
-    }
-}
-
-void identifyColors()
-{
-    int i, j;
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < 8; j++)
-        {
-            if (adjStates[i][j] < 140)
-                newBoardColors[i][j] = 0;
-            else if (adjStates[i][j] > 310)
-                newBoardColors[i][j] = 1;
-            else
-                newBoardColors[i][j] = 2;
-        }
-    }
-}
-
-void updateColors()
-{
-    int i, j;
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < 8; j++)
-        {
-            oldBoardColors[i][j] = newBoardColors[i][j];
-        }
     }
 }
 
@@ -911,7 +849,6 @@ void updateColors()
 // Keeps track of what piece was picked up and what are the possible moves
 // Enters state when piece is picked up
 // Leaves state when the piece is placed again
-int gameState = 0;
 
 // Start command from LCD
 int gameStartPB = 0;
@@ -919,44 +856,32 @@ int gameStartPB = 0;
 // 0 for white, 1 for black
 int turns = 0;
 
-char liftedPiece = ' ';
+Piece liftedPiece = Piece{};
 
 // row, col
 int liftedSquare[2] = {0, 0};
+int placedSquare[2] = {0, 0};
 
-int gameStartValid()
+bool gameStartValid()
 {
-    int valid = 1;
+    bool valid = true;
     int i;
     for (i = 0; i < 8; i++)
     {
-        if (newBoardColors[0][i] != 0)
-            valid = 0;
-        if (newBoardColors[1][i] != 0)
-            valid = 0;
+        if (currentBoard[0][i].colour != WHITE)
+            valid = false;
+        if (currentBoard[1][i].colour != WHITE)
+            valid = false;
 
-        if (newBoardColors[6][i] != 1)
-            valid = 0;
-        if (newBoardColors[7][i] != 1)
-            valid = 0;
+        if (currentBoard[6][i].colour != BLACK)
+            valid = false;
+        if (currentBoard[7][i].colour != BLACK)
+            valid = false;
     }
     return valid;
 }
 
-void assignPieces()
-{
-    int i, j;
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < 8; j++)
-        {
-            curBoardPieces[i][j] = defBoardPieces[i][j];
-        }
-    }
-}
-
-// HallSensors Functions
-Position detectNewPiece(int col, int row)
+int* detectNewPiece(int col, int row)
 {
     for (int row = 0; row < 8; row++)
     {
@@ -975,39 +900,68 @@ Position detectNewPiece(int col, int row)
     }
 }
 
-int checkPick()
+void identifyColors()
 {
-    int change = 0;
     int i, j;
     for (i = 0; i < 8; i++)
     {
         for (j = 0; j < 8; j++)
         {
-            if (newBoardColors[i][j] != oldBoardColors[i][j])
+            if (adjStates[i][j] < 140)
+                currentBoard[i][j].colour = WHITE;
+            else if (adjStates[i][j] > 310)
+                currentBoard[i][j].colour = BLACK;
+            else
+                currentBoard[i][j].colour = NO_COLOUR;
+        }
+    }
+}
+
+void updateColors()
+{
+    int i, j;
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            oldBoard[i][j].colour = currentBoard[i][j].colour;
+        }
+    }
+}
+
+bool checkPick()
+{
+    bool change = false;
+    int i, j;
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            if (currentBoard[i][j].colour != oldBoard[i][j].colour)
             {
-                liftedPiece = curBoardPieces[i][j];
+                liftedPiece = currentBoard[i][j];
                 liftedSquare[0] = i;
                 liftedSquare[1] = j;
-                change = 1;
+                change = true;
             }
         }
     }
     return change;
 }
 
-int checkPlace()
+bool checkPlace()
 {
-    int change = 0;
+    bool change = false;
     int i, j;
     for (i = 0; i < 8; i++)
     {
         for (j = 0; j < 8; j++)
         {
-            if (newBoardColors[i][j] != oldBoardColors[i][j])
+            if (currentBoard[i][j].colour != oldBoard[i][j].colour)
             {
-                curBoardPieces[i][j] = liftedPiece;
-                curBoardPieces[liftedSquare[0]][liftedSquare[1]] = '0';
-                change = 1;
+                currentBoard[i][j] = liftedPiece;
+                currentBoard[liftedSquare[0]][liftedSquare[1]] = Piece{};
+                change = true;
             }
         }
     }
@@ -1022,14 +976,16 @@ void lightUp(int row, int col)
     digitalWrite(cathodes[col + 1], HIGH);
 }
 
+// return true to continue checking for suqares to light
+// return false to stop checking (for pieces that move in straight lines)
 bool lightValidSquare(int row, int col, Colour activeColour)
 {
-    if (curBoardPieces[row][col] == '0')
+    if (currentBoard[row][col].type == NO_PIECE)
     {
         lightUp(row, col);
         return true;
     }
-    else if (charToPiece(curBoardPieces[row][col]).colour != activeColour)
+    else if (currentBoard[row][col].colour != activeColour)
     {
         lightUp(row, col);
         return false;
@@ -1052,22 +1008,22 @@ void lightsOff()
 
 void highlightPawnMoves(int row, int col, Colour activeColour)
 {
-    int direction = charToPiece(curBoardPieces[row][col]).colour == WHITE ? 1 : -1;
+    int direction = currentBoard[row][col].colour == WHITE ? 1 : -1;
 
     if (row + direction >= 0 && row + direction <= 7)
     {
         // Pawn can move forward by one square
-        if (curBoardPieces[row + direction][col] == '0')
+        if (currentBoard[row + direction][col].type == NO_PIECE)
         {
             lightUp(row + direction, col);
         }
 
         // Pawn can capture enemy piece diagonally
-        if (col > 0 && charToPiece(curBoardPieces[row + direction][col - 1]).colour != activeColour)
+        if (col > 0 && currentBoard[row + direction][col - 1].colour != activeColour)
         {
             lightUp(row + direction, col - 1);
         }
-        if (col < 7 && charToPiece(curBoardPieces[row + direction][col + 1]).colour != activeColour)
+        if (col < 7 && currentBoard[row + direction][col + 1].colour != activeColour)
         {
             lightUp(row + direction, col + 1);
         }
@@ -1083,8 +1039,8 @@ void highlightKnightMoves(int row, int col, Colour activeColour)
         int newCol = col + moves[i][1];
         if (newRow >= 0 && newRow <= 7 && newCol >= 0 && newCol <= 7)
         {
-            char targetPiece = curBoardPieces[newRow][newCol];
-            if (targetPiece == '0' || charToPiece(targetPiece).colour != activeColour)
+            Piece targetPiece = currentBoard[newRow][newCol];
+            if (targetPiece.type == NO_PIECE || targetPiece.colour != activeColour)
             {
                 lightUp(newRow, newCol);
             }
@@ -1286,39 +1242,39 @@ void highlightKingMoves(int row, int col, Colour activeColour)
     // Check the squares directly adjacent to the king
     if (row > 0)
     {
-        if (curBoardPieces[row - 1][col] == '0' || charToPiece(curBoardPieces[row - 1][col]).colour != activeColour)
+        if (currentBoard[row - 1][col].type == NO_PIECE || currentBoard[row - 1][col].colour != activeColour)
         {
             lightUp(row - 1, col);
         }
-        if (col > 0 && curBoardPieces[row - 1][col - 1] == '0' || charToPiece(curBoardPieces[row - 1][col - 1]).colour != activeColour)
+        if (col > 0 && currentBoard[row - 1][col - 1].type == NO_PIECE || currentBoard[row - 1][col - 1].colour != activeColour)
         {
             lightUp(row - 1, col - 1);
         }
-        if (col < 7 && curBoardPieces[row - 1][col + 1] == '0' || charToPiece(curBoardPieces[row - 1][col + 1]).colour != activeColour)
+        if (col < 7 && currentBoard[row - 1][col + 1].type == NO_PIECE || currentBoard[row - 1][col + 1].colour != activeColour)
         {
             lightUp(row - 1, col + 1);
         }
     }
     if (row < 7)
     {
-        if (curBoardPieces[row + 1][col] == '0' || charToPiece(curBoardPieces[row + 1][col]).colour != activeColour)
+        if (currentBoard[row + 1][col].type == NO_PIECE || currentBoard[row + 1][col].colour != activeColour)
         {
             lightUp(row + 1, col);
         }
-        if (col > 0 && curBoardPieces[row + 1][col - 1] == '0' || charToPiece(curBoardPieces[row + 1][col - 1]).colour != activeColour)
+        if (col > 0 && currentBoard[row + 1][col - 1].type == NO_PIECE || currentBoard[row + 1][col - 1].colour != activeColour)
         {
             lightUp(row + 1, col - 1);
         }
-        if (col < 7 && curBoardPieces[row + 1][col + 1] == '0' || charToPiece(curBoardPieces[row + 1][col + 1]).colour != activeColour)
+        if (col < 7 && currentBoard[row + 1][col + 1].type == NO_PIECE || currentBoard[row + 1][col + 1].colour != activeColour)
         {
             lightUp(row + 1, col + 1);
         }
     }
-    if (col > 0 && curBoardPieces[row][col - 1] == '0' || charToPiece(curBoardPieces[row][col - 1]).colour != activeColour)
+    if (col > 0 && currentBoard[row][col - 1].type == NO_PIECE || currentBoard[row][col - 1].colour != activeColour)
     {
         lightUp(row, col - 1);
     }
-    if (col < 7 && curBoardPieces[row][col + 1] == '0' || charToPiece(curBoardPieces[row][col + 1]).colour != activeColour)
+    if (col < 7 && currentBoard[row][col + 1].type == NO_PIECE || currentBoard[row][col + 1].colour != activeColour)
     {
         lightUp(row, col + 1);
     }
@@ -1326,7 +1282,7 @@ void highlightKingMoves(int row, int col, Colour activeColour)
 
 void flash()
 {
-    Piece fromPiece = charToPiece(liftedPiece);
+    Piece fromPiece = liftedPiece;
     int fromRow = liftedSquare[0];
     int fromCol = liftedSquare[1];
 
@@ -1371,11 +1327,17 @@ void loop()
         gameCommand = Serial1.read();
     }
 
+    if (gameCommand == 'e')
+    {
+        gameState = INIT_GAME;
+    }
+    
+
     readHallSensors();
 
     identifyColors();
 
-    Serial.print(gameState);
+    Serial.print((char)gameState);
     Serial.print("\t");
     Serial.print(turns);
     Serial.print("\t");
@@ -1384,52 +1346,144 @@ void loop()
 
     switch (gameState)
     {
-    case 0:
+    case INIT_GAME:
+        // wait for game mode selection from LCD screen
+        // if (Serial1.available() > 0)
+        // {
+        //     int temp = Serial1.read();
+        //     if (temp == BEGINNER_MODE || temp == NORMAL_MODE || temp == ENGINE_MODE)
+        //     {
+        //         gameMode = (GameMode)temp;
+        //         gameState = PLAY_GAME;
+        //     }
+        // }
+        gameState = PLAY_GAME;
+        break;
+    case PLAY_GAME:
         if (gameStartValid())
-        { //&& gameStartPB) {
-            assignPieces();
-            gameState = 1;
+        {
+            resetChessBoard();
+            gameState = WAIT_PICK;
+        }
+        else
+        {
+            // figure out some way to indicate that the game isn't set up properly.
+            // light squares??
         }
         break;
-    case 1:
+    case RESET_GAME:
+        // do we need this state?
+        break;
+    case WAIT_PICK:
         // sendFen();
         if (checkPick())
         {
-            gameState = 2;
+            gameState = PIECE_LIFTED;
         }
         else if (gameCommand == 'e')
-            gameState = 0;
+            gameState = INIT_GAME;
         break;
-    case 2:
+    case PIECE_LIFTED:
         // sendFen();
         flash();
         if (checkPlace())
         {
-            if (whoseTurn == 'w')
-                whoseTurn = 'b';
-            else
-            {
-                whoseTurn = 'w';
-                turns += 1;
-            }
-            gameState = 1;
-            turnOff();
+            lightsOff();
+            gameState = VALID_MOVE;
+            // if (movePiece(liftedSquare, placedSquare, QUEEN))
+            // {
+            //     gameState = VALID_MOVE;
+            // }
+            // else
+            // {
+            //     gameState = INVALID_MOVE;
+            // }
         }
         else if (gameCommand == 'e')
-            gameState = 0;
+            gameState = INIT_GAME;
+        break;
+    case REMOVE_PIECE:
+        // should we keep track of pieces taken?
+        gameState = WAIT_PICK;
+        break;
+    case PROMOTING:
+        // wait for piece selection from LCD screen
+        if (promoting)
+        {
+            if (checkPick())
+            {
+                gameState = PIECE_LIFTED;
+            }
+        }
+        
+        gameState = WAIT_PICK;
+        break;
+    case VALID_MOVE:
+        if (whoseTurn == WHITE)
+            whoseTurn = BLACK;
+        else
+        {
+            whoseTurn = WHITE;
+            turns += 1;
+        }
+        gameState = WAIT_PICK;
+        break;
+    case INVALID_MOVE:
+        lightUp(liftedSquare[0], liftedSquare[1]);
+        gameState = WAIT_PICK;
         break;
     default:
         break;
     }
 
-    printHall();
-    delay(delay_const);
-    Serial.print("\n");
-    Serial.print("\n");
-    printColors();
-    delay(delay_const);
-    Serial.print("\n");
-    Serial.print("\n");
+    // switch (gameState)
+    // {
+    // case 0:
+    //     if (gameStartValid())
+    //     { //&& gameStartPB) {
+    //         resetChessBoard();
+    //         gameState = WAIT_PICK;
+    //     }
+    //     break;
+    // case 1:
+    //     // sendFen();
+    //     if (checkPick())
+    //     {
+    //         gameState = PIECE_LIFTED;
+    //     }
+    //     else if (gameCommand == 'e')
+    //         gameState = WAIT_PICK;
+    //     break;
+    // case 2:
+    //     // sendFen();
+    //     flash();
+    //     if (checkPlace())
+    //     {
+    //         if (whoseTurn == 'w')
+    //             whoseTurn = 'b';
+    //         else
+    //         {
+    //             whoseTurn = 'w';
+    //             turns += 1;
+    //         }
+    //         gameState = WAIT_PICK;
+    //         lightsOff();
+    //     }
+    //     else if (gameCommand == 'e')
+    //         gameState = INIT_GAME;
+    //     break;
+    // default:
+    //     break;
+    // }
+
+    // printHall();
+    // delay(delay_const);
+    // Serial.print("\n");
+    // Serial.print("\n");
+    // printColors();
+    // delay(delay_const);
+    // Serial.print("\n");
+    // Serial.print("\n");
     printBoard();
     delay(delay_const);
     Serial.print("\n");
