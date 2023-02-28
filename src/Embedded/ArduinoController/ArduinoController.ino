@@ -90,7 +90,18 @@ struct Piece
     PieceType type;
     Colour colour;
     Piece() : type(PieceType::NO_PIECE), colour(Colour::NO_COLOUR) {}
-    Piece(PieceType piece, Colour colourType) : type(piece), colour(colourType) {}
+    Piece(PieceType pieceType, Colour colourType) : type(pieceType), colour(colourType) {}
+};
+
+struct Square
+{
+    Piece piece;
+    int row;
+    int col;
+    Square() : piece(Piece()), row(0), col(0) {}
+    Square(int r, int c) : piece(Piece{}), row(r), col(c) {}
+    Square(Piece piece, int r, int c) : piece(piece), row(r), col(c) {}
+    Square(PieceType type, Colour colour, int r, int c) : piece(Piece{type, colour}), row(r), col(c) {}
 };
 
 // Function delclarations
@@ -209,29 +220,28 @@ int baseReadings[8][8] = {
     {210, 210, 210, 210, 210, 210, 210, 210},
     {210, 210, 210, 210, 210, 210, 210, 210}};
 
-Piece oldBoard[numRows][numCols] = {
-    {{ROOK, BLACK}, {KNIGHT, BLACK}, {BISHOP, BLACK}, {QUEEN, BLACK}, {KING, BLACK}, {BISHOP, BLACK}, {KNIGHT, BLACK}, {ROOK, BLACK}},
-    {{PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}},
-    {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
-    {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
-    {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
-    {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
-    {{PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}},
-    {{ROOK, WHITE}, {KNIGHT, WHITE}, {BISHOP, WHITE}, {QUEEN, WHITE}, {KING, WHITE}, {BISHOP, WHITE}, {KNIGHT, WHITE}, {ROOK, WHITE}}};
+// Piece oldPieces[numRows][numCols] = {
+//     {{ROOK, BLACK}, {KNIGHT, BLACK}, {BISHOP, BLACK}, {QUEEN, BLACK}, {KING, BLACK}, {BISHOP, BLACK}, {KNIGHT, BLACK}, {ROOK, BLACK}},
+//     {{PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}},
+//     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+//     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+//     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+//     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+//     {{PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}},
+//     {{ROOK, WHITE}, {KNIGHT, WHITE}, {BISHOP, WHITE}, {QUEEN, WHITE}, {KING, WHITE}, {BISHOP, WHITE}, {KNIGHT, WHITE}, {ROOK, WHITE}}};
 
-Piece currentBoard[numRows][numCols] = {
-    {{ROOK, BLACK}, {KNIGHT, BLACK}, {BISHOP, BLACK}, {QUEEN, BLACK}, {KING, BLACK}, {BISHOP, BLACK}, {KNIGHT, BLACK}, {ROOK, BLACK}},
-    {{PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}},
-    {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
-    {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
-    {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
-    {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
-    {{PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}},
-    {{ROOK, WHITE}, {KNIGHT, WHITE}, {BISHOP, WHITE}, {QUEEN, WHITE}, {KING, WHITE}, {BISHOP, WHITE}, {KNIGHT, WHITE}, {ROOK, WHITE}}};
+// Piece currentPieces[numRows][numCols] = {
+//     {{ROOK, BLACK}, {KNIGHT, BLACK}, {BISHOP, BLACK}, {QUEEN, BLACK}, {KING, BLACK}, {BISHOP, BLACK}, {KNIGHT, BLACK}, {ROOK, BLACK}},
+//     {{PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}, {PAWN, BLACK}},
+//     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+//     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+//     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+//     {Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}, Piece{}},
+//     {{PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}, {PAWN, WHITE}},
+//     {{ROOK, WHITE}, {KNIGHT, WHITE}, {BISHOP, WHITE}, {QUEEN, WHITE}, {KING, WHITE}, {BISHOP, WHITE}, {KNIGHT, WHITE}, {ROOK, WHITE}}};
 
-// identify the positions which hold white or black pieces
-int whiteSquares[16][16];
-int blackSquares[16][16];
+Square currentBoard[numRows][numCols];
+Square oldBoard[numRows][numCols];
 
 // ChessBoard Functions
 void resetChessBoard()
@@ -242,12 +252,14 @@ void resetChessBoard()
     {
         for (j = 0; j < 8; j++)
         {
+            currentBoard[i][j] = Square(i,j);
+            oldBoard[i][j] = Square(i,j);
             Colour col;
             PieceType type;
             if (i > 1 && i < 6)
             {
-                currentBoard[i][j] = Piece{};
-                oldBoard[i][j] = Piece{};
+                currentBoard[i][j].piece = Piece();
+                oldBoard[i][j].piece = Piece();
                 continue;
             }
             else if (i < 2)
@@ -266,20 +278,10 @@ void resetChessBoard()
                 else
                     type = PAWN;
             }
-            currentBoard[i][j] = {type, col};
-            oldBoard[i][j] = {type, col};
+            currentBoard[i][j].piece = Piece(type, col);
+            oldBoard[i][j].piece = Piece(type, col);
         }
-    }
-
-    for (i = 0; i < 16; i++)
-    {
-                // row, col
-        whiteSquares[i][i] = i / 8;
-        whiteSquares[i][i] = i % 8;
-        blackSquares[i][i] = i / 8 + 6;
-        blackSquares[i][i] = i % 8;
-    }
-    
+    }    
 }
 
 void loopChessBoard()
@@ -293,8 +295,8 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
     int toRow = toSquare[0];
     int toCol = toSquare[1];
 
-    Piece &fromPiece = currentBoard[fromRow][fromCol];
-    Piece &toPiece = currentBoard[toRow][toCol];
+    Piece &fromPiece = currentBoard[fromRow][fromCol].piece;
+    Piece &toPiece = currentBoard[toRow][toCol].piece;
 
     if (fromPiece.type == NO_PIECE)
     {
@@ -338,7 +340,7 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
             if (fromRow == 4 && toRow == 5 && abs(fromCol - toCol) == 1 && toPiece.type == NO_PIECE)
             {
                 // White pawn can capture en passant
-                currentBoard[toRow - 1][toCol].type = NO_PIECE;
+                currentBoard[toRow - 1][toCol].piece.type = NO_PIECE;
                 toPiece = fromPiece;
                 fromPiece = Piece{};
                 break;
@@ -370,7 +372,7 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
             if (fromRow == 3 && toRow == 2 && abs(fromCol - toCol) == 1 && toPiece.type == NO_PIECE)
             {
                 // Black pawn can capture en passant
-                currentBoard[toRow + 1][toCol].type = NO_PIECE;
+                currentBoard[toRow + 1][toCol].piece.type = NO_PIECE;
                 toPiece = fromPiece;
                 fromPiece = Piece{};
                 break;
@@ -443,48 +445,48 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
         if (fromRow == 0 && fromCol == 4 && toRow == 0 && toCol == 6)
         {
             // White kingside castle
-            if (currentBoard[0][5].type == NO_PIECE && currentBoard[0][6].type == NO_PIECE && currentBoard[0][7].type == ROOK)
+            if (currentBoard[0][5].piece.type == NO_PIECE && currentBoard[0][6].piece.type == NO_PIECE && currentBoard[0][7].piece.type == ROOK)
             {
-                currentBoard[0][6] = currentBoard[0][4];
-                currentBoard[0][4] = Piece{};
-                currentBoard[0][5] = currentBoard[0][7];
-                currentBoard[0][7] = Piece{};
+                currentBoard[0][6].piece = currentBoard[0][4].piece;
+                currentBoard[0][4].piece = Piece{};
+                currentBoard[0][5].piece = currentBoard[0][7].piece;
+                currentBoard[0][7].piece = Piece{};
                 break;
             }
         }
         if (fromRow == 0 && fromCol == 4 && toRow == 0 && toCol == 2)
         {
             // White queenside castle
-            if (currentBoard[0][1].type == NO_PIECE && currentBoard[0][2].type == NO_PIECE && currentBoard[0][3].type == NO_PIECE && currentBoard[0][0].type == ROOK)
+            if (currentBoard[0][1].piece.type == NO_PIECE && currentBoard[0][2].piece.type == NO_PIECE && currentBoard[0][3].piece.type == NO_PIECE && currentBoard[0][0].piece.type == ROOK)
             {
-                currentBoard[0][2] = currentBoard[0][4];
-                currentBoard[0][4] = Piece{};
-                currentBoard[0][3] = currentBoard[0][0];
-                currentBoard[0][0] = Piece{};
+                currentBoard[0][2].piece = currentBoard[0][4].piece;
+                currentBoard[0][4].piece = Piece{};
+                currentBoard[0][3].piece = currentBoard[0][0].piece;
+                currentBoard[0][0].piece = Piece{};
                 break;
             }
         }
         if (fromRow == 7 && fromCol == 4 && toRow == 7 && toCol == 6)
         {
             // Black kingside castle
-            if (currentBoard[7][5].type == NO_PIECE && currentBoard[7][6].type == NO_PIECE && currentBoard[7][7].type == ROOK)
+            if (currentBoard[7][5].piece.type == NO_PIECE && currentBoard[7][6].piece.type == NO_PIECE && currentBoard[7][7].piece.type == ROOK)
             {
-                currentBoard[7][6] = currentBoard[7][4];
-                currentBoard[7][4] = Piece{};
-                currentBoard[7][5] = currentBoard[7][7];
-                currentBoard[7][7] = Piece{};
+                currentBoard[7][6].piece = currentBoard[7][4].piece;
+                currentBoard[7][4].piece = Piece{};
+                currentBoard[7][5].piece = currentBoard[7][7].piece;
+                currentBoard[7][7].piece = Piece{};
                 break;
             }
         }
         if (fromRow == 7 && fromCol == 4 && toRow == 7 && toCol == 2)
         {
             // Black queenside castle
-            if (currentBoard[7][1].type == NO_PIECE && currentBoard[7][2].type == NO_PIECE && currentBoard[7][3].type == NO_PIECE && currentBoard[7][0].type == ROOK)
+            if (currentBoard[7][1].piece.type == NO_PIECE && currentBoard[7][2].piece.type == NO_PIECE && currentBoard[7][3].piece.type == NO_PIECE && currentBoard[7][0].piece.type == ROOK)
             {
-                currentBoard[7][2] = currentBoard[7][4];
-                currentBoard[7][4] = Piece{};
-                currentBoard[7][3] = currentBoard[7][0];
-                currentBoard[7][0] = Piece{};
+                currentBoard[7][2].piece = currentBoard[7][4].piece;
+                currentBoard[7][4].piece = Piece{};
+                currentBoard[7][3].piece = currentBoard[7][0].piece;
+                currentBoard[7][0].piece = Piece{};
                 break;
             }
         }
@@ -494,12 +496,13 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
 }
 
 // Converts a single row of the chess board to a FEN string
-void rowToFen(Piece row[8], int &fen_index)
+void rowToFen(Square row[8], int &fen_index)
 {
     int empty_count = 0;
     for (int i = 0; i < 8; ++i)
     {
-        if (row[i].type == PieceType::NO_PIECE)
+        Piece piece = row[i].piece;
+        if (piece.type == PieceType::NO_PIECE)
         {
             ++empty_count;
         }
@@ -510,7 +513,7 @@ void rowToFen(Piece row[8], int &fen_index)
                 FEN[fen_index++] = (char)('0' + empty_count);
                 empty_count = 0;
             }
-            FEN[fen_index++] = pieceToChar(row[i]);
+            FEN[fen_index++] = pieceToChar(piece);
         }
     }
     if (empty_count > 0)
@@ -784,7 +787,7 @@ void readHallSensors()
 // PieceIdentification Functions
 char pieceToChar(Piece piece)
 {
-    if (piece.type == NO_PIECE)
+    if (piece.colour == NO_COLOUR)
     {
         return '0';
     }
@@ -817,7 +820,7 @@ void printColors()
         Serial.print("\t");
         for (j = 0; j < 8; j++)
         {
-            Serial.print(currentBoard[i][j].colour);
+            Serial.print(currentBoard[i][j].piece.colour);
             Serial.print("\t");
         }
         Serial.print("\n");
@@ -835,7 +838,7 @@ void printBoard()
         Serial.print("\t");
         for (j = 0; j < 8; j++)
         {
-            Serial.print(pieceToChar(currentBoard[i][j]));
+            Serial.print(pieceToChar(currentBoard[i][j].piece));
             Serial.print("\t");
         }
         Serial.print("\n");
@@ -858,11 +861,8 @@ void printBoard()
 // Start command from LCD
 int gameStartPB = 0;
 
-Piece liftedPiece = Piece{};
-
-// row, col
-int liftedSquare[2] = {0, 0};
-int placedSquare[2] = {0, 0};
+Square *liftedSquare;
+Square *placed;
 
 bool gameStartValid()
 {
@@ -870,36 +870,17 @@ bool gameStartValid()
     int i;
     for (i = 0; i < 8; i++)
     {
-        if (currentBoard[0][i].colour != WHITE)
+        if (currentBoard[0][i].piece.colour != WHITE)
             valid = false;
-        if (currentBoard[1][i].colour != WHITE)
+        if (currentBoard[1][i].piece.colour != WHITE)
             valid = false;
 
-        if (currentBoard[6][i].colour != BLACK)
+        if (currentBoard[6][i].piece.colour != BLACK)
             valid = false;
-        if (currentBoard[7][i].colour != BLACK)
+        if (currentBoard[7][i].piece.colour != BLACK)
             valid = false;
     }
     return valid;
-}
-
-int* detectNewPiece(int col, int row)
-{
-    for (int row = 0; row < 8; row++)
-    {
-        for (int col = 0; col < 8; col++)
-        {
-            if (adjStates[row][col] < 140)
-            {
-            }
-            else if (adjStates[row][col] > 310)
-            {
-            }
-            else
-            {
-            }
-        }
-    }
 }
 
 void identifyColors()
@@ -910,11 +891,11 @@ void identifyColors()
         for (j = 0; j < 8; j++)
         {
             if (adjStates[i][j] < 140)
-                currentBoard[i][j].colour = WHITE;
+                currentBoard[i][j].piece.colour = WHITE;
             else if (adjStates[i][j] > 310)
-                currentBoard[i][j].colour = BLACK;
+                currentBoard[i][j].piece.colour = BLACK;
             else
-                currentBoard[i][j].colour = NO_COLOUR;
+                currentBoard[i][j].piece.colour = NO_COLOUR;
         }
     }
 }
@@ -939,11 +920,9 @@ bool checkPick()
     {
         for (j = 0; j < 8; j++)
         {
-            if (currentBoard[i][j].colour != oldBoard[i][j].colour)
+            if (currentBoard[i][j].piece.colour != oldBoard[i][j].piece.colour)
             {
-                liftedPiece = currentBoard[i][j];
-                liftedSquare[0] = i;
-                liftedSquare[1] = j;
+                liftedSquare = &currentBoard[i][j];
                 change = true;
             }
         }
@@ -959,10 +938,10 @@ bool checkPlace()
     {
         for (j = 0; j < 8; j++)
         {
-            if (currentBoard[i][j].colour != oldBoard[i][j].colour)
+            if (currentBoard[i][j].piece.colour != oldBoard[i][j].piece.colour)
             {
-                currentBoard[i][j] = liftedPiece;
-                currentBoard[liftedSquare[0]][liftedSquare[1]] = Piece{};
+                currentBoard[i][j] = *liftedSquare;
+                (*liftedSquare).piece = Piece();
                 change = true;
             }
         }
@@ -982,12 +961,12 @@ void lightUp(int row, int col)
 // return false to stop checking (for pieces that move in straight lines)
 bool lightValidSquare(int row, int col, Colour activeColour)
 {
-    if (currentBoard[row][col].type == NO_PIECE)
+    if (currentBoard[row][col].piece.type == NO_PIECE)
     {
         lightUp(row, col);
         return true;
     }
-    else if (currentBoard[row][col].colour != activeColour)
+    else if (currentBoard[row][col].piece.colour != activeColour)
     {
         lightUp(row, col);
         return false;
@@ -1008,32 +987,40 @@ void lightsOff()
     }
 }
 
-void highlightPawnMoves(int row, int col, Colour activeColour)
+void highlightPawnMoves(Square square)
 {
-    int direction = currentBoard[row][col].colour == WHITE ? 1 : -1;
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
+    int direction = activeColour == WHITE ? 1 : -1;
 
     if (row + direction >= 0 && row + direction <= 7)
     {
         // Pawn can move forward by one square
-        if (currentBoard[row + direction][col].type == NO_PIECE)
+        if (currentBoard[row + direction][col].piece.type == NO_PIECE)
         {
             lightUp(row + direction, col);
         }
 
         // Pawn can capture enemy piece diagonally
-        if (col > 0 && currentBoard[row + direction][col - 1].colour != activeColour)
+        if (col > 0 && currentBoard[row + direction][col - 1].piece.colour != activeColour)
         {
             lightUp(row + direction, col - 1);
         }
-        if (col < 7 && currentBoard[row + direction][col + 1].colour != activeColour)
+        if (col < 7 && currentBoard[row + direction][col + 1].piece.colour != activeColour)
         {
             lightUp(row + direction, col + 1);
         }
     }
 }
 
-void highlightKnightMoves(int row, int col, Colour activeColour)
+void highlightKnightMoves(Square square)
 {
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
     int moves[8][2] = {{-2, -1}, {-2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}};
     for (int i = 0; i < 8; i++)
     {
@@ -1041,7 +1028,7 @@ void highlightKnightMoves(int row, int col, Colour activeColour)
         int newCol = col + moves[i][1];
         if (newRow >= 0 && newRow <= 7 && newCol >= 0 && newCol <= 7)
         {
-            Piece targetPiece = currentBoard[newRow][newCol];
+            Piece targetPiece = currentBoard[newRow][newCol].piece;
             if (targetPiece.type == NO_PIECE || targetPiece.colour != activeColour)
             {
                 lightUp(newRow, newCol);
@@ -1050,8 +1037,12 @@ void highlightKnightMoves(int row, int col, Colour activeColour)
     }
 }
 
-void highlightBishopMoves(int row, int col, Colour activeColour)
+void highlightBishopMoves(Square square)
 {
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
     // Move up and right
     for (int i = row + 1; i <= 7; i++)
     {
@@ -1101,8 +1092,12 @@ void highlightBishopMoves(int row, int col, Colour activeColour)
     }
 }
 
-void highlightRookMoves(int row, int col, Colour activeColour)
+void highlightRookMoves(Square square)
 {
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
     if (col + 1 < 8)
     {
         // Check moves to the right
@@ -1152,8 +1147,11 @@ void highlightRookMoves(int row, int col, Colour activeColour)
     }
 }
 
-void highlightQueenMoves(int row, int col, Colour activeColour)
+void highlightQueenMoves(Square square)
 {
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
     // Move up
     for (int i = row - 1; i >= 0; i--)
     {
@@ -1239,44 +1237,49 @@ void highlightQueenMoves(int row, int col, Colour activeColour)
     }
 }
 
-void highlightKingMoves(int row, int col, Colour activeColour)
+void highlightKingMoves(Square* square)
 {
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
     // Check the squares directly adjacent to the king
     if (row > 0)
     {
-        if (currentBoard[row - 1][col].type == NO_PIECE || currentBoard[row - 1][col].colour != activeColour)
+        Square* prevRow = liftedSquare - numRows;
+        if (currentBoard[row - 1][col].piece.type == NO_PIECE || currentBoard[row - 1][col].piece.colour != activeColour)
         {
             lightUp(row - 1, col);
         }
-        if (col > 0 && currentBoard[row - 1][col - 1].type == NO_PIECE || currentBoard[row - 1][col - 1].colour != activeColour)
+        if (col > 0 && currentBoard[row - 1][col - 1].piece.type == NO_PIECE || currentBoard[row - 1][col - 1].piece.colour != activeColour)
         {
             lightUp(row - 1, col - 1);
         }
-        if (col < 7 && currentBoard[row - 1][col + 1].type == NO_PIECE || currentBoard[row - 1][col + 1].colour != activeColour)
+        if (col < 7 && currentBoard[row - 1][col + 1].piece.type == NO_PIECE || currentBoard[row - 1][col + 1].piece.colour != activeColour)
         {
             lightUp(row - 1, col + 1);
         }
     }
     if (row < 7)
     {
-        if (currentBoard[row + 1][col].type == NO_PIECE || currentBoard[row + 1][col].colour != activeColour)
+        if (currentBoard[row + 1][col].piece.type == NO_PIECE || currentBoard[row + 1][col].piece.colour != activeColour)
         {
             lightUp(row + 1, col);
         }
-        if (col > 0 && currentBoard[row + 1][col - 1].type == NO_PIECE || currentBoard[row + 1][col - 1].colour != activeColour)
+        if (col > 0 && currentBoard[row + 1][col - 1].piece.type == NO_PIECE || currentBoard[row + 1][col - 1].piece.colour != activeColour)
         {
             lightUp(row + 1, col - 1);
         }
-        if (col < 7 && currentBoard[row + 1][col + 1].type == NO_PIECE || currentBoard[row + 1][col + 1].colour != activeColour)
+        if (col < 7 && currentBoard[row + 1][col + 1].piece.type == NO_PIECE || currentBoard[row + 1][col + 1].piece.colour != activeColour)
         {
             lightUp(row + 1, col + 1);
         }
     }
-    if (col > 0 && currentBoard[row][col - 1].type == NO_PIECE || currentBoard[row][col - 1].colour != activeColour)
+    if (col > 0 && currentBoard[row][col - 1].piece.type == NO_PIECE || currentBoard[row][col - 1].piece.colour != activeColour)
     {
         lightUp(row, col - 1);
     }
-    if (col < 7 && currentBoard[row][col + 1].type == NO_PIECE || currentBoard[row][col + 1].colour != activeColour)
+    if (col < 7 && currentBoard[row][col + 1].piece.type == NO_PIECE || currentBoard[row][col + 1].piece.colour != activeColour)
     {
         lightUp(row, col + 1);
     }
@@ -1284,29 +1287,26 @@ void highlightKingMoves(int row, int col, Colour activeColour)
 
 void flash()
 {
-    Piece fromPiece = liftedPiece;
-    int fromRow = liftedSquare[0];
-    int fromCol = liftedSquare[1];
-
-    switch (fromPiece.type)
+    Square square = *liftedSquare;
+    switch (square.piece.type)
     {
     case PAWN:
-        highlightPawnMoves(fromRow, fromCol, fromPiece.colour);
+        highlightPawnMoves(liftedSquare);
         return;
     case KNIGHT:
-        highlightKnightMoves(fromRow, fromCol, fromPiece.colour);
+        highlightKnightMoves(liftedSquare);
         return;
     case ROOK:
-        highlightRookMoves(fromRow, fromCol, fromPiece.colour);
+        highlightRookMoves(liftedSquare);
         return;
     case BISHOP:
-        highlightBishopMoves(fromRow, fromCol, fromPiece.colour);
+        highlightBishopMoves(liftedSquare);
         return;
     case QUEEN:
-        highlightQueenMoves(fromRow, fromCol, fromPiece.colour);
+        highlightQueenMoves(liftedSquare);
         return;
     case KING:
-        highlightKingMoves(fromRow, fromCol, fromPiece.colour);
+        highlightKingMoves(liftedSquare);
         return;
     }
 }
@@ -1347,6 +1347,7 @@ void loop()
     switch (gameState)
     {
     case INIT_GAME:
+        resetChessBoard();
         // wait for game mode selection from LCD screen
         // if (Serial1.available() > 0)
         // {
@@ -1362,7 +1363,6 @@ void loop()
     case PLAY_GAME:
         if (gameStartValid())
         {
-            resetChessBoard();
             gameState = WAIT_PICK;
         }
         else
@@ -1425,7 +1425,7 @@ void loop()
         gameState = WAIT_PICK;
         break;
     case INVALID_MOVE:
-        lightUp(liftedSquare[0], liftedSquare[1]);
+        lightUp((*liftedSquare).row, (*liftedSquare).col);
         gameState = WAIT_PICK;
         break;
     default:
