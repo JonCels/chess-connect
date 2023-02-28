@@ -149,8 +149,15 @@ int turns = 1;
 GameMode gameMode = BEGINNER_MODE;
 GameState gameState = INIT_GAME;
 GameCommand gameCommand = NO_ACTION;
+
 Colour whoseTurn = WHITE;
 bool promoting = false;
+
+// Start command from LCD
+int gameStartPB = 0;
+
+Square *liftedSquare;
+Square *placed;
 
 char CastlingStatus[5] = "KQkq";
 
@@ -858,11 +865,6 @@ void printBoard()
 // Enters state when piece is picked up
 // Leaves state when the piece is placed again
 
-// Start command from LCD
-int gameStartPB = 0;
-
-Square *liftedSquare;
-Square *placed;
 
 bool gameStartValid()
 {
@@ -1029,7 +1031,7 @@ void highlightKnightMoves(Square square)
         if (newRow >= 0 && newRow <= 7 && newCol >= 0 && newCol <= 7)
         {
             Piece targetPiece = currentBoard[newRow][newCol].piece;
-            if (targetPiece.type == NO_PIECE || targetPiece.colour != activeColour)
+            if (targetPiece.colour != activeColour)
             {
                 lightUp(newRow, newCol);
             }
@@ -1043,51 +1045,46 @@ void highlightBishopMoves(Square square)
     int col = square.col;
     Colour activeColour = square.piece.colour;
 
-    // Move up and right
-    for (int i = row + 1; i <= 7; i++)
+    // maximum possible distances from piece to edge of board
+    // ul = up left, dr = down right, etc.
+    int dist_ul = min(7-row, col);
+    int dist_ur = min(7-row, 7-col);
+    int dist_dl = min(row, col);
+    int dist_dr = min(row, 7-col);
+
+    // Move up left
+    for (int i = 1; i <= dist_ul; i++)
     {
-        for (int j = 0; j <= 7; j++)
+        if (!lightValidSquare(row+i, col-i, activeColour))
         {
-            if (!lightValidSquare(i, j, activeColour))
-            {
-                break;
-            }
+            break;
         }
     }
 
-    // Move up and left
-    for (int i = row + 1; i <= 7; i++)
+    // Move up right
+    for (int i = 1; i <= dist_ur; i++)
     {
-        for (int j = col - 1; j >= 0; j--)
+        if (!lightValidSquare(row+i, col+i, activeColour))
         {
-            if (!lightValidSquare(i, j, activeColour))
-            {
-                break;
-            }
+            break;
         }
     }
 
-    // Check for moves in the down-right direction
-    for (int i = row - 1; i >= 0; i--)
+    // Move down left
+    for (int i = 1; i <= dist_dl; i++)
     {
-        for (int j = 0; j <= 7; j++)
+        if (!lightValidSquare(row-i, col-i, activeColour))
         {
-            if (!lightValidSquare(i, j, activeColour))
-            {
-                break;
-            }
+            break;
         }
     }
 
-    // Check for moves in the down-left direction
-    for (int i = row - 1; i >= 0; i--)
+    // Move down right
+    for (int i = 1; i <= dist_dr; i++)
     {
-        for (int j = col - 1; j >= 0; j--)
+        if (!lightValidSquare(row-i, col+i, activeColour))
         {
-            if (!lightValidSquare(i, j, activeColour))
-            {
-                break;
-            }
+            break;
         }
     }
 }
@@ -1098,51 +1095,39 @@ void highlightRookMoves(Square square)
     int col = square.col;
     Colour activeColour = square.piece.colour;
 
-    if (col + 1 < 8)
+    // Check moves to the right
+    for (int i = col + 1; i = 7; i++)
     {
-        // Check moves to the right
-        for (int i = col + 1; i < 8; i++)
+        if (!lightValidSquare(row, i, activeColour))
         {
-            if (!lightValidSquare(row, i, activeColour))
-            {
-                break;
-            }
+            break;
         }
     }
 
-    if (col - 1 >= 0)
+    // Check moves to the left
+    for (int i = col - 1; i >= 0; i--)
     {
-        // Check moves to the left
-        for (int i = col - 1; i >= 0; i--)
+        if (!lightValidSquare(row, i, activeColour))
         {
-            if (!lightValidSquare(row, i, activeColour))
-            {
-                break;
-            }
+            break;
         }
     }
 
-    if (row - 1 >= 0)
+    // Check moves down
+    for (int i = row - 1; i >= 0; i--)
     {
-        // Check moves down
-        for (int i = row - 1; i >= 0; i--)
+        if (!lightValidSquare(i, col, activeColour))
         {
-            if (!lightValidSquare(i, col, activeColour))
-            {
-                break;
-            }
+            break;
         }
     }
 
-    if (row + 1 < 8)
+    // Check moves up
+    for (int i = row + 1; i <= 7; i++)
     {
-        // Check moves up
-        for (int i = row + 1; i < 8; i++)
+        if (!lightValidSquare(i, col, activeColour))
         {
-            if (!lightValidSquare(i, col, activeColour))
-            {
-                break;
-            }
+            break;
         }
     }
 }
@@ -1152,7 +1137,51 @@ void highlightQueenMoves(Square square)
     int row = square.row;
     int col = square.col;
     Colour activeColour = square.piece.colour;
-    // Move up
+
+    // maximum possible distances from piece to edge of board
+    // ul = up left, dr = down right, etc.
+    int dist_ul = min(7-row, col);
+    int dist_ur = min(7-row, 7-col);
+    int dist_dl = min(row, col);
+    int dist_dr = min(row, 7-col);
+
+    // Move up left
+    for (int i = 1; i <= dist_ul; i++)
+    {
+        if (!lightValidSquare(row+i, col-i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move up right
+    for (int i = 1; i <= dist_ur; i++)
+    {
+        if (!lightValidSquare(row+i, col+i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move down left
+    for (int i = 1; i <= dist_dl; i++)
+    {
+        if (!lightValidSquare(row-i, col-i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move down right
+    for (int i = 1; i <= dist_dr; i++)
+    {
+        if (!lightValidSquare(row-i, col+i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move down
     for (int i = row - 1; i >= 0; i--)
     {
         if (!lightValidSquare(i, col, activeColour))
@@ -1161,7 +1190,7 @@ void highlightQueenMoves(Square square)
         }
     }
 
-    // Move down
+    // Move up
     for (int i = row + 1; i <= 7; i++)
     {
         if (!lightValidSquare(i, col, activeColour))
@@ -1187,99 +1216,50 @@ void highlightQueenMoves(Square square)
             break;
         }
     }
-
-    // Move down and right
-    for (int i = row - 1; i >= 0; i--)
-    {
-        for (int j = 0; j <= 7; j++)
-        {
-            if (!lightValidSquare(i, j, activeColour))
-            {
-                break;
-            }
-        }
-    }
-
-    // Move down and left
-    for (int i = row - 1; i >= 0; i--)
-    {
-        for (int j = col - 1; j >= 0; j--)
-        {
-            if (!lightValidSquare(i, j, activeColour))
-            {
-                break;
-            }
-        }
-    }
-
-    // Move up and right
-    for (int i = row + 1; i <= 7; i++)
-    {
-        for (int j = 0; j <= 7; j++)
-        {
-            if (!lightValidSquare(i, j, activeColour))
-            {
-                break;
-            }
-        }
-    }
-
-    // Move up and left
-    for (int i = row + 1; i <= 7; i++)
-    {
-        for (int j = col - 1; j >= 0; j--)
-        {
-            if (!lightValidSquare(i, j, activeColour))
-            {
-                break;
-            }
-        }
-    }
 }
 
-void highlightKingMoves(Square* square)
+void highlightKingMoves(Square square)
 {
-    int row = square.row;
-    int col = square.col;
-    Colour activeColour = square.piece.colour;
+    int row = liftedSquare->row;
+    int col = liftedSquare->col;
+    Colour activeColour = liftedSquare->piece.colour;
 
     // Check the squares directly adjacent to the king
     if (row > 0)
     {
-        Square* prevRow = liftedSquare - numRows;
-        if (currentBoard[row - 1][col].piece.type == NO_PIECE || currentBoard[row - 1][col].piece.colour != activeColour)
+        if (currentBoard[row - 1][col].piece.colour != activeColour)
         {
             lightUp(row - 1, col);
         }
-        if (col > 0 && currentBoard[row - 1][col - 1].piece.type == NO_PIECE || currentBoard[row - 1][col - 1].piece.colour != activeColour)
+        if (col > 0 && currentBoard[row - 1][col - 1].piece.colour != activeColour)
         {
             lightUp(row - 1, col - 1);
         }
-        if (col < 7 && currentBoard[row - 1][col + 1].piece.type == NO_PIECE || currentBoard[row - 1][col + 1].piece.colour != activeColour)
+        if (col < 7 && currentBoard[row - 1][col + 1].piece.colour != activeColour)
         {
             lightUp(row - 1, col + 1);
         }
     }
     if (row < 7)
     {
-        if (currentBoard[row + 1][col].piece.type == NO_PIECE || currentBoard[row + 1][col].piece.colour != activeColour)
+        if (currentBoard[row + 1][col].piece.colour != activeColour)
         {
             lightUp(row + 1, col);
         }
-        if (col > 0 && currentBoard[row + 1][col - 1].piece.type == NO_PIECE || currentBoard[row + 1][col - 1].piece.colour != activeColour)
+        if (col > 0 && currentBoard[row + 1][col - 1].piece.colour != activeColour)
         {
             lightUp(row + 1, col - 1);
         }
-        if (col < 7 && currentBoard[row + 1][col + 1].piece.type == NO_PIECE || currentBoard[row + 1][col + 1].piece.colour != activeColour)
+        if (col < 7 && currentBoard[row + 1][col + 1].piece.colour != activeColour)
         {
             lightUp(row + 1, col + 1);
         }
     }
-    if (col > 0 && currentBoard[row][col - 1].piece.type == NO_PIECE || currentBoard[row][col - 1].piece.colour != activeColour)
+    if (col > 0 && currentBoard[row][col - 1].piece.colour != activeColour)
     {
         lightUp(row, col - 1);
     }
-    if (col < 7 && currentBoard[row][col + 1].piece.type == NO_PIECE || currentBoard[row][col + 1].piece.colour != activeColour)
+    if (col < 7 && currentBoard[row][col + 1].piece.colour != activeColour)
     {
         lightUp(row, col + 1);
     }
@@ -1291,22 +1271,22 @@ void flash()
     switch (square.piece.type)
     {
     case PAWN:
-        highlightPawnMoves(liftedSquare);
+        highlightPawnMoves(square);
         return;
     case KNIGHT:
-        highlightKnightMoves(liftedSquare);
+        highlightKnightMoves(square);
         return;
     case ROOK:
-        highlightRookMoves(liftedSquare);
+        highlightRookMoves(square);
         return;
     case BISHOP:
-        highlightBishopMoves(liftedSquare);
+        highlightBishopMoves(square);
         return;
     case QUEEN:
-        highlightQueenMoves(liftedSquare);
+        highlightQueenMoves(square);
         return;
     case KING:
-        highlightKingMoves(liftedSquare);
+        highlightKingMoves(square);
         return;
     }
 }
