@@ -1,12 +1,4 @@
-// #include "HallSensors.h"
-// #include "ChessBoard.h"
-// #include "PieceIdentification.h"
-#ifndef Arduino_h
-    #pragma message "Injecting MockArduinoController to run tests..."
-    #include "../ArduinoTest/MockArduinoController.cpp"
-#else
-    #pragma message "Compiling software for flashing on Arduino..."
-#endif
+#include "MockArduinoController.cpp"
 
 int delay_const = 2000;
 
@@ -113,7 +105,7 @@ struct Square
 // Function delclarations
 char pieceToChar(Piece piece);
 Piece charToPiece(char pieceChar);
-int* detectNewPiece(int col, int row);
+int *detectNewPiece(int col, int row);
 int readHall(int adcnum, int rx, int tx);
 void readHallRow(int row, int rx, int tx);
 void adjust();
@@ -125,7 +117,7 @@ void resetChessBoard();
 void loopChessBoard();
 void LightAllPieces();
 void LightSquare(int row, int col, bool on);
-bool movePiece(int* fromSquare, int * toSquare, PieceType promotionType = NO_PIECE);
+bool movePiece(int *fromSquare, int *toSquare, PieceType promotionType = NO_PIECE);
 void printColors();
 void printBoard();
 void identifyColors();
@@ -265,8 +257,8 @@ void resetChessBoard()
     {
         for (j = 0; j < 8; j++)
         {
-            currentBoard[i][j] = Square(i,j);
-            oldBoard[i][j] = Square(i,j);
+            currentBoard[i][j] = Square(i, j);
+            oldBoard[i][j] = Square(i, j);
             Colour col;
             PieceType type;
             if (i > 1 && i < 6)
@@ -294,14 +286,14 @@ void resetChessBoard()
             currentBoard[i][j].piece = Piece(type, col);
             oldBoard[i][j].piece = Piece(type, col);
         }
-    }    
+    }
 }
 
 void loopChessBoard()
 {
 }
 
-bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIECE)
+bool movePiece(int *fromSquare, int *toSquare, PieceType promotionType = NO_PIECE)
 {
     int fromRow = fromSquare[0];
     int fromCol = fromSquare[1];
@@ -576,7 +568,7 @@ void boardToFen()
     {
         FEN[fen_index++] = buf[buf_index--];
     }
-    
+
     FEN[fen_index++] = ' ';
 
     FEN[fen_index++] = '\r';
@@ -804,7 +796,7 @@ char pieceToChar(Piece piece)
     {
         return '0';
     }
-    
+
     return (char)(piece.type + piece.colour);
 }
 
@@ -871,7 +863,6 @@ void printBoard()
 // Enters state when piece is picked up
 // Leaves state when the piece is placed again
 
-
 bool gameStartValid()
 {
     bool valid = true;
@@ -920,6 +911,8 @@ void updateBoard()
     }
 }
 
+
+
 bool checkPick()
 {
     bool change = false;
@@ -956,6 +949,7 @@ bool checkPlace()
     }
     return change;
 }
+
 
 void lightUp(int row, int col)
 {
@@ -1053,15 +1047,15 @@ void highlightBishopMoves(Square square)
 
     // maximum possible distances from piece to edge of board
     // ul = up left, dr = down right, etc.
-    int dist_ul = min(7-row, col);
-    int dist_ur = min(7-row, 7-col);
+    int dist_ul = min(7 - row, col);
+    int dist_ur = min(7 - row, 7 - col);
     int dist_dl = min(row, col);
-    int dist_dr = min(row, 7-col);
+    int dist_dr = min(row, 7 - col);
 
     // Move up left
     for (int i = 1; i <= dist_ul; i++)
     {
-        if (!lightValidSquare(row+i, col-i, activeColour))
+        if (!lightValidSquare(row + i, col - i, activeColour))
         {
             break;
         }
@@ -1070,7 +1064,7 @@ void highlightBishopMoves(Square square)
     // Move up right
     for (int i = 1; i <= dist_ur; i++)
     {
-        if (!lightValidSquare(row+i, col+i, activeColour))
+        if (!lightValidSquare(row + i, col + i, activeColour))
         {
             break;
         }
@@ -1079,7 +1073,7 @@ void highlightBishopMoves(Square square)
     // Move down left
     for (int i = 1; i <= dist_dl; i++)
     {
-        if (!lightValidSquare(row-i, col-i, activeColour))
+        if (!lightValidSquare(row - i, col - i, activeColour))
         {
             break;
         }
@@ -1088,7 +1082,7 @@ void highlightBishopMoves(Square square)
     // Move down right
     for (int i = 1; i <= dist_dr; i++)
     {
-        if (!lightValidSquare(row-i, col+i, activeColour))
+        if (!lightValidSquare(row - i, col + i, activeColour))
         {
             break;
         }
@@ -1146,15 +1140,15 @@ void highlightQueenMoves(Square square)
 
     // maximum possible distances from piece to edge of board
     // ul = up left, dr = down right, etc.
-    int dist_ul = min(7-row, col);
-    int dist_ur = min(7-row, 7-col);
+    int dist_ul = min(7 - row, col);
+    int dist_ur = min(7 - row, 7 - col);
     int dist_dl = min(row, col);
-    int dist_dr = min(row, 7-col);
+    int dist_dr = min(row, 7 - col);
 
     // Move up left
     for (int i = 1; i <= dist_ul; i++)
     {
-        if (!lightValidSquare(row+i, col-i, activeColour))
+        if (!lightValidSquare(row + i, col - i, activeColour))
         {
             break;
         }
@@ -1163,7 +1157,7 @@ void highlightQueenMoves(Square square)
     // Move up right
     for (int i = 1; i <= dist_ur; i++)
     {
-        if (!lightValidSquare(row+i, col+i, activeColour))
+        if (!lightValidSquare(row + i, col + i, activeColour))
         {
             break;
         }
@@ -1172,7 +1166,7 @@ void highlightQueenMoves(Square square)
     // Move down left
     for (int i = 1; i <= dist_dl; i++)
     {
-        if (!lightValidSquare(row-i, col-i, activeColour))
+        if (!lightValidSquare(row - i, col - i, activeColour))
         {
             break;
         }
@@ -1181,7 +1175,7 @@ void highlightQueenMoves(Square square)
     // Move down right
     for (int i = 1; i <= dist_dr; i++)
     {
-        if (!lightValidSquare(row-i, col+i, activeColour))
+        if (!lightValidSquare(row - i, col + i, activeColour))
         {
             break;
         }
@@ -1317,7 +1311,6 @@ void loop()
     {
         gameState = INIT_GAME;
     }
-    
 
     readHallSensors();
 
@@ -1327,7 +1320,7 @@ void loop()
     Serial.print("\t");
     Serial.print(turns);
     Serial.print("\t");
-    //Serial.println((char)gameCommand);
+    // Serial.println((char)gameCommand);
     Serial.print("\n");
 
     switch (gameState)
@@ -1396,7 +1389,7 @@ void loop()
                 gameState = PIECE_LIFTED;
             }
         }
-        
+
         gameState = WAIT_PICK;
         break;
     case VALID_MOVE:
