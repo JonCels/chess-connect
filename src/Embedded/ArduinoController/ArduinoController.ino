@@ -3,7 +3,10 @@
 // #include "PieceIdentification.h"
 #ifndef Arduino_h
     #pragma message "Injecting MockArduinoController to run tests..."
-    #include "../ArduinoTest/MockArduinoController.cpp"
+    #include "../../../test/ArduinoTest/MockArduinoController.cpp"
+
+    SerialStream Serial = SerialStream();
+    SerialStream Serial1 = SerialStream();
 #else
     #pragma message "Compiling software for flashing on Arduino..."
 #endif
@@ -1310,7 +1313,7 @@ void loop()
 {
     if (Serial1.available() > 0)
     {
-        gameCommand = Serial1.read();
+        gameCommand = (GameCommand)Serial1.read()[0];
     }
 
     if (gameCommand == 'e')
