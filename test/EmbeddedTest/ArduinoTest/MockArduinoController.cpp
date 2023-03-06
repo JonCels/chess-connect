@@ -48,7 +48,7 @@ using namespace std;
 
 struct PinValues {
     short val[512];
-    PinValues() : val({}) {}
+    PinValues() : val{} {}
 };
 
 class ReadWritePins{
@@ -61,7 +61,7 @@ public:
             index[pin] = 0;
         }
         
-        values[pin].val[index[pin++]] = val;
+        values[pin].val[index[pin]++] = val;
     }
     void printPinValues(int pin) {
         cout << "______Pin " << pin << ":______\n";
@@ -116,19 +116,19 @@ public:
     {
         return input.data();
     }
-    size_t write(char c)
+    size_t write(const char c)
     {
         size_t size = sizeof(char);
         output += c;
         return size;
     }
-    size_t write(char *str)
+    size_t write(const char *str)
     {
         size_t size = sizeof(str);
         output += str;
         return size;
     }
-    size_t print(char *str)
+    size_t print(const char *str)
     {
         if (output.empty()) {
             output = string(str);
@@ -150,7 +150,7 @@ public:
         size_t size = sizeof(char);
         return size;
     }
-    size_t println(char *str)
+    size_t println(const char *str)
     {
         if (output.empty())
         {
@@ -161,6 +161,19 @@ public:
             output.append(string(str) + "\n");
         }
         size_t size = sizeof(str);
+        return size;
+    }
+    size_t println(int i)
+    {
+        if (output.empty())
+        {
+            output = to_string(i) + "\n";
+        }
+        else
+        {
+            output.append(to_string(i) + "\n");
+        }
+        size_t size = sizeof(int) + sizeof("\n");
         return size;
     }
     string checkOutput() {

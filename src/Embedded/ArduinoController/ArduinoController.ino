@@ -3,7 +3,7 @@
 // #include "PieceIdentification.h"
 #ifndef Arduino_h
     #pragma message "Injecting MockArduinoController to run tests..."
-    #include "../../../test/ArduinoTest/MockArduinoController.cpp"
+    #include "../../../test/EmbeddedTest/ArduinoTest/MockArduinoController.cpp"
 
     SerialStream Serial = SerialStream();
     SerialStream Serial1 = SerialStream();
@@ -128,7 +128,7 @@ void resetChessBoard();
 void loopChessBoard();
 void LightAllPieces();
 void LightSquare(int row, int col, bool on);
-bool movePiece(int* fromSquare, int * toSquare, PieceType promotionType = NO_PIECE);
+bool movePiece(int* fromSquare, int * toSquare, PieceType promotionType);
 void printColors();
 void printBoard();
 void identifyColors();
@@ -402,7 +402,7 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
             break;
         }
         // Invalid move for pawn
-        return;
+        return false;
     case KNIGHT:
         if (abs(fromRow - toRow) == 2 && abs(fromCol - toCol) == 1)
         {
@@ -419,7 +419,7 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
             break;
         }
         // Invalid move for knight
-        return;
+        return false;
     case BISHOP:
         if (abs(fromRow - toRow) == abs(fromCol - toCol))
         {
@@ -429,7 +429,7 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
             break;
         }
         // Invalid move for bishop
-        return;
+        return false;
     case ROOK:
         if (fromRow == toRow || fromCol == toCol)
         {
@@ -439,7 +439,7 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
             break;
         }
         // Invalid move for rook
-        return;
+        return false;
     case QUEEN:
         if (fromRow == toRow || fromCol == toCol || abs(fromRow - toRow) == abs(fromCol - toCol))
         {
@@ -449,7 +449,7 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
             break;
         }
         // Invalid move for queen
-        return;
+        return false;
     case KING:
         if (abs(fromRow - toRow) <= 1 && abs(fromCol - toCol) <= 1)
         {
@@ -507,8 +507,9 @@ bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIEC
             }
         }
         // Invalid move for king
-        return;
+        return false;
     }
+    return true;
 }
 
 // Converts a single row of the chess board to a FEN string
