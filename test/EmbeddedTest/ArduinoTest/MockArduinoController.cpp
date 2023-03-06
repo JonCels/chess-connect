@@ -1,3 +1,4 @@
+#pragma once
 #include <map>
 #include <iostream>
 #include <string>
@@ -19,6 +20,7 @@
 #define INPUT 0x0
 #define OUTPUT 0x1
 #define INPUT_PULLUP 0x2
+#define ADC_LEN 12
 
 #define PI 3.1415926535897932384626433832795
 #define HALF_PI 1.5707963267948966192313216916398
@@ -47,25 +49,36 @@
 using namespace std;
 
 struct PinValues {
-    short val[512];
-    PinValues() : val{} {}
+    int val[1024];
+    int iter;
+
+    PinValues() : val{}, iter(0) {}
 };
 
 class ReadWritePins{
 public:
-    map<int, int> index;
+    map<int, int> lastVal;
     map<int, PinValues> values;
 
     void writePin(int pin, int val) {
         if (values.find(pin) == values.end()) {
-            index[pin] = 0;
+            lastVal[pin] = 0;
         }
-        
-        values[pin].val[index[pin]++] = val;
+        values[pin].val[lastVal[pin]] = val;
+
+        // handle many read/writes to clk and cs pins while reading hall rows
+        if (lastVal[pin] < 512)
+        {
+            lastVal[pin]++;
+        }
+        else
+        {
+            lastVal[pin] = 0;
+        }
     }
     void printPinValues(int pin) {
         cout << "______Pin " << pin << ":______\n";
-        for (int i = 0; i < index[pin]; i++)
+        for (int i = 0; i < lastVal[pin]; i++)
         {
             cout << values[pin].val[i] << "\t";
         }
@@ -76,6 +89,9 @@ public:
         {
             printPinValues(iter->first);
         }
+    }
+    void resetPinIterator(int pin) {
+        values[pin].iter = 0;
     }
 
     ReadWritePins() {
@@ -90,11 +106,11 @@ public:
 
         for(map<int, PinValues>::iterator iter = values.begin(); iter != values.end(); ++iter)
         {
-            index[iter->first] = 0;
+            lastVal[iter->first] = 0;
         }
     }
     ~ReadWritePins() {
-        index.clear();
+        lastVal.clear();
         values.clear();
     }
 };
@@ -112,9 +128,9 @@ public:
     bool available(){
         return baudRate != 0;
     }
-    char *read()
+    int read()
     {
-        return input.data();
+        return input.front();
     }
     size_t write(const char c)
     {
@@ -126,6 +142,18 @@ public:
     {
         size_t size = sizeof(str);
         output += str;
+        return size;
+    }
+    size_t print(const char c)
+    {
+        if (output.empty()) {
+            output = string({c});
+        }
+        else {
+            output.append(string({c}));
+        }
+        size_t size = sizeof(c);
+        // cout << c;
         return size;
     }
     size_t print(const char *str)
@@ -154,7 +182,7 @@ public:
     {
         if (output.empty())
         {
-            output = string(str);
+            output = string(str) + "\n";
         }
         else
         {
@@ -211,7 +239,7 @@ void pinMode(int pin, uint8_t mode) {
 }
 
 int digitalRead(int pin) {
-    return 0;
+    return RWPins.values[pin].val[RWPins.values[pin].iter++];
 }
 
 int digitalWrite(int pin, int value) {
@@ -221,4 +249,37 @@ int digitalWrite(int pin, int value) {
 
 void delay(int ms) {
     cout << "Arduino slept for " << ms << " milliseconds.\n";
+}
+
+void writeAdc(int pin, int decimal)
+{
+    int i = ADC_LEN;
+    int binary[ADC_LEN];
+
+    // first bit of adc reading is not useful
+    binary[--i] = 0;
+
+    while (decimal > 0)
+    {
+        // cout << "i: " << i << "\t%2: " << decimal % 2 << "\t/2: " << decimal / 2 << "\n";
+
+        binary[--i] = decimal % 2;
+        decimal /= 2;
+    }
+    while (i > 0)
+    {
+        binary[--i] = 0;
+    }
+    i=0;
+    while(i < ADC_LEN){
+        RWPins.writePin(pin, binary[i++]);
+    }
+}
+
+void writeAdcRow(int rx, int* val)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        writeAdc(rx, *(val+i));
+    };
 }

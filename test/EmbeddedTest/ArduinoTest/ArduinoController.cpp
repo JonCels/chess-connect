@@ -98,6 +98,12 @@ struct Piece
 {
     PieceType type;
     Colour colour;
+
+    bool operator==(const Piece &p) const
+    {
+        return (type == p.type && colour == p.colour);
+    }
+
     Piece() : type(PieceType::NO_PIECE), colour(Colour::NO_COLOUR) {}
     Piece(PieceType pieceType, Colour colourType) : type(pieceType), colour(colourType) {}
 };
@@ -107,6 +113,12 @@ struct Square
     Piece piece;
     int row;
     int col;
+
+    bool operator==(const Square &s) const
+    {
+        return (piece == s.piece && row == s.row && col == s.col);
+    }
+
     Square() : piece(Piece()), row(0), col(0) {}
     Square(int r, int c) : piece(Piece{}), row(r), col(c) {}
     Square(Piece piece, int r, int c) : piece(piece), row(r), col(c) {}
@@ -656,9 +668,7 @@ int readHall(int adcnum, int rx, int tx)
 
 void readHallRow(int row, int rx, int tx)
 {
-    int i;
-
-    for (i = 0; i < 8; i++)
+    for (int i = 0; i < 8; i++)
     {
         rawStates[row][i] = readHall(i, rx, tx);
     }
@@ -732,6 +742,33 @@ void adjust()
     adjStates[0][7] = rawStates[4][4];
 }
 
+void readHallSensors()
+{
+    cout << "read row " << 0 << "\n";
+    readHallRow(0, arx, atx);
+    cout << "read row " << 1 << "\n";
+    readHallRow(1, brx, btx);
+    cout << "read row " << 2 << "\n";
+    readHallRow(2, crx, ctx);
+    cout << "read row " << 3 << "\n";
+    readHallRow(3, drx, dtx);
+    cout << "read row " << 4 << "\n";
+    readHallRow(4, erx, etx);
+    cout << "read row " << 5 << "\n";
+    readHallRow(5, frx, ftx);
+    cout << "read row " << 6 << "\n";
+    readHallRow(6, grx, gtx);
+    cout << "read row " << 7 << "\n";
+    readHallRow(7, hrx, htx);
+
+    cout << "adjust\n";
+    adjust();
+
+    cout << "printHall\n";
+    printHall();
+    Serial.print("\n");
+}
+
 void printHall()
 {
     int i, j;
@@ -782,23 +819,6 @@ void setupHallSensors()
     pinMode(hrx, INPUT);
     pinMode(htx, OUTPUT);
     pinMode(clk, OUTPUT);
-}
-
-void readHallSensors()
-{
-    readHallRow(0, arx, atx);
-    readHallRow(1, brx, btx);
-    readHallRow(2, crx, ctx);
-    readHallRow(3, drx, dtx);
-    readHallRow(4, erx, etx);
-    readHallRow(5, frx, ftx);
-    readHallRow(6, grx, gtx);
-    readHallRow(7, hrx, htx);
-
-    adjust();
-
-    printHall();
-    Serial.print("\n");
 }
 
 // PieceIdentification Functions
@@ -1314,7 +1334,7 @@ void loop()
 {
     if (Serial1.available() > 0)
     {
-        gameCommand = (GameCommand)Serial1.read()[0];
+        gameCommand = (GameCommand)(char)Serial1.read();
     }
 
     if (gameCommand == 'e')
