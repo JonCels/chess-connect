@@ -172,9 +172,10 @@ void testReadPiece()
 
 void printErrors()
 {
+    cout << "____ERRORS:_____\n";
     for (const auto &elem : errors)
     {
-        cout << elem.first << " " << elem.second << "\n";
+        cout << "\t" << elem.first << " " << elem.second << "\n";
     }
 }
 
