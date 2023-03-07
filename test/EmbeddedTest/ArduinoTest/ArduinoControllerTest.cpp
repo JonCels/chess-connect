@@ -2,7 +2,7 @@
 
 using namespace std;
 
-
+map<const char*, int> errors;
 
 random_device rd;  // Will be used to obtain a seed for the random number engine
 mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
@@ -144,19 +144,45 @@ bool assert_equal(int a, int b)
     return a == b;
 }
 
+void check(bool b, const char* c, int l)
+{
+    if(!b)
+        errors[c] = l;
+}
 
-// def assert_true(bool obj){
-//     throw 
-// }
+void setupMockHallSensors()
+{
+    generateHallValues();
+    mapHallValuesToSensors();
+}
 
-// def highlighBlackPawnCapturesPieceTest(){
-//     movePiece()
-// }
+void setupBoard()
+{
+    resetChessBoard();
+    check(assert_equal(*currentBoard, *oldBoard), __FUNCTION__, __LINE__);
+    setupMockHallSensors();
+    check(assert_equal(*organizedHallValues, *adjStates), __FUNCTION__, __LINE__);
+}
+
+void testReadPiece()
+{
+    setupBoard();
+    //check(assert_equal(),__FUNCTION__,__LINE__);
+}
+
+void printErrors()
+{
+    for (const auto &elem : errors)
+    {
+        cout << elem.first << " " << elem.second << "\n";
+    }
+}
 
 int main(void) {
-    resetChessBoard();
-    assert_equal(*currentBoard, *oldBoard);
-
+    try
+    {
+        testReadPiece();
+    
     // generateHallValues();
     // mapHallValuesToSensors();
 
@@ -172,26 +198,30 @@ int main(void) {
     // printBoard();
     // cout << Serial.output << "\n\n";
 
-    // int arxrow[8] = {342, 322, 353, 344, 318, 329, 347, 333};
-    writeAdcRow(arx, rawHallValues[0]);
-    writeAdcRow(brx, rawHallValues[1]);
-    writeAdcRow(crx, rawHallValues[2]);
-    writeAdcRow(drx, rawHallValues[3]);
-    writeAdcRow(erx, rawHallValues[4]);
-    writeAdcRow(frx, rawHallValues[5]);
-    writeAdcRow(grx, rawHallValues[6]);
-    writeAdcRow(hrx, rawHallValues[7]);
+    // writeAdcRow(arx, rawHallValues[0]);
+    // writeAdcRow(brx, rawHallValues[1]);
+    // writeAdcRow(crx, rawHallValues[2]);
+    // writeAdcRow(drx, rawHallValues[3]);
+    // writeAdcRow(erx, rawHallValues[4]);
+    // writeAdcRow(frx, rawHallValues[5]);
+    // writeAdcRow(grx, rawHallValues[6]);
+    // writeAdcRow(hrx, rawHallValues[7]);
 
-    // RWPins.printPinValues(arx);
-    // RWPins.printPinValues(brx);
-    // RWPins.printPinValues(crx);
-    // RWPins.printPinValues(drx);
-    // RWPins.printPinValues(erx);
-    // RWPins.printPinValues(frx);
-    // RWPins.printPinValues(grx);
-    // RWPins.printPinValues(hrx);
-    readHallSensors();
-    cout << "\n\n" + Serial.output;
-
+    // // RWPins.printPinValues(arx);
+    // // RWPins.printPinValues(brx);
+    // // RWPins.printPinValues(crx);
+    // // RWPins.printPinValues(drx);
+    // // RWPins.printPinValues(erx);
+    // // RWPins.printPinValues(frx);
+    // // RWPins.printPinValues(grx);
+    // // RWPins.printPinValues(hrx);
+    // readHallSensors();
+    // cout << "\n\n" + Serial.output;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    printErrors();
     return 0;
 }
