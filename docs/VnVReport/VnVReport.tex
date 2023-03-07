@@ -51,8 +51,9 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-2021-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
-2021-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
+2023-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
+2023-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
+2023-03-07 & Jonathan Cels & Added some nonfunctional requirement test reports\\
 \bottomrule
 \end{tabularx}
 
@@ -92,22 +93,24 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
 \begin{table}[H]
   \centering
       \setlength{\leftmargini}{0.4cm}
-      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
         >{\centering\arraybackslash}m{4cm} | 
-        >{\centering\arraybackslash}m{6cm} |}
+        >{\centering\arraybackslash}m{4cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
       \hline
       \rowcolor[gray]{0.9}
-      Test & Result & Notes\\
+      Test & Expected & Actual & Notes & Result\\
       \hline
-      GA-1 &  & \\
+      GA-1 & System variable `gameInProgress' set to false. &  System variable configured correctly. &  & Pass \\
       \hline
-      GA-2 &  & \\
+      GA-2 & System variable `gameInProgress' remains true. &  System variable configured correctly. &  & Pass \\
       \hline
-      GA-3 &  & \\
+      GA-3 & System variable `currMode' changed to represent the selected user mode. &  User mode unchanged. & Design changed, user mode not switchable while a game is active. Test fails by design. & Fail \\
       \hline
-      GA-4 &  & \\
+      GA-4 & System variable `gameInProgress' set to false. &  System variable configured correctly. &  & Pass \\
       \hline
-      GA-5 &  & \\
+      GA-5 & System variable `gameInProgress' set to false. &  System variable configured correctly. &  & Pass \\
       \hline
       \end{tabular}
   \caption{Active State Functional Requirements Results}
