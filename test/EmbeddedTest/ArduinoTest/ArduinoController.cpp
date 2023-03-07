@@ -1,6 +1,6 @@
-// #include "HallSensors.h"
-// #include "ChessBoard.h"
-// #include "PieceIdentification.h"
+#define WHITE_HALL 140
+#define BLACK_HALL 310
+
 #ifndef Arduino_h
     #pragma message "Injecting MockArduinoController to run tests..."
     #include "../../../test/EmbeddedTest/ArduinoTest/MockArduinoController.cpp"
@@ -744,27 +744,17 @@ void adjust()
 
 void readHallSensors()
 {
-    cout << "read row " << 0 << "\n";
     readHallRow(0, arx, atx);
-    cout << "read row " << 1 << "\n";
     readHallRow(1, brx, btx);
-    cout << "read row " << 2 << "\n";
     readHallRow(2, crx, ctx);
-    cout << "read row " << 3 << "\n";
     readHallRow(3, drx, dtx);
-    cout << "read row " << 4 << "\n";
     readHallRow(4, erx, etx);
-    cout << "read row " << 5 << "\n";
     readHallRow(5, frx, ftx);
-    cout << "read row " << 6 << "\n";
     readHallRow(6, grx, gtx);
-    cout << "read row " << 7 << "\n";
     readHallRow(7, hrx, htx);
 
-    cout << "adjust\n";
     adjust();
 
-    cout << "printHall\n";
     printHall();
     Serial.print("\n");
 }
@@ -922,9 +912,9 @@ void identifyColors()
     {
         for (j = 0; j < 8; j++)
         {
-            if (adjStates[i][j] < 140)
+            if (adjStates[i][j] < WHITE_HALL)
                 currentBoard[i][j].piece.colour = WHITE;
-            else if (adjStates[i][j] > 310)
+            else if (adjStates[i][j] > BLACK_HALL)
                 currentBoard[i][j].piece.colour = BLACK;
             else
                 currentBoard[i][j].piece.colour = NO_COLOUR;
