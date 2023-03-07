@@ -1,23 +1,45 @@
 \documentclass[12pt, titlepage]{article}
 
+\usepackage{fullpage}
+\usepackage[round]{natbib}
+\usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{float}
 \usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\usepackage{amsmath, mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{colortbl}
+\usepackage{xr}
+\usepackage{longtable}
+\usepackage{xfrac}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{titlesec}
+\usepackage{array}
 \hypersetup{
     colorlinks,
-    citecolor=black,
+    citecolor=blue,
     filecolor=black,
     linkcolor=red,
     urlcolor=blue
 }
-\usepackage[round]{natbib}
-
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{caption}
+\usepackage{enumitem}
 \input{../Comments}
+\input{../Common}
 
 \begin{document}
 
-\title{Test Report: Project Title} 
-\author{Author Name}
+\title{System Verification and Validation Report for \progname{}} 
+\author{\authname}
 \date{\today}
 	
 \maketitle
@@ -29,8 +51,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+2021-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
+2021-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
 \bottomrule
 \end{tabularx}
 
@@ -47,7 +69,7 @@ Date 2 & 1.1 & Notes\\
   \bottomrule
 \end{tabular}\\
 
-\wss{symbols, abbreviations or acronyms -- you can reference the SRS tables if needed}
+Refer to SRS Section 1 for an extensive list of used symbols, abbreviations, and acronyms.
 
 \newpage
 
@@ -64,18 +86,291 @@ Date 2 & 1.1 & Notes\\
 This document ...
 
 \section{Functional Requirements Evaluation}
+Refer to the VnV Plan for descriptions of the tests derived to evaluate the functional requirements.
+\subsection{Game Active State}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{6cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Test & Result & Notes\\
+      \hline
+      GA-1 &  & \\
+      \hline
+      GA-2 &  & \\
+      \hline
+      GA-3 &  & \\
+      \hline
+      GA-4 &  & \\
+      \hline
+      GA-5 &  & \\
+      \hline
+      \end{tabular}
+  \caption{Active State Functional Requirements Results}
+  \end{table}
+
+\subsection{Game Inactive State}
+
+\begin{table}[H]
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      >{\centering\arraybackslash}m{4cm} | 
+      >{\centering\arraybackslash}m{6cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Result & Notes\\
+    \hline
+    GI-1 &  & \\
+    \hline
+    GI-2 &  & \\
+    \hline
+    GI-3 &  & \\
+    \hline
+    GI-4 &  & \\
+    \hline
+    GI-5 &  & \\
+    \hline
+    \end{tabular}
+\caption{Inactive State Functional Requirements Results}
+\end{table}
+
+\subsection{Normal Mode}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{6cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Test & Result & Notes\\
+      \hline
+      NB-1 &  & \\
+      \hline
+      NB-2 &  & \\
+      \hline
+      NB-3 &  & \\
+      \hline
+      ND-1 &  & \\
+      \hline
+      NA-1 &  & \\
+      \hline
+      NA-2 &  & \\
+      \hline
+      \end{tabular}
+  \caption{Normal Mode Functional Requirements Results}
+  \end{table}
+
+\subsection{Engine Mode}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{6cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Test & Result & Notes\\
+      \hline
+      EB-1 &  & \\
+      \hline
+      EB-2 &  & \\
+      \hline
+      EB-3 &  & \\
+      \hline
+      EB-1 &  & \\
+      \hline
+      ED-1 &  & \\
+      \hline
+      ED-2 &  & \\
+      \hline
+      EA-1 &  & \\
+      \hline
+      EA-2 &  & \\
+      \hline
+      EA-3 &  & \\
+      \hline
+      \end{tabular}
+  \caption{Engine Mode Functional Requirements Results}
+  \end{table}
+
+\subsection{Beginner Mode}
+
+\begin{table}[H]
+  \centering
+      \setlength{\leftmargini}{0.4cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{6cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Test & Result & Notes\\
+      \hline
+      BB-1 &  & \\
+      \hline
+      BB-2 &  & \\
+      \hline
+      BB-3 &  & \\
+      \hline
+      BB-4 &  & \\
+      \hline
+      BB-5 &  & \\
+      \hline
+      BD-1 &  & \\
+      \hline
+      BA-1 &  & \\
+      \hline
+      BA-2 &  & \\
+      \hline
+      \end{tabular}
+  \caption{Beginner Mode Functional Requirements Results}
+  \end{table}
 
 \section{Nonfunctional Requirements Evaluation}
+Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-functional requirements.
 
-\subsection{Usability}
+\subsection{Look and Feel}
+
+\begin{table}[H]
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      >{\centering\arraybackslash}m{4cm} | 
+      >{\centering\arraybackslash}m{6cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Result & Notes\\
+    \hline
+    NFT-1 &  & \\
+    \hline
+    \end{tabular}
+\caption{Look and Feel Non-Functional Requirements Results}
+\end{table}
 		
+\subsection{Usability and Humanity}
+
+\begin{table}[H]
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      >{\centering\arraybackslash}m{4cm} | 
+      >{\centering\arraybackslash}m{6cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Result & Notes\\
+    \hline
+    NFT-2 &  & \\
+    \hline
+    NFT-3 &  & \\
+    \hline
+    \end{tabular}
+\caption{Usability and Humanity Non-Functional Requirements Results}
+\end{table}
+
 \subsection{Performance}
 
-\subsection{etc.}
-	
-\section{Comparison to Existing Implementation}	
+\begin{table}[H]
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      >{\centering\arraybackslash}m{4cm} | 
+      >{\centering\arraybackslash}m{6cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Result & Notes\\
+    \hline
+    NFT-4 &  & \\
+    \hline
+    NFT-5 &  & \\
+    \hline
+    NFT-6 &  & \\
+    \hline
+    NFT-7 &  & \\
+    \hline
+    \end{tabular}
+\caption{Performance Non-Functional Requirements Results}
+\end{table}
 
-This section will not be appropriate for every project.
+\subsection{Health and Safety}
+
+\begin{table}[H]
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      >{\centering\arraybackslash}m{4cm} | 
+      >{\centering\arraybackslash}m{6cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Result & Notes\\
+    \hline
+    NFT-8 &  & \\
+    \hline
+    \end{tabular}
+\caption{Health and Safety Non-Functional Requirements Results}
+\end{table}
+
+\subsection{Precision and Accuracy}
+
+\begin{table}[H]
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      >{\centering\arraybackslash}m{4cm} | 
+      >{\centering\arraybackslash}m{6cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Result & Notes\\
+    \hline
+    NFT-9 &  & \\
+    \hline
+    \end{tabular}
+\caption{Precision and Accuracy Non-Functional Requirements Results}
+\end{table}
+
+\subsection{Capacity}
+
+\begin{table}[H]
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      >{\centering\arraybackslash}m{4cm} | 
+      >{\centering\arraybackslash}m{6cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Result & Notes\\
+    \hline
+    NFT-10 &  & \\
+    \hline
+    \end{tabular}
+\caption{Capacity Non-Functional Requirements Results}
+\end{table}
+
+\subsection{Security}
+
+\begin{table}[H]
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
+      >{\centering\arraybackslash}m{4cm} | 
+      >{\centering\arraybackslash}m{6cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Result & Notes\\
+    \hline
+    NFT-11 &  & \\
+    \hline
+    NFT-12 &  & \\
+    \hline
+    \end{tabular}
+\caption{Security Non-Functional Requirements Results}
+\end{table}
 
 \section{Unit Testing}
 
@@ -84,10 +379,111 @@ This section will not be appropriate for every project.
 \section{Automated Testing}
 		
 \section{Trace to Requirements}
+
+\begin{longtable}{| p{.20\textwidth} | p{.80\textwidth} |}
+  \hline
+  Test & Requirement\\
+  \hline
+  GA-1 & GA1\\
+  \hline
+  GA-2 & GA2\\
+  \hline
+  GA-3 & GA3\\
+  \hline
+  GA-4 & GA6\\
+  \hline
+  GA-5 & GA7\\
+  \hline
+  GI-1 & GI1\\
+  \hline
+  GI-2 & GI2\\
+  \hline
+  GI-3 & GI3\\
+  \hline
+  GI-4 & GI4\\
+  \hline
+  GI-5 & GI5, GI6\\
+  \hline
+  NB-1 & NB1\\
+  \hline
+  NB-2 & NB2\\
+  \hline
+  NB-3 & NB3\\
+  \hline
+  ND-1 & ND1\\
+  \hline
+  NA-1 & NA1, NA2\\
+  \hline
+  NA-2 & NA3\\
+  \hline
+  EB-1 & EB1\\
+  \hline
+  EB-2 & EB2\\
+  \hline
+  EB-3 & EB3\\
+  \hline
+  EB-4 & EB4\\
+  \hline
+  ED-1 & ED1\\
+  \hline
+  ED-2 & ED2\\
+  \hline
+  EA-1 & EA1, EA2\\
+  \hline
+  EA-2 & EA3, EA4, EA5\\
+  \hline
+  EA-3 & EA6\\
+  \hline
+  BB-1 & BB1\\
+  \hline
+  BB-2 & BB2\\
+  \hline
+  BB-3 & BB3\\
+  \hline
+  BB-4 & BB4\\
+  \hline
+  BB-5 & BB5\\
+  \hline
+  BD-1 & BD1\\
+  \hline
+  BA-1 & BA1\\
+  \hline
+  BA-2 & BA2\\
+  \hline
+  NFT1 & LF3\\
+  \hline
+  NFT2 & UH5\\
+  \hline
+  NFT3 & UH6\\
+  \hline
+  NFT4 & PR1\\
+  \hline
+  NFT5 & PR2\\
+  \hline
+  NFT6 & PR3\\
+  \hline
+  NFT7 & PR4\\
+  \hline
+  NFT8 & PR6\\
+  \hline
+  NFT9 & PR7\\
+  \hline
+  NFT10 & PR10\\
+  \hline
+  NFT11 & SR4\\
+  \hline
+  NFT12 & SR3\\
+  \hline
+\caption{Requirements Traceability Matrix}
+\end{longtable}
 		
 \section{Trace to Modules}		
 
 \section{Code Coverage Metrics}
+
+\appendix
+\section{Reflection Appendix}
+
 
 \bibliographystyle{plainnat}
 
