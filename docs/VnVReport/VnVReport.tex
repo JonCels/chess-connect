@@ -67,6 +67,7 @@
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   T & Test\\
+  FSM & Finite State Machine\\
   \bottomrule
 \end{tabular}\\
 
@@ -396,6 +397,56 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-
 \section{Unit Testing}
 
 \section{Changes Due to Testing}
+The results detailed in the above tests prompted a number of design changes in 
+the hardware, embedded and web application systems. Outlined below are the 
+changes made as result. 
+
+\subsection{Embedded Testing} 
+Testing the finite state machine located in the electrical system resulted in 
+incorrect functionality according to the design. A finite state machine was 
+designed to control the functionality of the electrical system dictated by the
+user. It allows users to change modes and have control over the performance 
+of the board. The initial implementation of the FSM utilized a slow clock speed
+and certain inputs were missed as a result. The new solution is to increase the
+clock speed of the FSM and include buffers within the states to increase the
+robustness of the system. 
+\newline
+\newline
+Easy mode provides the functionality of possible moves for pieces on the board.
+When a piece is lifted, the available squares are highlighted. During testing of 
+the function, there were a number of edge cases that were not covered such as 
+castling, en passant and check scenarios. The proposed solution was to increase
+the robustness of the algorithm and maintain logs of the game to account for
+these edge cases. 
+
+\subsection{Hardware Testing}
+Testing the hall sensor piece detection circuits at scale uncovered issues
+with sensitivity of the sensors. At scales of four or more sensors in series, 
+the sensitivity of the reading was too large. Initial solutions included 
+improvement of the hardware. This included improvement of the power supply, 
+grounding and sensors themselves. These solutions did not solve the issue. As 
+a result, the requirements of the sensors have been changed to sense north and 
+south poles exclusively. The functionality of individual piece detection was not
+feasible. 
+\newline
+\newline
+Assembly of the revision one chess board displayed issues with robustness of the
+connections between mechanical and electrical assemblies. Temporary connection 
+was established with electrical and duct tape. The electrical system suspended 
+below the mechanical system. After testing of the board, connection points began 
+to fail and separation occured. The solution for revision two is assembly of the
+mechanical and electrical systems simultaneously. The two systems are assembled 
+together and the robustness of the system is increased.
+
+\subsection{Web Application Testing}
+Integration of the web application with the embedded system revealed an error 
+with the implementation of polling in the web application. Polling required 
+handling of constant data transmission between systems. Issues were clear with 
+required data and processing dedicated to this communicatin. One of the proposed
+solutions is the implementation of a refresh to erase the stored data. This 
+eliminates the data size issue. A second solution is the introduction of sockets
+which eliminates polling entirely and solves the data size and processing issues. 
+ 
 
 \section{Automated Testing}
 		
