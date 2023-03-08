@@ -15,26 +15,19 @@ int delay_const = 2000;
 
 int clk = A0; // 97;   // A0
 int cs = A3;  // 94;    // A3
-
+// 96 -> A1
+// 95 -> A2
+// 93 -> A4
+// 92 -> A5
+// 91 -> A6
+// 90 -> A7
+// 89 -> A8
+// 88 -> A9
 int anodes[9] = {29, 35, 25, 41, 27, 31, 37, 39, 33};
 int cathodes[9] = {34, 28, 26, 30, 24, 40, 32, 36, 38};
+int hallRx[8] = {A1, A4, A6, A8, 12, 10, 8, 6};
+int hallTx[8] = {A2, A5, A7, A9, 13, 11, 9, 7};
 
-int arx = A1; // 96;   // A1
-int atx = A2; // 95;   // A2
-int brx = A4; // 93;   // A4
-int btx = A5; // 92;   // A5
-int crx = A6; // 91;   // A6
-int ctx = A7; // 90;   // A7
-int drx = A8; // 89;   // A8
-int dtx = A9; // 88;   // A9
-int erx = 12;
-int etx = 13;
-int frx = 10;
-int ftx = 11;
-int grx = 8;
-int gtx = 9;
-int hrx = 6;
-int htx = 7;
 
 enum GameMode : char
 {
@@ -744,14 +737,10 @@ void adjust()
 
 void readHallSensors()
 {
-    readHallRow(0, arx, atx);
-    readHallRow(1, brx, btx);
-    readHallRow(2, crx, ctx);
-    readHallRow(3, drx, dtx);
-    readHallRow(4, erx, etx);
-    readHallRow(5, frx, ftx);
-    readHallRow(6, grx, gtx);
-    readHallRow(7, hrx, htx);
+    for (int i = 0; i < 8; i++)
+    {
+        readHallRow(i, hallRx[i], hallTx[i]);
+    }
 
     adjust();
 
@@ -792,23 +781,13 @@ void setupLEDs()
 void setupHallSensors()
 {
     pinMode(cs, OUTPUT);
-    pinMode(arx, INPUT);
-    pinMode(atx, OUTPUT);
-    pinMode(brx, INPUT);
-    pinMode(btx, OUTPUT);
-    pinMode(crx, INPUT);
-    pinMode(ctx, OUTPUT);
-    pinMode(drx, INPUT);
-    pinMode(dtx, OUTPUT);
-    pinMode(erx, INPUT);
-    pinMode(etx, OUTPUT);
-    pinMode(frx, INPUT);
-    pinMode(ftx, OUTPUT);
-    pinMode(grx, INPUT);
-    pinMode(gtx, OUTPUT);
-    pinMode(hrx, INPUT);
-    pinMode(htx, OUTPUT);
     pinMode(clk, OUTPUT);
+
+    for (int i = 0; i < 8; i++)
+    {
+        pinMode(hallRx[i], INPUT);
+        pinMode(hallTx[i], OUTPUT);
+    }
 }
 
 // PieceIdentification Functions
@@ -1322,6 +1301,7 @@ void setup()
 
 void loop()
 {
+    cout << gameState << endl;
     if (Serial1.available() > 0)
     {
         gameCommand = (GameCommand)(char)Serial1.read();
