@@ -107,11 +107,11 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
         \hline
         GA-2 & Start game button pressed while game active. & System variable `gameInProgress' remains true. &  System variable configured correctly. &  & Pass \\
         \hline
-        GA-3 & User mode button pressed while game active. & System variable `currMode' changed to represent the selected user mode. &  User mode unchanged. & Design changed, user mode not switchable while a game is active. Test fails by design. & Fail \\
+        GA-3 & User mode button pressed while game active. & System variable `currMode' changed to represent the selected user mode. &  User mode unchanged. & Design changed, user mode not switchable while a game is active. & Rework \\
         \hline
         GA-4 & Start game button pressed while game inactive. & System variable `gameInProgress' set to true, `currFEN' variable is set to the starting FEN. &  System variables configured correctly. &  & Pass \\
         \hline
-        GA-5 & Move made that results in stalemate or checkmate according to the rules of chess. & System variable `gameInProgress' set to false. &  System variable configured correctly. &  & Pass \\ 
+        GA-5 & Move made that results in stalemate or checkmate according to the rules of chess while game inactive. & System variable `gameInProgress' set to false. &  System variable configured correctly. &  & Pass \\ 
         \hline
         \end{tabular}
     \caption{Active State Functional Requirements Results}
@@ -132,15 +132,15 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
         \rowcolor[gray]{0.9}
         Test & Input & Expected & Actual & Notes & Result\\
         \hline
-        GI-1 &  &  &  &  & \\
+        GI-1 & Start game button pressed while game inactive. & System variable `gameInProgress' set to true. & System variable configured correctly. &  & Pass \\
         \hline
-        GI-2 &  &  &  &  & \\
+        GI-2 & User mode button pressed while game inactive. & User mode unchanged. & System variable configured correctly. & Design changed, user mode is now switchable (only) while a game is inactive. & Rework \\
         \hline
-        GI-3 &  &  &  &  & \\
+        GI-3 & Draw/resign button pressed while game inactive. & System variable `gameInProgress' remains false. & System variable configured correctly. &  & Pass \\
         \hline
-        GI-4 &  &  &  &  & \\
+        GI-4 & Piece moved while game inactive. & System variable `currFEN' is unchanged. & System variable configured correctly. &  & Pass \\
         \hline
-        GI-5 &  &  &  &  & \\
+        GI-5 & Draw/resign button pressed, or move made that results in stalemate or checkmate according to the rules of chess while game active. & Game termination and winner are displayed on LCD screen. & Display updates correctly. &  & Pass \\
         \hline
         \end{tabular}
     \caption{Inactive State Functional Requirements Results}
@@ -161,77 +161,98 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
         \rowcolor[gray]{0.9}
         Test & Input & Expected & Actual & Notes & Result\\
         \hline
-        GA-1 &  &  &  &  & \\
+        NB-1 & Piece moved while in normal mode. & Game state is updated to reflect piece movement. & Game state updated correctly. &  & Pass \\
         \hline
-        GA-2 &  &  &  &  & \\
+        NB-2 & Resign button pressed while in normal mode. & System variable `gameInProgress' set to false. & System variable configured correctly. &  & Pass \\
         \hline
-        GA-3 &  &  &  &  & \\
+        NB-3 & Draw button pressed while in normal mode. & System variable `gameInProgress' set to false. & System variable configured correctly. &  & Pass \\
         \hline
-        GA-4 &  &  &  &  & \\
+        ND-1 & Game state updated while in normal mode. & Updated game state is transmitted to the web application via Bluetooth. & Game state transmitted correctly. &  & Pass \\
         \hline
-        GA-5 &  &  &  &  & \\
+        NA-1 & Web application receives updated game state while in normal mode. & Update to game state is reflected on web application display. & Display updates correctly. &  & Pass \\
+        \hline
+        NA-2 & Game termination occurs while in normal mode. & Game termination and winner are displayed on web application display. & Display updates correctly. &  & Pass \\
         \hline
         \end{tabular}
     \caption{Normal Mode Functional Requirements Results}
 \end{table}
 
+\pagebreak
 \subsection{Engine Mode}
+    \begin{longtable}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Input & Expected & Actual & Notes & Result\\
+    \hline
+    EB-1 & Piece moved while in engine mode. & Game state is updated to reflect piece movement. & Game state updated correctly. &  & Pass \\
+    \hline
+    EB-2 & Resign button pressed while in engine mode. & System variable `gameInProgress' set to false. & System variable configured correctly. &  & Pass \\
+    \hline
+    EB-3 & Draw button pressed while in engine mode. & System variable `gameInProgress' set to false. & System variable configured correctly. &  & Pass \\
+    \hline
+    EB-4 & Engine moves transmitted from the web application to microcontroller. & Engine moves are displayed on the LCD screen. & Display updated correctly. &  & Pass \\
+    \hline
+    ED-1 & Game state updated while in engine mode. & Updated game state is transmitted to the web application via Bluetooth. & Game state transmitted correctly. &  & Pass \\
+    \hline
+    ED-2 & Engine moves are calculated by the web application. & Calculated engine moves are transmitted from the web application to the microcontroller via Bluetooth & Moves transmitted correctly. & Only one engine move currently calculated, more planned in future revisions. & Partial Pass \\
+    \hline
+    \pagebreak 
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Input & Expected & Actual & Notes & Result\\
+    \hline
+    EA-1 & Web application receives updated game state while in engine mode. & Update to game state is reflected on web application display. & Display updates correctly. &  & Pass \\
+    \hline
+    EA-2 & Engine moves are calculated by the web application. & Calculated engine moves are displayed on web application display. & Engine moves are not displayed. & Not implemented, planned in future revisions. & TBD \\
+    \hline
+    EA-3 & Game termination occurs while in engine mode. & Game termination and winner are displayed on web application display. & Display updates correctly. &  & Pass \\
+    \hline
+    \caption{Engine Mode Functional Requirements Results}\\
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-        \setlength{\leftmargini}{0.4cm}
-        \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
-            >{\centering\arraybackslash}m{2.5cm} | 
-            >{\centering\arraybackslash}m{4cm} | 
-            >{\centering\arraybackslash}m{3cm} |
-            >{\centering\arraybackslash}m{3cm} |
-            >{\centering\arraybackslash}m{1.5cm} |}
-        \hline
-        \rowcolor[gray]{0.9}
-        Test & Input & Expected & Actual & Notes & Result\\
-        \hline
-        GA-1 &  &  &  &  & \\
-        \hline
-        GA-2 &  &  &  &  & \\
-        \hline
-        GA-3 &  &  &  &  & \\
-        \hline
-        GA-4 &  &  &  &  & \\
-        \hline
-        GA-5 &  &  &  &  & \\
-        \hline
-        \end{tabular}
-    \caption{Engine Mode Functional Requirements Results}
-\end{table}
+\pagebreak
 
 \subsection{Beginner Mode}
-
-\begin{table}[H]
-    \centering
-        \setlength{\leftmargini}{0.4cm}
-        \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
-            >{\centering\arraybackslash}m{2.5cm} | 
-            >{\centering\arraybackslash}m{4cm} | 
-            >{\centering\arraybackslash}m{3cm} |
-            >{\centering\arraybackslash}m{3cm} |
-            >{\centering\arraybackslash}m{1.5cm} |}
-        \hline
-        \rowcolor[gray]{0.9}
-        Test & Input & Expected & Actual & Notes & Result\\
-        \hline
-        GA-1 &  &  &  &  & \\
-        \hline
-        GA-2 &  &  &  &  & \\
-        \hline
-        GA-3 &  &  &  &  & \\
-        \hline
-        GA-4 &  &  &  &  & \\
-        \hline
-        GA-5 &  &  &  &  & \\
-        \hline
-        \end{tabular}
-    \caption{Beginner Mode Functional Requirements Results}
-\end{table}
+    \begin{longtable}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Input & Expected & Actual & Notes & Result\\
+    \hline
+    BB-1 & Piece moved while in beginner mode. & Game state is updated to reflect piece movement. & Game state updated correctly. &  & Pass \\
+    \hline
+    BB-2 & Piece picked up and held while in beginner mode. & LEDs on board indicate legal moves. & Correct LEDs light up. &  & Pass \\
+    \hline
+    BB-3 & Piece moved such that an illegal move is made while in beginner mode. & LEDs on board indicate illegal move. & Correct LEDs light up. & Not implemented, planned in future revisions. & TBD \\
+    \hline
+    BB-4 & Resign button is pressed while in beginner mode. & System variable `gameInProgress' set to false. & System variable configured correctly. &  & Pass \\
+    \hline
+    BB-5 & Draw button is pressed while in beginner mode. & System variable `gameInProgress' set to false. & System variable configured correctly. &  & Pass \\
+    \hline
+    BD-1 & Game state is updated while in beginner mode. & Updated game state is transmitted to the web application via Bluetooth. & Game state transmitted correctly. &  & Pass \\
+    \hline
+    \pagebreak 
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Input & Expected & Actual & Notes & Result\\
+    \hline
+    BA-1 & User selcetions chess instructions in web application. & Web application displays detailed rules for how to play chess. & N/A & Not implemented, planned in future revisions. & TBD \\
+    \hline
+    BA-2 & Web application receives updated game state while in beginner mode. & Update to game state is reflected on web application display. & Display updates correctly. &  & Pass \\
+    \hline
+    \caption{Beginner Mode Functional Requirements Results}\\
+\end{longtable}
+    
+\pagebreak
 
 \section{Nonfunctional Requirements Evaluation}
 Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-functional requirements.
@@ -239,144 +260,137 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-
 \subsection{Look and Feel}
 
 \begin{table}[H]
-  \centering
-    \setlength{\leftmargini}{0cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{1.5cm} | 
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
       >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} |}
+      >{\centering\arraybackslash}m{6cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Inputs & Expected Result & Actual Result\\
+    Test & Result & Notes\\
     \hline
-    NFT-1 &  &  & \\
+    NFT-1 &  & \\
     \hline
     \end{tabular}
-  \caption{Look and Feel Non-Functional Requirements Results}
+\caption{Look and Feel Non-Functional Requirements Results}
 \end{table}
 		
 \subsection{Usability and Humanity}
 
 \begin{table}[H]
-  \centering
-    \setlength{\leftmargini}{0cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{1.5cm} | 
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
       >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} |}
+      >{\centering\arraybackslash}m{6cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Inputs & Expected Result & Actual Result\\
+    Test & Result & Notes\\
     \hline
-    NFT-2 &  &  & \\
+    NFT-2 &  & \\
     \hline
-    NFT-3 &  &  & \\
+    NFT-3 &  & \\
     \hline
     \end{tabular}
-  \caption{Usability and Humanity Non-Functional Requirements Results}
+\caption{Usability and Humanity Non-Functional Requirements Results}
 \end{table}
 
 \subsection{Performance}
 
 \begin{table}[H]
-  \centering
-    \setlength{\leftmargini}{0cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{1.5cm} | 
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
       >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} |}
+      >{\centering\arraybackslash}m{6cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Inputs & Expected Result & Actual Result\\
+    Test & Result & Notes\\
     \hline
-    NFT-4 &  &  & \\
+    NFT-4 &  & \\
     \hline
-    NFT-5 &  &  & \\
+    NFT-5 &  & \\
     \hline
-    NFT-6 &  &  & \\
+    NFT-6 &  & \\
     \hline
-    NFT-7 &  &  & \\
+    NFT-7 &  & \\
     \hline
     \end{tabular}
-  \caption{Performance Non-Functional Requirements Results}
+\caption{Performance Non-Functional Requirements Results}
 \end{table}
 
 \subsection{Health and Safety}
 
 \begin{table}[H]
-  \centering
-    \setlength{\leftmargini}{0cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{1.5cm} | 
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
       >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} |}
+      >{\centering\arraybackslash}m{6cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Inputs & Expected Result & Actual Result\\
+    Test & Result & Notes\\
     \hline
-    NFT-8 & Test &  & \\
+    NFT-8 &  & \\
     \hline
     \end{tabular}
-  \caption{Health and Safety Non-Functional Requirements Results}
+\caption{Health and Safety Non-Functional Requirements Results}
 \end{table}
 
 \subsection{Precision and Accuracy}
 
 \begin{table}[H]
-  \centering
-    \setlength{\leftmargini}{0cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{1.5cm} | 
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
       >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} |}
+      >{\centering\arraybackslash}m{6cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Inputs & Expected Result & Actual Result\\
+    Test & Result & Notes\\
     \hline
-    NFT-9 &  &  & \\
+    NFT-9 &  & \\
     \hline
     \end{tabular}
-  \caption{Precision and Accuracy Non-Functional Requirements Results}
+\caption{Precision and Accuracy Non-Functional Requirements Results}
 \end{table}
 
 \subsection{Capacity}
 
 \begin{table}[H]
-  \centering
-    \setlength{\leftmargini}{0cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{1.5cm} | 
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
       >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} |}
+      >{\centering\arraybackslash}m{6cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Inputs & Expected Result & Actual Result\\
+    Test & Result & Notes\\
     \hline
-    NFT-10 &  &  & \\
+    NFT-10 &  & \\
     \hline
     \end{tabular}
-  \caption{Capacity Non-Functional Requirements Results}
+\caption{Capacity Non-Functional Requirements Results}
 \end{table}
 
 \subsection{Security}
 
 \begin{table}[H]
-  \centering
-    \setlength{\leftmargini}{0cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{1.5cm} | 
+\centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
       >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{4cm} |}
+      >{\centering\arraybackslash}m{6cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Inputs & Expected Result & Actual Result\\
+    Test & Result & Notes\\
     \hline
-    NFT-11 &  &  & \\
+    NFT-11 &  & \\
     \hline
-    NFT-12 &  &  & \\
+    NFT-12 &  & \\
     \hline
     \end{tabular}
-  \caption{Security Non-Functional Requirements Results}
+\caption{Security Non-Functional Requirements Results}
 \end{table}
 
 \section{Unit Testing}
