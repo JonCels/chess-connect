@@ -51,8 +51,9 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-2021-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
-2021-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
+2023-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
+2023-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
+2023-03-07 & Jonathan Cels & Added some nonfunctional requirement test reports\\
 \bottomrule
 \end{tabularx}
 
@@ -90,148 +91,147 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
 \subsection{Game Active State}
 
 \begin{table}[H]
-  \centering
-      \setlength{\leftmargini}{0.4cm}
-      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-        >{\centering\arraybackslash}m{4cm} | 
-        >{\centering\arraybackslash}m{6cm} |}
-      \hline
-      \rowcolor[gray]{0.9}
-      Test & Result & Notes\\
-      \hline
-      GA-1 &  & \\
-      \hline
-      GA-2 &  & \\
-      \hline
-      GA-3 &  & \\
-      \hline
-      GA-4 &  & \\
-      \hline
-      GA-5 &  & \\
-      \hline
-      \end{tabular}
-  \caption{Active State Functional Requirements Results}
-  \end{table}
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+            >{\centering\arraybackslash}m{2.5cm} | 
+            >{\centering\arraybackslash}m{4cm} | 
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{1.5cm} |}
+        \hline
+        \rowcolor[gray]{0.9}
+        Test & Input & Expected & Actual & Notes & Result\\
+        \hline
+        GA-1 & Draw/resign button pressed while game active. & System variable `gameInProgress' set to false. &  System variable configured correctly. &  & Pass \\
+        \hline
+        GA-2 & Start game button pressed while game active. & System variable `gameInProgress' remains true. &  System variable configured correctly. &  & Pass \\
+        \hline
+        GA-3 & User mode button pressed while game active. & System variable `currMode' changed to represent the selected user mode. &  User mode unchanged. & Design changed, user mode not switchable while a game is active. Test fails by design. & Fail \\
+        \hline
+        GA-4 & Start game button pressed while game inactive. & System variable `gameInProgress' set to true, `currFEN' variable is set to the starting FEN. &  System variables configured correctly. &  & Pass \\
+        \hline
+        GA-5 & Move made that results in stalemate or checkmate according to the rules of chess. & System variable `gameInProgress' set to false. &  System variable configured correctly. &  & Pass \\ 
+        \hline
+        \end{tabular}
+    \caption{Active State Functional Requirements Results}
+\end{table}
 
 \subsection{Game Inactive State}
 
 \begin{table}[H]
-\centering
-    \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
-    \hline
-    \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
-    \hline
-    GI-1 &  & \\
-    \hline
-    GI-2 &  & \\
-    \hline
-    GI-3 &  & \\
-    \hline
-    GI-4 &  & \\
-    \hline
-    GI-5 &  & \\
-    \hline
-    \end{tabular}
-\caption{Inactive State Functional Requirements Results}
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+            >{\centering\arraybackslash}m{2.5cm} | 
+            >{\centering\arraybackslash}m{4cm} | 
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{1.5cm} |}
+        \hline
+        \rowcolor[gray]{0.9}
+        Test & Input & Expected & Actual & Notes & Result\\
+        \hline
+        GI-1 &  &  &  &  & \\
+        \hline
+        GI-2 &  &  &  &  & \\
+        \hline
+        GI-3 &  &  &  &  & \\
+        \hline
+        GI-4 &  &  &  &  & \\
+        \hline
+        GI-5 &  &  &  &  & \\
+        \hline
+        \end{tabular}
+    \caption{Inactive State Functional Requirements Results}
 \end{table}
 
 \subsection{Normal Mode}
 
 \begin{table}[H]
-  \centering
-      \setlength{\leftmargini}{0.4cm}
-      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-        >{\centering\arraybackslash}m{4cm} | 
-        >{\centering\arraybackslash}m{6cm} |}
-      \hline
-      \rowcolor[gray]{0.9}
-      Test & Result & Notes\\
-      \hline
-      NB-1 &  & \\
-      \hline
-      NB-2 &  & \\
-      \hline
-      NB-3 &  & \\
-      \hline
-      ND-1 &  & \\
-      \hline
-      NA-1 &  & \\
-      \hline
-      NA-2 &  & \\
-      \hline
-      \end{tabular}
-  \caption{Normal Mode Functional Requirements Results}
-  \end{table}
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+            >{\centering\arraybackslash}m{2.5cm} | 
+            >{\centering\arraybackslash}m{4cm} | 
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{1.5cm} |}
+        \hline
+        \rowcolor[gray]{0.9}
+        Test & Input & Expected & Actual & Notes & Result\\
+        \hline
+        GA-1 &  &  &  &  & \\
+        \hline
+        GA-2 &  &  &  &  & \\
+        \hline
+        GA-3 &  &  &  &  & \\
+        \hline
+        GA-4 &  &  &  &  & \\
+        \hline
+        GA-5 &  &  &  &  & \\
+        \hline
+        \end{tabular}
+    \caption{Normal Mode Functional Requirements Results}
+\end{table}
 
 \subsection{Engine Mode}
 
 \begin{table}[H]
-  \centering
-      \setlength{\leftmargini}{0.4cm}
-      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-        >{\centering\arraybackslash}m{4cm} | 
-        >{\centering\arraybackslash}m{6cm} |}
-      \hline
-      \rowcolor[gray]{0.9}
-      Test & Result & Notes\\
-      \hline
-      EB-1 &  & \\
-      \hline
-      EB-2 &  & \\
-      \hline
-      EB-3 &  & \\
-      \hline
-      EB-1 &  & \\
-      \hline
-      ED-1 &  & \\
-      \hline
-      ED-2 &  & \\
-      \hline
-      EA-1 &  & \\
-      \hline
-      EA-2 &  & \\
-      \hline
-      EA-3 &  & \\
-      \hline
-      \end{tabular}
-  \caption{Engine Mode Functional Requirements Results}
-  \end{table}
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+            >{\centering\arraybackslash}m{2.5cm} | 
+            >{\centering\arraybackslash}m{4cm} | 
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{1.5cm} |}
+        \hline
+        \rowcolor[gray]{0.9}
+        Test & Input & Expected & Actual & Notes & Result\\
+        \hline
+        GA-1 &  &  &  &  & \\
+        \hline
+        GA-2 &  &  &  &  & \\
+        \hline
+        GA-3 &  &  &  &  & \\
+        \hline
+        GA-4 &  &  &  &  & \\
+        \hline
+        GA-5 &  &  &  &  & \\
+        \hline
+        \end{tabular}
+    \caption{Engine Mode Functional Requirements Results}
+\end{table}
 
 \subsection{Beginner Mode}
 
 \begin{table}[H]
-  \centering
-      \setlength{\leftmargini}{0.4cm}
-      \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-        >{\centering\arraybackslash}m{4cm} | 
-        >{\centering\arraybackslash}m{6cm} |}
-      \hline
-      \rowcolor[gray]{0.9}
-      Test & Result & Notes\\
-      \hline
-      BB-1 &  & \\
-      \hline
-      BB-2 &  & \\
-      \hline
-      BB-3 &  & \\
-      \hline
-      BB-4 &  & \\
-      \hline
-      BB-5 &  & \\
-      \hline
-      BD-1 &  & \\
-      \hline
-      BA-1 &  & \\
-      \hline
-      BA-2 &  & \\
-      \hline
-      \end{tabular}
-  \caption{Beginner Mode Functional Requirements Results}
-  \end{table}
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+            >{\centering\arraybackslash}m{2.5cm} | 
+            >{\centering\arraybackslash}m{4cm} | 
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{3cm} |
+            >{\centering\arraybackslash}m{1.5cm} |}
+        \hline
+        \rowcolor[gray]{0.9}
+        Test & Input & Expected & Actual & Notes & Result\\
+        \hline
+        GA-1 &  &  &  &  & \\
+        \hline
+        GA-2 &  &  &  &  & \\
+        \hline
+        GA-3 &  &  &  &  & \\
+        \hline
+        GA-4 &  &  &  &  & \\
+        \hline
+        GA-5 &  &  &  &  & \\
+        \hline
+        \end{tabular}
+    \caption{Beginner Mode Functional Requirements Results}
+\end{table}
 
 \section{Nonfunctional Requirements Evaluation}
 Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-functional requirements.
@@ -487,6 +487,6 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-
 
 \bibliographystyle{plainnat}
 
-\bibliography{../../refs/References}
+\nocite{*}\bibliography{../../refs/References}
 
 \end{document}
