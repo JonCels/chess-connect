@@ -54,6 +54,7 @@
 2023-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
 2023-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
 2023-03-07 & Jonathan Cels & Added functional requirement test reports\\
+2033-03-08 & Arshdeep Aujla & Added reflection appendix\\
 \bottomrule
 \end{tabularx}
 
@@ -83,8 +84,6 @@ Refer to SRS Section 1 for an extensive list of used symbols, abbreviations, and
 \newpage
 
 \pagenumbering{arabic}
-
-This document ...
 
 \section{Functional Requirements Evaluation}
 Refer to the VnV Plan for descriptions of the tests derived to evaluate the functional requirements.
@@ -469,7 +468,15 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 
 \appendix
 \section{Reflection Appendix}
+The majority of the tests planned out in the VnV Plan were carried out as expected and reported in the VnV Report. 
+Some differences in the tests were due to a rework of the requirements, and modifying what is in scope for the first iteration of the project.\\
 
+Two tests were not carried out as planned because the requirements changed since the creation of the VnV Plan. These tests were GA-3 and GI-2.
+These tests were both related to the changing the game state. Initially, functional requirements outlined that the user should be able to change the games mode
+regardless if they are currently in the active state or inactive state. On a second consideration, it was decided that the mode should only be able to be changed if
+the user is in the inactive mode. Therefore the tests GA-3 and GI-1 were no long applicable and not reported in this report. \\
+
+A few tests for functional and non-functional requirements were not completed due to the scope of the project changing.
 
 \bibliographystyle{plainnat}
 
