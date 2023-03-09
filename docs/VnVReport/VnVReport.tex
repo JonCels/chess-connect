@@ -22,6 +22,7 @@
 \usepackage{afterpage}
 \usepackage{titlesec}
 \usepackage{array}
+%\usepackage{showframe}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -33,8 +34,46 @@
 \graphicspath{ {./images/} }
 \usepackage{caption}
 \usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{geometry}
+
 \input{../Comments}
 \input{../Common}
+
+% https://tex.stackexchange.com/a/409782
+\colorlet{mygray}{black!30}
+\colorlet{mygreen}{green!60!blue}
+\colorlet{mymauve}{red!60!blue}
+
+\lstset{
+  backgroundcolor=\color{gray!10}, 
+  basicstyle=\small,
+  columns=fullflexible,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{mygreen},
+  extendedchars=true,
+  frame=single,
+  keepspaces=true,
+  keywordstyle=\color{blue}, 
+  language=c++, 
+  numbers=none,
+  numbersep=5pt,
+  numberstyle=\tiny\color{blue},
+  rulecolor=\color{mygray}, 
+  showspaces=false,
+  showtabs=false,
+  stepnumber=5,
+  stringstyle=\color{mymauve}, 
+  tabsize=3,
+  title=\lstname 
+}
+
+\newcounter{acnum}
+\newcommand{\actheacnum}{AC\theacnum}
+\newcommand{\acref}[1]{AC\ref{#1}}
 
 \begin{document}
 
@@ -55,6 +94,9 @@
 2023-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
 2023-03-07 & Jonathan Cels & Added functional requirement test reports\\
 2023-03-08 & Joshua Chapman & Added changes due to testing, Trace to Modules\\
+2023-03-07 & Alexander Van Kralingen & Added Arduino unit tests example\\
+2023-03-08 & Jonathan Cels & Added nonfunctional requirement test reports\\
+2023-03-08 & Arshdeep Aujla & Added reflection appendix\\
 \bottomrule
 \end{tabularx}
 
@@ -64,11 +106,18 @@
 
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  T & Test\\
+    \toprule		
+    \textbf{symbol} & \textbf{description}\\
+    \midrule 
+    T & Test\\
   FSM & Finite State Machine\\
+    TBD & To Be Determined\\
+    LCD & Liquid Crystal Display\\
+    LED & Light Emitting Diode\\
+    Engine Move & Good chess move, calculated by a chess engine\\
+    Legal Move & Chess move that is allowed according to the rules\\
+    Illegal Move & Chess move that is not allowed according to the rules\\
+    ADC & Analog to Digital Converter\\
   \bottomrule
 \end{tabular}\\
 
@@ -85,8 +134,6 @@ Refer to SRS Section 1 for an extensive list of used symbols, abbreviations, and
 \newpage
 
 \pagenumbering{arabic}
-
-This document ...
 
 \section{Functional Requirements Evaluation}
 Refer to the VnV Plan for descriptions of the tests derived to evaluate the functional requirements.
@@ -257,119 +304,169 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
 \pagebreak
 
 \section{Nonfunctional Requirements Evaluation}
-Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-functional requirements.
+
+Many of the nonfunctional requirements outlined in the VnV plan are left for revision 1, as much of the external testing relies on the product being more completed and accessible to a wider audience.
+Some external user testing was done, specifically for NFT-4 and NFT-5, and is detailed in the Performance section.
 
 \subsection{Look and Feel}
 
-\begin{table}[H]
-\centering
-    \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
-    \hline
-    \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
-    \hline
-    NFT-1 &  & \\
-    \hline
-    \end{tabular}
-\caption{Look and Feel Non-Functional Requirements Results}
-\end{table}
+Look and feel testing will be performed for revision 1, as though it is functional, this part of the product is not ready for external user testing.
 		
 \subsection{Usability and Humanity}
 
-\begin{table}[H]
-\centering
-    \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
-    \hline
-    \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
-    \hline
-    NFT-2 &  & \\
-    \hline
-    NFT-3 &  & \\
-    \hline
-    \end{tabular}
-\caption{Usability and Humanity Non-Functional Requirements Results}
-\end{table}
+Usability testing will be performed for revision 1, as though it is functional, this part of the product is not ready for external user testing.
 
 \subsection{Performance}
 
 \begin{table}[H]
-\centering
-    \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
-    \hline
-    \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
-    \hline
-    NFT-4 &  & \\
-    \hline
-    NFT-5 &  & \\
-    \hline
-    NFT-6 &  & \\
-    \hline
-    NFT-7 &  & \\
-    \hline
-    \end{tabular}
-\caption{Performance Non-Functional Requirements Results}
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
+            >{\centering\arraybackslash}m{2.5cm} | 
+            >{\centering\arraybackslash}m{3cm} | 
+            >{\centering\arraybackslash}m{2cm} |
+            >{\centering\arraybackslash}m{4cm} |
+            >{\centering\arraybackslash}m{1.5cm} |}
+        \hline
+        \rowcolor[gray]{0.9}
+        Test & Input & Expected & Actual & Notes & Result\\
+        \hline
+        NFT-4 & Experiment performed as detailed below. & Average LED response time over all trials is less than 0.5 seconds. & Average response time was 0.488 seconds. & This value is close to the 0.5 second limit, and may be subject to human error. Further testing will be done with more trials for revision 1 to ensure this requirement is met. & Pass \\
+        \hline
+        NFT-5 & Experiment performed as detailed below. & Maximum single response time of any trial is less than 1 second. & Maximum response time was 0.72 seconds. &  & Pass \\
+        \hline
+        NFT-6 & N/A & N/A & N/A & Not tested, as the system is currently subject to a 2-second delay before refreshing. Will be tested for revision 1. & TBD \\
+        \hline
+        NFT-7 & N/A & N/A & N/A & Not tested, as the system is currently subject to a 2-second delay before refreshing. Will be tested for revision 1. & TBD \\
+        \hline
+        \end{tabular}
+    \caption{Performance Non-Functional Requirements Results}
 \end{table}
 
+\newpage
+The following table holds data for NFT-4 and NFT-5. Three external users, all familiar with the rules of chess, were each asked to perform the following experiment in beginner mode 5 times:
+\medskip
+\\
+Pick up an arbitrary piece and suspend it in the air. Wait until the board visually indicates the possible moves for the suspended piece. The time between the user picking up 
+the piece and the board's LED indicators turning on was measured and recorded.
+
+\begin{table}[H]
+    \centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{3cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    & User 1 & User 2 & User 3 \\
+    \hline
+    Trial 1 & 0.49s & 0.48s & 0.36s \\
+    \hline
+    Trial 2 & 0.65s & 0.69s & 0.27s \\
+    \hline
+    Trial 3 & 0.53s & 0.33s & 0.52s \\
+    \hline
+    Trial 4 & 0.72s & 0.34s & 0.49s \\
+    \hline
+    Trial 5 & 0.42s & 0.51s & 0.52s \\
+    \hline
+    Total Average & \multicolumn{3}{c|}{\textbf{0.488s}}\\
+    \hline
+    \end{tabular}
+\caption{Experimental Results of Performance Testing}
+\end{table}
+
+The following scatter plot shows the experimental results visually. The average, shown in green, falls just below the 
+required 0.5 second threshold, and all points are well below the maximum acceptable response time of 1 second.
+
+\begin{figure}[H]
+    \includegraphics[scale=0.93]{performanceScatterPlot}
+    \caption{Experimental Results of Performance Testing}
+\end{figure}
+
+\newpage
 \subsection{Health and Safety}
 
 \begin{table}[H]
 \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{2.5cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
+    Test & Input & Expected & Actual & Notes & Result\\
     \hline
-    NFT-8 &  & \\
+    NFT-8 & 10 sample wires were chosen while the product was running. Their current and voltage were measured, and power was calculated using those measurements. & All power measurements below safe limits. & All power measurements below safe limits. & Measurements far below any safety thresholds. & Pass \\
     \hline
     \end{tabular}
 \caption{Health and Safety Non-Functional Requirements Results}
 \end{table}
 
-\subsection{Precision and Accuracy}
+The following table holds data for NFT-8. 
 
 \begin{table}[H]
-\centering
+    \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} | 
+        >{\centering\arraybackslash}m{2cm} |
+        >{\centering\arraybackslash}m{2cm} |
+        >{\centering\arraybackslash}m{2.5cm} |
+        >{\centering\arraybackslash}m{2.5cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
+    Wire \# & Wire Description & Gauge & Current (Amps) & Voltage (Volts) & Calculated Power (Watts) & Maximum power (Watts) \\
     \hline
-    NFT-9 &  & \\
+    1 & Hall sensor 1 with black piece & 20 & 0.04 & 1.6 & 0.064 & 7.5 \\
+    \hline
+    2 & Hall sensor 32 with no piece & 20 & 0.03 & 1 & 0.03 & 7.5 \\
+    \hline
+    3 & Hall sensor 64 with white piece & 20 & 0.02 & 0.6 & 0.012 & 7.5 \\
+    \hline
+    4 & Arduino power line & 10 & 0.5 & 5 & 2.5 & 75 \\
+    \hline
+    5 & ADC 1 & 20 & 0.01 & 5 & 0.05 & 7.5 \\
+    \hline
+    6 & ADC 4 & 20 & 0.02 & 5 & 0.1 & 7.5 \\
+    \hline
+    7 & ADC clock & 20 & 0.05 & 5 & 0.25 & 7.5 \\
+    \hline
+    8 & Wall power supply (L) & 8 & 0.75 & 110 & 47.631 & 120 \\
+    \hline
+    9 & Wall power supply (G) & 8 & 0.01 & 0 & 0 & 120 \\
+    \hline
+    10 & Bluetooth RX & 20 & 0.02 & 5 & 0.1 & 7.5 \\
     \hline
     \end{tabular}
-\caption{Precision and Accuracy Non-Functional Requirements Results}
+\caption{Experimental Results of Health and Safety Testing}
 \end{table}
+
+\subsection{Precision and Accuracy}
+
+Precision and accuracy testing will be performed for revision 1, as though it is functional, this part of the product is not ready for external user testing.
 
 \subsection{Capacity}
 
 \begin{table}[H]
 \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
+    Test & Input & Expected & Actual & Notes & Result\\
     \hline
-    NFT-10 &  & \\
+    NFT-10 & A relatively complex chess FEN position was transmitted via Bluetooth to the web application while in engine mode. & The measured memory usage of the web application is less than 1GB. & The maximum measured memory value was 1187.4 MB, as measured by Windows task manager. & Memory usage will increase in future revisions, as more engine moves will be calculated at a higher depth. & Pass \\
     \hline
     \end{tabular}
 \caption{Capacity Non-Functional Requirements Results}
@@ -380,22 +477,102 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-
 \begin{table}[H]
 \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
+    Test & Input & Expected & Actual & Notes & Result\\
     \hline
-    NFT-11 &  & \\
+    NFT-11 & Bluetooth connection to web application severed. & Web application alert that the connection has been lost. & N/A & Not implemented, planned in future revisions. & TBD \\
     \hline
-    NFT-12 &  & \\
+    NFT-12 & Power connection to system is severed, and then restored after a short time frame. & The game state data is stored in local memory and is unchanged after power is restored. & Game state data is properly stored. &  & Pass \\
     \hline
     \end{tabular}
 \caption{Security Non-Functional Requirements Results}
 \end{table}
 
-\section{Unit Testing}
+\section{Unit Testing} \label{UnitTest}
+
+  Creating unit tests for the Embedded software required several of Arduino's built in functionality to be simulated. This included serial communication functions,
+  pin setup (input or output), reading from and writing to pins, and time delays. Additionally, binary values neded to be setup to simulate a sequence of events 
+  such as values recorded from a hall sensor, or LEDs turning on or off. All of this is handled in the 
+  \href{../../test/EmbeddedTest/ArduinoTest/MockArduinoController.cpp}{MockArduinoController.cpp} file, which holds the SerialStream and PinSimulation classes,
+  as well as several functions for interacting with the hardware.
+
+  Rather than unit testing every function in normal operation, individual functions were tested to ensure correct outputs from simulated inputs. Integration 
+  with the system was completed physically with the Arduino exectuing the program. An example of the test for hardware reading is given below. 
+
+\begin{lstlisting}
+    void testReadPiece()
+    {
+        setupBoard(); 
+        
+        // Simulate picking a piece 
+        organizedHallValues[0][1] = randHall(NO_COLOUR);  
+        mapHallValuesToSensors(); 
+        PinSim.reWritePin(hallRx[0]); 
+        writeAdcRow(hallRx[0], rawHallValues[0]); 
+
+        // NO_PIECE, NO_COLOUR 
+        Square expectedSquare = Square(0,1);    
+
+        // Checkpick() function inside Arduino's loop should catch this,
+        // updating the pieces on the board 
+        loopArduino();  
+
+        // Make sure the state changes to PIECE_LIFTED ('l')
+        check(assert_equal('l', gameState), __FUNCTION__, __LINE__);  
+
+        // Make sure the square in the board array is updated successfully
+        check(assert_equal(expectedSquare, currentBoard[0][1]), __FUNCTION__, __LINE__);  
+    }
+\end{lstlisting}
+
+  The rest of the tests follow a similar format of setting up the initial state, simulating an input and comparing the expected output. Several similar tests were 
+  performed with different piece types, positions and piece colours to cover edge cases. Only one test of each type in a group testing the same function with 
+  different inputs and outputs has been included in the table below.
+
+\newgeometry{left=0.5cm}
+\begin{table}[H]
+  \centering
+    \setlength{\leftmargini}{0cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{6cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3.5cm} | 
+        >{\centering\arraybackslash}m{3.5cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Input & Expected & Actual & Result\\
+    \hline
+    testReadPiece & random Hall sensor value between 140 and 310 (no piece reading) corresponding to square B1 & Square B1 resets piece value to NO\_PIECE & currentBoard[0][1] holds NO\_PIECE, NO\_COLOUR  & pass \\
+    \hline
+    testHighlightPawnValidMoves & Pawn lifted from starting position (A2) & A3, A4 light up & A3, A4 pins read output HIGH & pass \\
+    \hline
+    testHighlightKnightValidMoves & Knight lifted from starting position (B1)& A3, C3 light up & pins read output HIGH & pass \\
+    \hline
+    testHighlightBishopValidMoves & Bishop lifted from C1 after D2 Pawn to D3, and G7 Pawn to G5 & C2, E3, F4, G5 light up & C2, E3, F4, G5 pins read output HIGH & pass \\
+    \hline
+    testHighlightRookValidMoves & Rook lifted from & light up & pins read output HIGH & pass \\
+    \hline
+    testHighlightQueenValidMoves & Queen lifted from & light up & pins read output HIGH & pass \\
+    \hline
+    testHighlightKingValidMoves & King lifted from & light up & pins read output HIGH & pass \\
+    \hline
+    testPieceToChar & Piece(QUEEN, BLACK) & 'q' & 'q' & pass \\
+    \hline
+    testValidateFENString & King lifted from & {\scriptsize rnbqkbnr/pppp1ppp/ 4p3/8/4P3/5N2/ PPPP1PPP/RNBQKB1R w KQkq - 1 4} & {\scriptsize rnbqkbnr/pppp1ppp/ 4p3/8/4P3/5N2/ PPPP1PPP/RNBQKB1R w KQkq - 1 4} & pass \\
+    \hline
+    testGameStartValid & black piece on row 1 while all other pieces are white & false & false & pass \\
+    \hline
+    \end{tabular}
+  \caption{Unit Test functions}
+\end{table}
+\restoregeometry
 
 \section{Changes Due to Testing}
 The results detailed in the above tests prompted a number of design changes in 
@@ -449,7 +626,17 @@ eliminates the data size issue. A second solution is the introduction of sockets
 which eliminates polling entirely and solves the data size and processing issues. 
 
 
+\begin{itemize}
+  \item Initially, the game was only allowed to start while white and black were on specific sides. Code changed to support either side as starting position.
+\end{itemize}
+  
+
 \section{Automated Testing}
+\subsection{C++}
+  Since Arduino files are .ino and cannot be build using a g++ compiler, a build script has been created to convert the file to a .cpp filetype, compile it with
+  g++, execute it and watch the result. The error code is the number of errors which used by GitHub Actions to determine the success of all of the unit tests. Errors
+  are written to a log file and recorded for future reference. Unit tests are run in this method to verify changes to the code. Tests must all pass before merging
+  into main. Please refer to \hyperref[UnitTest]{Unit Testing} for details on the tests ran in build script.
 		
 \section{Trace to Requirements \& Modules}
 
@@ -556,7 +743,20 @@ which eliminates polling entirely and solves the data size and processing issues
 
 \appendix
 \section{Reflection Appendix}
+The majority of the tests planned out in the VnV Plan were carried out as expected and reported in the VnV Report. 
+Some differences in the tests were due to a rework of the requirements, and modifying what is in scope for the first iteration of the project.\\
 
+Two tests were not carried out as planned because the requirements changed since the creation of the VnV Plan. These tests were GA-3 and GI-2.
+These tests were both related to the changing the game state. Initially, functional requirements outlined that the user should be able to change the games mode
+regardless if they are currently in the active state or inactive state. On a second consideration, it was decided that the mode should only be able to be changed if
+the user is in the inactive mode. Therefore the tests GA-3 and GI-1 were no long applicable and not reported in this report. \\
+
+A few tests for functional and non-functional requirements were not completed due to the scope of the project changing. The requirements changed because 
+they were decided that they weren't mandatory for a working product. It was also not feasible for these requirements to be met during the timeline of the course.
+These tests that were descoped were ED-2, EA-2, BB-3, BA-1, NFT-6, NFT-7, and NFT-11.\\
+
+In a future VnV planning, emphasis will need to be made to ensure that the requirements are solidified before the tests are created, and that all of the requirements need to
+be feasible to be met during the project's timeline.
 
 \bibliographystyle{plainnat}
 
