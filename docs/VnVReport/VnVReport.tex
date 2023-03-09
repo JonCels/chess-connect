@@ -33,8 +33,43 @@
 \graphicspath{ {./images/} }
 \usepackage{caption}
 \usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+
 \input{../Comments}
 \input{../Common}
+
+% https://tex.stackexchange.com/a/409782
+\colorlet{mygray}{black!30}
+\colorlet{mygreen}{green!60!blue}
+\colorlet{mymauve}{red!60!blue}
+
+\lstset{
+  backgroundcolor=\color{gray!10}, 
+  basicstyle=\small,
+  columns=fullflexible,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{mygreen},
+  extendedchars=true,
+  frame=single,
+  keepspaces=true,
+  keywordstyle=\color{blue}, 
+  language=c++, 
+  numbers=none,
+  numbersep=5pt,
+  numberstyle=\tiny\color{blue},
+  rulecolor=\color{mygray}, 
+  showspaces=false,
+  showtabs=false,
+  stepnumber=5,
+  stringstyle=\color{mymauve}, 
+  tabsize=3,
+  title=\lstname 
+}
+
+
 
 \begin{document}
 
@@ -359,6 +394,50 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 \end{table}
 
 \section{Unit Testing}
+
+  Creating unit tests for the Embedded software required several of Arduino's built in functionality to be simulated. This included serial communication functions,
+  pin setup (input or output), reading from and writing to pins, and time delays. Additionally, binary values neded to be setup to simulate a sequence of events 
+  such as values recorded from a hall sensor, or LEDs turning on or off. All of this is handled in the 
+  \href{../../test/EmbeddedTest/ArduinoTest/MockArduinoController.cpp}{MockArduinoController.cpp} file, which holds the SerialStream and PinSimulation classes,
+  as well as several functions for interacting with the hardware.
+
+  Rather than unit testing every function in normal operation, individual functions were tested to ensure correct outputs from simulated inputs. Integration 
+  with the system was completed physically with the Arduino exectuing the program. An example of the test for hardware is given below. The rest of the tests follow
+  a similar format of setting up the initial state, simulating an input and comparing the expected output.
+
+  
+\begin{lstlisting}
+    void testReadPiece()
+    {
+        setupBoard(); 
+        
+        // Simulate picking a piece 
+        organizedHallValues[0][1] = randHall(NO_COLOUR);  
+        mapHallValuesToSensors(); 
+        PinSim.reWritePin(hallRx[0]); 
+        writeAdcRow(hallRx[0], rawHallValues[0]); 
+
+        //No Piece, No colour 
+        Square expectedSquare = Square(0,1);    
+
+        // Checkpick() function inside Arduino's loop should catch this,
+        // updating the pieces on the board 
+        loopArduino();  
+
+        // Make sure the state changes to PIECE_LIFTED ('l')
+        check(assert_equal('l', gameState), __FUNCTION__, __LINE__);  
+
+        // Make sure the square in the board array is updated successfully
+        check(assert_equal(expectedSquare, currentBoard[0][1]), __FUNCTION__, __LINE__);  
+    }
+\end{lstlisting}
+
+testHighlightPawnValidMoves
+testHighlightKnightValidMoves
+testHighlightBishopValidMoves
+testHighlightRookValidMoves
+testHighlightQueenValidMoves
+testHighlightKingValidMoves
 
 \section{Changes Due to Testing}
 

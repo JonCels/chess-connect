@@ -70,7 +70,7 @@ struct PinValues {
     PinValues() : val{}, iter(0) {}
 };
 
-class ReadWritePins{
+class PinSimulation{
 public:
     map<int, int> lastVal;
     map<int, PinValues> values;
@@ -91,7 +91,12 @@ public:
             lastVal[pin] = 0;
         }
     }
-    void printPinValues(int pin) {
+    void reWritePin(int pin)
+    {
+        lastVal[pin] = 0;
+    }
+    void printPinValues(int pin)
+    {
         cout << "______Pin " << pin << ":______\n";
         for (int i = 0; i < lastVal[pin]; i++)
         {
@@ -108,8 +113,14 @@ public:
     void resetPinIterator(int pin) {
         values[pin].iter = 0;
     }
+    void resetAllPinIterators() {
+        for (map<int, PinValues>::iterator iter = values.begin(); iter != values.end(); ++iter)
+        {
+            resetPinIterator(iter->first);
+        }
+    }
 
-    ReadWritePins() {
+    PinSimulation() {
         values = {
             {A0, PinValues()}, {A3, PinValues()}, {29, PinValues()}, {35, PinValues()}, {25, PinValues()}, {41, PinValues()},
             {27, PinValues()}, {31, PinValues()}, {37, PinValues()}, {39, PinValues()}, {33, PinValues()}, {34, PinValues()},
@@ -124,7 +135,7 @@ public:
             lastVal[iter->first] = 0;
         }
     }
-    ~ReadWritePins() {
+    ~PinSimulation() {
         lastVal.clear();
         values.clear();
     }
@@ -246,7 +257,7 @@ public:
     }
 };
 
-ReadWritePins RWPins = ReadWritePins();
+PinSimulation PinSim = PinSimulation();
 map<int, int> PinModes;
 
 void pinMode(int pin, uint8_t mode) {
@@ -254,16 +265,16 @@ void pinMode(int pin, uint8_t mode) {
 }
 
 int digitalRead(int pin) {
-    return RWPins.values[pin].val[RWPins.values[pin].iter++];
+    return PinSim.values[pin].val[PinSim.values[pin].iter++];
 }
 
 int digitalWrite(int pin, int value) {
-    RWPins.writePin(pin, value);
+    PinSim.writePin(pin, value);
     return value;
 }
 
 void delay(int ms) {
-    cout << "Arduino slept for " << ms << " milliseconds.\n";
+    //cout << "Arduino slept for " << ms << " milliseconds.\n";
 }
 
 void writeAdc(int pin, int decimal)
@@ -287,7 +298,7 @@ void writeAdc(int pin, int decimal)
     }
     i=0;
     while(i < ADC_LEN){
-        RWPins.writePin(pin, binary[i++]);
+        PinSim.writePin(pin, binary[i++]);
     }
 }
 
