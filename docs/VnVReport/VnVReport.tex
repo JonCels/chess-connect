@@ -93,6 +93,7 @@
 2023-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
 2023-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
 2023-03-07 & Jonathan Cels & Added functional requirement test reports\\
+2023-03-08 & Joshua Chapman & Added changes due to testing, Trace to Modules\\
 2023-03-07 & Alexander Van Kralingen & Added Arduino unit tests example\\
 2023-03-08 & Jonathan Cels & Added nonfunctional requirement test reports\\
 2023-03-08 & Arshdeep Aujla & Added reflection appendix\\
@@ -109,6 +110,7 @@
     \textbf{symbol} & \textbf{description}\\
     \midrule 
     T & Test\\
+  FSM & Finite State Machine\\
     TBD & To Be Determined\\
     LCD & Liquid Crystal Display\\
     LED & Light Emitting Diode\\
@@ -292,7 +294,7 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
     \rowcolor[gray]{0.9}
     Test & Input & Expected & Actual & Notes & Result\\
     \hline
-    BA-1 & User selcetions chess instructions in web application. & Web application displays detailed rules for how to play chess. & N/A & Not implemented, planned in future revisions. & TBD \\
+    BA-1 & User selects chess instructions in web application. & Web application displays detailed rules for how to play chess. & N/A & Not implemented, planned in future revisions. & TBD \\
     \hline
     BA-2 & Web application receives updated game state while in beginner mode. & Update to game state is reflected on web application display. & Display updates correctly. &  & Pass \\
     \hline
@@ -579,6 +581,56 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 \restoregeometry
 
 \section{Changes Due to Testing}
+The results detailed in the above tests prompted a number of design changes in 
+the hardware, embedded and web application systems. Outlined below are the 
+changes made as result. 
+
+\subsection{Embedded Testing} 
+Testing the finite state machine located in the electrical system resulted in 
+incorrect functionality according to the design. A finite state machine was 
+designed to control the functionality of the electrical system dictated by the
+user. It allows users to change modes and have control over the performance 
+of the board. The initial implementation of the FSM utilized a slow clock speed
+and certain inputs were missed as a result. The new solution is to increase the
+clock speed of the FSM and include buffers within the states to increase the
+robustness of the system. 
+\newline
+\newline
+Easy mode provides the functionality of possible moves for pieces on the board.
+When a piece is lifted, the available squares are highlighted. During testing of 
+the function, there were a number of edge cases that were not covered such as 
+castling, en passant and check scenarios. The proposed solution was to increase
+the robustness of the algorithm and maintain logs of the game to account for
+these edge cases. 
+
+\subsection{Hardware Testing}
+Testing the hall sensor piece detection circuits at scale uncovered issues
+with sensitivity of the sensors. At scales of four or more sensors in series, 
+the sensitivity of the reading was too large. Initial solutions included 
+improvement of the hardware. This included improvement of the power supply, 
+grounding and sensors themselves. These solutions did not solve the issue. As 
+a result, the requirements of the sensors have been changed to sense north and 
+south poles exclusively. The functionality of individual piece detection was not
+feasible. 
+\newline
+\newline
+Assembly of the revision one chess board displayed issues with robustness of the
+connections between mechanical and electrical assemblies. Temporary connection 
+was established with electrical and duct tape. The electrical system suspended 
+below the mechanical system. After testing of the board, connection points began 
+to fail and separation occured. The solution for revision two is assembly of the
+mechanical and electrical systems simultaneously. The two systems are assembled 
+together and the robustness of the system is increased.
+
+\subsection{Web Application Testing}
+Integration of the web application with the embedded system revealed an error 
+with the implementation of polling in the web application. Polling required 
+handling of constant data transmission between systems. Issues were clear with 
+required data and processing dedicated to this communicatin. One of the proposed
+solutions is the implementation of a refresh to erase the stored data. This 
+eliminates the data size issue. A second solution is the introduction of sockets
+which eliminates polling entirely and solves the data size and processing issues. 
+
 
 \begin{itemize}
   \item Initially, the game was only allowed to start while white and black were on specific sides. Code changed to support either side as starting position.
@@ -603,102 +655,102 @@ are more resilient to changes in the underlying codebase, and
 provide better coverage of the user experience. Overall, the React Testing Library
 was an important tool to ensure the quality and reliability
 of our frontend application.
+		
+\section{Trace to Requirements \& Modules}
 
-\section{Trace to Requirements}
-
-\begin{longtable}{| p{.20\textwidth} | p{.80\textwidth} |}
+\begin{longtable}{| p{.20\textwidth} | p{.4\textwidth} | p{.4\textwidth}|}
   \hline
-  Test & Requirement\\
+  Test & Requirement & Module\\
   \hline
-  GA-1 & GA1\\
+  GA-1 & GA1 & M2\\
   \hline
-  GA-2 & GA2\\
+  GA-2 & GA2 & M2\\
   \hline
-  GA-3 & GA3\\
+  GA-3 & GA3 & M2\\
   \hline
-  GA-4 & GA6\\
+  GA-4 & GA6 & M2\\
   \hline
-  GA-5 & GA7\\
+  GA-5 & GA7 & M2, M5, M11\\
   \hline
-  GI-1 & GI1\\
+  GI-1 & GI1 & M2\\
   \hline
-  GI-2 & GI2\\
+  GI-2 & GI2 & M2, M11\\
   \hline
-  GI-3 & GI3\\
+  GI-3 & GI3 & M2\\
   \hline
-  GI-4 & GI4\\
+  GI-4 & GI4 & M2, M4\\
   \hline
-  GI-5 & GI5, GI6\\
+  GI-5 & GI5, GI6 & M2, M5, M11\\
   \hline
-  NB-1 & NB1\\
+  NB-1 & NB1 & M2, M11\\
   \hline
-  NB-2 & NB2\\
+  NB-2 & NB2 & M2, M11\\
   \hline
-  NB-3 & NB3\\
+  NB-3 & NB3 & M2, M11\\
   \hline
-  ND-1 & ND1\\
+  ND-1 & ND1 & M2, M11\\
   \hline
-  NA-1 & NA1, NA2\\
+  NA-1 & NA1, NA2 & M2, M6, M8, M11\\
   \hline
-  NA-2 & NA3\\
+  NA-2 & NA3 & M2, M5, M11\\
   \hline
-  EB-1 & EB1\\
+  EB-1 & EB1 & M2, M5, M11\\
   \hline
-  EB-2 & EB2\\
+  EB-2 & EB2 & M2, M11\\
   \hline
-  EB-3 & EB3\\
+  EB-3 & EB3 & M2, M11\\
   \hline
-  EB-4 & EB4\\
+  EB-4 & EB4 & M10, M14\\
   \hline
-  ED-1 & ED1\\
+  ED-1 & ED1 & M5, M6, M8, M12\\
   \hline
-  ED-2 & ED2\\
+  ED-2 & ED2 & M14\\
   \hline
-  EA-1 & EA1, EA2\\
+  EA-1 & EA1, EA2 & M5, M6, M8, M11\\
   \hline
-  EA-2 & EA3, EA4, EA5\\
+  EA-2 & EA3, EA4, EA5 & M14\\
   \hline
-  EA-3 & EA6\\
+  EA-3 & EA6 & M5, M6, M8, M9\\
   \hline
-  BB-1 & BB1\\
+  BB-1 & BB1 & M4, M5, M11\\
   \hline
-  BB-2 & BB2\\
+  BB-2 & BB2 & M4, M5, M11\\
   \hline
-  BB-3 & BB3\\
+  BB-3 & BB3 & M4, M5, M11\\
   \hline
-  BB-4 & BB4\\
+  BB-4 & BB4 & M2, M5, M11\\
   \hline
-  BB-5 & BB5\\
+  BB-5 & BB5 & M2, M5, M11\\
   \hline
-  BD-1 & BD1\\
+  BD-1 & BD1 &  M2, M5, M11\\
   \hline
-  BA-1 & BA1\\
+  BA-1 & BA1 & M10, M11\\
   \hline
-  BA-2 & BA2\\
+  BA-2 & BA2 & M2, M8, M9\\
   \hline
-  NFT1 & LF3\\
+  NFT1 & LF3 &\\
   \hline
-  NFT2 & UH5\\
+  NFT2 & UH5 &\\
   \hline
-  NFT3 & UH6\\
+  NFT3 & UH6 &\\
   \hline
-  NFT4 & PR1\\
+  NFT4 & PR1 &\\
   \hline
-  NFT5 & PR2\\
+  NFT5 & PR2 &\\
   \hline
-  NFT6 & PR3\\
+  NFT6 & PR3 &\\
   \hline
-  NFT7 & PR4\\
+  NFT7 & PR4 &\\
   \hline
-  NFT8 & PR6\\
+  NFT8 & PR6 &\\
   \hline
-  NFT9 & PR7\\
+  NFT9 & PR7 &\\
   \hline
-  NFT10 & PR10\\
+  NFT10 & PR10 &\\
   \hline
-  NFT11 & SR4\\
+  NFT11 & SR4 &\\
   \hline
-  NFT12 & SR3\\
+  NFT12 & SR3 &\\
   \hline
 \caption{Requirements Traceability Matrix}
 \end{longtable}
