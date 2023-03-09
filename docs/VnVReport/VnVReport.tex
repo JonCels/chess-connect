@@ -591,7 +591,19 @@ Precision and accuracy testing will be performed for revision 1, as though it is
   g++, execute it and watch the result. The error code is the number of errors which used by GitHub Actions to determine the success of all of the unit tests. Errors
   are written to a log file and recorded for future reference. Unit tests are run in this method to verify changes to the code. Tests must all pass before merging
   into main. Please refer to \hyperref[UnitTest]{Unit Testing} for details on the tests ran in build script.
-		
+
+\subsection{React Testing Library}
+The React Testing Library was used for testing our React components. 
+Its function was to assist writing tests that simulate user 
+interactions with their application, allowing us to ensure that the components 
+are working as intended. The library provides a set of utilities that make it 
+easy to test React components by interacting with them as a user would, rather 
+than relying on implementation details. This means that tests written with this library
+are more resilient to changes in the underlying codebase, and 
+provide better coverage of the user experience. Overall, the React Testing Library
+was an important tool to ensure the quality and reliability
+of our frontend application.
+
 \section{Trace to Requirements}
 
 \begin{longtable}{| p{.20\textwidth} | p{.80\textwidth} |}
