@@ -99,6 +99,7 @@
 2023-03-08 & Jonathan Cels & Added nonfunctional requirement test reports\\
 2023-03-08 & Arshdeep Aujla & Added reflection appendix\\
 2023-03-08 & Alexander Van Kralingen & Completed Code Coverage Metrics section\\
+2023-03-08 & Rupinder Nagra & Added Unit Testing section\\
 \bottomrule
 \end{tabularx}
 
@@ -499,7 +500,21 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 
 \section{Unit Testing} \label{UnitTest}
 
-  Unit testing is a crucial aspect of software development that involves testing individual units or components of a software application in isolation from the rest of the system. It provides us with a way to ensure that each unit of code is functioning as intended and that it integrates seamlessly with other parts of the software application. By identifying defects and bugs early in the development cycle, unit testing helps reduce the overall time spent on software development while also improving the quality and reliability of the final product. Additionally, unit tests serve as a form of documentation, helping us understand how different components of the system are supposed to interact and ensuring that future modifications do not break existing functionality. We implemented unit testing to ensure our project was robust, maintainable, and of high quality. As mentioned in the VnV Plan, the React Testing Library was used for the Javascript unit tests. Additionally, with the inclusion of many hardware related components in our project, most of our testing is done manually, leaving very few tests that require being automated. 
+  Unit testing is a crucial aspect of software development that involves testing 
+  individual units or components of a software application in isolation from the 
+  rest of the system. It provides us with a way to ensure that each unit of code 
+  is functioning as intended and that it integrates seamlessly with other parts 
+  of the software application. By identifying defects and bugs early in the 
+  development cycle, it helped reduce the overall time spent on software 
+  development while also improving the quality and reliability of our final 
+  product. Additionally, our testing served as a form of documentation, helping us 
+  understand how different components of the system  interact and
+   ensuring that future modifications do not break existing functionality. We 
+   implemented unit testing to ensure our project was robust, maintainable, 
+   and of high quality. As mentioned in the VnV Plan, the React Testing Library 
+   was used for the Javascript unit tests. Additionally, with the inclusion of 
+   many hardware related components in our project, most of our testing is done 
+   manually, leaving very few tests that require being automated. 
   \\\\
   Creating unit tests for the Embedded software required several of Arduino's built in functionality to be simulated. This included serial communication functions,
   pin setup (input or output), reading from and writing to pins, and time delays. Additionally, binary values neded to be setup to simulate a sequence of events 
@@ -567,9 +582,9 @@ Precision and accuracy testing will be performed for revision 1, as though it is
     \hline
     testGameStartValid & black piece on row 1 while all other pieces are white & false & false & pass \\
     \hline
-    inStalemate & rnbqkbnr/\-pppppppp\-/8/8/8/8/\-PPPPPPPP/\-RNBQKBNR w KQkq - 0 1 & false & false & pass \\
+    inStalemate & {\scriptsize rnbqkbnr/pppppppp/ 8/8/8/8/PPPPPPPP/ RNBQKBNR w KQkq - 0 1} & false & false & pass \\
     \hline 
-    inCheckmate & rnb1kbnr/\-pppp1ppp\-/8/4p3\-/5PPq/8/\-PPPPP2P/\-RNBQKBNR \-w KQkq - 1 3 & true & true & pass \\
+    inCheckmate & {\scriptsize rnb1kbnr/pppp1ppp/ 8/4p3/5PPq/8/ PPPPP2P/ RNBQKBNR w KQkq - 1 3} & true & true & pass \\
     \hline
     \caption{Unit Test functions}
   \end{longtable}
@@ -650,7 +665,7 @@ than relying on implementation details. This means that tests written with this 
 are more resilient to changes in the underlying codebase, and 
 provide better coverage of the user experience. Overall, the React Testing Library
 was an important tool to ensure the quality and reliability
-of our frontend application.
+of our front-end application.
 		
 \section{Trace to Requirements \& Modules}
 
