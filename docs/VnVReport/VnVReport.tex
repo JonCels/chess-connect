@@ -54,6 +54,7 @@
 2023-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
 2023-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
 2023-03-07 & Jonathan Cels & Added functional requirement test reports\\
+2023-03-08 & Joshua Chapman & Added changes due to testing, Trace to Modules\\
 \bottomrule
 \end{tabularx}
 
@@ -446,105 +447,105 @@ required data and processing dedicated to this communicatin. One of the proposed
 solutions is the implementation of a refresh to erase the stored data. This 
 eliminates the data size issue. A second solution is the introduction of sockets
 which eliminates polling entirely and solves the data size and processing issues. 
- 
+
 
 \section{Automated Testing}
 		
-\section{Trace to Requirements}
+\section{Trace to Requirements \& Modules}
 
-\begin{longtable}{| p{.20\textwidth} | p{.80\textwidth} |}
+\begin{longtable}{| p{.20\textwidth} | p{.4\textwidth} | p{.4\textwidth}|}
   \hline
-  Test & Requirement\\
+  Test & Requirement & Module\\
   \hline
-  GA-1 & GA1\\
+  GA-1 & GA1 & M2\\
   \hline
-  GA-2 & GA2\\
+  GA-2 & GA2 & M2\\
   \hline
-  GA-3 & GA3\\
+  GA-3 & GA3 & M2\\
   \hline
-  GA-4 & GA6\\
+  GA-4 & GA6 & M2\\
   \hline
-  GA-5 & GA7\\
+  GA-5 & GA7 & M2, M5, M11\\
   \hline
-  GI-1 & GI1\\
+  GI-1 & GI1 & M2\\
   \hline
-  GI-2 & GI2\\
+  GI-2 & GI2 & M2, M11\\
   \hline
-  GI-3 & GI3\\
+  GI-3 & GI3 & M2\\
   \hline
-  GI-4 & GI4\\
+  GI-4 & GI4 & M2, M4\\
   \hline
-  GI-5 & GI5, GI6\\
+  GI-5 & GI5, GI6 & M2, M5, M11\\
   \hline
-  NB-1 & NB1\\
+  NB-1 & NB1 & M2, M11\\
   \hline
-  NB-2 & NB2\\
+  NB-2 & NB2 & M2, M11\\
   \hline
-  NB-3 & NB3\\
+  NB-3 & NB3 & M2, M11\\
   \hline
-  ND-1 & ND1\\
+  ND-1 & ND1 & M2, M11\\
   \hline
-  NA-1 & NA1, NA2\\
+  NA-1 & NA1, NA2 & M2, M6, M8, M11\\
   \hline
-  NA-2 & NA3\\
+  NA-2 & NA3 & M2, M5, M11\\
   \hline
-  EB-1 & EB1\\
+  EB-1 & EB1 & M2, M5, M11\\
   \hline
-  EB-2 & EB2\\
+  EB-2 & EB2 & M2, M11\\
   \hline
-  EB-3 & EB3\\
+  EB-3 & EB3 & M2, M11\\
   \hline
-  EB-4 & EB4\\
+  EB-4 & EB4 & M10, M14\\
   \hline
-  ED-1 & ED1\\
+  ED-1 & ED1 & M5, M6, M8, M12\\
   \hline
-  ED-2 & ED2\\
+  ED-2 & ED2 & M14\\
   \hline
-  EA-1 & EA1, EA2\\
+  EA-1 & EA1, EA2 & M5, M6, M8, M11\\
   \hline
-  EA-2 & EA3, EA4, EA5\\
+  EA-2 & EA3, EA4, EA5 & M14\\
   \hline
-  EA-3 & EA6\\
+  EA-3 & EA6 & M5, M6, M8, M9\\
   \hline
-  BB-1 & BB1\\
+  BB-1 & BB1 & M4, M5, M11\\
   \hline
-  BB-2 & BB2\\
+  BB-2 & BB2 & M4, M5, M11\\
   \hline
-  BB-3 & BB3\\
+  BB-3 & BB3 & M4, M5, M11\\
   \hline
-  BB-4 & BB4\\
+  BB-4 & BB4 & M2, M5, M11\\
   \hline
-  BB-5 & BB5\\
+  BB-5 & BB5 & M2, M5, M11\\
   \hline
-  BD-1 & BD1\\
+  BD-1 & BD1 &  M2, M5, M11\\
   \hline
-  BA-1 & BA1\\
+  BA-1 & BA1 &\\
   \hline
-  BA-2 & BA2\\
+  BA-2 & BA2 &\\
   \hline
-  NFT1 & LF3\\
+  NFT1 & LF3 &\\
   \hline
-  NFT2 & UH5\\
+  NFT2 & UH5 &\\
   \hline
-  NFT3 & UH6\\
+  NFT3 & UH6 &\\
   \hline
-  NFT4 & PR1\\
+  NFT4 & PR1 &\\
   \hline
-  NFT5 & PR2\\
+  NFT5 & PR2 &\\
   \hline
-  NFT6 & PR3\\
+  NFT6 & PR3 &\\
   \hline
-  NFT7 & PR4\\
+  NFT7 & PR4 &\\
   \hline
-  NFT8 & PR6\\
+  NFT8 & PR6 &\\
   \hline
-  NFT9 & PR7\\
+  NFT9 & PR7 &\\
   \hline
-  NFT10 & PR10\\
+  NFT10 & PR10 &\\
   \hline
-  NFT11 & SR4\\
+  NFT11 & SR4 &\\
   \hline
-  NFT12 & SR3\\
+  NFT12 & SR3 &\\
   \hline
 \caption{Requirements Traceability Matrix}
 \end{longtable}
