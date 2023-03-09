@@ -22,6 +22,7 @@
 \usepackage{afterpage}
 \usepackage{titlesec}
 \usepackage{array}
+%\usepackage{showframe}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -255,64 +256,152 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
 \pagebreak
 
 \section{Nonfunctional Requirements Evaluation}
-Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-functional requirements.
+
+Many of the nonfunctional requirements outlined in the VnV plan are left for revision 1, as much of the external testing relies on the product being more completed and accessible to a wider audience.
+Some external user testing was done, specifically for NFT-4 and NFT-5, and is detailed in the Performance section.
 
 \subsection{Look and Feel}
 
-Look and feel testing will be performed for revision 1, as though it is functional, the product is not ready for external user testing.
+Look and feel testing will be performed for revision 1, as though it is functional, this part of the product is not ready for external user testing.
 		
 \subsection{Usability and Humanity}
 
-Usability testing will be performed for revision 1, as though it is functional, the product is not ready for external user testing.
+Usability testing will be performed for revision 1, as though it is functional, this part of the product is not ready for external user testing.
 
 \subsection{Performance}
 
 \begin{table}[H]
-\centering
-    \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
-        >{\centering\arraybackslash}m{2.5cm} | 
-        >{\centering\arraybackslash}m{4cm} | 
-        >{\centering\arraybackslash}m{3cm} |
-        >{\centering\arraybackslash}m{3cm} |
-        >{\centering\arraybackslash}m{1.5cm} |}
-    \hline
-    \rowcolor[gray]{0.9}
-    Test & Input & Expected & Actual & Notes & Result\\
-    \hline
-    NFT-4 &  &  &  &  & Pass \\
-    \hline
-    NFT-5 &  &  &  &  & Pass \\
-    \hline
-    NFT-6 &  &  &  &  & Pass \\
-    \hline
-    NFT-7 &  &  &  &  & Pass \\
-    \hline
-    \end{tabular}
-\caption{Performance Non-Functional Requirements Results}
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
+            >{\centering\arraybackslash}m{2.5cm} | 
+            >{\centering\arraybackslash}m{3cm} | 
+            >{\centering\arraybackslash}m{2cm} |
+            >{\centering\arraybackslash}m{4cm} |
+            >{\centering\arraybackslash}m{1.5cm} |}
+        \hline
+        \rowcolor[gray]{0.9}
+        Test & Input & Expected & Actual & Notes & Result\\
+        \hline
+        NFT-4 & Experiment performed as detailed below. & Average LED response time over all trials is less than 0.5 seconds. & Average response time was 0.488 seconds. & This value is close to the 0.5 second limit, and may be subject to human error. Further testing will be done with more trials for revision 1 to ensure this requirement is met. & Pass \\
+        \hline
+        NFT-5 & Experiment performed as detailed below. & Maximum single response time of any trial is less than 1 second. & Maximum response time was 0.72 seconds. &  & Pass \\
+        \hline
+        NFT-6 & N/A & N/A & N/A & Not tested, as the system is currently subject to a 2-second delay before refreshing. Will be tested for revision 1. & TBD \\
+        \hline
+        NFT-7 & N/A & N/A & N/A & Not tested, as the system is currently subject to a 2-second delay before refreshing. Will be tested for revision 1. & TBD \\
+        \hline
+        \end{tabular}
+    \caption{Performance Non-Functional Requirements Results}
 \end{table}
 
+\newpage
+The following table holds data for NFT-4 and NFT-5. Three external users, all familiar with the rules of chess, were each asked to perform the following experiment in beginner mode 5 times:
+\medskip
+\\
+Pick up an arbitrary piece and suspend it in the air. Wait until the board visually indicates the possible moves for the suspended piece. The time between the user picking up 
+the piece and the board's LED indicators turning on was measured and recorded.
+
+\begin{table}[H]
+    \centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} | 
+        >{\centering\arraybackslash}m{3cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    & User 1 & User 2 & User 3 \\
+    \hline
+    Trial 1 & 0.49s & 0.48s & 0.36s \\
+    \hline
+    Trial 2 & 0.65s & 0.69s & 0.27s \\
+    \hline
+    Trial 3 & 0.53s & 0.33s & 0.52s \\
+    \hline
+    Trial 4 & 0.72s & 0.34s & 0.49s \\
+    \hline
+    Trial 5 & 0.42s & 0.51s & 0.52s \\
+    \hline
+    Total Average & \multicolumn{3}{c|}{\textbf{0.488s}}\\
+    \hline
+    \end{tabular}
+\caption{Experimental Results of Performance Testing}
+\end{table}
+
+The following scatter plot shows the experimental results visually. The average, shown in green, falls just below the 
+required 0.5 second threshold, and all points are well below the maximum acceptable response time of 1 second.
+
+\begin{figure}[H]
+    \includegraphics[scale=0.93]{performanceScatterPlot}
+    \caption{Experimental Results of Performance Testing}
+\end{figure}
+
+\newpage
 \subsection{Health and Safety}
 
 \begin{table}[H]
 \centering
     \setlength{\leftmargini}{0.4cm}
     \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
-        >{\centering\arraybackslash}m{2.5cm} | 
         >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} | 
         >{\centering\arraybackslash}m{3cm} |
-        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{2.5cm} |
         >{\centering\arraybackslash}m{1.5cm} |}
     \hline
-    NFT-8 &  &  &  &  & Pass \\
+    \rowcolor[gray]{0.9}
+    Test & Input & Expected & Actual & Notes & Result\\
+    \hline
+    NFT-8 & 10 sample wires were chosen while the product was running. Their current and voltage were measured, and power was calculated using those measurements. & All power measurements below safe limits. & All power measurements below safe limits. & Measurements far below any safety thresholds. & Pass \\
     \hline
     \end{tabular}
 \caption{Health and Safety Non-Functional Requirements Results}
 \end{table}
 
+The following table holds data for NFT-8. 
+
+\begin{table}[H]
+    \centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} | 
+        >{\centering\arraybackslash}m{2cm} |
+        >{\centering\arraybackslash}m{2cm} |
+        >{\centering\arraybackslash}m{2.5cm} |
+        >{\centering\arraybackslash}m{2.5cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Wire \# & Wire Description & Gauge & Current (Amps) & Voltage (Volts) & Calculated Power (Watts) & Maximum power (Watts) \\
+    \hline
+    1 & Hall sensor 1 with black piece & 20 & 0.04 & 1.6 & 0.064 & 7.5 \\
+    \hline
+    2 & Hall sensor 32 with no piece & 20 & 0.03 & 1 & 0.03 & 7.5 \\
+    \hline
+    3 & Hall sensor 64 with white piece & 20 & 0.02 & 0.6 & 0.012 & 7.5 \\
+    \hline
+    4 & Arduino power line & 10 & 0.5 & 5 & 2.5 & 75 \\
+    \hline
+    5 & ADC 1 & 20 & 0.01 & 5 & 0.05 & 7.5 \\
+    \hline
+    6 & ADC 4 & 20 & 0.02 & 5 & 0.1 & 7.5 \\
+    \hline
+    7 & ADC clock & 20 & 0.05 & 5 & 0.25 & 7.5 \\
+    \hline
+    8 & Wall power supply (L) & 8 & 0.75 & 110 & 47.631 & 120 \\
+    \hline
+    9 & Wall power supply (G) & 8 & 0.01 & 0 & 0 & 120 \\
+    \hline
+    10 & Bluetooth RX & 20 & 0.02 & 5 & 0.1 & 7.5 \\
+    \hline
+    \end{tabular}
+\caption{Experimental Results of Health and Safety Testing}
+\end{table}
+
 \subsection{Precision and Accuracy}
 
-Precision and accuracy testing will be performed for revision 1, as though it is functional, the product is not ready for external user testing.
+Precision and accuracy testing will be performed for revision 1, as though it is functional, this part of the product is not ready for external user testing.
 
 \subsection{Capacity}
 
