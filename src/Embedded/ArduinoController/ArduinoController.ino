@@ -869,18 +869,38 @@ bool gameStartValid()
 {
     bool valid = true;
     int i;
-    for (i = 0; i < 8; i++)
+    if (currentBoard[0][0].piece.colour == WHITE)
     {
-        if (currentBoard[0][i].piece.colour != WHITE)
-            valid = false;
-        if (currentBoard[1][i].piece.colour != WHITE)
-            valid = false;
+        for (i = 0; i < 8; i++)
+        {
+            if (currentBoard[0][i].piece.colour != WHITE)
+                valid = false;
+            if (currentBoard[1][i].piece.colour != WHITE)
+                valid = false;
 
-        if (currentBoard[6][i].piece.colour != BLACK)
-            valid = false;
-        if (currentBoard[7][i].piece.colour != BLACK)
-            valid = false;
+            if (currentBoard[6][i].piece.colour != BLACK)
+                valid = false;
+            if (currentBoard[7][i].piece.colour != BLACK)
+                valid = false;
+        }
     }
+    else
+    {
+        for (i = 0; i < 8; i++)
+        {
+            if (currentBoard[0][i].piece.colour != BLACK)
+                valid = false;
+            if (currentBoard[1][i].piece.colour != BLACK)
+                valid = false;
+
+            if (currentBoard[6][i].piece.colour != WHITE)
+                valid = false;
+            if (currentBoard[7][i].piece.colour != WHITE)
+                valid = false;
+        }
+    }
+    
+    
     return valid;
 }
 
@@ -1301,7 +1321,6 @@ void setup()
 
 void loop()
 {
-    cout << gameState << endl;
     if (Serial1.available() > 0)
     {
         gameCommand = (GameCommand)(char)Serial1.read();
@@ -1411,46 +1430,6 @@ void loop()
     default:
         break;
     }
-
-    // switch (gameState)
-    // {
-    // case 0:
-    //     if (gameStartValid())
-    //     { //&& gameStartPB) {
-    //         resetChessBoard();
-    //         gameState = WAIT_PICK;
-    //     }
-    //     break;
-    // case 1:
-    //     // sendFen();
-    //     if (checkPick())
-    //     {
-    //         gameState = PIECE_LIFTED;
-    //     }
-    //     else if (gameCommand == 'e')
-    //         gameState = WAIT_PICK;
-    //     break;
-    // case 2:
-    //     // sendFen();
-    //     flash();
-    //     if (checkPlace())
-    //     {
-    //         if (whoseTurn == 'w')
-    //             whoseTurn = 'b';
-    //         else
-    //         {
-    //             whoseTurn = 'w';
-    //             turns += 1;
-    //         }
-    //         gameState = WAIT_PICK;
-    //         lightsOff();
-    //     }
-    //     else if (gameCommand == 'e')
-    //         gameState = INIT_GAME;
-    //     break;
-    // default:
-    //     break;
-    // }
 
     // printHall();
     // delay(delay_const);

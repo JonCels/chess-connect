@@ -12,6 +12,86 @@ uniform_int_distribution<> distribute(WHITE_HALL, BLACK_HALL);
 int organizedHallValues[8][8];
 int rawHallValues[8][8];
 
+bool assert_equal(Square *actualBoard, Square *expectedBoard)
+{
+    bool equal = true;
+    for (int i = 0; i < 64; i++)
+    {
+        equal = *(actualBoard + i) == *(expectedBoard + i);
+
+        if (!equal)
+        {
+            cout << "\nnMismatched Piece values at row: " << i / 8 << " col: " << i % 8 << "\n";
+            cout << "Expected:\tActual:\n";
+            cout << pieceToChar((*(expectedBoard + i)).piece) << "\t\t" << pieceToChar((*(actualBoard + i)).piece) << "\n";
+        }
+    }
+    return equal;
+}
+bool assert_equal(Square actualBoard, Square expectedBoard)
+{
+    bool equal = true;
+    equal = actualBoard == expectedBoard;
+    if (!equal)
+    {
+        cout << "\nnMismatched Piece values \n";
+        cout << "Expected:\tActual:\n";
+        cout << pieceToChar(expectedBoard.piece) << "\t\t" << pieceToChar(actualBoard.piece) << "\n";
+    }
+    return equal;
+}
+bool assert_equal(int *arr1, int *arr2)
+{
+    bool equal = true;
+    for (int i = 0; i < 64; i++)
+    {
+        equal = *(arr1 + i) == *(arr2 + i);
+        if (!equal)
+        {
+            cout << "\nMismatched int values at row: " << i / 8 << " col: " << i % 8 << "\n";
+            cout << "Expected:\tActual:\n";
+            cout << *(arr1 + i) << "\t\t" << *(arr2 + i) << "\n";
+        }
+    }
+    return equal;
+}
+bool assert_equal(char a, char b)
+{
+    bool result = a == b;
+    if (!result)
+    {
+        cout << "\nMismatched char\n";
+        cout << "Expected:\tActual:\n";
+        cout << a << "\t\t" << b << "\n";
+        return false;
+    }
+    return result;
+}
+bool assert_equal(int a, int b)
+{
+    bool result = a == b;
+    if (!result)
+    {
+        cout << "\nMismatched int\n";
+        cout << "Expected:\tActual:\n";
+        cout << a << "\t\t" << b << "\n";
+        return false;
+    }
+    return result;
+}
+
+void check(bool b, const char *c, int l)
+{
+    if (!b)
+        errors[l] = c;
+}
+
+void loopArduino()
+{
+    loop();
+    PinSim.resetAllPinIterators();
+}
+
 int randHall(Colour colour) {
     switch (colour)
     {
@@ -115,67 +195,6 @@ void generateHallValues() {
     }
 }
 
-bool assert_equal(Square *actualBoard, Square *expectedBoard)
-{
-    bool equal = true;
-    for (int i = 0; i < 64; i++)
-    {
-        equal = *(actualBoard + i) == *(expectedBoard + i);
-
-        if(!equal) {
-            cout << "\nnMismatched Piece values at row: " << i / 8 << " col: " << i % 8 << "\n";
-            cout << "Expected:\tActual:\n";
-            cout << pieceToChar((*(expectedBoard + i)).piece) << "\t\t" << pieceToChar((*(actualBoard + i)).piece) << "\n";
-        }
-    }
-    return equal;
-}
-bool assert_equal(int *arr1, int *arr2)
-{
-    bool equal = true;
-    for (int i = 0; i < 64; i++)
-    {
-        equal = *(arr1 + i) == *(arr2 + i);
-        if (!equal)
-        {
-            cout << "\nMismatched int values at row: " << i / 8 << " col: " << i % 8 << "\n";
-            cout << "Expected:\tActual:\n";
-            cout << *(arr1 + i) << "\t\t" << *(arr2 + i) << "\n";
-        }
-    }
-    return equal;
-}
-bool assert_equal(char a, char b)
-{
-    bool result = a == b;
-    if (!result)
-    {
-        cout << "\nMismatched char\n";
-        cout << "Expected:\tActual:\n";
-        cout << a << "\t\t" << b << "\n";
-        return false;
-    }
-    return result;
-}
-bool assert_equal(int a, int b)
-{
-    bool result = a == b;
-    if (!result)
-    {
-        cout << "\nMismatched int\n";
-        cout << "Expected:\tActual:\n";
-        cout << a << "\t\t" << b << "\n";
-        return false;
-    }
-    return result;
-}
-
-void check(bool b, const char* c, int l)
-{
-    if(!b)
-        errors[l] = c;
-}
-
 void setupMockHallSensors()
 {
     generateHallValues();
@@ -188,12 +207,16 @@ void setupMockHallSensors()
 
 void setupBoard()
 {
-    resetChessBoard();
     setupMockHallSensors();
-    loop();
+    loopArduino(); // enter PLAY_GAME state
+
     check(assert_equal('p', gameState), __FUNCTION__, __LINE__);
+    check(gameStartValid(), __FUNCTION__, __LINE__);
     check(assert_equal(*currentBoard, *oldBoard), __FUNCTION__, __LINE__);
     check(assert_equal(*organizedHallValues, *adjStates), __FUNCTION__, __LINE__);
+
+    loopArduino();// enter WAIT_PICK state
+    check(assert_equal('w', gameState), __FUNCTION__, __LINE__);
 }
 
 void testReadPiece()
@@ -203,15 +226,29 @@ void testReadPiece()
     // Simulate picking a piece
     organizedHallValues[0][1] = randHall(NO_COLOUR);
     mapHallValuesToSensors();
-    Square expectedSquare = Square(0,1);    //No Piece, No colour
+    PinSim.reWritePin(hallRx[0]);
+    writeAdcRow(hallRx[0], rawHallValues[0]);
 
-    // Checkpick should catch this and update the pieces on the board
-    loop();
-    check(assert_equal('w', gameState), __FUNCTION__, __LINE__);
-    loop();
+    // No Piece, No colour
+    Square expectedSquare = Square(0, 1);
+
+    // Checkpick() function inside Arduino's loop should catch this and update the pieces on the board
+    loopArduino();
+
+    // Make sure the state changes to PIECE_LIFTED ('l')
     check(assert_equal('l', gameState), __FUNCTION__, __LINE__);
 
+    // Make sure the square in the board array is updated successfully
+    check(assert_equal(expectedSquare, currentBoard[0][1]), __FUNCTION__, __LINE__);
 }
+
+
+void testHighlightPawnValidMoves();
+void testHighlightKnightValidMoves();
+void testHighlightBishopValidMoves();
+void testHighlightRookValidMoves();
+void testHighlightQueenValidMoves();
+void testHighlightKingValidMoves();
 
 void printErrors()
 {
@@ -236,8 +273,8 @@ int main(void) {
     // mapHallValuesToSensors();
 
     // lightUp(1, 2);
-    // RWPins.printPinValues(anodes[1]);
-    // RWPins.printPinValues(cathodes[2]);
+    // PinSim.printPinValues(anodes[1]);
+    // PinSim.printPinValues(cathodes[2]);
 
     // // loop();
     // resetChessBoard();
@@ -256,14 +293,14 @@ int main(void) {
     // writeAdcRow(grx, rawHallValues[6]);
     // writeAdcRow(hrx, rawHallValues[7]);
 
-    // // RWPins.printPinValues(arx);
-    // // RWPins.printPinValues(brx);
-    // // RWPins.printPinValues(crx);
-    // // RWPins.printPinValues(drx);
-    // // RWPins.printPinValues(erx);
-    // // RWPins.printPinValues(frx);
-    // // RWPins.printPinValues(grx);
-    // // RWPins.printPinValues(hrx);
+    // // PinSim.printPinValues(arx);
+    // // PinSim.printPinValues(brx);
+    // // PinSim.printPinValues(crx);
+    // // PinSim.printPinValues(drx);
+    // // PinSim.printPinValues(erx);
+    // // PinSim.printPinValues(frx);
+    // // PinSim.printPinValues(grx);
+    // // PinSim.printPinValues(hrx);
     // readHallSensors();
     // cout << "\n\n" + Serial.output;
     }
