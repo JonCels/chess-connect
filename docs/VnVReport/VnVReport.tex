@@ -100,6 +100,7 @@
 2023-03-08 & Arshdeep Aujla & Added reflection appendix\\
 2023-03-08 & Alexander Van Kralingen & Completed Code Coverage Metrics section\\
 2023-03-08 & Rupinder Nagra & Added Unit Testing section\\
+2023-03-08 & Alexander Van Kralingen & Clean up merge conflicts\\
 \bottomrule
 \end{tabularx}
 
@@ -642,12 +643,6 @@ solutions is the implementation of a refresh to erase the stored data. This
 eliminates the data size issue. A second solution is the introduction of sockets
 which eliminates polling entirely and solves the data size and processing issues. 
 
-
-\begin{itemize}
-  \item Initially, the game was only allowed to start while white and black were on specific sides. Code changed to support either side as starting position.
-\end{itemize}
-  
-
 \section{Automated Testing}
 \subsection{C++}
   Since Arduino files are .ino and cannot be build using a g++ compiler, a build script has been created to convert the file to a .cpp filetype, compile it with
@@ -766,8 +761,6 @@ of our front-end application.
 \caption{Requirements Traceability Matrix}
 \end{longtable}
 		
-\section{Trace to Modules}		
-
 \section{Code Coverage Metrics}
 
 The code coverage was measured through a combination of Function coverage and Path coverage. Since the number of possible moves in a chess game is an 
