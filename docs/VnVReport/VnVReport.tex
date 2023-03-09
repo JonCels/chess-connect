@@ -35,6 +35,7 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage{geometry}
 
 \input{../Comments}
 \input{../Common}
@@ -89,6 +90,7 @@
 2023-03-04 & Arshdeep Aujla & Added Template for Nonfunctional Requirements\\
 2023-03-05 & Arshdeep Aujla & Added Table for functional requirements, traceability matrix\\
 2023-03-07 & Jonathan Cels & Added functional requirement test reports\\
+2023-03-07 & Alexander Van Kralingen & Added Arduino unit tests example\\
 \bottomrule
 \end{tabularx}
 
@@ -402,10 +404,8 @@ Precision and accuracy testing will be performed for revision 1, as though it is
   as well as several functions for interacting with the hardware.
 
   Rather than unit testing every function in normal operation, individual functions were tested to ensure correct outputs from simulated inputs. Integration 
-  with the system was completed physically with the Arduino exectuing the program. An example of the test for hardware is given below. The rest of the tests follow
-  a similar format of setting up the initial state, simulating an input and comparing the expected output.
+  with the system was completed physically with the Arduino exectuing the program. An example of the test for hardware reading is given below. 
 
-  
 \begin{lstlisting}
     void testReadPiece()
     {
@@ -417,7 +417,7 @@ Precision and accuracy testing will be performed for revision 1, as though it is
         PinSim.reWritePin(hallRx[0]); 
         writeAdcRow(hallRx[0], rawHallValues[0]); 
 
-        //No Piece, No colour 
+        // NO_PIECE, NO_COLOUR 
         Square expectedSquare = Square(0,1);    
 
         // Checkpick() function inside Arduino's loop should catch this,
@@ -432,14 +432,53 @@ Precision and accuracy testing will be performed for revision 1, as though it is
     }
 \end{lstlisting}
 
-testHighlightPawnValidMoves
-testHighlightKnightValidMoves
-testHighlightBishopValidMoves
-testHighlightRookValidMoves
-testHighlightQueenValidMoves
-testHighlightKingValidMoves
+  The rest of the tests follow a similar format of setting up the initial state, simulating an input and comparing the expected output. Several similar tests were 
+  performed with different piece types, positions and piece colours to cover edge cases. Only one test of each type in a group testing the same function with 
+  different inputs and outputs has been included in the table below.
+
+\newgeometry{left=0.5cm}
+\begin{table}[H]
+  \centering
+    \setlength{\leftmargini}{0cm}
+    \begin{tabular}{| >{\centering\arraybackslash}m{6cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3.5cm} | 
+        >{\centering\arraybackslash}m{3.5cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
+    \hline
+    \rowcolor[gray]{0.9}
+    Test & Input & Expected & Actual & Result\\
+    \hline
+    testReadPiece & random Hall sensor value between 140 and 310 (no piece reading) corresponding to square B1 & Square B1 resets piece value to NO\_PIECE & currentBoard[0][1] holds NO\_PIECE, NO\_COLOUR  & pass \\
+    \hline
+    testHighlightPawnValidMoves & Pawn lifted from starting position (A2) & A3, A4 light up & A3, A4 pins read output HIGH & pass \\
+    \hline
+    testHighlightKnightValidMoves & Knight lifted from starting position (B1)& A3, C3 light up & pins read output HIGH & pass \\
+    \hline
+    testHighlightBishopValidMoves & Bishop lifted from C1 after D2 Pawn to D3, and G7 Pawn to G5 & C2, E3, F4, G5 light up & C2, E3, F4, G5 pins read output HIGH & pass \\
+    \hline
+    testHighlightRookValidMoves & Rook lifted from & light up & pins read output HIGH & pass \\
+    \hline
+    testHighlightQueenValidMoves & Queen lifted from & light up & pins read output HIGH & pass \\
+    \hline
+    testHighlightKingValidMoves & King lifted from & light up & pins read output HIGH & pass \\
+    \hline
+    testPieceToChar & Piece(QUEEN, BLACK) & 'q' & 'q' & pass \\
+    \hline
+    testValidateFENString & King lifted from & {\scriptsize rnbqkbnr/pppp1ppp/ 4p3/8/4P3/5N2/ PPPP1PPP/RNBQKB1R w KQkq - 1 4} & {\scriptsize rnbqkbnr/pppp1ppp/ 4p3/8/4P3/5N2/ PPPP1PPP/RNBQKB1R w KQkq - 1 4} & pass \\
+    \hline
+    testGameStartValid & black piece on row 1 while all other pieces are white & false & false & pass \\
+    \hline
+    \end{tabular}
+  \caption{Unit Test functions}
+\end{table}
 
 \section{Changes Due to Testing}
+
+\begin{itemize}
+  \item Initially, the game was only allowed to start while white and black were on specific sides. Code changed to support either side as starting position.
+\end{itemize}
+  
 
 \section{Automated Testing}
 		
