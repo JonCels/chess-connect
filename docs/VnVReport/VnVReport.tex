@@ -37,6 +37,7 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{geometry}
+\usepackage{amsfonts}
 
 \input{../Comments}
 \input{../Common}
@@ -139,7 +140,7 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
 
 \begin{table}[H]
     \centering
-        \setlength{\leftmargini}{0.4cm}
+        \setlength{\leftmargini}{0cm}
         \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
             >{\centering\arraybackslash}m{2.5cm} | 
             >{\centering\arraybackslash}m{4cm} | 
@@ -168,7 +169,7 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
 
 \begin{table}[H]
     \centering
-        \setlength{\leftmargini}{0.4cm}
+        \setlength{\leftmargini}{0cm}
         \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
             >{\centering\arraybackslash}m{2.5cm} | 
             >{\centering\arraybackslash}m{4cm} | 
@@ -197,7 +198,7 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
 
 \begin{table}[H]
     \centering
-        \setlength{\leftmargini}{0.4cm}
+        \setlength{\leftmargini}{0cm}
         \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
             >{\centering\arraybackslash}m{2.5cm} | 
             >{\centering\arraybackslash}m{4cm} | 
@@ -318,7 +319,7 @@ Usability testing will be performed for revision 1, as though it is functional, 
 
 \begin{table}[H]
     \centering
-        \setlength{\leftmargini}{0.4cm}
+        \setlength{\leftmargini}{0cm}
         \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
             >{\centering\arraybackslash}m{2.5cm} | 
             >{\centering\arraybackslash}m{3cm} | 
@@ -350,7 +351,7 @@ the piece and the board's LED indicators turning on was measured and recorded.
 
 \begin{table}[H]
     \centering
-    \setlength{\leftmargini}{0.4cm}
+    \setlength{\leftmargini}{0cm}
     \begin{tabular}{| >{\centering\arraybackslash}m{4cm} | 
         >{\centering\arraybackslash}m{3cm} |
         >{\centering\arraybackslash}m{3cm} | 
@@ -388,7 +389,7 @@ required 0.5 second threshold, and all points are well below the maximum accepta
 
 \begin{table}[H]
 \centering
-    \setlength{\leftmargini}{0.4cm}
+    \setlength{\leftmargini}{0cm}
     \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
         >{\centering\arraybackslash}m{4cm} | 
         >{\centering\arraybackslash}m{3cm} | 
@@ -409,7 +410,7 @@ The following table holds data for NFT-8.
 
 \begin{table}[H]
     \centering
-    \setlength{\leftmargini}{0.4cm}
+    \setlength{\leftmargini}{0cm}
     \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
         >{\centering\arraybackslash}m{3cm} |
         >{\centering\arraybackslash}m{1.5cm} | 
@@ -453,7 +454,7 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 
 \begin{table}[H]
 \centering
-    \setlength{\leftmargini}{0.4cm}
+    \setlength{\leftmargini}{0cm}
     \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
         >{\centering\arraybackslash}m{2.5cm} | 
         >{\centering\arraybackslash}m{4cm} | 
@@ -474,7 +475,7 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 
 \begin{table}[H]
 \centering
-    \setlength{\leftmargini}{0.4cm}
+    \setlength{\leftmargini}{0cm}
     \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
         >{\centering\arraybackslash}m{2.5cm} | 
         >{\centering\arraybackslash}m{4cm} | 
@@ -689,8 +690,134 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 
 \section{Code Coverage Metrics}
 
+\paragraph{
+  The code coverage was measured through a combination of Function coverage and Path coverage. Since the number of possible moves in a chess game is an 
+  atronomically large number, complete path coverage would be close to 0\%. Therefore, only paths that produced a change in state (game start, switch to beginner
+  mode, draw game, etc.), significant change in values (piece taken, piece lifted, piece placed, etc.), or a standard operation of the game (following piece movement
+  from the board to the web app) were considered as code paths.
+}
+
+Arduino executes the following 2 functions during runtime:
+
+\begin{center}
+  setup() $\rightarrow$ loop()
+\end{center}
+
+All code paths occur in the loop() function. After pins are initialized and communication modules are connected, an example of the path through the
+code taken by one of actions is as follows:
+
+\begin{center}
+  gameCommand=BEGINNER\_MODE $\rightarrow$ readHallSensors() $\rightarrow$ identifyColors() $\rightarrow$ resetChessBoard() 
+  $\rightarrow$ gameState=PLAY\_GAME $\rightarrow$ updateBoard() $\rightarrow$ readHallSensors() $\rightarrow$ etc\dots
+\end{center}
+
+\begin{table}[H]
+  \centering
+  \setlength{\leftmargini}{0cm}
+      \begin{tabular}{| >{\centering\arraybackslash}m{2cm} | 
+          >{\centering\arraybackslash}m{3cm} |
+          >{\centering\arraybackslash}m{2cm} |
+          >{\centering\arraybackslash}m{2cm} |
+          >{\centering\arraybackslash}m{3cm} |}
+      \hline
+      \rowcolor[gray]{0.9}
+      Coverage & Number of Functions/Paths & Number Tested & \% Covered & Notes\\
+      \hline
+      Function & 61 &  &  & A list of all functions covered can be found in \hyperref[FunctionsCovered]{Appendix \ref{FunctionsCovered}} \\
+      \hline
+      Path &  &  &  & A list of all paths considered can be found in \hyperref[CodePaths]{Appendix \ref{CodePaths}} \\
+      \hline
+      \end{tabular}
+  \caption{Code Coverage Metrics}
+  \end{table}
+
+\pagebreak
 \appendix
-\section{Reflection Appendix}
+\section{Coverage Metrics Details}
+\subsection{Functions Covered}\label{FunctionsCovered}
+
+\begin{itemize}
+  \item[\checkmark] pieceToChar
+  \item[\checkmark] charToPiece
+  \item[\checkmark] detectNewPiece
+  \item[\checkmark] readHall
+  \item[\checkmark] readHallRow
+  \item[\checkmark] adjust
+  \item[$\times$] printHall
+  \item[\checkmark] setupHallSensors
+  \item[$\times$] setupLEDs
+  \item[\checkmark] readHallSensors
+  \item[\checkmark] resetChessBoard
+  \item LightAllPieces
+  \item[\checkmark] LightSquare
+  \item[\checkmark] movePiece
+  \item[$\times$] printColors
+  \item[$\times$] printBoard
+  \item[\checkmark] identifyColors
+  \item[$\times$] updateBoard
+  \item[\checkmark] gameStartValid
+  \item[$\times$] assignPieces
+  \item[\checkmark] rowToFen
+  \item[\checkmark] boardToFen
+  \item[\checkmark] sendFen
+  \item[\checkmark] checkPick
+  \item[\checkmark] checkPlace
+  \item[\checkmark] lightUp
+  \item[\checkmark] lightValidSquare
+  \item[\checkmark] flash
+  \item[\checkmark] highlightPawnMoves
+  \item[\checkmark] highlightKnightMoves
+  \item[\checkmark] highlightBishopMoves
+  \item[\checkmark] highlightRookMoves
+  \item[\checkmark] highlightQueenMoves
+  \item[\checkmark] highlightKingMoves
+  \item btComm
+  \item appendCharToStr
+  \item makeEngineBox
+  \item setEngineBoxText
+  \item makeStartButton
+  \item makeWhiteResignButton
+  \item makeDrawButton
+  \item makeBlackResignButton
+  \item makeGameModeButtons
+  \item selectNormalMode
+  \item selectEngineMode
+  \item selectBeginnerMode
+  \item resignGame
+  \item drawGame
+  \item startGame
+  \item[\checkmark] changeMode
+  \item[\checkmark] updateState
+  \item[\checkmark] parseWebPayload
+  \item[\checkmark] getData
+  \item[\checkmark] sendData
+  \item[\checkmark] App
+  \item[$\times$] errFunction
+  \item[$\times$] storeData
+  \item[\checkmark] writeArduino
+  \item[$\times$] btSerial.on("found")
+  \item[\checkmark] router.get('/')
+  \item[\checkmark] router.post('/')
+\end{itemize}
+
+\subsection{Code Paths}\label{CodePaths}
+
+% [$\times$]
+\bf{Paths considered}
+\begin{itemize}
+  \item[\checkmark] board start with no pieces
+  \item[\checkmark] board start with pieces in correct positions
+  \item[\checkmark] board start with pieces in wrong positions
+  \item[\checkmark] move white pawn from start
+  \item[\checkmark] move black bishop from random square
+  \item[\checkmark] move black knight from random square
+  \item[\checkmark] move white queen from random square
+  \item[\checkmark] move black king from random square
+  \item[$\times$] move piece to illegal spot
+  \item capture piece
+\end{itemize}
+
+\section{Reflection}
 The majority of the tests planned out in the VnV Plan were carried out as expected and reported in the VnV Report. 
 Some differences in the tests were due to a rework of the requirements, and modifying what is in scope for the first iteration of the project.\\
 
