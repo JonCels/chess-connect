@@ -95,6 +95,7 @@
 2023-03-07 & Jonathan Cels & Added functional requirement test reports\\
 2023-03-07 & Alexander Van Kralingen & Added Arduino unit tests example\\
 2023-03-08 & Jonathan Cels & Added nonfunctional requirement test reports\\
+2023-03-08 & Arshdeep Aujla & Added reflection appendix\\
 \bottomrule
 \end{tabularx}
 
@@ -131,8 +132,6 @@ Refer to SRS Section 1 for an extensive list of used symbols, abbreviations, and
 \newpage
 
 \pagenumbering{arabic}
-
-This document ...
 
 \section{Functional Requirements Evaluation}
 Refer to the VnV Plan for descriptions of the tests derived to evaluate the functional requirements.
@@ -692,7 +691,20 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 
 \appendix
 \section{Reflection Appendix}
+The majority of the tests planned out in the VnV Plan were carried out as expected and reported in the VnV Report. 
+Some differences in the tests were due to a rework of the requirements, and modifying what is in scope for the first iteration of the project.\\
 
+Two tests were not carried out as planned because the requirements changed since the creation of the VnV Plan. These tests were GA-3 and GI-2.
+These tests were both related to the changing the game state. Initially, functional requirements outlined that the user should be able to change the games mode
+regardless if they are currently in the active state or inactive state. On a second consideration, it was decided that the mode should only be able to be changed if
+the user is in the inactive mode. Therefore the tests GA-3 and GI-1 were no long applicable and not reported in this report. \\
+
+A few tests for functional and non-functional requirements were not completed due to the scope of the project changing. The requirements changed because 
+they were decided that they weren't mandatory for a working product. It was also not feasible for these requirements to be met during the timeline of the course.
+These tests that were descoped were ED-2, EA-2, BB-3, BA-1, NFT-6, NFT-7, and NFT-11.\\
+
+In a future VnV planning, emphasis will need to be made to ensure that the requirements are solidified before the tests are created, and that all of the requirements need to
+be feasible to be met during the project's timeline.
 
 \bibliographystyle{plainnat}
 
