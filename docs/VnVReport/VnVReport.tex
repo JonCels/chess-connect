@@ -71,7 +71,9 @@
   title=\lstname 
 }
 
-
+\newcounter{acnum}
+\newcommand{\actheacnum}{AC\theacnum}
+\newcommand{\acref}[1]{AC\ref{#1}}
 
 \begin{document}
 
@@ -492,7 +494,7 @@ Precision and accuracy testing will be performed for revision 1, as though it is
 \caption{Security Non-Functional Requirements Results}
 \end{table}
 
-\section{Unit Testing}
+\section{Unit Testing} \label{UnitTest}
 
   Creating unit tests for the Embedded software required several of Arduino's built in functionality to be simulated. This included serial communication functions,
   pin setup (input or output), reading from and writing to pins, and time delays. Additionally, binary values neded to be setup to simulate a sequence of events 
@@ -569,6 +571,7 @@ Precision and accuracy testing will be performed for revision 1, as though it is
     \end{tabular}
   \caption{Unit Test functions}
 \end{table}
+\restoregeometry
 
 \section{Changes Due to Testing}
 
@@ -578,6 +581,11 @@ Precision and accuracy testing will be performed for revision 1, as though it is
   
 
 \section{Automated Testing}
+\subsection{C++}
+  Since Arduino files are .ino and cannot be build using a g++ compiler, a build script has been created to convert the file to a .cpp filetype, compile it with
+  g++, execute it and watch the result. The error code is the number of errors which used by GitHub Actions to determine the success of all of the unit tests. Errors
+  are written to a log file and recorded for future reference. Unit tests are run in this method to verify changes to the code. Tests must all pass before merging
+  into main. Please refer to \hyperref[UnitTest]{Unit Testing} for details on the tests ran in build script.
 		
 \section{Trace to Requirements}
 

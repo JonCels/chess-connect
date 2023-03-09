@@ -3,6 +3,7 @@
 using namespace std;
 
 map<int, const char *> errors;
+int exitCode = 0;
 
 random_device rd;  // Will be used to obtain a seed for the random number engine
 mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
@@ -256,6 +257,7 @@ void printErrors()
         cout << "\n\nSUCCESS: All tests pass\n\n";
     }
     else {
+        exitCode = (int)errors.size();
         cout << "\n\n_______ERRORS:_______\n\n";
         for (const auto &elem : errors)
         {
