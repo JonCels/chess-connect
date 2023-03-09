@@ -259,61 +259,34 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-
 
 \subsection{Look and Feel}
 
-\begin{table}[H]
-\centering
-    \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
-    \hline
-    \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
-    \hline
-    NFT-1 &  & \\
-    \hline
-    \end{tabular}
-\caption{Look and Feel Non-Functional Requirements Results}
-\end{table}
+Look and feel testing will be performed for revision 1, as though it is functional, the product is not ready for external user testing.
 		
 \subsection{Usability and Humanity}
 
-\begin{table}[H]
-\centering
-    \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
-    \hline
-    \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
-    \hline
-    NFT-2 &  & \\
-    \hline
-    NFT-3 &  & \\
-    \hline
-    \end{tabular}
-\caption{Usability and Humanity Non-Functional Requirements Results}
-\end{table}
+Usability testing will be performed for revision 1, as though it is functional, the product is not ready for external user testing.
 
 \subsection{Performance}
 
 \begin{table}[H]
 \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
+    Test & Input & Expected & Actual & Notes & Result\\
     \hline
-    NFT-4 &  & \\
+    NFT-4 &  &  &  &  & Pass \\
     \hline
-    NFT-5 &  & \\
+    NFT-5 &  &  &  &  & Pass \\
     \hline
-    NFT-6 &  & \\
+    NFT-6 &  &  &  &  & Pass \\
     \hline
-    NFT-7 &  & \\
+    NFT-7 &  &  &  &  & Pass \\
     \hline
     \end{tabular}
 \caption{Performance Non-Functional Requirements Results}
@@ -324,14 +297,14 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-
 \begin{table}[H]
 \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
     \hline
-    \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
-    \hline
-    NFT-8 &  & \\
+    NFT-8 &  &  &  &  & Pass \\
     \hline
     \end{tabular}
 \caption{Health and Safety Non-Functional Requirements Results}
@@ -339,35 +312,24 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-
 
 \subsection{Precision and Accuracy}
 
-\begin{table}[H]
-\centering
-    \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
-    \hline
-    \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
-    \hline
-    NFT-9 &  & \\
-    \hline
-    \end{tabular}
-\caption{Precision and Accuracy Non-Functional Requirements Results}
-\end{table}
+Precision and accuracy testing will be performed for revision 1, as though it is functional, the product is not ready for external user testing.
 
 \subsection{Capacity}
 
 \begin{table}[H]
 \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
+    Test & Input & Expected & Actual & Notes & Result\\
     \hline
-    NFT-10 &  & \\
+    NFT-10 & A relatively complex chess FEN position was transmitted via Bluetooth to the web application while in engine mode. & The measured memory usage of the web application is less than 1GB. & The maximum measured memory value was 1187.4 MB, as measured by Windows task manager. & Memory usage will increase in future revisions, as more engine moves will be calculated at a higher depth. & Pass \\
     \hline
     \end{tabular}
 \caption{Capacity Non-Functional Requirements Results}
@@ -378,16 +340,19 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the non-
 \begin{table}[H]
 \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-      >{\centering\arraybackslash}m{4cm} | 
-      >{\centering\arraybackslash}m{6cm} |}
+    \begin{tabular}{| >{\centering\arraybackslash}m{1cm} | 
+        >{\centering\arraybackslash}m{2.5cm} | 
+        >{\centering\arraybackslash}m{4cm} | 
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{3cm} |
+        >{\centering\arraybackslash}m{1.5cm} |}
     \hline
     \rowcolor[gray]{0.9}
-    Test & Result & Notes\\
+    Test & Input & Expected & Actual & Notes & Result\\
     \hline
-    NFT-11 &  & \\
+    NFT-11 & Bluetooth connection to web application severed. & Web application alert that the connection has been lost. & N/A & Not implemented, planned in future revisions. & TBD \\
     \hline
-    NFT-12 &  & \\
+    NFT-12 & Power connection to system is severed, and then restored after a short time frame. & The game state data is stored in local memory and is unchanged after power is restored. & Game state data is properly stored. &  & Pass \\
     \hline
     \end{tabular}
 \caption{Security Non-Functional Requirements Results}
