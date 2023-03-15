@@ -5,3 +5,5 @@ xcopy %DUINO% %DUINOPP% /y
 g++ ArduinoControllerTest.cpp -o ArduinoControlertest.exe
 
 .\ArduinoControlertest.exe
+
+exit %ERRORLEVEL%
