@@ -34,6 +34,7 @@
 #define MUSTARD 0xED67
 #define DARKGRAY 0x41E8
 #define PINK 0xEAAA
+#define PURPLE 0x398A
 
 // Dark theme colours:
 #define DARK_BLUEGRAY 0x2947
@@ -43,6 +44,7 @@
 #define DARK_LIGHTBROWN 0xC448
 #define DARK_BROWNWHITE 0xE612
 #define DARK_PINK 0x4806
+#define DARK_PURPLE 0x1885
 
 // Main screen buttons
 #define MAIN_BUTTON_X 230
@@ -67,23 +69,23 @@
 #define OK_BUTTON_Y 80
 #define TERMINATION_TEXT_Y 100
 
-// Settings button
-#define SETTINGS_X 70
-#define SETTINGS_Y 70
+// Theme button
+#define THEME_BUTTON_X 70
+#define THEME_BUTTON_Y 70
 
 #define TOUCH_DELAY 50
 
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, A4);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 290);
 
-int BACKGROUND_COLOUR, PRIMARY_COLOUR, SECONDARY_COLOUR, TERTIARY_COLOUR, BORDER_COLOUR, TEXT_COLOUR_1, TEXT_COLOUR_2, TEXT_COLOUR_3, HIGHLIGHT_COLOUR, SETTINGS_COLOUR;
+int BACKGROUND_COLOUR, PRIMARY_COLOUR, SECONDARY_COLOUR, TERTIARY_COLOUR, QUATERNARY_COLOUR, BORDER_COLOUR, TEXT_COLOUR_1, TEXT_COLOUR_2, TEXT_COLOUR_3, HIGHLIGHT_COLOUR, THEME_BUTTON_COLOUR;
 
 //[topLeftX, topLeftY] for each button
 int mainScreenBounds[2][2] = {};
 int modeSelectScreenBounds[3][2] = {};
 int gameScreenBounds[3][2] = {};
 int okButtonBounds[1][2] = {};
-int settingsButtonBounds[1][2] = {};
+int themeButtonBounds[1][2] = {};
 int promotionScreenBounds[4][2] = {};
 
 char* currentTheme = "light";
@@ -498,9 +500,9 @@ void handleTouch(int x, int y) {
 		okButton();
 	}
 
-	//Settings button
-	if ((currentScreen != 3 && currentScreen != 5) && (x > settingsButtonBounds[0][0] && x < (settingsButtonBounds[0][0] + SETTINGS_X) && y > settingsButtonBounds[0][1] && (y < settingsButtonBounds[0][1] + SETTINGS_Y))) {
-		settingsButton();
+	//Theme button
+	if ((currentScreen != 3 && currentScreen != 5) && (x > themeButtonBounds[0][0] && x < (themeButtonBounds[0][0] + THEME_BUTTON_X) && y > themeButtonBounds[0][1] && (y < themeButtonBounds[0][1] + THEME_BUTTON_Y))) {
+		themeButton();
 	}	
 }
 
@@ -509,7 +511,7 @@ void makeMainScreen() {
 	int paddingX = 5;
 	int paddingY = 5;
 	int x = paddingX;
-	int y = 2*paddingY + SETTINGS_Y;
+	int y = 2*paddingY + THEME_BUTTON_Y;
 
 	tft.fillRect(x, y, MAIN_BUTTON_X + paddingX, MAIN_BUTTON_Y, SECONDARY_COLOUR);
 	tft.drawRect(x, y, MAIN_BUTTON_X + paddingX, MAIN_BUTTON_Y, BORDER_COLOUR);
@@ -552,62 +554,112 @@ void makeMainScreen() {
 	tft.setTextSize(5);
 	tft.print("Chess Connect");
 
-	makeSettingsButton();
+	makeThemeButton();
 }
 
 void makeModeSelectScreen() {
 	int paddingX = 5;
 	int paddingY = 5;
 	int x = 3*paddingX + MAIN_BUTTON_X;
-	int y = 3*paddingY + SETTINGS_Y + MODE_BUTTON_Y;
-	tft.fillRect(x, 2*paddingY + SETTINGS_Y, MODE_BUTTON_X, 3*MODE_BUTTON_Y + 2*paddingY, BACKGROUND_COLOUR);
+	int y = 3*paddingY + THEME_BUTTON_Y + MODE_BUTTON_Y;
+	tft.fillRect(x, 2*paddingY + THEME_BUTTON_Y, MODE_BUTTON_X, 3*MODE_BUTTON_Y + 2*paddingY, BACKGROUND_COLOUR);
 
 	if (currentUserMode == 0) {
-		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, HIGHLIGHT_COLOUR); //Highlight Beginner
+		//Highlight Beginner
+		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, HIGHLIGHT_COLOUR); 
+		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[0][0] = x;
+		modeSelectScreenBounds[0][1] = y - MODE_BUTTON_Y - 5;
+		int textInset = (MAIN_BUTTON_X - getPixelWidth("Beginner", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[0][0] + textInset, modeSelectScreenBounds[0][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_3);
+		tft.setTextSize(4);
+		tft.print("Beginner");
+		
 		tft.fillRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR); 
+		tft.drawRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[1][0] = x;
+		modeSelectScreenBounds[1][1] = y;
+		textInset = (MAIN_BUTTON_X - getPixelWidth("Normal", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[1][0] + textInset, modeSelectScreenBounds[1][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_1);
+		tft.setTextSize(4);
+		tft.print("Normal");
+		
 		tft.fillRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR); 
+		tft.drawRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[2][0] = x;
+		modeSelectScreenBounds[2][1] = y + MODE_BUTTON_Y + 5;
+		textInset = (MAIN_BUTTON_X - getPixelWidth("Engine", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[2][0] + textInset, modeSelectScreenBounds[2][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_1);
+		tft.setTextSize(4);
+		tft.print("Engine");
 	}
 	else if (currentUserMode == 1) {
+		//Highlight Normal
 		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR); 
-		tft.fillRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, HIGHLIGHT_COLOUR); //Highlight Normal
+		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[0][0] = x;
+		modeSelectScreenBounds[0][1] = y - MODE_BUTTON_Y - 5;
+		int textInset = (MAIN_BUTTON_X - getPixelWidth("Beginner", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[0][0] + textInset, modeSelectScreenBounds[0][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_1);
+		tft.setTextSize(4);
+		tft.print("Beginner");
+		
+		tft.fillRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, HIGHLIGHT_COLOUR);
+		tft.drawRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[1][0] = x;
+		modeSelectScreenBounds[1][1] = y;
+		textInset = (MAIN_BUTTON_X - getPixelWidth("Normal", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[1][0] + textInset, modeSelectScreenBounds[1][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_3);
+		tft.setTextSize(4);
+		tft.print("Normal");
+		
 		tft.fillRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR); 
+		tft.drawRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[2][0] = x;
+		modeSelectScreenBounds[2][1] = y + MODE_BUTTON_Y + 5;
+		textInset = (MAIN_BUTTON_X - getPixelWidth("Engine", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[2][0] + textInset, modeSelectScreenBounds[2][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_1);
+		tft.setTextSize(4);
+		tft.print("Engine");
 	}
 	else if (currentUserMode == 2) {
+		//Highlight Normal
 		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR); 
-		tft.fillRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR); 
-		tft.fillRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, HIGHLIGHT_COLOUR); //Highlight Engine
+		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[0][0] = x;
+		modeSelectScreenBounds[0][1] = y - MODE_BUTTON_Y - 5;
+		int textInset = (MAIN_BUTTON_X - getPixelWidth("Beginner", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[0][0] + textInset, modeSelectScreenBounds[0][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_1);
+		tft.setTextSize(4);
+		tft.print("Beginner");
+		
+		tft.fillRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR);
+		tft.drawRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[1][0] = x;
+		modeSelectScreenBounds[1][1] = y;
+		textInset = (MAIN_BUTTON_X - getPixelWidth("Normal", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[1][0] + textInset, modeSelectScreenBounds[1][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_1);
+		tft.setTextSize(4);
+		tft.print("Normal");
+		
+		tft.fillRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, HIGHLIGHT_COLOUR); 
+		tft.drawRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
+		modeSelectScreenBounds[2][0] = x;
+		modeSelectScreenBounds[2][1] = y + MODE_BUTTON_Y + 5;
+		textInset = (MAIN_BUTTON_X - getPixelWidth("Engine", 4)) / 2;
+		tft.setCursor(modeSelectScreenBounds[2][0] + textInset, modeSelectScreenBounds[2][1] + 24);
+		tft.setTextColor(TEXT_COLOUR_3);
+		tft.setTextSize(4);
+		tft.print("Engine");
 	}
-	
-	tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
-	modeSelectScreenBounds[0][0] = x;
-	modeSelectScreenBounds[0][1] = y - MODE_BUTTON_Y - 5;
-
-	tft.drawRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
-	modeSelectScreenBounds[1][0] = x;
-	modeSelectScreenBounds[1][1] = y;
-	
-	tft.drawRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
-	modeSelectScreenBounds[2][0] = x;
-	modeSelectScreenBounds[2][1] = y + MODE_BUTTON_Y + 5;
-	
-	int textInset = (MAIN_BUTTON_X - getPixelWidth("Beginner", 4)) / 2;
-	tft.setCursor(modeSelectScreenBounds[0][0] + textInset, modeSelectScreenBounds[0][1] + 24);
-	tft.setTextColor(TEXT_COLOUR_1);
-	tft.setTextSize(4);
-	tft.print("Beginner");
-
-	textInset = (MAIN_BUTTON_X - getPixelWidth("Normal", 4)) / 2;
-	tft.setCursor(modeSelectScreenBounds[1][0] + textInset, modeSelectScreenBounds[1][1] + 24);
-	tft.setTextColor(TEXT_COLOUR_3);
-	tft.setTextSize(4);
-	tft.print("Normal");
-
-	textInset = (MAIN_BUTTON_X - getPixelWidth("Engine", 4)) / 2;
-	tft.setCursor(modeSelectScreenBounds[2][0] + textInset, modeSelectScreenBounds[2][1] + 24);
-	tft.setTextColor(TEXT_COLOUR_1);
-	tft.setTextSize(4);
-	tft.print("Engine");
-
 	time = millis();
 }
 
@@ -634,6 +686,7 @@ void makeGameScreen() {
 	gameScreenBounds[2][0] = x;
 	gameScreenBounds[2][1] = y + 2*padding + 2*GAME_BUTTON_Y;
 
+	tft.fillRect(padding, startY, tft.width() - 3*padding - GAME_BUTTON_X, 3*GAME_BUTTON_Y + 2*padding, QUATERNARY_COLOUR);
 	tft.drawRect(padding, startY, tft.width() - 3*padding - GAME_BUTTON_X, 3*GAME_BUTTON_Y + 2*padding, BORDER_COLOUR);
 	
 	// Add text to buttons
@@ -646,6 +699,7 @@ void makeGameScreen() {
 	tft.setTextSize(3);
 	tft.setCursor(gameScreenBounds[0][0] + textInset, tft.getCursorY() + 3);
 	tft.print("(White)");
+	int endButton1Y = tft.getCursorY() + 3 + 3*8;
 
 	textInset = (GAME_BUTTON_X - getPixelWidth("Draw", 4)) / 2;
 	tft.setCursor(gameScreenBounds[1][0] + textInset, gameScreenBounds[1][1] + 25);
@@ -670,12 +724,19 @@ void makeGameScreen() {
 	tft.print(currMode);
 	tft.print(" Mode");
 
-	textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth("Engine Moves", 3)) / 2;
+	int paddingY = 10;
+	textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth("Calculated", 3)) / 2;
+	tft.setTextColor(TEXT_COLOUR_1);
 	tft.setTextSize(3);
-	tft.setCursor(padding + textInset, gameScreenBounds[0][1] + 15);
-	tft.drawFastHLine(padding, gameScreenBounds[0][1] + 50, tft.width() - 3*padding - GAME_BUTTON_X, BORDER_COLOUR);
-	tft.print("Engine Moves");
-	makeSettingsButton();
+	tft.setCursor(padding + textInset, gameScreenBounds[0][1] + paddingY);
+	tft.drawFastHLine(padding, gameScreenBounds[0][1] + GAME_BUTTON_Y - 1, tft.width() - 3*padding - GAME_BUTTON_X, BORDER_COLOUR); 
+	tft.println("Calculated");
+	textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth("Engine Move", 3)) / 2;
+	tft.setCursor(padding + textInset, tft.getCursorY() + 6);
+	tft.println("Engine Move");
+
+	drawEngineMove("Nd1xc3+");
+	makeThemeButton();
 }
 
 void makeEndScreen(char* msg) {
@@ -774,13 +835,13 @@ void makePromotionScreen() {
 	tft.print("Knight");
 }
 
-void makeSettingsButton() {
+void makeThemeButton() {
 	int padding = 5;
-	tft.fillRect(tft.width() - padding - SETTINGS_X, padding, SETTINGS_X, SETTINGS_Y, SETTINGS_COLOUR);
-	tft.drawRect(tft.width() - padding - SETTINGS_X, padding, SETTINGS_X, SETTINGS_Y, BORDER_COLOUR);
-	settingsButtonBounds[0][0] = tft.width() - padding - SETTINGS_X;
-	settingsButtonBounds[0][1] = padding;
-	tft.drawBitmap(settingsButtonBounds[0][0] + 5, settingsButtonBounds[0][1] + 5, epdBitmapBrush, 60, 60, TEXT_COLOUR_1);
+	tft.fillRect(tft.width() - padding - THEME_BUTTON_X, padding, THEME_BUTTON_X, THEME_BUTTON_Y, THEME_BUTTON_COLOUR);
+	tft.drawRect(tft.width() - padding - THEME_BUTTON_X, padding, THEME_BUTTON_X, THEME_BUTTON_Y, BORDER_COLOUR);
+	themeButtonBounds[0][0] = tft.width() - padding - THEME_BUTTON_X;
+	themeButtonBounds[0][1] = padding;
+	tft.drawBitmap(themeButtonBounds[0][0] + 5, themeButtonBounds[0][1] + 5, epdBitmapBrush, 60, 60, TEXT_COLOUR_1);
 }
 
 void drawStartMode() {	
@@ -802,6 +863,18 @@ void drawStartMode() {
 	int textInset = (MAIN_BUTTON_X - getPixelWidth(mode, 3)) / 2 + 2;
 	tft.setCursor(mainScreenBounds[0][0] + textInset, mainScreenBounds[0][1] + 160);
 	tft.print(mode);
+}
+
+void drawEngineMove(char* move) {
+	int padding = 5;
+	int textSize = getEngineMoveTextSize(move);	
+	int textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth(move, textSize)) / 2;
+	int textHeight = textSize*8;
+	int textInsetY = (tft.height() - (gameScreenBounds[0][1] + GAME_BUTTON_Y + padding) - textHeight) / 2;
+	tft.setCursor(padding + textInset, gameScreenBounds[0][1] + 78 + textInsetY);
+	tft.setTextSize(textSize);
+	tft.setTextColor(TEXT_COLOUR_1);
+	tft.print(move);
 }
 
 void startGameButton() {
@@ -904,29 +977,9 @@ void drawButton() {
 	makeEndScreen("Game Drawn by Agreement");
 }
 
-void checkmateWhite() {
-	currentScreen = 4;
-	makeEndScreen("White Wins by Checkmate");
-}
-
-void checkmateBlack() {
-	currentScreen = 4;
-	makeEndScreen("Black Wins by Checkmate");
-}
-
-void stalemate() {
-	currentScreen = 4;
-	makeEndScreen("Game Drawn by Stalemate");
-}
-
 void okButton() {
 	currentScreen = 0;
 	makeMainScreen();
-}
-
-void settingsButton() {
-	themeButton();
-	//makePromotionScreen();	
 }
 
 void themeButton() {
@@ -943,6 +996,21 @@ void promotionButton(char piece) {
 	//Change state of piece
 	currentScreen = 2;
 	makeGameScreen();
+}
+
+void checkmateWhite() {
+	currentScreen = 4;
+	makeEndScreen("White Wins by Checkmate");
+}
+
+void checkmateBlack() {
+	currentScreen = 4;
+	makeEndScreen("Black Wins by Checkmate");
+}
+
+void stalemate() {
+	currentScreen = 4;
+	makeEndScreen("Game Drawn by Stalemate");
 }
 
 void selectMode(int mode) {
@@ -984,24 +1052,26 @@ void changeTheme(char *theme) {
 		PRIMARY_COLOUR = TEAL;
 		SECONDARY_COLOUR = GREEN;
 		TERTIARY_COLOUR = DARKGRAY;
+		QUATERNARY_COLOUR = PURPLE;
 		BORDER_COLOUR = BLACK;
 		TEXT_COLOUR_1 = WHITE;
 		TEXT_COLOUR_2 = BLACK;
 		TEXT_COLOUR_3 = BLACK;
 		HIGHLIGHT_COLOUR = MUSTARD;
-		SETTINGS_COLOUR = PINK;
+		THEME_BUTTON_COLOUR = PINK;
 	}
 	else if (strcmp(theme, "dark") == 0) {
 		BACKGROUND_COLOUR = BLACK;
 		PRIMARY_COLOUR = DARK_BLUEGRAY;
 		SECONDARY_COLOUR = DARK_BROWN;
 		TERTIARY_COLOUR = DARK_GREEN;
+		QUATERNARY_COLOUR = DARK_PURPLE;
 		BORDER_COLOUR = DARK_TAN;
 		TEXT_COLOUR_1 = DARK_BROWNWHITE;
 		TEXT_COLOUR_2 = DARK_TAN;
 		TEXT_COLOUR_3 = BLACK;
 		HIGHLIGHT_COLOUR = DARK_LIGHTBROWN;
-		SETTINGS_COLOUR = DARK_PINK;
+		THEME_BUTTON_COLOUR = DARK_PINK;
 	}
 	currentTheme = theme;
 }
@@ -1029,4 +1099,18 @@ char* getSubstring(char* src, char* dest, int start, int end) {
 	memcpy(dest, &src[start], end - start);
 	dest[end - start - 1] = '\0';
 	return dest;
+}
+
+int getEngineMoveTextSize(char* move) {
+	int padding = 5;
+	int boxWidth = tft.width() - 3*padding - GAME_BUTTON_X;
+	int wordWidth, textSize;
+	for (int i = 9; i > 0; i--) {
+		wordWidth = getPixelWidth(move, i);
+		textSize = i - 1;
+		if (wordWidth < boxWidth) {
+			break;
+		}
+	}
+	return textSize;
 }
