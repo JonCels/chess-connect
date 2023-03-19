@@ -735,7 +735,18 @@ void makeGameScreen() {
 	tft.setCursor(padding + textInset, tft.getCursorY() + 6);
 	tft.println("Engine Move");
 
-	drawEngineMove("Nd1xc3+");
+	if (currentUserMode == 2) {
+		drawEngineMove("Nd1xc3+");		
+	}
+	else {
+		textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth("N/A", 5)) / 2;
+		int textInsetY = (tft.height() - (gameScreenBounds[0][1] + GAME_BUTTON_Y + padding) - 5*8) / 2;
+		tft.setTextSize(5);
+		tft.setTextColor(TEXT_COLOUR_1);
+		tft.setCursor(padding + textInset, gameScreenBounds[0][1] + GAME_BUTTON_Y + textInsetY);
+		tft.print("N/A");
+	}
+	
 	makeThemeButton();
 }
 
@@ -871,7 +882,9 @@ void drawEngineMove(char* move) {
 	int textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth(move, textSize)) / 2;
 	int textHeight = textSize*8;
 	int textInsetY = (tft.height() - (gameScreenBounds[0][1] + GAME_BUTTON_Y + padding) - textHeight) / 2;
-	tft.setCursor(padding + textInset, gameScreenBounds[0][1] + 78 + textInsetY);
+	Serial.println(textSize);
+	Serial.println(textInsetY);
+	tft.setCursor(padding + textInset, gameScreenBounds[0][1] + GAME_BUTTON_Y + textInsetY);
 	tft.setTextSize(textSize);
 	tft.setTextColor(TEXT_COLOUR_1);
 	tft.print(move);
