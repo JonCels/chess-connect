@@ -75,6 +75,8 @@
 
 #define TOUCH_DELAY 50
 
+SoftwareSerial BTserial(10, 11); //TX, RX
+
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, A4);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 290);
 
@@ -91,7 +93,13 @@ int promotionScreenBounds[4][2] = {};
 char* currentTheme = "light";
 int currentScreen = 0; //0 for main screen, 1 for mode select screen, 2 for game screen, 3 for promotion screen, 4 for termination screen, 5 for error screen
 int currentUserMode = 1; //0 for beginner mode, 1 for normal mode, 2 for engine mode
+char currentGameState = 'n'; //n for not active, s for started (game active), b for black resign, w for white resign, d for draw by agreement
+char currentFen[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; //Starting position
 double time = 0.0;
+char inputStr[100] = "";
+char* currentEngineMove = "N/A";
+int currentMoveCounter = 1;
+char* lastColourMove = "w";
 
 // Bitmap icons
 // 'brush', 60x60px
@@ -414,6 +422,7 @@ const unsigned char epdBitmapRook [] PROGMEM = {
 
 void setup() {
 	Serial.begin(9600);
+	BTserial.begin(9600);
 	tft.begin(tft.readID());
 	changeTheme(currentTheme);
 	tft.setRotation(1);
@@ -432,6 +441,7 @@ void loop() {
 		int y = tft.height() - p.x;
 		handleTouch(x, y);
 	}
+	btComm();
 }
 
 void handleTouch(int x, int y) {
@@ -446,17 +456,17 @@ void handleTouch(int x, int y) {
 	}
 
 	//Beginner mode button (mode select screen)
-	if (currentScreen == 1 && (millis() > time + TOUCH_DELAY) && (x > modeSelectScreenBounds[0][0] && x < (modeSelectScreenBounds[0][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[0][1] && y < (modeSelectScreenBounds[0][1] + MODE_BUTTON_Y))) {
+	if (currentScreen == 1 && ((millis() - time) > TOUCH_DELAY) && (x > modeSelectScreenBounds[0][0] && x < (modeSelectScreenBounds[0][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[0][1] && y < (modeSelectScreenBounds[0][1] + MODE_BUTTON_Y))) {
 		selectMode(0);
 	}
 
 	//Normal mode button (mode select screen)
-	if (currentScreen == 1 && (millis() > time + TOUCH_DELAY) && (x > modeSelectScreenBounds[1][0] && x < (modeSelectScreenBounds[1][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[1][1] && y < (modeSelectScreenBounds[1][1] + MODE_BUTTON_Y))) {
+	if (currentScreen == 1 && ((millis() - time) > TOUCH_DELAY) && (x > modeSelectScreenBounds[1][0] && x < (modeSelectScreenBounds[1][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[1][1] && y < (modeSelectScreenBounds[1][1] + MODE_BUTTON_Y))) {
 		selectMode(1);
 	}
 
 	//Engine mode button (mode select screen)
-	if (currentScreen == 1 && (millis() > time + TOUCH_DELAY) && (x > modeSelectScreenBounds[2][0] && x < (modeSelectScreenBounds[2][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[2][1] && y < (modeSelectScreenBounds[2][1] + MODE_BUTTON_Y))) {
+	if (currentScreen == 1 && ((millis() - time) > TOUCH_DELAY) && (x > modeSelectScreenBounds[2][0] && x < (modeSelectScreenBounds[2][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[2][1] && y < (modeSelectScreenBounds[2][1] + MODE_BUTTON_Y))) {
 		selectMode(2);
 	}
 
@@ -504,6 +514,32 @@ void handleTouch(int x, int y) {
 	if ((currentScreen != 3 && currentScreen != 5) && (x > themeButtonBounds[0][0] && x < (themeButtonBounds[0][0] + THEME_BUTTON_X) && y > themeButtonBounds[0][1] && (y < themeButtonBounds[0][1] + THEME_BUTTON_Y))) {
 		themeButton();
 	}	
+}
+
+void btComm() {
+	// Receive data from external device
+	if (BTserial.available()) {
+		char c = BTserial.read(); //Comes in form "fen@code@code\r\n"
+		if (c == -1) {
+			Serial.println("nothing");
+			return;
+		}
+		if (c == '\n') {
+			parseWebPayload(inputStr);
+			memset(inputStr, 0, 10);
+		}
+		else if (c == '\r') {
+			;			
+		}
+		else {
+			strncat(inputStr, &c, 1);
+		}
+	}
+
+	// Send data to external device
+	if (Serial.available()) {
+		BTserial.write(Serial.read());
+	}
 }
 
 void makeMainScreen() {
@@ -720,8 +756,8 @@ void makeGameScreen() {
 	tft.setCursor(5, 20);
 	tft.setTextColor(TEXT_COLOUR_2);
 	tft.setTextSize(5);
-	char* currMode = getUserMode(currentUserMode);
-	tft.print(currMode);
+	char* currModeStr = getUserModeStr(currentUserMode);
+	tft.print(currModeStr);
 	tft.print(" Mode");
 
 	int paddingY = 10;
@@ -736,7 +772,7 @@ void makeGameScreen() {
 	tft.println("Engine Move");
 
 	if (currentUserMode == 2) {
-		drawEngineMove("Nd1xc3+");		
+		drawEngineMove(currentEngineMove);		
 	}
 	else {
 		textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth("N/A", 5)) / 2;
@@ -856,7 +892,7 @@ void makeThemeButton() {
 }
 
 void drawStartMode() {	
-	char* tmp = getUserMode(currentUserMode);
+	char* tmp = getUserModeStr(currentUserMode);
 	char mode[11] = {};
 	if (strcmp(tmp, "Beginner") == 0) {
 		strcat(mode, "(");
@@ -877,20 +913,23 @@ void drawStartMode() {
 }
 
 void drawEngineMove(char* move) {
-	int padding = 5;
-	int textSize = getEngineMoveTextSize(move);	
-	int textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth(move, textSize)) / 2;
-	int textHeight = textSize*8;
-	int textInsetY = (tft.height() - (gameScreenBounds[0][1] + GAME_BUTTON_Y + padding) - textHeight) / 2;
-	Serial.println(textSize);
-	Serial.println(textInsetY);
-	tft.setCursor(padding + textInset, gameScreenBounds[0][1] + GAME_BUTTON_Y + textInsetY);
-	tft.setTextSize(textSize);
-	tft.setTextColor(TEXT_COLOUR_1);
-	tft.print(move);
+	if (currentScreen == 2) {
+		int padding = 5;
+		int textSize = getEngineMoveTextSize(move);	
+		int textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth(move, textSize)) / 2;
+		int textHeight = textSize*8;
+		int textInsetY = (tft.height() - (gameScreenBounds[0][1] + GAME_BUTTON_Y + padding) - textHeight) / 2;
+		tft.setCursor(padding + textInset, gameScreenBounds[0][1] + GAME_BUTTON_Y + textInsetY);
+		tft.setTextSize(textSize);
+		tft.setTextColor(TEXT_COLOUR_1);
+		tft.print(move);
+	}
+	strcpy(currentEngineMove, move);
 }
 
 void startGameButton() {
+	//updateState(currentFen, 's', getUserModeChar(currentUserMode));
+	updateState("8/4kN2/4N1Bq/1P1P1KP1/P5p1/2P1bR2/6p1/2r5 w - - 0 1", 's', getUserModeChar(currentUserMode));
 	currentScreen = 2;
 	makeGameScreen();
 }
@@ -976,16 +1015,19 @@ void engineModeButton(bool active) {
 }
 
 void resignWhiteButton() {
+	updateState(currentFen, 'w', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("Black Wins by Resignation");
 }
 
 void resignBlackButton() {
+	updateState(currentFen, 'b', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("White Wins by Resignation");
 }
 
 void drawButton() {
+	updateState(currentFen, 'd', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("Game Drawn by Agreement");
 }
@@ -1055,8 +1097,42 @@ void refreshScreen() {
 	}
 }
 
+void updateState(char* FEN, char gameState, char userMode) {
+	char stateData[100] = "";
+	strncat(stateData, FEN, strlen(FEN));
+	strncat(stateData, "@", 1);
+	strncat(stateData, &gameState, 1);
+	strncat(stateData, "@", 1);
+	strncat(stateData, &userMode, 1);
+	strncat(stateData, "\r", 1);
+
+	strcpy(currentFen, FEN);
+	currentGameState = gameState;
+	currentUserMode = getUserModeInt(userMode);
+	
+	sendBluetoothData(stateData);
+}
+
 void resetState() {
 	currentUserMode = 1;
+}
+
+void sendBluetoothData(char* stateData) {
+	int len = strlen(stateData);
+	for (int i = 0; i < len; i++) {
+		BTserial.write(stateData[i]);
+	}
+}
+
+void parseWebPayload(char* webData) {
+	Serial.println(webData);
+	char* engineMove = strtok(webData, "@"); //eg. Nf3
+	char* webCode = strtok(NULL, "@"); //eg. 'w12', meaning white just moved, and the fullmove number is 12. Can only be 'w' (white), 'b' (black), or 'a' (filler) 
+	char* gameState = strtok(NULL, "@"); //eg. 'c' checkmate, 's' stalemate', 'n' nothing
+
+	Serial.println(engineMove);
+	Serial.println(webCode);
+	Serial.println(gameState);
 }
 
 void changeTheme(char *theme) {
@@ -1064,8 +1140,8 @@ void changeTheme(char *theme) {
 		BACKGROUND_COLOUR = LIGHTBROWN;
 		PRIMARY_COLOUR = TEAL;
 		SECONDARY_COLOUR = GREEN;
-		TERTIARY_COLOUR = DARKGRAY;
-		QUATERNARY_COLOUR = PURPLE;
+		TERTIARY_COLOUR = PURPLE;
+		QUATERNARY_COLOUR = DARKGRAY;
 		BORDER_COLOUR = BLACK;
 		TEXT_COLOUR_1 = WHITE;
 		TEXT_COLOUR_2 = BLACK;
@@ -1089,7 +1165,7 @@ void changeTheme(char *theme) {
 	currentTheme = theme;
 }
 
-char* getUserMode(int mode) {
+char* getUserModeStr(int mode) {
 	if (mode == 0) {
 		return "Beginner";
 	}
@@ -1099,6 +1175,30 @@ char* getUserMode(int mode) {
 	else if (mode == 2) {
 		return "Engine";
 	}
+}
+
+char getUserModeChar(int mode) {
+	if (mode == 0) {
+		return 'b';
+	}
+	else if (mode == 1) {
+		return 'n';
+	}
+	else if (mode == 2) {
+		return 'e';
+	}
+}
+
+int getUserModeInt(char mode) {
+	if (mode == 'b') {
+		return 0;
+	}
+	else if (mode == 'n') {
+		return 1;
+	}
+	else if (mode == 'e') {
+		return 2;
+	}	
 }
 
 int getPixelWidth(char* str, int textSize) {
