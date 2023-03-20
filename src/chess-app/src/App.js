@@ -4,6 +4,7 @@ import Chessboard from 'chessboardjsx';
 import { Chess } from 'chess.js'
 import { calculateBestMove, initGame } from "chess-ai";
 import axios from "axios";
+import { Grid } from '@mui/material';
 
 const getData = (setData) => {
   axios.get("http://localhost:3000/").then(data => {
@@ -19,26 +20,9 @@ const sendData = (data) => {
 const container = {
   marginTop: "6rem",
   display: "flex",
-  justifyContent: "space-around",
+  justifyContent: "center",
   alignItems: "center"
 }
-
-// function lichessCloudEval(fen) {
-//   return new Promise(function (resolve, reject) {
-//     fetch("https://lichess.org/api/cloud-eval?fen=" + fen + "&multiPv=" + "3")
-//       .then((response) => response.json())
-//       .then((data) => resolve(data["pvs"]));
-//   }
-// )}
-
-// async function getTopThree(fenString) {
-//   const topThree = []
-//   const moveVariations = await lichessCloudEval(fenString);
-//   for(let i = 0; i < moveVariations.length; i++) {
-//     topThree.push(moveVariations[i]["moves"].split(" ").shift())
-//   }
-//   return topThree
-// }
 
 function App() {
 
@@ -81,9 +65,15 @@ function App() {
     gameOutput = "White Resigns!"
   } else if (gameState == "b") {
     gameOutput = "Black Resigns!"
+  } else if (gameState == "n") {
+    gameOutput = "Empty Game State"
+  } else if (gameState == "s") {
+    gameOutput = "Normal Position"
   } else {
     gameOutput = "";
   }
+
+  // getData(setData)
   
   if (!intervalSet) {
     const receivingInterval = setInterval(() => getData(setData), 500)
@@ -91,13 +81,19 @@ function App() {
     setIntervalSet(true)
   }
 
-  // console.log(getTopThree(fenString))
-  // const [fen, setFen] = useState(fenString)
-
   return (
     <div className="App" style={container}>
-      <Chessboard position={fenString}/> 
-      <h3>{gameOutput}</h3>
+      <Grid container spacing={2}>
+        <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} item xs={3}>
+          <h1 className="font-link">Chess Connect</h1>
+        </Grid>
+        <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} item xs={6}>
+          <Chessboard position={fenString}/> 
+        </Grid>
+        <Grid style={{ display: 'flex', alignItems: 'center' }} item xs={3}>
+          <h3 className="font-link">{gameOutput}</h3>
+        </Grid>
+      </Grid>
     </div>
   );
 }
