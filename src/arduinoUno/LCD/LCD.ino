@@ -64,6 +64,10 @@
 #define PROMOTION_Y 100
 #define ICON_SIZE 90
 
+// Confirmation screen buttons
+#define YES_NO_X 120
+#define YES_NO_Y 80
+
 // End/error screen buttons
 #define OK_BUTTON_X 100
 #define OK_BUTTON_Y 80
@@ -89,17 +93,17 @@ int gameScreenBounds[3][2] = {};
 int okButtonBounds[1][2] = {};
 int themeButtonBounds[1][2] = {};
 int promotionScreenBounds[4][2] = {};
+int confirmationScreenBounds[2][2] = {};
 
 char* currentTheme = "light";
-int currentScreen = 0; //0 for main screen, 1 for mode select screen, 2 for game screen, 3 for promotion screen, 4 for termination screen, 5 for error screen
+int currentScreen = 0; //0 for main screen, 1 for mode select screen, 2 for game screen, 3 for promotion screen, 4 for termination screen, 5 for error screen, 6 for confirmation screen
 int currentUserMode = 1; //0 for beginner mode, 1 for normal mode, 2 for engine mode
 char currentGameState = 'n'; //n for not active, s for started (game active), b for black resign, w for white resign, d for draw by agreement
 char currentFen[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; //Starting position
 double time = 0.0;
 char inputStr[100] = "";
 char* currentEngineMove = "N/A";
-int currentMoveCounter = 1;
-char* lastColourMove = "w";
+char selectedPromotion = 'Q';
 
 // Bitmap icons
 // 'brush', 60x60px
@@ -487,22 +491,26 @@ void handleTouch(int x, int y) {
 
 	//Queen button (promotion screen)
 	if (currentScreen == 3 && (x > promotionScreenBounds[0][0] && x < (promotionScreenBounds[0][0] + PROMOTION_COMMON_X) && y > promotionScreenBounds[0][1] && (y < promotionScreenBounds[0][1] + PROMOTION_Y))) {
-		promotionButton('Q');
+		selectedPromotion = 'Q';
+    promotionButton(selectedPromotion);
 	}
 
 	//Rook button (promotion screen)
 	if (currentScreen == 3 && (x > promotionScreenBounds[1][0] && x < (promotionScreenBounds[1][0] + PROMOTION_RARE_X) && y > promotionScreenBounds[1][1] && (y < promotionScreenBounds[1][1] + PROMOTION_Y))) {
-		promotionButton('R');
+    currentScreen = 6;
+    makeConfirmationScreen('R');
 	}
 
 	//Bishop button (promotion screen)
 	if (currentScreen == 3 && (x > promotionScreenBounds[2][0] && x < (promotionScreenBounds[2][0] + PROMOTION_RARE_X) && y > promotionScreenBounds[2][1] && (y < promotionScreenBounds[2][1] + PROMOTION_Y))) {
-		promotionButton('B');
+		currentScreen = 6;
+    makeConfirmationScreen('B');
 	}
 
 	//Knight button (promotion screen)
 	if (currentScreen == 3 && (x > promotionScreenBounds[3][0] && x < (promotionScreenBounds[3][0] + PROMOTION_COMMON_X) && y > promotionScreenBounds[3][1] && (y < promotionScreenBounds[3][1] + PROMOTION_Y))) {
-		promotionButton('N');
+		currentScreen = 6;
+    makeConfirmationScreen('N');
 	}
 
 	//OK button (end screen)
@@ -512,14 +520,25 @@ void handleTouch(int x, int y) {
 
 	//Theme button
 	if ((currentScreen != 3 && currentScreen != 5) && (x > themeButtonBounds[0][0] && x < (themeButtonBounds[0][0] + THEME_BUTTON_X) && y > themeButtonBounds[0][1] && (y < themeButtonBounds[0][1] + THEME_BUTTON_Y))) {
-		themeButton();
+		//themeButton();
+    makePromotionScreen();
 	}	
+
+  //Yes confirmation
+  if (currentScreen == 6 && ((millis() - time) > TOUCH_DELAY) && (x > confirmationScreenBounds[0][0] && x < (confirmationScreenBounds[0][0] + YES_NO_X) && y > confirmationScreenBounds[0][1] && (y < confirmationScreenBounds[0][1] + YES_NO_Y))) {
+    promotionButton(selectedPromotion);
+  }
+
+  //No confirmation
+  if (currentScreen == 6 && ((millis() - time) > TOUCH_DELAY) && (x > confirmationScreenBounds[1][0] && x < (confirmationScreenBounds[1][0] + YES_NO_X) && y > confirmationScreenBounds[1][1] && (y < confirmationScreenBounds[1][1] + YES_NO_Y))) {
+    makePromotionScreen();
+  }
 }
 
 void btComm() {
 	// Receive data from external device
 	if (BTserial.available()) {
-		char c = BTserial.read(); //Comes in form "fen@code@code\r\n"
+		char c = BTserial.read(); // Comes in form "FEN@code@code\r\n"
 		if (c == -1) {
 			Serial.println("nothing");
 			return;
@@ -601,7 +620,7 @@ void makeModeSelectScreen() {
 	tft.fillRect(x, 2*paddingY + THEME_BUTTON_Y, MODE_BUTTON_X, 3*MODE_BUTTON_Y + 2*paddingY, BACKGROUND_COLOUR);
 
 	if (currentUserMode == 0) {
-		//Highlight Beginner
+		// Highlight Beginner
 		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, HIGHLIGHT_COLOUR); 
 		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
 		modeSelectScreenBounds[0][0] = x;
@@ -633,7 +652,7 @@ void makeModeSelectScreen() {
 		tft.print("Engine");
 	}
 	else if (currentUserMode == 1) {
-		//Highlight Normal
+		// Highlight Normal
 		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR); 
 		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
 		modeSelectScreenBounds[0][0] = x;
@@ -665,7 +684,7 @@ void makeModeSelectScreen() {
 		tft.print("Engine");
 	}
 	else if (currentUserMode == 2) {
-		//Highlight Normal
+		// Highlight Engine
 		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR); 
 		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
 		modeSelectScreenBounds[0][0] = x;
@@ -753,13 +772,16 @@ void makeGameScreen() {
 	tft.setCursor(gameScreenBounds[0][0] + textInset, tft.getCursorY() + 3);
 	tft.print("(Black)");
 
-	tft.setCursor(5, 20);
 	tft.setTextColor(TEXT_COLOUR_2);
 	tft.setTextSize(5);
 	char* currModeStr = getUserModeStr(currentUserMode);
-	tft.print(currModeStr);
-	tft.print(" Mode");
-
+  char fullModeStr[strlen(currModeStr) + 6] = {};
+  strcat(fullModeStr, currModeStr);
+  strcat(fullModeStr, " Mode");
+  textInset = ((tft.width() - 2*padding - THEME_BUTTON_X) - getPixelWidth(fullModeStr, 5)) / 2;
+  tft.setCursor(padding + textInset, 20);
+	tft.print(fullModeStr);
+	
 	int paddingY = 10;
 	textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth("Calculated", 3)) / 2;
 	tft.setTextColor(TEXT_COLOUR_1);
@@ -891,6 +913,59 @@ void makeThemeButton() {
 	tft.drawBitmap(themeButtonBounds[0][0] + 5, themeButtonBounds[0][1] + 5, epdBitmapBrush, 60, 60, TEXT_COLOUR_1);
 }
 
+void makeConfirmationScreen(char piece) {
+  selectedPromotion = piece;
+	tft.fillScreen(BACKGROUND_COLOUR);
+  int padding = 10;
+	int x = (tft.width() - 2*YES_NO_X - padding) / 2;
+	int y = 2 * tft.height() / 3;
+	tft.fillRect(x, y, YES_NO_X, YES_NO_Y, PRIMARY_COLOUR);
+	tft.drawRect(x, y, YES_NO_X, YES_NO_Y, BORDER_COLOUR);
+	confirmationScreenBounds[0][0] = x;
+	confirmationScreenBounds[0][1] = y;
+
+  int textInset = (YES_NO_X - getPixelWidth("Yes", 5)) / 2;  
+	tft.setCursor(x + textInset, y + 22);
+	tft.setTextColor(TEXT_COLOUR_1);
+	tft.setTextSize(5);
+	tft.print("Yes");
+
+  x += YES_NO_X + padding;
+  tft.fillRect(x, y, YES_NO_X, YES_NO_Y, SECONDARY_COLOUR);
+	tft.drawRect(x, y, YES_NO_X, YES_NO_Y, BORDER_COLOUR);
+	confirmationScreenBounds[1][0] = x;
+	confirmationScreenBounds[1][1] = y;
+
+  textInset = (YES_NO_X - getPixelWidth("No", 5)) / 2;  
+	tft.setCursor(x + textInset, y + 22);
+	tft.setTextColor(TEXT_COLOUR_1);
+	tft.setTextSize(5);
+	tft.print("No");
+
+	tft.setTextColor(TEXT_COLOUR_2);
+	tft.setTextSize(5);
+
+  x = (tft.width() - getPixelWidth("Promote to ", 5)) / 2;
+	tft.setCursor(x, TERMINATION_TEXT_Y);
+	tft.println("Promote to ");
+
+  char confirmationText[10] = "a "; 
+  if (piece == 'N') { 
+    strcat(confirmationText, "Knight?");
+  }
+  else if (piece == 'R') { 
+    strcat(confirmationText, "Rook?");
+  }
+  else if (piece == 'B') {
+    strcat(confirmationText, "Bishop?");
+  }
+
+	x = (tft.width() - getPixelWidth(confirmationText, 5)) / 2;
+	tft.setCursor(x, tft.getCursorY());
+	tft.println(confirmationText);
+  time = millis();
+}
+
 void drawStartMode() {	
 	char* tmp = getUserModeStr(currentUserMode);
 	char mode[11] = {};
@@ -928,8 +1003,8 @@ void drawEngineMove(char* move) {
 }
 
 void startGameButton() {
-	//updateState(currentFen, 's', getUserModeChar(currentUserMode));
-	updateState("8/4kN2/4N1Bq/1P1P1KP1/P5p1/2P1bR2/6p1/2r5 w - - 0 1", 's', getUserModeChar(currentUserMode));
+	updateState(currentFen, 's', getUserModeChar(currentUserMode));
+	//updateState("8/4kN2/4N1Bq/1P1P1KP1/P5p1/2P1bR2/6p1/2r5 w - - 0 1", 's', getUserModeChar(currentUserMode));
 	currentScreen = 2;
 	makeGameScreen();
 }
@@ -1015,13 +1090,13 @@ void engineModeButton(bool active) {
 }
 
 void resignWhiteButton() {
-	updateState(currentFen, 'w', getUserModeChar(currentUserMode));
+	updateState(currentFen, 'b', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("Black Wins by Resignation");
 }
 
 void resignBlackButton() {
-	updateState(currentFen, 'b', getUserModeChar(currentUserMode));
+	updateState(currentFen, 'w', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("White Wins by Resignation");
 }
@@ -1054,16 +1129,19 @@ void promotionButton(char piece) {
 }
 
 void checkmateWhite() {
+  updateState(currentFen, 'w', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("White Wins by Checkmate");
 }
 
 void checkmateBlack() {
+  updateState(currentFen, 'b', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("Black Wins by Checkmate");
 }
 
 void stalemate() {
+  updateState(currentFen, 'd', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("Game Drawn by Stalemate");
 }
@@ -1124,15 +1202,49 @@ void sendBluetoothData(char* stateData) {
 	}
 }
 
-void parseWebPayload(char* webData) {
-	Serial.println(webData);
+void parseWebPayload(char* webData) { //eg. "Nf3@w12@n" or "a@a@n" if not in engine mode
 	char* engineMove = strtok(webData, "@"); //eg. Nf3
 	char* webCode = strtok(NULL, "@"); //eg. 'w12', meaning white just moved, and the fullmove number is 12. Can only be 'w' (white), 'b' (black), or 'a' (filler) 
 	char* gameState = strtok(NULL, "@"); //eg. 'c' checkmate, 's' stalemate', 'n' nothing
 
-	Serial.println(engineMove);
-	Serial.println(webCode);
-	Serial.println(gameState);
+  char* turnColour;
+  getSubstring(webCode, turnColour, 0, 1);
+  char* moveNumStr;
+  getSubstring(webCode, moveNumStr, 1, strlen(webCode));
+  int moveNum = (atoi(moveNumStr) - 1) * 2;
+  moveNum += (strcmp(turnColour, "b") == 0) ? 1 : 0;
+
+  if (moveNum == 0) { // Starting position
+    currentEngineMove = "N/A";
+    return;
+  }
+
+  if (strcmp(gameState, "c") == 0) { // Checkmate
+    if (strcmp(turnColour, "w") == 0) { // White win
+      checkmateWhite();
+    }
+    else if (strcmp(turnColour, "b") == 0) {
+      checkmateBlack();
+    }
+    return;
+  }
+  else if (strcmp(gameState, "s") == 0) { // Stalemate
+    stalemate();
+    return;
+  }
+
+  if (strcmp(engineMove, "a") == 0) { // Not in engine mode
+    currentEngineMove = "N/A";
+    return;
+  }  
+
+  if (moveNum == 0) {
+    return;
+  }
+
+  if (strcmp(engineMove, currentEngineMove) != 0) { // Display engine move
+    drawEngineMove(engineMove); 
+  } 
 }
 
 void changeTheme(char *theme) {
