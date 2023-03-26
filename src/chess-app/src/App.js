@@ -47,11 +47,11 @@ function App() {
     let index = fenString.indexOf(" ")
     sendData(calculatedMove + "@" + fenString[index + 1] + fenString[fenString.length-1] + "@n" + "\r\n");
   } else if (chess.in_checkmate()) {
-    sendData("a@a@c" + "\r\n");
+    sendData("a@" + fenString[index + 1] + fenString[fenString.length-1] + "@c" + "\r\n");
   } else if (chess.in_stalemate()) {
-    sendData("a@a@s" + "\r\n");
+    sendData("a@" + fenString[index + 1] + fenString[fenString.length-1] + "@s" + "\r\n");
   } else if (mode == "b" || mode == "n") {
-    sendData("a@a@n" + "\r\n");
+    sendData("a@" + fenString[index + 1] + fenString[fenString.length-1] + "@n" + "\r\n");
   } 
 
   let gameOutput;
