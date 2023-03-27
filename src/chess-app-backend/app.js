@@ -50,30 +50,26 @@ app.use(function(err, req, res, next) {
 
 let intervalStarted = false;
 
-// "rnbqkbnr/pp2pppp/2p5/3pP3/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3", 
-// "rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3", 
-// "rnbqkbnr/pp1p1ppp/2p5/4p3/2P5/6P1/PP1PPP1P/RNBQKBNR w KQkq - 0 3"
-
-// const positions = [
-//   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 
-//   "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", 
-// ]
+const positions = [
+  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@e", 
+  "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3@n@n", 
+  "rnbqkbnr/pp2pppp/2p5/3pP3/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3@s@n", 
+  "rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3@s@e", 
+  "rnbqkbnr/pp1p1ppp/2p5/4p3/2P5/6P1/PP1PPP1P/RNBQKBNR w KQkq - 0 3@s@e"
+]
 
 io.on("connection", (socket) => {
   console.log("Client connected")
 
-  let previousData = data;
+  let previousData = positions[0];
   socket.broadcast.emit("new_data", previousData)
-  console.log(previousData)
   if (!intervalStarted) {
     intervalStarted = true
     setInterval(() => {
-      // let randomPos = Math.floor(Math.random() * 2)
-      let index = data[data.length - 1].indexOf("\r")
-      let strippedString = data[data.length - 1].substring(0,index)
-      let splitString = strippedString.split("@")
-      if (previousData != splitString) {
-        previousData = splitString;
+      let randomPos = Math.floor(Math.random() * 5)
+      if (previousData != positions[randomPos]) {
+        previousData = positions[randomPos];
+        console.log(previousData)
         socket.broadcast.emit("new_data", previousData)
       }
     }, 1000)

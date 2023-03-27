@@ -43,18 +43,22 @@ function App() {
     };
   }, []);
 
+  // console.log(data)
+  // let index = data[data.length - 1].indexOf("\r")
+  // let strippedString = data[data.length - 1].substring(0,index)
+  let splitString = data.split("@")
+  const fenString = splitString[0]
+  const gameState = splitString[1]
+  const mode = splitString[2]
+  // console.log("FEN: " + fenString, "Game State: " + gameState, "Mode: " + mode)
+  // console.log(splitString)
   // const [bestMove, setBestMove] = useState("")
   // const [currentFenString, setCurrentFenString] = useState("")
-  // // getData(setData)
-  // const [intervalSet, setIntervalSet] = useState(false)
-  // const fenString = data[0]
-  // const gameState = data[1]
-  // const mode = data[2]
   // const chess = new Chess(fenString) 
   // const difficulty = 1
   // initGame(chess, difficulty)
   // const calculatedMove = calculateBestMove(chess, difficulty)
-  // // console.log("currentFenString: ", currentFenString)
+  // console.log("currentFenString: ", currentFenString)
   // console.log("fenString: ", fenString)
   // console.log(calculatedMove != "Nf3" && !chess.in_checkmate() && !chess.in_stalemate())
   // if (calculatedMove != "Nf3" && !chess.in_checkmate() && !chess.in_stalemate() && mode == "e") {
@@ -104,7 +108,7 @@ function App() {
           <h1 className="font-link">Chess Connect</h1>
         </Grid>
         <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} item xs={6}>
-          <Chessboard position={data}/> 
+          <Chessboard position={fenString}/> 
         </Grid>
         {/* <Grid style={{ display: 'flex', alignItems: 'center' }} item xs={3}>
           <h3 className="font-link">{gameOutput}</h3>
