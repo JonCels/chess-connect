@@ -520,8 +520,8 @@ void handleTouch(int x, int y) {
 
 	//Theme button
 	if ((currentScreen != 3 && currentScreen != 5) && (x > themeButtonBounds[0][0] && x < (themeButtonBounds[0][0] + THEME_BUTTON_X) && y > themeButtonBounds[0][1] && (y < themeButtonBounds[0][1] + THEME_BUTTON_Y))) {
-		//themeButton();
-    	makePromotionScreen();
+		themeButton();
+    	//makePromotionScreen();
 	}	
 
 	//Yes confirmation
@@ -810,7 +810,7 @@ void makeGameScreen() {
 
 void makeEndScreen(char* msg) {
 	tft.fillScreen(BACKGROUND_COLOUR);
-	resetState();
+	//resetState();
 	int x = (tft.width() - OK_BUTTON_X) / 2;
 	int y = 2 * tft.height() / 3;
 	tft.fillRect(x, y, OK_BUTTON_X, OK_BUTTON_Y, PRIMARY_COLOUR);
@@ -990,6 +990,7 @@ void drawStartMode() {
 void drawEngineMove(char* move) {
 	if (currentScreen == 2) {
 		int padding = 5;
+		tft.fillRect(padding, 80 + GAME_BUTTON_Y + padding, tft.width() - 3*padding - GAME_BUTTON_X - 1, 2*GAME_BUTTON_Y + padding, QUATERNARY_COLOUR);
 		int textSize = getEngineMoveTextSize(move);	
 		int textInset = ((tft.width() - 3*padding - GAME_BUTTON_X) - getPixelWidth(move, textSize)) / 2;
 		int textHeight = textSize*8;
@@ -1109,6 +1110,7 @@ void drawButton() {
 
 void okButton() {
 	currentScreen = 0;
+	resetState();
 	makeMainScreen();
 }
 
@@ -1176,7 +1178,7 @@ void refreshScreen() {
 }
 
 void updateState(char* FEN, char gameState, char userMode) {
-	char stateData[100] = "";
+	char stateData[100] = {};
 	strncat(stateData, FEN, strlen(FEN));
 	strncat(stateData, "@", 1);
 	strncat(stateData, &gameState, 1);
@@ -1192,9 +1194,12 @@ void updateState(char* FEN, char gameState, char userMode) {
 }
 
 void resetState() {
-	currentUserMode = 1;
+	char* startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	updateState(startingFen, 'n', getUserModeChar(1)); 
+	char* currentEngineMove = "N/A";
+	char selectedPromotion = 'Q';
 }
-
+x
 void sendBluetoothData(char* stateData) {
 	int len = strlen(stateData);
 	for (int i = 0; i < len; i++) {
