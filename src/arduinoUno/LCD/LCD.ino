@@ -492,25 +492,25 @@ void handleTouch(int x, int y) {
 	//Queen button (promotion screen)
 	if (currentScreen == 3 && (x > promotionScreenBounds[0][0] && x < (promotionScreenBounds[0][0] + PROMOTION_COMMON_X) && y > promotionScreenBounds[0][1] && (y < promotionScreenBounds[0][1] + PROMOTION_Y))) {
 		selectedPromotion = 'Q';
-    promotionButton(selectedPromotion);
+    	promotionButton(selectedPromotion);
 	}
 
 	//Rook button (promotion screen)
 	if (currentScreen == 3 && (x > promotionScreenBounds[1][0] && x < (promotionScreenBounds[1][0] + PROMOTION_RARE_X) && y > promotionScreenBounds[1][1] && (y < promotionScreenBounds[1][1] + PROMOTION_Y))) {
-    currentScreen = 6;
-    makeConfirmationScreen('R');
+		currentScreen = 6;
+		makeConfirmationScreen('R');
 	}
 
 	//Bishop button (promotion screen)
 	if (currentScreen == 3 && (x > promotionScreenBounds[2][0] && x < (promotionScreenBounds[2][0] + PROMOTION_RARE_X) && y > promotionScreenBounds[2][1] && (y < promotionScreenBounds[2][1] + PROMOTION_Y))) {
 		currentScreen = 6;
-    makeConfirmationScreen('B');
+    	makeConfirmationScreen('B');
 	}
 
 	//Knight button (promotion screen)
 	if (currentScreen == 3 && (x > promotionScreenBounds[3][0] && x < (promotionScreenBounds[3][0] + PROMOTION_COMMON_X) && y > promotionScreenBounds[3][1] && (y < promotionScreenBounds[3][1] + PROMOTION_Y))) {
 		currentScreen = 6;
-    makeConfirmationScreen('N');
+    	makeConfirmationScreen('N');
 	}
 
 	//OK button (end screen)
@@ -521,18 +521,18 @@ void handleTouch(int x, int y) {
 	//Theme button
 	if ((currentScreen != 3 && currentScreen != 5) && (x > themeButtonBounds[0][0] && x < (themeButtonBounds[0][0] + THEME_BUTTON_X) && y > themeButtonBounds[0][1] && (y < themeButtonBounds[0][1] + THEME_BUTTON_Y))) {
 		//themeButton();
-    makePromotionScreen();
+    	makePromotionScreen();
 	}	
 
-  //Yes confirmation
-  if (currentScreen == 6 && ((millis() - time) > TOUCH_DELAY) && (x > confirmationScreenBounds[0][0] && x < (confirmationScreenBounds[0][0] + YES_NO_X) && y > confirmationScreenBounds[0][1] && (y < confirmationScreenBounds[0][1] + YES_NO_Y))) {
-    promotionButton(selectedPromotion);
-  }
+	//Yes confirmation
+	if (currentScreen == 6 && ((millis() - time) > TOUCH_DELAY) && (x > confirmationScreenBounds[0][0] && x < (confirmationScreenBounds[0][0] + YES_NO_X) && y > confirmationScreenBounds[0][1] && (y < confirmationScreenBounds[0][1] + YES_NO_Y))) {
+		promotionButton(selectedPromotion);
+	}
 
-  //No confirmation
-  if (currentScreen == 6 && ((millis() - time) > TOUCH_DELAY) && (x > confirmationScreenBounds[1][0] && x < (confirmationScreenBounds[1][0] + YES_NO_X) && y > confirmationScreenBounds[1][1] && (y < confirmationScreenBounds[1][1] + YES_NO_Y))) {
-    makePromotionScreen();
-  }
+	//No confirmation
+	if (currentScreen == 6 && ((millis() - time) > TOUCH_DELAY) && (x > confirmationScreenBounds[1][0] && x < (confirmationScreenBounds[1][0] + YES_NO_X) && y > confirmationScreenBounds[1][1] && (y < confirmationScreenBounds[1][1] + YES_NO_Y))) {
+		makePromotionScreen();
+	}
 }
 
 void btComm() {
@@ -775,11 +775,11 @@ void makeGameScreen() {
 	tft.setTextColor(TEXT_COLOUR_2);
 	tft.setTextSize(5);
 	char* currModeStr = getUserModeStr(currentUserMode);
-  char fullModeStr[strlen(currModeStr) + 6] = {};
-  strcat(fullModeStr, currModeStr);
-  strcat(fullModeStr, " Mode");
-  textInset = ((tft.width() - 2*padding - THEME_BUTTON_X) - getPixelWidth(fullModeStr, 5)) / 2;
-  tft.setCursor(padding + textInset, 20);
+	char fullModeStr[strlen(currModeStr) + 6] = {};
+	strcat(fullModeStr, currModeStr);
+	strcat(fullModeStr, " Mode");
+	textInset = ((tft.width() - 2*padding - THEME_BUTTON_X) - getPixelWidth(fullModeStr, 5)) / 2;
+	tft.setCursor(padding + textInset, 20);
 	tft.print(fullModeStr);
 	
 	int paddingY = 10;
@@ -914,9 +914,9 @@ void makeThemeButton() {
 }
 
 void makeConfirmationScreen(char piece) {
-  selectedPromotion = piece;
+	selectedPromotion = piece;
 	tft.fillScreen(BACKGROUND_COLOUR);
-  int padding = 10;
+	int padding = 10;
 	int x = (tft.width() - 2*YES_NO_X - padding) / 2;
 	int y = 2 * tft.height() / 3;
 	tft.fillRect(x, y, YES_NO_X, YES_NO_Y, PRIMARY_COLOUR);
@@ -924,19 +924,19 @@ void makeConfirmationScreen(char piece) {
 	confirmationScreenBounds[0][0] = x;
 	confirmationScreenBounds[0][1] = y;
 
-  int textInset = (YES_NO_X - getPixelWidth("Yes", 5)) / 2;  
+	int textInset = (YES_NO_X - getPixelWidth("Yes", 5)) / 2;  
 	tft.setCursor(x + textInset, y + 22);
 	tft.setTextColor(TEXT_COLOUR_1);
 	tft.setTextSize(5);
 	tft.print("Yes");
 
-  x += YES_NO_X + padding;
-  tft.fillRect(x, y, YES_NO_X, YES_NO_Y, SECONDARY_COLOUR);
+	x += YES_NO_X + padding;
+	tft.fillRect(x, y, YES_NO_X, YES_NO_Y, SECONDARY_COLOUR);
 	tft.drawRect(x, y, YES_NO_X, YES_NO_Y, BORDER_COLOUR);
 	confirmationScreenBounds[1][0] = x;
 	confirmationScreenBounds[1][1] = y;
 
-  textInset = (YES_NO_X - getPixelWidth("No", 5)) / 2;  
+	textInset = (YES_NO_X - getPixelWidth("No", 5)) / 2;  
 	tft.setCursor(x + textInset, y + 22);
 	tft.setTextColor(TEXT_COLOUR_1);
 	tft.setTextSize(5);
@@ -945,25 +945,25 @@ void makeConfirmationScreen(char piece) {
 	tft.setTextColor(TEXT_COLOUR_2);
 	tft.setTextSize(5);
 
-  x = (tft.width() - getPixelWidth("Promote to ", 5)) / 2;
+	x = (tft.width() - getPixelWidth("Promote to ", 5)) / 2;
 	tft.setCursor(x, TERMINATION_TEXT_Y);
 	tft.println("Promote to ");
 
-  char confirmationText[10] = "a "; 
-  if (piece == 'N') { 
-    strcat(confirmationText, "Knight?");
-  }
-  else if (piece == 'R') { 
-    strcat(confirmationText, "Rook?");
-  }
-  else if (piece == 'B') {
-    strcat(confirmationText, "Bishop?");
-  }
+	char confirmationText[10] = "a "; 
+	if (piece == 'N') { 
+		strcat(confirmationText, "Knight?");
+	}
+	else if (piece == 'R') { 
+		strcat(confirmationText, "Rook?");
+	}
+	else if (piece == 'B') {
+		strcat(confirmationText, "Bishop?");
+	}
 
 	x = (tft.width() - getPixelWidth(confirmationText, 5)) / 2;
 	tft.setCursor(x, tft.getCursorY());
 	tft.println(confirmationText);
-  time = millis();
+  	time = millis();
 }
 
 void drawStartMode() {	
@@ -1129,19 +1129,19 @@ void promotionButton(char piece) {
 }
 
 void checkmateWhite() {
-  updateState(currentFen, 'w', getUserModeChar(currentUserMode));
+	updateState(currentFen, 'w', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("White Wins by Checkmate");
 }
 
 void checkmateBlack() {
-  updateState(currentFen, 'b', getUserModeChar(currentUserMode));
+	updateState(currentFen, 'b', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("Black Wins by Checkmate");
 }
 
 void stalemate() {
-  updateState(currentFen, 'd', getUserModeChar(currentUserMode));
+	updateState(currentFen, 'd', getUserModeChar(currentUserMode));
 	currentScreen = 4;
 	makeEndScreen("Game Drawn by Stalemate");
 }
@@ -1207,44 +1207,44 @@ void parseWebPayload(char* webData) { //eg. "Nf3@w12@n" or "a@a@n" if not in eng
 	char* webCode = strtok(NULL, "@"); //eg. 'w12', meaning white just moved, and the fullmove number is 12. Can only be 'w' (white), 'b' (black), or 'a' (filler) 
 	char* gameState = strtok(NULL, "@"); //eg. 'c' checkmate, 's' stalemate', 'n' nothing
 
-  char* turnColour;
-  getSubstring(webCode, turnColour, 0, 1);
-  char* moveNumStr;
-  getSubstring(webCode, moveNumStr, 1, strlen(webCode));
-  int moveNum = (atoi(moveNumStr) - 1) * 2;
-  moveNum += (strcmp(turnColour, "b") == 0) ? 1 : 0;
+	char* turnColour;
+	getSubstring(webCode, turnColour, 0, 1);
+	char* moveNumStr;
+	getSubstring(webCode, moveNumStr, 1, strlen(webCode));
+	int moveNum = (atoi(moveNumStr) - 1) * 2;
+	moveNum += (strcmp(turnColour, "b") == 0) ? 1 : 0;
 
-  if (moveNum == 0) { // Starting position
-    currentEngineMove = "N/A";
-    return;
-  }
+	if (moveNum == 0) { // Starting position
+		currentEngineMove = "N/A";
+		return;
+	}
 
-  if (strcmp(gameState, "c") == 0) { // Checkmate
-    if (strcmp(turnColour, "w") == 0) { // White win
-      checkmateWhite();
-    }
-    else if (strcmp(turnColour, "b") == 0) {
-      checkmateBlack();
-    }
-    return;
-  }
-  else if (strcmp(gameState, "s") == 0) { // Stalemate
-    stalemate();
-    return;
-  }
+	if (strcmp(gameState, "c") == 0) { // Checkmate
+		if (strcmp(turnColour, "w") == 0) { // White win
+			checkmateWhite();
+		}
+		else if (strcmp(turnColour, "b") == 0) {
+			checkmateBlack();
+		}
+		return;
+	}
+	else if (strcmp(gameState, "s") == 0) { // Stalemate
+		stalemate();
+		return;
+	}
 
-  if (strcmp(engineMove, "a") == 0) { // Not in engine mode
-    currentEngineMove = "N/A";
-    return;
-  }  
+	if (strcmp(engineMove, "a") == 0) { // Not in engine mode
+		currentEngineMove = "N/A";
+		return;
+	}  
 
-  if (moveNum == 0) {
-    return;
-  }
+	if (moveNum == 0) {
+		return;
+	}
 
-  if (strcmp(engineMove, currentEngineMove) != 0) { // Display engine move
-    drawEngineMove(engineMove); 
-  } 
+	if (strcmp(engineMove, currentEngineMove) != 0) { // Display engine move
+		drawEngineMove(engineMove); 
+	} 
 }
 
 void changeTheme(char *theme) {
