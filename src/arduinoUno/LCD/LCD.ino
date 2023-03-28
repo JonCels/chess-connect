@@ -105,6 +105,44 @@ char inputStr[100] = "";
 char* currentEngineMove = "N/A";
 char selectedPromotion = 'Q';
 
+// Global variable initializations
+const int numRows = 8;
+const int numCols = 8;
+
+int turns = 1;
+GameMode gameMode = BEGINNER_MODE;
+GameState gameState = INIT_GAME;
+GameCommand gameCommand = NO_ACTION;
+
+Colour whoseTurn = WHITE;
+bool promoting = false;
+
+// Start command from LCD
+int gameStartPB = 0;
+
+Square *liftedSquare;
+Square *placed;
+
+int clk = A5;
+int cs = A8;
+int anodes[8] = {46,47,48,49,50,51,52,53};
+int cathodes[8] = {38,39,40,41,42,43,44,45};
+int hallRx[8] = {A13,A11,A9,A6,2,4,6,8};
+int hallTx[8] = {A14,A12,A10,A7,3,5,7,9};
+
+int rawStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0}};
+
+
+Square currentBoard[numRows][numCols];
+Square oldBoard[numRows][numCols];
+
 // Bitmap icons
 // 'brush', 60x60px
 const unsigned char epdBitmapBrush [] PROGMEM = {
@@ -422,6 +460,95 @@ const unsigned char epdBitmapRook [] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+enum GameMode : char
+{
+    BEGINNER_MODE = 'B',
+    NORMAL_MODE = 'N',
+    ENGINE_MODE = 'E',
+    NO_MODE = 'M'
+};
+
+enum GameState : char
+{
+    INIT_GAME = 'i',
+    PLAY_GAME = 'p',
+    RESET_GAME = 'r',
+    WAIT_PICK = 'w',
+    PIECE_LIFTED = 'l',
+    REMOVE_PIECE = 'x',
+    PROMOTING = 'P',
+    VALID_MOVE = 'v',
+    INVALID_MOVE = 'n',
+};
+
+enum GameCommand : char
+{
+    PROMOTE_QUEEN = 'Q',
+    PROMOTE_ROOK = 'R',
+    PROMOTE_BISHOP = 'B',
+    PROMOTE_KNIGHT = 'K',
+    DRAW_ACTION = 'd',
+    RESIGN_ACTION = 'q',
+    RESET_ACTION = 'r',
+    END_GAME = 'e',
+    NO_ACTION = '.'
+};
+
+// Enum to represent the different types of chess pieces
+enum PieceType : char
+{
+    NO_PIECE = '0',
+    PAWN = 'P',
+    KNIGHT = 'N',
+    BISHOP = 'B',
+    ROOK = 'R',
+    QUEEN = 'Q',
+    KING = 'K'
+};
+
+// BLACK is 32 because P + 32 = p
+// Use this to convert to FEN string
+enum Colour
+{
+    WHITE = 0,
+    BLACK = 32,
+    NO_COLOUR = 64
+};
+
+// Structure to represent a chess piece
+// Members: PieceType, Colour
+// Default NO_PIECE, NO_COLOUR
+struct Piece
+{
+    PieceType type;
+    Colour colour;
+
+    bool operator==(const Piece &p) const
+    {
+        return (type == p.type && colour == p.colour);
+    }
+
+    Piece() : type(PieceType::NO_PIECE), colour(Colour::NO_COLOUR) {}
+    Piece(PieceType pieceType, Colour colourType) : type(pieceType), colour(colourType) {}
+};
+
+struct Square
+{
+    Piece piece;
+    int row;
+    int col;
+
+    bool operator==(const Square &s) const
+    {
+        return (piece == s.piece && row == s.row && col == s.col);
+    }
+
+    Square() : piece(Piece()), row(0), col(0) {}
+    Square(int r, int c) : piece(Piece{}), row(r), col(c) {}
+    Square(Piece piece, int r, int c) : piece(piece), row(r), col(c) {}
+    Square(PieceType type, Colour colour, int r, int c) : piece(Piece{type, colour}), row(r), col(c) {}
 };
 
 void setup() {
@@ -1199,7 +1326,7 @@ void resetState() {
 	char* currentEngineMove = "N/A";
 	char selectedPromotion = 'Q';
 }
-x
+
 void sendBluetoothData(char* stateData) {
 	int len = strlen(stateData);
 	for (int i = 0; i < len; i++) {
@@ -1343,4 +1470,1069 @@ int getEngineMoveTextSize(char* move) {
 		}
 	}
 	return textSize;
+}
+
+//Start of integration functions
+// ChessBoard Functions
+void resetChessBoard()
+{
+    PieceType backRows[8] = {ROOK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROOK};
+    int i, j;
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            currentBoard[i][j] = Square(i,j);
+            oldBoard[i][j] = Square(i,j);
+            Colour col;
+            PieceType type;
+            if (i > 1 && i < 6)
+            {
+                currentBoard[i][j].piece = Piece();
+                oldBoard[i][j].piece = Piece();
+                continue;
+            }
+            else if (i < 2)
+            {
+                col = WHITE;
+                if (i == 0)
+                    type = backRows[j];
+                else
+                    type = PAWN;
+            }
+            else
+            {
+                col = BLACK;
+                if (i == 7)
+                    type = backRows[j];
+                else
+                    type = PAWN;
+            }
+            currentBoard[i][j].piece = Piece(type, col);
+            oldBoard[i][j].piece = Piece(type, col);
+        }
+    }    
+}
+
+bool movePiece(int* fromSquare, int* toSquare, PieceType promotionType = NO_PIECE)
+{
+    int fromRow = fromSquare[0];
+    int fromCol = fromSquare[1];
+    int toRow = toSquare[0];
+    int toCol = toSquare[1];
+
+    Piece &fromPiece = currentBoard[fromRow][fromCol].piece;
+    Piece &toPiece = currentBoard[toRow][toCol].piece;
+
+    if (fromPiece.type == NO_PIECE)
+    {
+        return false;
+    }
+    if (toPiece.type != NO_PIECE && fromPiece.colour == toPiece.colour)
+    {
+        // Cannot capture own piece
+        // illegalMove(int fromRow, int fromCol, int toRow, int toCol);
+        return false;
+    }
+    else if (toPiece.type != NO_PIECE && fromPiece.colour != toPiece.colour)
+    {
+    }
+    switch (fromPiece.type)
+    {
+    case PAWN:
+        if (fromPiece.colour == 0)
+        { // white pawn
+            if (fromRow == 1 && toRow == 3 && fromCol == toCol && toPiece.type == NO_PIECE)
+            {
+                // White pawn can move two squares from the second row
+                toPiece = fromPiece;
+                fromPiece = Piece{};
+                break;
+            }
+            if (fromRow + 1 == toRow && fromCol == toCol && toPiece.type == NO_PIECE)
+            {
+                // White pawn can move one square forward
+                toPiece = fromPiece;
+                fromPiece = Piece{};
+                break;
+            }
+            if (fromRow + 1 == toRow && abs(fromCol - toCol) == 1 && toPiece.type != NO_PIECE)
+            {
+                // White pawn can capture diagonally
+                toPiece = fromPiece;
+                fromPiece = Piece{};
+                break;
+            }
+            if (fromRow == 4 && toRow == 5 && abs(fromCol - toCol) == 1 && toPiece.type == NO_PIECE)
+            {
+                // White pawn can capture en passant
+                currentBoard[toRow - 1][toCol].piece.type = NO_PIECE;
+                toPiece = fromPiece;
+                fromPiece = Piece{};
+                break;
+            }
+        }
+        else
+        { // black pawn
+            if (fromRow == 6 && toRow == 4 && fromCol == toCol && toPiece.type == NO_PIECE)
+            {
+                // Black pawn can move two squares from the seventh row
+                toPiece = fromPiece;
+                fromPiece = Piece{};
+                break;
+            }
+            if (fromRow - 1 == toRow && fromCol == toCol && toPiece.type == NO_PIECE)
+            {
+                // Black pawn can move one square forward
+                toPiece = fromPiece;
+                fromPiece = Piece{};
+                break;
+            }
+            if (fromRow - 1 == toRow && abs(fromCol - toCol) == 1 && toPiece.type != NO_PIECE)
+            {
+                // Black pawn can capture diagonally
+                toPiece = fromPiece;
+                fromPiece = Piece{};
+                break;
+            }
+            if (fromRow == 3 && toRow == 2 && abs(fromCol - toCol) == 1 && toPiece.type == NO_PIECE)
+            {
+                // Black pawn can capture en passant
+                currentBoard[toRow + 1][toCol].piece.type = NO_PIECE;
+                toPiece = fromPiece;
+                fromPiece = Piece{};
+                break;
+            }
+        }
+        if (toRow == 0 || toRow == 7)
+        {
+            // Pawn has reached the other side of the board, promote it
+            toPiece = (Piece){promotionType, fromPiece.colour};
+            fromPiece = Piece{};
+            break;
+        }
+        // Invalid move for pawn
+        return false;
+    case KNIGHT:
+        if (abs(fromRow - toRow) == 2 && abs(fromCol - toCol) == 1)
+        {
+            // Knight can move in an L shape
+            toPiece = fromPiece;
+            fromPiece = Piece{};
+            break;
+        }
+        if (abs(fromRow - toRow) == 1 && abs(fromCol - toCol) == 2)
+        {
+            // Knight can move in an L shape
+            toPiece = fromPiece;
+            fromPiece = Piece{};
+            break;
+        }
+        // Invalid move for knight
+        return false;
+    case BISHOP:
+        if (abs(fromRow - toRow) == abs(fromCol - toCol))
+        {
+            // Bishop can move diagonally
+            toPiece = fromPiece;
+            fromPiece = Piece{};
+            break;
+        }
+        // Invalid move for bishop
+        return false;
+    case ROOK:
+        if (fromRow == toRow || fromCol == toCol)
+        {
+            // Rook can move horizontally or vertically
+            toPiece = fromPiece;
+            fromPiece = Piece{};
+            break;
+        }
+        // Invalid move for rook
+        return false;
+    case QUEEN:
+        if (fromRow == toRow || fromCol == toCol || abs(fromRow - toRow) == abs(fromCol - toCol))
+        {
+            // Queen can move horizontally, vertically, or diagonally
+            toPiece = fromPiece;
+            fromPiece = Piece{};
+            break;
+        }
+        // Invalid move for queen
+        return false;
+    case KING:
+        if (abs(fromRow - toRow) <= 1 && abs(fromCol - toCol) <= 1)
+        {
+            // King can move one square in any direction
+            toPiece = fromPiece;
+            fromPiece = Piece{};
+            break;
+        }
+        if (fromRow == 0 && fromCol == 4 && toRow == 0 && toCol == 6)
+        {
+            // White kingside castle
+            if (currentBoard[0][5].piece.type == NO_PIECE && currentBoard[0][6].piece.type == NO_PIECE && currentBoard[0][7].piece.type == ROOK)
+            {
+                currentBoard[0][6].piece = currentBoard[0][4].piece;
+                currentBoard[0][4].piece = Piece{};
+                currentBoard[0][5].piece = currentBoard[0][7].piece;
+                currentBoard[0][7].piece = Piece{};
+                break;
+            }
+        }
+        if (fromRow == 0 && fromCol == 4 && toRow == 0 && toCol == 2)
+        {
+            // White queenside castle
+            if (currentBoard[0][1].piece.type == NO_PIECE && currentBoard[0][2].piece.type == NO_PIECE && currentBoard[0][3].piece.type == NO_PIECE && currentBoard[0][0].piece.type == ROOK)
+            {
+                currentBoard[0][2].piece = currentBoard[0][4].piece;
+                currentBoard[0][4].piece = Piece{};
+                currentBoard[0][3].piece = currentBoard[0][0].piece;
+                currentBoard[0][0].piece = Piece{};
+                break;
+            }
+        }
+        if (fromRow == 7 && fromCol == 4 && toRow == 7 && toCol == 6)
+        {
+            // Black kingside castle
+            if (currentBoard[7][5].piece.type == NO_PIECE && currentBoard[7][6].piece.type == NO_PIECE && currentBoard[7][7].piece.type == ROOK)
+            {
+                currentBoard[7][6].piece = currentBoard[7][4].piece;
+                currentBoard[7][4].piece = Piece{};
+                currentBoard[7][5].piece = currentBoard[7][7].piece;
+                currentBoard[7][7].piece = Piece{};
+                break;
+            }
+        }
+        if (fromRow == 7 && fromCol == 4 && toRow == 7 && toCol == 2)
+        {
+            // Black queenside castle
+            if (currentBoard[7][1].piece.type == NO_PIECE && currentBoard[7][2].piece.type == NO_PIECE && currentBoard[7][3].piece.type == NO_PIECE && currentBoard[7][0].piece.type == ROOK)
+            {
+                currentBoard[7][2].piece = currentBoard[7][4].piece;
+                currentBoard[7][4].piece = Piece{};
+                currentBoard[7][3].piece = currentBoard[7][0].piece;
+                currentBoard[7][0].piece = Piece{};
+                break;
+            }
+        }
+        // Invalid move for king
+        return false;
+    }
+    return true;
+}
+
+// Converts a single row of the chess board to a FEN string
+void rowToFen(Square row[8], int &fen_index)
+{
+    int empty_count = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        Piece piece = row[i].piece;
+        if (piece.type == PieceType::NO_PIECE)
+        {
+            ++empty_count;
+        }
+        else
+        {
+            if (empty_count > 0)
+            {
+                FEN[fen_index++] = (char)('0' + empty_count);
+                empty_count = 0;
+            }
+            FEN[fen_index++] = pieceToChar(piece);
+        }
+    }
+    if (empty_count > 0)
+    {
+        FEN[fen_index++] = '0' + empty_count;
+    }
+}
+
+// Converts a chess board to a FEN string
+void boardToFen()
+{
+    int fen_index = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        rowToFen(currentBoard[i], fen_index);
+        if (i != 7)
+            FEN[fen_index++] = '/';
+        else
+            FEN[fen_index++] = ' ';
+    }
+
+    // w or b
+    FEN[fen_index++] = whoseTurn == WHITE ? 'w' : 'b';
+    FEN[fen_index++] = ' ';
+
+    int castle_index = 0;
+    while (CastlingStatus[castle_index])
+    {
+        FEN[fen_index++] = CastlingStatus[castle_index++];
+    }
+
+    // en passant status. leave as - for now
+    FEN[fen_index++] = '-';
+    FEN[fen_index++] = ' ';
+
+    // convert turn number to chars
+    int temp = turns;
+    char buf[6];
+    int buf_index = 0;
+    buf[buf_index] = '\0';
+    while (temp > 0)
+    {
+        buf[++buf_index] = '0' + (temp % 10);
+        temp /= 10;
+    }
+    while (buf[buf_index])
+    {
+        FEN[fen_index++] = buf[buf_index--];
+    }
+    
+    FEN[fen_index++] = ' ';
+
+    FEN[fen_index++] = '\r';
+    FEN[fen_index] = '\0';
+}
+
+int readHall(int adcnum, int rx, int tx)
+{
+    digitalWrite(cs, HIGH);
+    digitalWrite(clk, LOW);
+    digitalWrite(cs, LOW);
+
+    int commandout = adcnum;
+    commandout |= 0x18;
+    commandout <<= 3;
+
+    for (int i = 0; i < 5; i++)
+    {
+        if (commandout & 0x80)
+        {
+            digitalWrite(tx, HIGH);
+        }
+        else
+        {
+            digitalWrite(tx, LOW);
+        }
+
+        commandout <<= 1;
+        digitalWrite(clk, HIGH);
+        digitalWrite(clk, LOW);
+    }
+
+    int adcout = 0;
+
+    for (int i = 0; i < 12; i++)
+    {
+        digitalWrite(clk, HIGH);
+        digitalWrite(clk, LOW);
+
+        adcout <<= 1;
+
+        if (digitalRead(rx))
+            adcout |= 0x1;
+    }
+
+    digitalWrite(cs, HIGH);
+
+    adcout >>= 1;
+    return adcout;
+}
+
+void readHallRow(int row, int rx, int tx)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        rawStates[row][i] = readHall(i, rx, tx);
+    }
+}
+
+void readHallSensors()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        readHallRow(i, hallRx[i], hallTx[i]);
+    }
+
+    printHall();
+    Serial.print("\n");
+}
+
+void printHall()
+{
+    int i, j;
+
+    Serial.println("\ta\tb\tc\td\te\tf\tg\th");
+    for (i = 0; i < 8; i++)
+    {
+        Serial.print(8 - i);
+        Serial.print("\t");
+        for (j = 0; j < 8; j++)
+        {
+            Serial.print(rawStates[i][j]);
+            Serial.print("\t");
+        }
+        Serial.print("\n");
+        delay(1);
+    }
+}
+
+void setupLEDs()
+{
+    for (int i = 0; i < 9; i++)
+    {
+        pinMode(anodes[i], OUTPUT);
+        pinMode(cathodes[i], OUTPUT);
+        digitalWrite(anodes[i], HIGH);
+        digitalWrite(cathodes[i], LOW);
+    }
+}
+
+void setupHallSensors()
+{
+    pinMode(cs, OUTPUT);
+    pinMode(clk, OUTPUT);
+
+    for (int i = 0; i < 8; i++)
+    {
+        pinMode(hallRx[i], INPUT);
+        pinMode(hallTx[i], OUTPUT);
+    }
+}
+
+// PieceIdentification Functions
+char pieceToChar(Piece piece)
+{
+    if (piece.colour == NO_COLOUR)
+    {
+        return '0';
+    }
+    
+    return (char)(piece.type + piece.colour);
+}
+
+Piece charToPiece(char pieceChar)
+{
+    if ((int)pieceChar > 90)
+    {
+        // if char is lowercase
+        return Piece{(PieceType)pieceChar, BLACK};
+    }
+    else
+    {
+        // if char is uppercase
+        return Piece{(PieceType)pieceChar, WHITE};
+    }
+}
+
+void printBoard()
+{
+    int i, j;
+
+    Serial.println("\ta\tb\tc\td\te\tf\tg\th");
+    for (i = 0; i < 8; i++)
+    {
+        Serial.print(8 - i);
+        Serial.print("\t");
+        for (j = 0; j < 8; j++)
+        {
+            Serial.print(pieceToChar(currentBoard[i][j].piece));
+            Serial.print("\t");
+        }
+        Serial.print("\n");
+    }
+}
+
+// 0 is when the game is over and before the game is started.
+// Enters state when powered on and when game over button is pressed
+// Leaves state when all whites and blacks are in correct spot and the game start is pressed
+
+// 1 Game is active and players are thinking (all pieces are on the board)
+// Enters state when game start is pressed
+// Leaves state when a piece is picked up or if resign or draw is pressed
+
+// 2 Piece is picked up, LEDs are lit up accordingly
+// Keeps track of what piece was picked up and what are the possible moves
+// Enters state when piece is picked up
+// Leaves state when the piece is placed again
+
+
+bool gameStartValid() //Given white starting on one side, checks if the board state is the starting position
+{
+    bool valid = true;
+    int i;
+    if (currentBoard[0][0].piece.colour == WHITE)
+    {
+        for (i = 0; i < 8; i++)
+        {
+            if (currentBoard[0][i].piece.colour != WHITE)
+                valid = false;
+            if (currentBoard[1][i].piece.colour != WHITE)
+                valid = false;
+
+            if (currentBoard[6][i].piece.colour != BLACK)
+                valid = false;
+            if (currentBoard[7][i].piece.colour != BLACK)
+                valid = false;
+        }
+    }
+    else
+    {
+        for (i = 0; i < 8; i++)
+        {
+            if (currentBoard[0][i].piece.colour != BLACK)
+                valid = false;
+            if (currentBoard[1][i].piece.colour != BLACK)
+                valid = false;
+
+            if (currentBoard[6][i].piece.colour != WHITE)
+                valid = false;
+            if (currentBoard[7][i].piece.colour != WHITE)
+                valid = false;
+        }
+    }
+    
+    
+    return valid;
+}
+
+void identifyColors()
+{
+    int i, j;
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            if (rawStates[i][j] < WHITE_HALL)
+                currentBoard[i][j].piece.colour = WHITE;
+            else if (rawStates[i][j] > BLACK_HALL)
+                currentBoard[i][j].piece.colour = BLACK;
+            else
+                currentBoard[i][j].piece.colour = NO_COLOUR;
+        }
+    }
+}
+
+void updateBoard()
+{
+    int i, j;
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            oldBoard[i][j] = currentBoard[i][j];
+        }
+    }
+}
+
+bool checkPick()
+{
+    bool change = false;
+    int i, j;
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            if (currentBoard[i][j].piece.colour != oldBoard[i][j].piece.colour)
+            {
+                liftedSquare = &currentBoard[i][j];
+                change = true;
+            }
+        }
+    }
+    return change;
+}
+
+bool checkPlace()
+{
+    bool change = false;
+    int i, j;
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            if (currentBoard[i][j].piece.colour != oldBoard[i][j].piece.colour)
+            {
+                currentBoard[i][j] = *liftedSquare;
+                (*liftedSquare).piece = Piece();
+                change = true;
+            }
+        }
+    }
+    return change;
+}
+
+void lightUp(int row, int col)
+{
+    digitalWrite(anodes[row], LOW);
+    digitalWrite(anodes[row + 1], LOW);
+    digitalWrite(cathodes[col], HIGH);
+    digitalWrite(cathodes[col + 1], HIGH);
+}
+
+// return true to continue checking for suqares to light
+// return false to stop checking (for pieces that move in straight lines)
+bool lightValidSquare(int row, int col, Colour activeColour)
+{
+    if (currentBoard[row][col].piece.type == NO_PIECE)
+    {
+        lightUp(row, col);
+        return true;
+    }
+    else if (currentBoard[row][col].piece.colour != activeColour)
+    {
+        lightUp(row, col);
+        return false;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void lightsOff()
+{
+    int m;
+    for (m = 0; m < 9; m++)
+    {
+        digitalWrite(anodes[m], HIGH);
+        digitalWrite(cathodes[m], LOW);
+    }
+}
+
+void highlightPawnMoves(Square square)
+{
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
+    int direction = activeColour == WHITE ? 1 : -1;
+
+    if (row + direction >= 0 && row + direction <= 7)
+    {
+        // Pawn can move forward by one square
+        if (currentBoard[row + direction][col].piece.type == NO_PIECE)
+        {
+            lightUp(row + direction, col);
+        }
+
+        // Pawn can capture enemy piece diagonally
+        if (col > 0 && currentBoard[row + direction][col - 1].piece.colour != activeColour)
+        {
+            lightUp(row + direction, col - 1);
+        }
+        if (col < 7 && currentBoard[row + direction][col + 1].piece.colour != activeColour)
+        {
+            lightUp(row + direction, col + 1);
+        }
+    }
+}
+
+void highlightKnightMoves(Square square)
+{
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
+    int moves[8][2] = {{-2, -1}, {-2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}};
+    for (int i = 0; i < 8; i++)
+    {
+        int newRow = row + moves[i][0];
+        int newCol = col + moves[i][1];
+        if (newRow >= 0 && newRow <= 7 && newCol >= 0 && newCol <= 7)
+        {
+            Piece targetPiece = currentBoard[newRow][newCol].piece;
+            if (targetPiece.colour != activeColour)
+            {
+                lightUp(newRow, newCol);
+            }
+        }
+    }
+}
+
+void highlightBishopMoves(Square square)
+{
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
+    // maximum possible distances from piece to edge of board
+    // ul = up left, dr = down right, etc.
+    int dist_ul = min(7-row, col);
+    int dist_ur = min(7-row, 7-col);
+    int dist_dl = min(row, col);
+    int dist_dr = min(row, 7-col);
+
+    // Move up left
+    for (int i = 1; i <= dist_ul; i++)
+    {
+        if (!lightValidSquare(row+i, col-i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move up right
+    for (int i = 1; i <= dist_ur; i++)
+    {
+        if (!lightValidSquare(row+i, col+i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move down left
+    for (int i = 1; i <= dist_dl; i++)
+    {
+        if (!lightValidSquare(row-i, col-i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move down right
+    for (int i = 1; i <= dist_dr; i++)
+    {
+        if (!lightValidSquare(row-i, col+i, activeColour))
+        {
+            break;
+        }
+    }
+}
+
+void highlightRookMoves(Square square)
+{
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
+    // Check moves to the right
+    for (int i = col + 1; i = 7; i++)
+    {
+        if (!lightValidSquare(row, i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Check moves to the left
+    for (int i = col - 1; i >= 0; i--)
+    {
+        if (!lightValidSquare(row, i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Check moves down
+    for (int i = row - 1; i >= 0; i--)
+    {
+        if (!lightValidSquare(i, col, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Check moves up
+    for (int i = row + 1; i <= 7; i++)
+    {
+        if (!lightValidSquare(i, col, activeColour))
+        {
+            break;
+        }
+    }
+}
+
+void highlightQueenMoves(Square square)
+{
+    int row = square.row;
+    int col = square.col;
+    Colour activeColour = square.piece.colour;
+
+    // maximum possible distances from piece to edge of board
+    // ul = up left, dr = down right, etc.
+    int dist_ul = min(7-row, col);
+    int dist_ur = min(7-row, 7-col);
+    int dist_dl = min(row, col);
+    int dist_dr = min(row, 7-col);
+
+    // Move up left
+    for (int i = 1; i <= dist_ul; i++)
+    {
+        if (!lightValidSquare(row+i, col-i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move up right
+    for (int i = 1; i <= dist_ur; i++)
+    {
+        if (!lightValidSquare(row+i, col+i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move down left
+    for (int i = 1; i <= dist_dl; i++)
+    {
+        if (!lightValidSquare(row-i, col-i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move down right
+    for (int i = 1; i <= dist_dr; i++)
+    {
+        if (!lightValidSquare(row-i, col+i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move down
+    for (int i = row - 1; i >= 0; i--)
+    {
+        if (!lightValidSquare(i, col, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move up
+    for (int i = row + 1; i <= 7; i++)
+    {
+        if (!lightValidSquare(i, col, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move left
+    for (int i = col - 1; i >= 0; i--)
+    {
+        if (!lightValidSquare(row, i, activeColour))
+        {
+            break;
+        }
+    }
+
+    // Move right
+    for (int i = col + 1; i <= 7; i++)
+    {
+        if (!lightValidSquare(row, i, activeColour))
+        {
+            break;
+        }
+    }
+}
+
+void highlightKingMoves(Square square)
+{
+    int row = liftedSquare->row;
+    int col = liftedSquare->col;
+    Colour activeColour = liftedSquare->piece.colour;
+
+    // Check the squares directly adjacent to the king
+    if (row > 0)
+    {
+        if (currentBoard[row - 1][col].piece.colour != activeColour)
+        {
+            lightUp(row - 1, col);
+        }
+        if (col > 0 && currentBoard[row - 1][col - 1].piece.colour != activeColour)
+        {
+            lightUp(row - 1, col - 1);
+        }
+        if (col < 7 && currentBoard[row - 1][col + 1].piece.colour != activeColour)
+        {
+            lightUp(row - 1, col + 1);
+        }
+    }
+    if (row < 7)
+    {
+        if (currentBoard[row + 1][col].piece.colour != activeColour)
+        {
+            lightUp(row + 1, col);
+        }
+        if (col > 0 && currentBoard[row + 1][col - 1].piece.colour != activeColour)
+        {
+            lightUp(row + 1, col - 1);
+        }
+        if (col < 7 && currentBoard[row + 1][col + 1].piece.colour != activeColour)
+        {
+            lightUp(row + 1, col + 1);
+        }
+    }
+    if (col > 0 && currentBoard[row][col - 1].piece.colour != activeColour)
+    {
+        lightUp(row, col - 1);
+    }
+    if (col < 7 && currentBoard[row][col + 1].piece.colour != activeColour)
+    {
+        lightUp(row, col + 1);
+    }
+}
+
+void flash()
+{
+    Square square = *liftedSquare;
+    switch (square.piece.type)
+    {
+    case PAWN:
+        highlightPawnMoves(square);
+        return;
+    case KNIGHT:
+        highlightKnightMoves(square);
+        return;
+    case ROOK:
+        highlightRookMoves(square);
+        return;
+    case BISHOP:
+        highlightBishopMoves(square);
+        return;
+    case QUEEN:
+        highlightQueenMoves(square);
+        return;
+    case KING:
+        highlightKingMoves(square);
+        return;
+    }
+}
+
+void setup()
+{
+    setupHallSensors();
+    setupLEDs();
+
+    Serial.begin(9600);
+}
+
+void loop()
+{
+    if (gameCommand == 'e') //END_GAME
+    {
+        gameState = INIT_GAME;
+    }
+    
+
+    readHallSensors();
+
+    identifyColors();
+
+    Serial.print((char)gameState);
+    Serial.print("\t");
+    Serial.print(turns);
+    Serial.print("\t");
+    //Serial.println((char)gameCommand);
+    Serial.print("\n");
+
+    switch (gameState)
+    {
+    case INIT_GAME:
+        resetChessBoard();
+        // wait for game mode selection from LCD screen
+        // if (Serial1.available() > 0)
+        // {
+        //     int temp = Serial1.read();
+        //     if (temp == BEGINNER_MODE || temp == NORMAL_MODE || temp == ENGINE_MODE)
+        //     {
+        //         gameMode = (GameMode)temp;
+        //         gameState = PLAY_GAME;
+        //     }
+        // }
+        gameState = PLAY_GAME;
+        break;
+    case PLAY_GAME:
+        if (gameStartValid()) 
+        {
+            gameState = WAIT_PICK; //Not always picking up pieces in beginner mode
+        }
+        else
+        {
+            // figure out some way to indicate that the game isn't set up properly.
+            // light squares??
+        }
+        break;
+    case RESET_GAME:
+        // do we need this state?
+        break;
+    case WAIT_PICK:
+        // sendFen();
+        if (checkPick())
+        {
+            gameState = PIECE_LIFTED;
+        }
+        break;
+    case PIECE_LIFTED:
+        // sendFen();
+        flash();
+        if (checkPlace())
+        {
+            gameState = VALID_MOVE;
+            // if (movePiece(liftedSquare, placedSquare, QUEEN))
+            // {
+            //     gameState = VALID_MOVE;
+            // }
+            // else
+            // {
+            //     gameState = INVALID_MOVE;
+            // }
+        }
+        break;
+    case REMOVE_PIECE:
+        // should we keep track of pieces taken?
+        gameState = WAIT_PICK;
+        break;
+    case PROMOTING:
+        // wait for piece selection from LCD screen
+        if (promoting)
+        {
+            if (checkPick())
+            {
+                gameState = PIECE_LIFTED;
+            }
+        }
+        
+        gameState = WAIT_PICK;
+        break;
+    case VALID_MOVE:
+        if (whoseTurn == WHITE)
+            whoseTurn = BLACK;
+        else
+        {
+            whoseTurn = WHITE;
+            turns += 1;
+        }
+        lightsOff();
+        gameState = WAIT_PICK;
+        break;
+    case INVALID_MOVE:
+        lightUp((*liftedSquare).row, (*liftedSquare).col);
+        gameState = WAIT_PICK;
+        break;
+    default:
+        break;
+    }
+
+    // printHall();
+    // delay(delay_const);
+    // Serial.print("\n");
+    // Serial.print("\n");
+    // printColors();
+    // delay(delay_const);
+    // Serial.print("\n");
+    // Serial.print("\n");
+    Serial.println(FEN);
+    printBoard();
+    delay(delay_const);
+    Serial.print("\n");
+
+    updateBoard();
+    delay(delay_const);
 }
