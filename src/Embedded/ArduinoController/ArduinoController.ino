@@ -1,5 +1,6 @@
 #define WHITE_HALL 140
 #define BLACK_HALL 310
+#define AVG_SAMPLE_SIZE 8
 
 #ifndef Arduino_h
     #pragma message "Injecting MockArduinoController to run tests..."
@@ -118,10 +119,34 @@ struct Square
     Square(PieceType type, Colour colour, int r, int c) : piece(Piece{type, colour}), row(r), col(c) {}
 };
 
+struct hallAvg
+{
+    int elements[AVG_SAMPLE_SIZE];
+    int index;
+
+    void add(int value)
+    {
+        elements[index] = value;
+        index = (index + 1) % AVG_SAMPLE_SIZE;
+    }
+    int avg()
+    {
+        int s = 0;
+        for (uint i = 0; i < AVG_SAMPLE_SIZE; i++)
+        {
+            s += elements[i];
+        }
+        return s / AVG_SAMPLE_SIZE;
+    }
+
+    hallAvg() : elements{}, index(0) {}
+};
+
 // Function delclarations
 char pieceToChar(Piece piece);
 Piece charToPiece(char pieceChar);
 int* detectNewPiece(int col, int row);
+int runningAverage(hallAvg ha, int x);
 int readHall(int adcnum, int rx, int tx);
 void readHallRow(int row, int rx, int tx);
 void adjust();
@@ -195,41 +220,7 @@ int adjStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0}};
 
-// int newBoardColors[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0}};
-
-// int oldBoardColors[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0},
-//                             {0, 0, 0, 0, 0, 0, 0, 0}};
-
-// char currentBoard[8][8] = {{'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'}};
-
-// char defBoardPieces[8][8] = {{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-//                              {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'0', '0', '0', '0', '0', '0', '0', '0'},
-//                              {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-//                              {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}};
+hallAvg hAvg[8][8];
 
 int baseReadings[8][8] = {
     {210, 210, 210, 210, 210, 210, 210, 210},
@@ -614,6 +605,12 @@ void sendFen()
     Serial1.write("\n");
 }
 
+int runningAverage(hallAvg *ha, int x)
+{
+    ha->add(x);
+    return ha->avg();
+}
+
 int readHall(int adcnum, int rx, int tx)
 {
     digitalWrite(cs, HIGH);
@@ -663,7 +660,7 @@ void readHallRow(int row, int rx, int tx)
 {
     for (int i = 0; i < 8; i++)
     {
-        rawStates[row][i] = readHall(i, rx, tx);
+        rawStates[row][i] = runningAverage(hAvg[row][i], readHall(i, rx, tx));
     }
 }
 
