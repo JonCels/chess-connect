@@ -9,7 +9,7 @@ import { io } from 'socket.io-client';
 const socket = io("http://localhost:8002");
 
 const sendData = (data) => {
-  axios.post("http://localhost:3000/", { engineMove: data })
+  axios.post("http://localhost:8002/", { engineMove: data })
 }
 
 const container = {
@@ -49,13 +49,13 @@ function App() {
   initGame(chess, difficulty)
   const calculatedMove = calculateBestMove(chess, difficulty)
   let index = fenString.indexOf(" ")
-  if (!chess.in_checkmate() && !chess.in_stalemate() && mode == "e") {
+  if (!chess.in_checkmate() && !chess.in_stalemate() && mode[0] == "e") {
     sendData(calculatedMove + "@" + fenString[index + 1] + fenString[fenString.length-1] + "@n" + "\r\n");
   } else if (chess.in_checkmate()) {
     sendData("a@" + fenString[index + 1] + fenString[fenString.length-1] + "@c" + "\r\n");
   } else if (chess.in_stalemate()) {
     sendData("a@" + fenString[index + 1] + fenString[fenString.length-1] + "@s" + "\r\n");
-  } else if (mode == "b" || mode == "n") {
+  } else if (mode[0] == "b" || mode[0] == "n") {
     sendData("a@" + fenString[index + 1] + fenString[fenString.length-1] + "@n" + "\r\n");
   } 
 
@@ -70,8 +70,6 @@ function App() {
     gameOutput = "White Resigns!"
   } else if (gameState == "b") {
     gameOutput = "Black Resigns!"
-  } else if (gameState == "n") {
-    gameOutput = "Empty Game State"
   } else {
     gameOutput = "";
   }
