@@ -53,7 +53,7 @@ let previousData = "";
 
 io.on("connection", (socket) => {
   console.log("Client connected")
-  socket.emit("new_data", data.length == 0 ? "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@e" : data[data.length - 1])
+  socket.emit("new_data", data.length == 0 ? "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@n" : data[data.length - 1])
   if (!intervalStarted) {
     intervalStarted = true
     setInterval(() => {

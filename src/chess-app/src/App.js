@@ -9,7 +9,7 @@ import { io } from 'socket.io-client';
 const socket = io("http://localhost:8002");
 
 const sendData = (data) => {
-  axios.post("http://localhost:8002/", { engineMove: data })
+  axios.post("http://localhost:8002/", { engineMove: data }).then(response => {})
 }
 
 const container = {
@@ -81,6 +81,7 @@ function App() {
         </Grid>
         <Grid style={{ display: "grid", justifyContent: 'center', alignItems: 'center' }} item xs={6}>
           <h1 className="font-link">Chess Connect</h1>
+          <h3 className="font-link">Best Move: {calculatedMove}</h3>
           <Chessboard position={fenString}/> 
         </Grid>
         <Grid style={{ display: 'flex', alignItems: 'center' }} item xs={3}>
