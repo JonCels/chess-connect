@@ -26,6 +26,9 @@
 #define MINPRESSURE 50
 #define MAXPRESSURE 1000
 
+//Delay before lights come on after piece is picked up in beginner mode
+#define SUSPENSION_TIME 1000
+
 //Common colours:
 #define BLACK_COLOUR 0x0000
 #define WHITE_COLOUR 0xFFFF
@@ -105,15 +108,13 @@ enum UserMode : char {
 };
 
 enum GameState : char {
-    INIT_GAME = 'i',
-    PLAY_GAME = 'p',
-    RESET_GAME = 'r',
-    WAIT_PICK = 'w',
-    PIECE_LIFTED = 'l',
-    REMOVE_PIECE = 'x',
-    PROMOTING = 'P',
-    VALID_MOVE = 'v',
-    INVALID_MOVE = 'n',
+	GAME_ACTIVE,
+	GAME_INACTIVE,
+	GAME_TERMINATED,
+	PIECE_LIFTED,
+	PIECE_SUSPENDED,
+	PROMOTING,
+	ERROR
 };
 
 //Follows FEN notation assuming white pieces. For black pieces, add 32
@@ -190,7 +191,7 @@ int confirmationScreenBounds[2][2] = {};
 char* currentTheme = "light";
 int currentScreen = 0; //0 for main screen, 1 for mode select screen, 2 for game screen, 3 for promotion screen, 4 for termination screen, 5 for error screen, 6 for confirmation screen
 UserMode currentUserMode = NORMAL; //0 for beginner mode, 1 for normal mode, 2 for engine mode
-char currentGameState = 'n'; //n for not active, s for started (game active), b for black resign, w for white resign, d for draw by agreement
+char currentBluetoothGameState = 'n'; //n for not active, s for started (game active), b for black resign, w for white resign, d for draw by agreement
 char currentFen[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; //Starting position
 double time = 0.0;
 char inputStr[100] = "";
@@ -201,6 +202,7 @@ char* castlingStatus = "KQkq";
 char activeColour = WHITE;
 int numTurns = 1;
 Square *liftedSquare(0, 0);
+GameState gameState = GAME_INACTIVE;
 
 //Hall sensor board state
 int rawStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
@@ -213,6 +215,8 @@ int rawStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0}};
 Square currentBoard[BOARD_X][BOARD_Y];
 Square oldBoard[BOARD_X][BOARD_Y];
+
+//Add array of "attacked" pieces by each colour, to help with check. Remove king when generating attacked squares
 
 //Bitmap icons
 //'brush', 60x60px
@@ -601,6 +605,8 @@ void setup() {
 		Serial.print(", ");	
 		Serial.println(squarray6[i].col);	
 	}
+	
+	highlightMoves(squarray5);
 }
 
 void loop() {
@@ -616,6 +622,45 @@ void loop() {
 		handleTouch(x, y);
 	}
 	btComm();
+	//stateMachine();
+}
+
+void stateMachine() {
+	switch(gameState) { //State machine
+		case GAME_INACTIVE:
+			//start button and board in starting position -> GAME_ACTIVE
+			//move made and board (otherwise) in starting position -> GAME_ACTIVE
+			//start button while board not in starting position -> ERROR
+			//move made and board (otherwise) not in starting position -> ERROR
+			break;
+		case GAME_ACTIVE:
+			//pawn on final row -> PROMOTING
+			//(single?) change detected on board -> PIECE_LIFTED
+			//checkmate, stalemate detected -> GAME_TERMINATED
+			//resign, draw selected on LCD -> GAME_TERMINATED
+			break;
+		case PIECE_LIFTED:
+			//beginner mode and no change detected on board within timeframe -> PIECE_SUSPENDED
+			//change detected on board (within timeframe for beginner mode) and valid move -> GAME_ACTIVE
+			//change detected on board (within timeframe for beginner mode) and invalid move -> ERROR
+			break;
+		case PIECE_SUSPENDED:
+			//change detected on board and valid move -> GAME_ACTIVE
+			//change detected on board and invalid move -> ERROR
+			break;
+		case PROMOTING:
+			//piece selected on LCD -> GAME_ACTIVE
+			//change detected on board -> ERROR
+			break;
+		case GAME_TERMINATED:
+			//ok button on LCD -> GAME_INACTIVE
+			break;
+		case ERROR:
+			//ok button on LCD after wrong move -> GAME_ACTIVE
+			//ok button on LCD after no promotion selection -> PROMOTION
+			//ok button on LCD after other error? -> GAME_ACTIVE
+			break;
+	}
 }
 
 void printing() {
@@ -864,7 +909,7 @@ void lightUp(int row, int col) {
     digitalWrite(cathodes[col + 1], HIGH);
 }
 
-bool lightValidSquare(int row, int col, Colour activeColour) {
+bool lightValidSquare(int row, int col, Colour activeColour) { //possibly delete
     if (currentBoard[row][col].piece == NO_PIECE) {
         lightUp(row, col);
         return true;
@@ -882,11 +927,17 @@ void lightsOff() {
     }
 }
 
-void highlightMoves(Square square) {
-	int row = square.row;
-	int col = square.col;
-    Colour activeColour = square.colour;
-	ChessPiece piece = square.piece;    
+void highlightMoves(Square square[]) {
+	int i = 0;
+	Square nextSquare = square[i++];
+	while (nextSquare.row >= 0 && nextSquare.col >= 0) {
+		Serial.print("Light up square: ");
+		Serial.print(nextSquare.row);
+		Serial.print(", ");
+		Serial.println(nextSquare.col);
+		//lightUp(nextSquare.row, nextSquare.col);
+		nextSquare = square[i++];
+	}
 }
 
 void getPawnMoves(Square startingSquare, Square possibleMoves[PAWN_SIGHT]) {
@@ -1065,6 +1116,7 @@ void getRookMoves(Square startingSquare, Square possibleMoves[ROOK_SIGHT]) {
 }
 
 void getQueenMoves(Square startingSquare, Square possibleMoves[QUEEN_SIGHT]) {
+	Serial.println(millis());
 	int row = startingSquare.row;
 	int col = startingSquare.col;
     Colour activeColour = startingSquare.colour;
@@ -1181,6 +1233,7 @@ void getQueenMoves(Square startingSquare, Square possibleMoves[QUEEN_SIGHT]) {
 		newRow += 1;
 		newCol += 1;
 	}
+	Serial.println(millis());
 }
 
 void getKingMoves(Square startingSquare, Square possibleMoves[KING_SIGHT]) {
@@ -1263,6 +1316,42 @@ void getKingMoves(Square startingSquare, Square possibleMoves[KING_SIGHT]) {
 		if (targetSquare.colour != activeColour) { //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
+	}
+}
+
+void flash() {
+	Square square = *liftedSquare;
+	switch(square.piece) {
+		case PAWN:
+			Square possiblePawnMoves[PAWN_SIGHT] = {};
+			getPawnMoves(square, possiblePawnMoves);
+			highlightMoves(possiblePawnMoves);
+			break;
+		case KNIGHT:
+			Square possibleKnightMoves[KNIGHT_SIGHT] = {};
+			getKnightMoves(square, possibleKnightMoves);
+			highlightMoves(possibleKnightMoves);
+			break;
+		case BISHOP:
+			Square possibleBishopMoves[BISHOP_SIGHT] = {};
+			getBishopMoves(square, possibleBishopMoves);
+			highlightMoves(possibleBishopMoves);
+			break;
+		case ROOK:
+			Square possibleRookMoves[ROOK_SIGHT] = {};
+			getRookMoves(square, possibleRookMoves);
+			highlightMoves(possibleRookMoves);
+			break;
+		case QUEEN:
+			Square possibleQueenMoves[QUEEN_SIGHT] = {};
+			getQueenMoves(square, possibleQueenMoves);
+			highlightMoves(possibleQueenMoves);
+			break;
+		case KING:
+			Square possibleKingMoves[KING_SIGHT] = {};
+			getKingMoves(square, possibleKingMoves);
+			highlightMoves(possibleKingMoves);
+			break;
 	}
 }
 
@@ -2035,7 +2124,7 @@ void updateState(char* FEN, char gameState, char userMode) {
 	strncat(stateData, "\r", 1);
 
 	strcpy(currentFen, FEN);
-	currentGameState = gameState;
+	currentBluetoothGameState = gameState;
 	currentUserMode = getUserModeEnum(userMode);
 	
 	sendBluetoothData(stateData);
