@@ -6,7 +6,7 @@ var logger = require('morgan');
 var cors = require('cors');
 const { Server } = require('socket.io');
 const http = require("http")
-var { data, writeArduino } = require("./utils/bluetooth")
+var { data } = require("./utils/bluetooth")
 
 var indexRouter = require('./routes/index');
 
@@ -49,12 +49,6 @@ app.use(function(err, req, res, next) {
 });
 
 let intervalStarted = false;
-
-// let positions = [
-//   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@e\r", 
-//   "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3@s@n\r", 
-// ]
-
 let previousData = "";
 
 io.on("connection", (socket) => {
@@ -63,13 +57,7 @@ io.on("connection", (socket) => {
   if (!intervalStarted) {
     intervalStarted = true
     setInterval(() => {
-      // let randomPos = Math.floor(Math.random() * 5)
-      // console.log("previousData: " + previousData[data.length - 1])
-      // console.log("newData: " + data[data.length - 1])
-      // console.log(data.length)
       if (data.length != 0 && previousData != data[data.length - 1]) {
-        // console.log("Sending... " + data[data.length - 1])
-        // console.log(data.length)
         previousData = data[data.length - 1];
         socket.emit("new_data", data[data.length - 1])
         socket.broadcast.emit("new_data", data[data.length - 1])
