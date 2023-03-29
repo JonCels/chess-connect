@@ -1,12 +1,13 @@
 import './App.css';
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useState, useLayoutEffect } from "react"
 import Chessboard from 'chessboardjsx';
 import { Chess } from 'chess.js'
 import { calculateBestMove, initGame } from "chess-ai";
 import axios from "axios";
 import { Grid } from '@mui/material';
 import { io } from 'socket.io-client';
-const socket = io("http://localhost:8001");
+const socket = io("http://localhost:8002");
+// const socket2 = io.connect("http://localhost:8002");
 
 // const getData = (setData) => {
 //   axios.get("http://localhost:3000/").then(data => {
@@ -43,14 +44,19 @@ function App() {
     };
   }, []);
 
-  // console.log(data)
+  console.log(data)
   // let index = data[data.length - 1].indexOf("\r")
   // let strippedString = data[data.length - 1].substring(0,index)
-  let splitString = data.split("@")
-  const fenString = splitString[0]
-  const gameState = splitString[1]
-  const mode = splitString[2]
-  // console.log("FEN: " + fenString, "Game State: " + gameState, "Mode: " + mode)
+  let fenString = ""
+  let gameState = ""
+  let mode = ""
+  if (data.length) {
+    let splitString = data.toString().split("@")
+    fenString = splitString[0]
+    gameState = splitString[1]
+    mode = splitString[2]  
+    console.log("FEN: " + fenString, "Game State: " + gameState, "Mode: " + mode)
+  }
   // console.log(splitString)
   // const [bestMove, setBestMove] = useState("")
   // const [currentFenString, setCurrentFenString] = useState("")
@@ -105,14 +111,14 @@ function App() {
     <div className="App" style={container}>
       <Grid container spacing={2}>
         <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} item xs={3}>
-          <h1 className="font-link">Chess Connect</h1>
         </Grid>
-        <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} item xs={6}>
+        <Grid style={{ display: "grid", justifyContent: 'center', alignItems: 'center' }} item xs={6}>
+          <h1 className="font-link">Chess Connect</h1>
           <Chessboard position={fenString}/> 
         </Grid>
-        {/* <Grid style={{ display: 'flex', alignItems: 'center' }} item xs={3}>
-          <h3 className="font-link">{gameOutput}</h3>
-        </Grid> */}
+        <Grid style={{ display: 'flex', alignItems: 'center' }} item xs={3}>
+          {/* <h3 className="font-link">{gameOutput}</h3> */}
+        </Grid>
       </Grid>
     </div>
   );
