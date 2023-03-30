@@ -245,8 +245,9 @@ bool promoting = false;
 char* castlingStatus = "KQkq";
 char activeColour = WHITE;
 int numTurns = 1;
-Square *liftedSquare;
+Square *liftedSquare = NULL;
 Square *placedSquare;
+Colour liftedPieceColour = NO_COLOUR;
 GameState gameState = GAME_INACTIVE;
 bool liftedFlag = false;
 double timeLifted = 0;
@@ -619,70 +620,6 @@ void loop() {
 	//stateMachine();
 }
 
-void setupHallSensors() {
-    pinMode(CS, OUTPUT);
-    pinMode(CLK, OUTPUT);
-
-    for (int i = 0; i < BOARD_X; i++) {
-        pinMode(hallRx[i], INPUT);
-        pinMode(hallTx[i], OUTPUT);
-    }
-}
-
-int readHallSensorData(int adcnum, int rx, int tx) {
-    digitalWrite(CS, HIGH);
-    digitalWrite(CLK, LOW);
-    digitalWrite(CS, LOW);
-
-    int commandout = adcnum;
-    commandout |= 0x18;
-    commandout <<= 3;
-
-    for (int i = 0; i < 5; i++) {
-        if (commandout & 0x80) {
-            digitalWrite(tx, HIGH);
-        }
-        else {
-            digitalWrite(tx, LOW);
-        }
-
-        commandout <<= 1;
-        digitalWrite(CLK, HIGH);
-        digitalWrite(CLK, LOW);
-    }
-
-    int adcout = 0;
-
-    for (int i = 0; i < 12; i++) {
-        digitalWrite(CLK, HIGH);
-        digitalWrite(CLK, LOW);
-
-        adcout <<= 1;
-
-        if (digitalRead(rx)) {
-            adcout |= 0x1;
-		}
-    }
-
-    digitalWrite(CS, HIGH);
-
-    adcout >>= 1;
-    return adcout;
-}
-
-void getHallSensorData() {
-    for (int i = 0; i < BOARD_Y; i++) {
-		for (int j = 0; j < BOARD_X; j++) {
-			rawStates[i][j] = runningAverage(&hAvg[i][j], readHallSensorData(j, hallRx[i], hallTx[i]));
-		}
-    }
-}
-
-int runningAverage(hallAvg *ha, int x) {
-	ha->add(x);
-	return ha->avg();
-}
-
 void stateMachine() {
 	getHallSensorData();
 	identifyColours();
@@ -777,6 +714,70 @@ void stateMachine() {
 			break;
 	}
 	updateBoard();
+}
+
+void setupHallSensors() {
+    pinMode(CS, OUTPUT);
+    pinMode(CLK, OUTPUT);
+
+    for (int i = 0; i < BOARD_X; i++) {
+        pinMode(hallRx[i], INPUT);
+        pinMode(hallTx[i], OUTPUT);
+    }
+}
+
+int readHallSensorData(int adcnum, int rx, int tx) {
+    digitalWrite(CS, HIGH);
+    digitalWrite(CLK, LOW);
+    digitalWrite(CS, LOW);
+
+    int commandout = adcnum;
+    commandout |= 0x18;
+    commandout <<= 3;
+
+    for (int i = 0; i < 5; i++) {
+        if (commandout & 0x80) {
+            digitalWrite(tx, HIGH);
+        }
+        else {
+            digitalWrite(tx, LOW);
+        }
+
+        commandout <<= 1;
+        digitalWrite(CLK, HIGH);
+        digitalWrite(CLK, LOW);
+    }
+
+    int adcout = 0;
+
+    for (int i = 0; i < 12; i++) {
+        digitalWrite(CLK, HIGH);
+        digitalWrite(CLK, LOW);
+
+        adcout <<= 1;
+
+        if (digitalRead(rx)) {
+            adcout |= 0x1;
+		}
+    }
+
+    digitalWrite(CS, HIGH);
+
+    adcout >>= 1;
+    return adcout;
+}
+
+void getHallSensorData() {
+    for (int i = 0; i < BOARD_Y; i++) {
+		for (int j = 0; j < BOARD_X; j++) {
+			rawStates[i][j] = runningAverage(&hAvg[i][j], readHallSensorData(j, hallRx[i], hallTx[i]));
+		}
+    }
+}
+
+int runningAverage(hallAvg *ha, int x) {
+	ha->add(x);
+	return ha->avg();
 }
 
 //Initializes currentBoard with the starting position. Places white at the bottom and black at the top of the board
@@ -994,8 +995,11 @@ bool checkPickup() {
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
 			if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
-				liftedSquare = &currentBoard[i][j];
-				return true;
+				if (liftedSquare == NULL) {
+					liftedSquare = &currentBoard[i][j];
+					liftedPieceColour = oldBoard[i][j].colour;
+					return true;
+				}
 			}
 		}
 	}
@@ -1006,10 +1010,14 @@ bool checkPlaceDown() {
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
 			if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
-				currentBoard[i][j] = *liftedSquare;
-				(*liftedSquare).piece = NO_PIECE;
-				(*liftedSquare).colour = NO_COLOUR;
-				return true;
+				if (liftedSquare != NULL && liftedPieceColour == currentBoard[i][j].colour) {
+					currentBoard[i][j] = *liftedSquare;
+					(*liftedSquare).piece = NO_PIECE;
+					(*liftedSquare).colour = NO_COLOUR;
+					liftedSquare = NULL;
+					liftedPieceColour = NO_COLOUR;
+					return true;
+				}
 			}
 		}
 	}
@@ -1730,23 +1738,7 @@ void handleTouch(int x, int y) {
 	}
 	
 	if (currentScreen = ERROR_SCREEN && (x > okButtonBounds[0][0] && x < (okButtonBounds[0][0] + OK_BUTTON_X) && y > okButtonBounds[0][1] && (y < okButtonBounds[0][1] + OK_BUTTON_Y))) {
-		switch(afterError) {
-			case GAME_ACTIVE:
-				gameState = GAME_ACTIVE;
-				currentScreen = GAME_SCREEN;
-				makeGameScreen();
-				break;
-			case GAME_INACTIVE:
-				gameState = GAME_INACTIVE;
-				currentScreen = MAIN_SCREEN;
-				makeMainScreen();
-				break;
-			case PROMOTING:
-				gameState = PROMOTING;
-				currentScreen = PROMOTION_SCREEN;
-				makePromotionScreen();
-				break;
-		}
+		errorOkButton();
 	}
 }
 
@@ -2364,7 +2356,23 @@ void terminationOkButton() {
 }
 
 void errorOkButton() {
-
+	switch(afterError) {
+		case GAME_ACTIVE:
+			gameState = GAME_ACTIVE;
+			currentScreen = GAME_SCREEN;
+			makeGameScreen();
+			break;
+		case GAME_INACTIVE:
+			gameState = GAME_INACTIVE;
+			currentScreen = MAIN_SCREEN;
+			makeMainScreen();
+			break;
+		case PROMOTING:
+			gameState = PROMOTING;
+			currentScreen = PROMOTION_SCREEN;
+			makePromotionScreen();
+			break;
+	}
 }
 
 void themeButton() {
