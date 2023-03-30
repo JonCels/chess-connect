@@ -201,7 +201,7 @@ bool promoting = false;
 char* castlingStatus = "KQkq";
 char activeColour = WHITE;
 int numTurns = 1;
-Square *liftedSquare(0, 0);
+Square *liftedSquare;
 GameState gameState = GAME_INACTIVE;
 
 //Hall sensor board state
@@ -626,11 +626,17 @@ void loop() {
 }
 
 void stateMachine() {
+	getHallSensorData();
+	identifyColours();
+	
 	switch(gameState) { //State machine
 		case GAME_INACTIVE:
 			//start button and board in starting position -> GAME_ACTIVE
-			//move made and board (otherwise) in starting position -> GAME_ACTIVE
 			//start button while board not in starting position -> ERROR
+			if (checkPickup()) {
+				;
+			}
+			//move made and board (otherwise) in starting position -> GAME_ACTIVE
 			//move made and board (otherwise) not in starting position -> ERROR
 			break;
 		case GAME_ACTIVE:
@@ -853,11 +859,28 @@ void boardToFen(char boardFen[90]) {
 	strncat(boardFen, &fullmoves, 1);
 }
 
+
 bool validStartingPosition() {
 	char* currentFen = "";
 	char* startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; //Starting position
 	boardToFen(currentFen);
 	return (strcmp(currentFen, startingFen) == 0);
+}
+
+bool validStartingBoard() {
+	Colour topColour = currentBoard[0][0].colour;
+	Colour botColour = currentBoard[7][0].colour;
+	for (int i = 0; i < BOARD_X; i++) {
+		if (currentBoard[0][i].colour != topColour || currentBoard[1][i].colour != topColour || currentBoard[6][i].colour != botColour || currentBoard[7][i].colour != botColour) {
+			return false;
+		}
+	}
+	for (int i = 0; i < BOARD_X; i++) {
+		if (currentBoard[2][i].colour != NO_COLOUR || currentBoard[3][i].colour != NO_COLOUR || currentBoard[4][i].colour != NO_COLOUR || currentBoard[5][i].colour != NO_COLOUR) {
+			return false;
+		}
+	}
+	return true;
 }
 
 void identifyColours() {
@@ -900,6 +923,48 @@ bool checkPlaceDown() {
 		}
 	}
 	return false;
+}
+
+//Besides the lifted piece, the board is in the starting position
+//Can maybe replace with an if -> continue statement in copy of validStartingBoard()
+bool otherwiseStartingBoard() {
+	int col = 0;
+	if ((*liftedSquare).col == 0) { //Don't compare vs colour of lifted piece
+		col = 7;
+	}
+	Colour topColour = currentBoard[0][col].colour;
+	Colour botColour = currentBoard[7][col].colour;
+	
+	for (int i = 0; i < BOARD_X; i++) {
+		if (!(currentBoard[0][i] == *liftedSquare) && currentBoard[0][i].colour != topColour) {
+			return false;
+		}
+		else if (!(currentBoard[1][i] == *liftedSquare) && currentBoard[1][i].colour != topColour) {
+			return false;
+		}
+		else if (!(currentBoard[6][i] == *liftedSquare) && currentBoard[6][i].colour != botColour) {
+			return false;
+		}
+		else if (!(currentBoard[7][i] == *liftedSquare) && currentBoard[7][i].colour != botColour) {
+			return false;
+		}
+	}
+	
+	for (int i = 0; i < BOARD_X; i++) {
+		if (!(currentBoard[2][i] == *liftedSquare) && currentBoard[2][i].colour != NO_COLOUR) {
+			return false;
+		}
+		else if (!(currentBoard[3][i] == *liftedSquare) && currentBoard[3][i].colour != NO_COLOUR) {
+			return false;
+		}
+		else if (!(currentBoard[4][i] == *liftedSquare) && currentBoard[4][i].colour != NO_COLOUR) {
+			return false;
+		}
+		else if (!(currentBoard[5][i] == *liftedSquare) && currentBoard[5][i].colour != NO_COLOUR) {
+			return false;
+		}
+	}
+	return true;
 }
 
 void lightUp(int row, int col) {
@@ -1943,8 +2008,18 @@ void drawEngineMove(char* move) {
 void startGameButton() {
 	updateState(currentFen, 's', getUserModeChar(currentUserMode));
 	//updateState("8/4kN2/4N1Bq/1P1P1KP1/P5p1/2P1bR2/6p1/2r5 w - - 0 1", 's', getUserModeChar(currentUserMode));
-	currentScreen = 2;
-	makeGameScreen();
+	//start button and board in starting position -> GAME_ACTIVE
+	if (gameState == GAME_INACTIVE) {
+		if (validStartingBoard()) {
+			gameState = GAME_ACTIVE;
+			currentScreen = 2;
+			makeGameScreen();
+		}
+		else {
+			gameState = ERROR;
+			currentScreen = 5;
+		}
+	}
 }
 
 void selectModeButton() {
@@ -2142,6 +2217,7 @@ void sendBluetoothData(char* stateData) {
 	for (int i = 0; i < len; i++) {
 		BTserial.write(stateData[i]);
 	}
+	Serial.println(stateData);
 }
 
 void parseWebPayload(char* webData) { //eg. "Nf3@w12@n" or "a@a@n" if not in engine mode
@@ -2155,9 +2231,10 @@ void parseWebPayload(char* webData) { //eg. "Nf3@w12@n" or "a@a@n" if not in eng
 	getSubstring(webCode, moveNumStr, 1, strlen(webCode));
 	int moveNum = (atoi(moveNumStr) - 1) * 2;
 	moveNum += (strcmp(turnColour, "b") == 0) ? 1 : 0;
-
+	
 	if (moveNum == 0) { //Starting position
 		currentEngineMove = "N/A";
+		drawEngineMove(currentEngineMove);
 		return;
 	}
 
@@ -2174,9 +2251,10 @@ void parseWebPayload(char* webData) { //eg. "Nf3@w12@n" or "a@a@n" if not in eng
 		stalemate();
 		return;
 	}
-
+	
 	if (strcmp(engineMove, "a") == 0) { //Not in engine mode
 		currentEngineMove = "N/A";
+		drawEngineMove(currentEngineMove); 
 		return;
 	}  
 
