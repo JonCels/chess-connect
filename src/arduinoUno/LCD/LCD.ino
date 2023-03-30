@@ -246,13 +246,16 @@ char* castlingStatus = "KQkq";
 char activeColour = WHITE;
 int numTurns = 1;
 Square *liftedSquare = NULL;
-Square *placedSquare;
+Square *toSquare = NULL;
+Square *fromSquare = NULL;
 Colour liftedPieceColour = NO_COLOUR;
 GameState gameState = GAME_INACTIVE;
 bool liftedFlag = false;
 double timeLifted = 0;
 Square *promotionSquare;
 GameState afterError = GAME_ACTIVE;
+Colour topColour = BLACK;
+Colour botColour = BLACK;
 
 //Hall sensor board state
 hallAvg hAvg[8][8];
@@ -629,12 +632,12 @@ void stateMachine() {
 			//Handled in startGameButton() function:
 			//Start button and board in starting position -> GAME_ACTIVE
 			//Start button while board not in starting position -> ERROR	
-			if (checkPickup() && otherwiseStartingBoard()) { //Move made and board (otherwise) in starting position -> GAME_ACTIVE
+			if (checkPlaceDown() && otherwiseStartingBoard()) { //Move made and board (otherwise) in starting position -> GAME_ACTIVE
 				gameState = GAME_ACTIVE;
 				currentScreen = GAME_SCREEN;
 				makeGameScreen();
 			}
-			else if (checkPickup() && !otherwiseStartingBoard()) { //Move made and board (otherwise) not in starting position -> ERROR
+			else if (checkPlaceDown() && !otherwiseStartingBoard()) { //Move made and board (otherwise) not in starting position -> ERROR
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Board not in starting position!");
@@ -673,7 +676,7 @@ void stateMachine() {
 			if (checkPlaceDown() && moveValid()) { //Change detected on board and valid move -> GAME_ACTIVE
 				gameState = GAME_ACTIVE;
 			}
-			else if (checkPickup() && !moveValid()) { //Change detected on board and invalid move -> ERROR
+			else if (checkPlaceDown() && !moveValid()) { //Change detected on board and invalid move -> ERROR
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Invalid move!");
@@ -695,7 +698,7 @@ void stateMachine() {
 		case PROMOTING:
 			//Handled in promotionButton():
 			//Piece selected on LCD -> GAME_ACTIVE
-			if (checkPickup() || checkPlaceDown()) { //Change detected on board -> ERROR
+			if (checkPlaceDown()) { //Change detected on board -> ERROR
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Please select a piece for promotion!");
@@ -788,29 +791,36 @@ void initBoard() {
 			switch(i) {
 				case 0:
 					currentBoard[i][j].piece = backRow[j];
-					currentBoard[i][j].colour = BLACK;
+					//currentBoard[i][j].colour = BLACK;
 					break;
 				case 7:
 					currentBoard[i][j].piece = backRow[j];
-					currentBoard[i][j].colour = WHITE;
+					//currentBoard[i][j].colour = WHITE;
 					break;
 				case 1:
 					currentBoard[i][j].piece = PAWN;
-					currentBoard[i][j].colour = BLACK;
+					//currentBoard[i][j].colour = BLACK;
 					break;
 				case 6:
 					currentBoard[i][j].piece = PAWN;
-					currentBoard[i][j].colour = WHITE;
+					//currentBoard[i][j].colour = WHITE;
 					break;
 				default:
 					currentBoard[i][j].piece = NO_PIECE;
-					currentBoard[i][j].colour = NO_COLOUR;
+					//currentBoard[i][j].colour = NO_COLOUR;
 					break;
 			}
 			currentBoard[i][j].row = i;
 			currentBoard[i][j].col = j;
 		}
 	}
+}
+
+//Should only be called in the starting position
+void getColourOrientation() {
+	identifyColours();
+	topColour = currentBoard[0][0].colour;
+	botColour = currentBoard[7][0].colour;
 }
 
 void updateBoard() {
@@ -919,57 +929,58 @@ bool validStartingPosition() {
 }
 
 bool validStartingBoard() {
-	Colour topColour = currentBoard[0][0].colour;
-	Colour botColour = currentBoard[7][0].colour;
-	for (int i = 0; i < BOARD_X; i++) {
-		if (currentBoard[0][i].colour != topColour || currentBoard[1][i].colour != topColour || currentBoard[6][i].colour != botColour || currentBoard[7][i].colour != botColour) {
-			return false;
-		}
-	}
-	for (int i = 0; i < BOARD_X; i++) {
-		if (currentBoard[2][i].colour != NO_COLOUR || currentBoard[3][i].colour != NO_COLOUR || currentBoard[4][i].colour != NO_COLOUR || currentBoard[5][i].colour != NO_COLOUR) {
-			return false;
+	for (int i = 0; i < BOARD_Y; i++) {
+		for (int j = 0; j < BOARD_X; j++) {
+			switch(i) {
+				case 0: case 1:
+					if (currentBoard[i][j].colour != topColour) {
+						return false;
+					}
+					break;
+				case 2: case 3: case 4: case 5:
+					if (currentBoard[i][j].colour != NO_COLOUR) {
+						return false;
+					}
+					break;
+				case 6: case 7:
+					if (currentBoard[i][j].colour != botColour) {
+						return false;
+					}
+					break;					
+			}
 		}
 	}
 	return true;
 }
 
-//Besides the lifted piece, the board is in the starting position
+//Besides the moved piece, the board is in the starting position
+//Must be called after checkPlacedown()
 bool otherwiseStartingBoard() {
-	int col = 0;
-	if ((*liftedSquare).col == 0) { //Don't compare vs colour of lifted piece
-		col = 7;
-	}
-	Colour topColour = currentBoard[0][col].colour;
-	Colour botColour = currentBoard[7][col].colour;
-	
-	for (int i = 0; i < BOARD_X; i++) {
-		if (!(currentBoard[0][i] == *liftedSquare) && currentBoard[0][i].colour != topColour) {
-			return false;
-		}
-		else if (!(currentBoard[1][i] == *liftedSquare) && currentBoard[1][i].colour != topColour) {
-			return false;
-		}
-		else if (!(currentBoard[6][i] == *liftedSquare) && currentBoard[6][i].colour != botColour) {
-			return false;
-		}
-		else if (!(currentBoard[7][i] == *liftedSquare) && currentBoard[7][i].colour != botColour) {
-			return false;
-		}
-	}
-	
-	for (int i = 0; i < BOARD_X; i++) {
-		if (!(currentBoard[2][i] == *liftedSquare) && currentBoard[2][i].colour != NO_COLOUR) {
-			return false;
-		}
-		else if (!(currentBoard[3][i] == *liftedSquare) && currentBoard[3][i].colour != NO_COLOUR) {
-			return false;
-		}
-		else if (!(currentBoard[4][i] == *liftedSquare) && currentBoard[4][i].colour != NO_COLOUR) {
-			return false;
-		}
-		else if (!(currentBoard[5][i] == *liftedSquare) && currentBoard[5][i].colour != NO_COLOUR) {
-			return false;
+	int fromRow = (*fromSquare).row;
+	int fromCol = (*fromSquare).col;
+	int toRow = (*toSquare).row;
+	int toCol = (*toSquare).col;
+	for (int i = 0; i < BOARD_Y; i++) {
+		for (int j = 0; j < BOARD_X; j++) {
+			if ((fromRow != i || fromCol != j) && (toRow != i || toCol != j)) { //Not square that piece moved to or from
+				switch(i) {
+					case 0: case 1:
+						if (currentBoard[i][j].colour != topColour) {
+							return false;
+						}
+						break;
+					case 2: case 3: case 4: case 5:
+						if (currentBoard[i][j].colour != NO_COLOUR) {
+							return false;
+						}
+						break;
+					case 6: case 7:
+						if (currentBoard[i][j].colour != botColour) {
+							return false;
+						}
+						break;					
+				}
+			}
 		}
 	}
 	return true;
@@ -998,6 +1009,7 @@ bool checkPickup() {
 				if (liftedSquare == NULL) {
 					liftedSquare = &currentBoard[i][j];
 					liftedPieceColour = oldBoard[i][j].colour;
+					fromSquare = &Square(currentBoard[i][j].piece, liftedPieceColour, i, j);
 					return true;
 				}
 			}
@@ -1007,15 +1019,18 @@ bool checkPickup() {
 }
 
 bool checkPlaceDown() {
+	checkPickup();
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
 			if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
 				if (liftedSquare != NULL && liftedPieceColour == currentBoard[i][j].colour) {
-					currentBoard[i][j] = *liftedSquare;
-					(*liftedSquare).piece = NO_PIECE;
-					(*liftedSquare).colour = NO_COLOUR;
+					currentBoard[i][j] = Square((*liftedSquare).piece, liftedPieceColour, i, j);
+					int origRow = (*liftedSquare).row;
+					int origCol = (*liftedSquare).col;
+					currentBoard[origRow][origCol] = Square(origRow, origCol);
 					liftedSquare = NULL;
 					liftedPieceColour = NO_COLOUR;
+					toSquare = &Square(currentBoard[i][j].piece, currentBoard[i][j].colour, i, j);
 					return true;
 				}
 			}
@@ -1024,14 +1039,14 @@ bool checkPlaceDown() {
 	return false;
 }
 
-void getPlaceDownSquare() {
+void getPlaceDownSquare() { //Can delete?
 	int liftedRow = (*liftedSquare).row;
 	int liftedCol = (*liftedSquare).col;
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
 			if (currentBoard[i][j] != oldBoard[i][j]) {
 				if (i != liftedRow || j != liftedCol) { //Board value changed somewhere besides the lifted square
-					placedSquare = &currentBoard[i][j];
+					toSquare = &currentBoard[i][j];
 				}
 			}
 		}
@@ -1039,21 +1054,14 @@ void getPlaceDownSquare() {
 }
 
 bool moveValid() { //To be implemented
-	Square fromSquare = *liftedSquare;
-	int fromRow = fromSquare.row;
-	int fromCol = fromSquare.col;
-	ChessPiece fromPiece = fromSquare.piece;
-	
-	Square toSquare = *placedSquare;
-	int toRow = toSquare.row;
-	int toCol = toSquare.col;
-	ChessPiece toPiece = toSquare.piece;
+	Square from = *fromSquare;
+	Square to = *toSquare;
 	
 	Square possibleMoves[QUEEN_SIGHT] = {};
-	getValidMoves(fromSquare, possibleMoves);
+	getValidMoves(from, possibleMoves);
 	int i = 0;
 	while (possibleMoves[i].row != -1 && possibleMoves[i].col != -1) {
-		if (possibleMoves[i] == toSquare) {
+		if (possibleMoves[i] == *toSquare) {
 			return true;
 		}
 	}
@@ -2231,11 +2239,11 @@ void drawEngineMove(char* move) {
 }
 
 void startGameButton() {
-	updateState(currentFen, 's', getUserModeChar(currentUserMode));
 	//updateState("8/4kN2/4N1Bq/1P1P1KP1/P5p1/2P1bR2/6p1/2r5 w - - 0 1", 's', getUserModeChar(currentUserMode));
 	//start button and board in starting position -> GAME_ACTIVE
 	if (gameState == GAME_INACTIVE) {
 		if (validStartingBoard()) {
+			updateState(currentFen, 's', getUserModeChar(currentUserMode));
 			gameState = GAME_ACTIVE;
 			currentScreen = GAME_SCREEN;
 			makeGameScreen();
