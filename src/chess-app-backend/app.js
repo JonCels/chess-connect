@@ -6,7 +6,7 @@ var logger = require('morgan');
 var cors = require('cors');
 const { Server } = require('socket.io');
 const http = require("http")
-var { data, writeArduino } = require("./utils/bluetooth")
+var { data } = require("./utils/bluetooth")
 
 var indexRouter = require('./routes/index');
 
@@ -14,7 +14,7 @@ var app = express();
 const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:8001',
+    origin: 'http://localhost:8002',
     methods: ['GET', 'POST']
   }
 })
@@ -49,34 +49,24 @@ app.use(function(err, req, res, next) {
 });
 
 let intervalStarted = false;
-
-const positions = [
-  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@e", 
-  "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3@n@n", 
-  "rnbqkbnr/pp2pppp/2p5/3pP3/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3@s@n", 
-  "rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3@s@e", 
-  "rnbqkbnr/pp1p1ppp/2p5/4p3/2P5/6P1/PP1PPP1P/RNBQKBNR w KQkq - 0 3@s@e"
-]
+let previousData = "";
 
 io.on("connection", (socket) => {
   console.log("Client connected")
-
-  let previousData = positions[0];
-  socket.broadcast.emit("new_data", previousData)
+  socket.emit("new_data", data.length == 0 ? "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@n" : data[data.length - 1])
   if (!intervalStarted) {
     intervalStarted = true
     setInterval(() => {
-      let randomPos = Math.floor(Math.random() * 5)
-      if (previousData != positions[randomPos]) {
-        previousData = positions[randomPos];
-        console.log(previousData)
-        socket.broadcast.emit("new_data", previousData)
+      if (data.length != 0 && previousData != data[data.length - 1]) {
+        previousData = data[data.length - 1];
+        socket.emit("new_data", data[data.length - 1])
+        socket.broadcast.emit("new_data", data[data.length - 1])
       }
     }, 1000)
   }
 })
 
-server.listen(8001, () => {
+server.listen(8002, () => {
   console.log("Server is online")
 })
 
