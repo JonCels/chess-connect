@@ -10,10 +10,7 @@ const errFunction = (err) => {
 }
 
 function storeData(str) {
-    // console.log(str);
     data.push(str);
-    console.log(data);
-    btSerial.write(Buffer.from("From node\r"), errFunction);
 }
 
 function writeArduino(str) {
