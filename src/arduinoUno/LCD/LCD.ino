@@ -180,6 +180,29 @@ struct Square {
 	}
 };
 
+struct hallAvg
+{
+	int elements[AVG_SAMPLE_SIZE];
+	int index;
+
+	void add(int value)
+	{
+		elements[index] = value;
+		index = (index + 1) % AVG_SAMPLE_SIZE;
+	}
+	int avg()
+	{
+		int s = 0;
+		for (uint i = 0; i < AVG_SAMPLE_SIZE; i++)
+		{
+			s += elements[i];
+		}
+		return s / AVG_SAMPLE_SIZE;
+	}
+
+	hallAvg() : elements{}, index(0) {}
+};
+
 SoftwareSerial BTserial(10, 11); //TX, RX
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, A4);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 290);
@@ -223,6 +246,7 @@ double timeLifted = 0;
 Square *promotionSquare;
 
 //Hall sensor board state
+hallAvg hAvg[8][8];
 int rawStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
@@ -231,6 +255,7 @@ int rawStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0}};
+
 Square currentBoard[BOARD_X][BOARD_Y];
 Square oldBoard[BOARD_X][BOARD_Y];
 
@@ -798,10 +823,16 @@ int readHallSensorData(int adcnum, int rx, int tx) {
     return adcout;
 }
 
+int runningAverage(hallAvg *ha, int x)
+{
+	ha->add(x);
+	return ha->avg();
+}
+
 void getHallSensorData() {
     for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
-			rawStates[i][j] = readHallSensorData(j, hallRx[i], hallTx[i]);
+			rawStates[i][j] = runningAverage(hAvg[i][j], readHallSensorData(j, hallRx[i], hallTx[i]));
 		}
     }
 }
