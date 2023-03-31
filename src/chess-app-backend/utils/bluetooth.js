@@ -1,6 +1,7 @@
 const BTSP = require('bluetooth-serial-port');
 const btSerial = new BTSP.BluetoothSerialPort();
-var data = [];
+var data = ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@n"];
+var deviceName = [];
 console.log("Connecting...");
 
 const errFunction = (err) => {
@@ -22,6 +23,7 @@ btSerial.on("found", function(address, name) {
         btSerial.findSerialPortChannel(address, function(channel) {
             btSerial.connect(address, channel, function() {
                 console.log('Connected to: ', name);
+                deviceName.push(name)
                 var str = "";
                 btSerial.on('data', function(bufferData) {
                     str += bufferData;
@@ -39,5 +41,6 @@ btSerial.on("found", function(address, name) {
 });
 
 btSerial.inquire();
+console.log(deviceName)
 
-module.exports = { data: data, writeArduino: writeArduino }
+module.exports = { data: data, deviceName: deviceName, writeArduino: writeArduino }

@@ -6,7 +6,7 @@ var logger = require('morgan');
 var cors = require('cors');
 const { Server } = require('socket.io');
 const http = require("http")
-var { data } = require("./utils/bluetooth")
+var { data, deviceName } = require("./utils/bluetooth")
 
 var indexRouter = require('./routes/index');
 
@@ -49,18 +49,19 @@ app.use(function(err, req, res, next) {
 });
 
 let intervalStarted = false;
-let previousData = "";
+let previousData = {board: "", deviceName: ""};
 
 io.on("connection", (socket) => {
   console.log("Client connected")
-  socket.emit("new_data", data.length == 0 ? "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@n" : data[data.length - 1])
+  socket.emit("new_data", JSON.stringify({board: data.length == 0 ? "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1@s@n" : data[data.length - 1], deviceName: deviceName.length ? deviceName[0] : ""}))
   if (!intervalStarted) {
     intervalStarted = true
     setInterval(() => {
-      if (data.length != 0 && previousData != data[data.length - 1]) {
-        previousData = data[data.length - 1];
-        socket.emit("new_data", data[data.length - 1])
-        socket.broadcast.emit("new_data", data[data.length - 1])
+      console.log(deviceName)
+      if ((data.length != 0 && previousData.board != data[data.length - 1]) || (deviceName.length != 0 && previousData.deviceName != deviceName[0])) {
+        previousData = {board: data[data.length - 1], deviceName: deviceName[0]};
+        socket.emit("new_data", JSON.stringify({board: data[data.length - 1], deviceName: deviceName[0]}))
+        socket.broadcast.emit("new_data", JSON.stringify({board: data[data.length - 1], deviceName: deviceName[0]}))
       }
     }, 1000)
   }

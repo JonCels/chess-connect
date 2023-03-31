@@ -1,4 +1,5 @@
 import './App.css';
+import { TbChessKnightFilled, TbChessKnight, TbCircleFilled } from "react-icons/tb"
 import React, {useEffect, useState, useLayoutEffect } from "react"
 import Chessboard from 'chessboardjsx';
 import { Chess } from 'chess.js'
@@ -13,7 +14,6 @@ const sendData = (data) => {
 }
 
 const container = {
-  marginTop: "6rem",
   display: "flex",
   justifyContent: "center",
   alignItems: "center"
@@ -21,9 +21,12 @@ const container = {
 
 function App() {
   const [data, setData] = useState([])
+  const [deviceName, setDeviceName] = useState("")
   useEffect(() => {
     socket.on("new_data", (data) => {
-      setData(data)
+      console.log(JSON.parse(data))
+      setData(JSON.parse(data).board)
+      setDeviceName(JSON.parse(data).deviceName)
     })
   }, [socket])
 
@@ -62,7 +65,7 @@ function App() {
   let gameOutput;
   if (chess.in_checkmate()) {
     gameOutput = "Checkmate!";
-  } else if (chess.in_stalemate()) {
+  } else if (chess.in_stalemate() && data.length != 0) {
     gameOutput = "Stalemate!"
   } else if (gameState == "d") {
     gameOutput = "Draw!"
@@ -74,14 +77,38 @@ function App() {
     gameOutput = "";
   }
 
+  let currentPlayer = ""
+  if (fenString[index + 1] == "w") {
+    currentPlayer = "w"
+  } else {
+    currentPlayer = "b"
+  }
+
   return (
     <div className="App" style={container}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{marginBottom: '100px'}}>
         <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} item xs={3}>
         </Grid>
         <Grid style={{ display: "grid", justifyContent: 'center', alignItems: 'center' }} item xs={6}>
-          <h1 className="font-link">Chess Connect</h1>
-          <h3 className="font-link">Best Move: {calculatedMove}</h3>
+          <h1 className="font-link" style={{ margin: "auto", marginBottom: "40px", marginTop: "50px" }}>Chess Connect</h1>
+          <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            {!deviceName ? 
+              <div style={{display: 'flex', paddingBottom: '0px', marginBottom: '0px', marginTop: '15px'}}>
+              <TbCircleFilled style={{ color: "red", marginTop: '4px', marginRight: '7px', paddingBottom: '0px', marginBottom: '0px' }}/>
+              <h3 className="font-link" style={{ color: "red", marginTop: '0px', paddingTop: '0px', paddingBottom: '0px', marginBottom: '0px'}}>Disconnected</h3> 
+              </div>
+              : 
+              <div style={{display: 'flex', paddingBottom: '0px', marginBottom: '0px', padding: '0px', marginTop: '15px'}}>
+              <TbCircleFilled style={{ color: "lightGreen", marginTop: '3px', marginRight: '7px', paddingBottom: '0px', marginBottom: '0px' }}/>
+              <h3 className="font-link" style={{ color: "green", marginTop: '0px', paddingTop: '0px', paddingBottom: '0px', marginBottom: '0px'}}>Connected To: {deviceName}</h3> 
+              </div>
+            }
+            {/* <h3 className="font-link">{currentPlayer} to {calculatedMove}</h3> */}
+            {currentPlayer == "w" ? 
+              <TbChessKnight style={{ fontSize: "50px" }}/> :
+              <TbChessKnightFilled style={{ fontSize: "50px" }}/>
+            }
+          </div>
           <Chessboard position={fenString}/> 
         </Grid>
         <Grid style={{ display: 'flex', alignItems: 'center' }} item xs={3}>
