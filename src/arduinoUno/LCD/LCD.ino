@@ -29,7 +29,7 @@
 //Delay before lights come on after piece is picked up in beginner mode
 #define SUSPENSION_TIME 1000
 
-#define AVG_SAMPLE_SIZE 8
+#define AVG_SAMPLE_SIZE 20
 
 //Common colours:
 #define BLACK_COLOUR 0x0000
@@ -88,8 +88,8 @@
 #define TOUCH_DELAY 50
 
 //Hall sensors
-#define WHITE_HALL 140
-#define BLACK_HALL 310
+#define BLACK_HALL 120
+#define WHITE_HALL 330
 
 #define BOARD_X 8
 #define BOARD_Y 8
@@ -187,28 +187,28 @@ struct Square {
 	}
 };
 
-struct hallAvg
-{
-	int elements[AVG_SAMPLE_SIZE];
-	int index;
+// struct hallAvg
+// {
+// 	int elements[AVG_SAMPLE_SIZE];
+// 	int index;
 
-	void add(int value)
-	{
-		elements[index] = value;
-		index = (index + 1) % AVG_SAMPLE_SIZE;
-	}
-	int avg()
-	{
-		int s = 0;
-		for (int i = 0; i < AVG_SAMPLE_SIZE; i++)
-		{
-			s += elements[i];
-		}
-		return s / AVG_SAMPLE_SIZE;
-	}
+// 	void add(int value)
+// 	{
+// 		elements[index] = value;
+// 		index = (index + 1) % AVG_SAMPLE_SIZE;
+// 	}
+// 	int avg()
+// 	{
+// 		int s = 0;
+// 		for (int i = 0; i < AVG_SAMPLE_SIZE; i++)
+// 		{
+// 			s += elements[i];
+// 		}
+// 		return s / AVG_SAMPLE_SIZE;
+// 	}
 
-	hallAvg() : elements{}, index(0) {}
-};
+// 	hallAvg() : elements{}, index(0) {}
+// };
 
 SoftwareSerial BTserial(10, 11); //TX, RX
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, A4);
@@ -258,7 +258,10 @@ Colour topColour = BLACK;
 Colour botColour = BLACK;
 
 //Hall sensor board state
-hallAvg hAvg[8][8];
+//hallAvg hAvg[8][8];
+int avgData[BOARD_X][BOARD_Y][AVG_SAMPLE_SIZE]; 
+int avgSums[BOARD_X][BOARD_Y];
+int avgIndex = 0; 
 int rawStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
@@ -602,8 +605,13 @@ void setup() {
 	
 	setupHallSensors();
 	setupLEDs();
+	setupAvg();
+  initBoard();
+
+  for (int i = 0; i < AVG_SAMPLE_SIZE; i++) {
+    getHallSensorData();
+  }
 	
-	initBoard();
 	//printing();
 }
 
@@ -620,18 +628,19 @@ void loop() {
 		handleTouch(x, y);
 	}
 	btComm();
-	//stateMachine();
+	stateMachine();
 }
 
 void stateMachine() {
 	getHallSensorData();
 	identifyColours();
-	
+	//printHall();
 	switch(gameState) { //State machine
 		case GAME_INACTIVE:
 			//Handled in startGameButton() function:
 			//Start button and board in starting position -> GAME_ACTIVE
 			//Start button while board not in starting position -> ERROR	
+      //Serial.println(otherwiseStartingBoard());
 			if (checkPlaceDown() && otherwiseStartingBoard()) { //Move made and board (otherwise) in starting position -> GAME_ACTIVE
 				gameState = GAME_ACTIVE;
 				currentScreen = GAME_SCREEN;
@@ -772,15 +781,42 @@ int readHallSensorData(int adcnum, int rx, int tx) {
 
 void getHallSensorData() {
     for (int i = 0; i < BOARD_Y; i++) {
-		for (int j = 0; j < BOARD_X; j++) {
-			rawStates[i][j] = runningAverage(&hAvg[i][j], readHallSensorData(j, hallRx[i], hallTx[i]));
-		}
+      for (int j = 0; j < BOARD_X; j++) {
+        rawStates[i][j] = avg(readHallSensorData(j, hallRx[i], hallTx[i]), i, j);
+      }
     }
+    rawStates[6][0] = 400;
+    rawStates[6][6] = 400;
+    rawStates[7][7] = 400;
 }
 
-int runningAverage(hallAvg *ha, int x) {
-	ha->add(x);
-	return ha->avg();
+// int runningAverage(hallAvg *ha, int x) {
+// 	ha->add(x);
+// 	return ha->avg();
+// }
+
+void setupAvg() { 
+  for (int i = 0; i < 8; i++)  { 
+    for (int j = 0; j < 8; j++) { 
+      for (int k = 0; k < AVG_SAMPLE_SIZE; k++) { 
+        avgData[i][j][k] = 0;
+      }
+      avgSums[i][j] = 0; 
+    }
+  }
+}
+
+int avg(int value, int row, int col) {
+  int temp = avgData[row][col][avgIndex];
+
+  avgSums[row][col] += value - temp; 
+
+  avgData[row][col][avgIndex] = value;
+  if (row == 7 && col == 7) {
+    avgIndex = (avgIndex + 1) % AVG_SAMPLE_SIZE;
+  }
+
+  return avgSums[row][col] / AVG_SAMPLE_SIZE;
 }
 
 //Initializes currentBoard with the starting position. Places white at the bottom and black at the top of the board
@@ -989,10 +1025,10 @@ bool otherwiseStartingBoard() {
 void identifyColours() {
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
-			if (rawStates[i][j] < WHITE_HALL) { //White piece according to hall sensor
+			if (rawStates[i][j] > WHITE_HALL) { //White piece according to hall sensor
 				currentBoard[i][j].colour = WHITE;
 			}
-			else if (rawStates[i][j] > BLACK_HALL) { //Black piece according to hall sensor
+			else if (rawStates[i][j] < BLACK_HALL) { //Black piece according to hall sensor
 				currentBoard[i][j].colour = BLACK;
 			}
 			else { //No piece according to hall sensor
@@ -1010,6 +1046,7 @@ bool checkPickup() {
 					liftedSquare = &currentBoard[i][j];
 					liftedPieceColour = oldBoard[i][j].colour;
 					fromSquare = &Square(currentBoard[i][j].piece, liftedPieceColour, i, j);
+          Serial.println("Here");
 					return true;
 				}
 			}
@@ -1031,6 +1068,7 @@ bool checkPlaceDown() {
 					liftedSquare = NULL;
 					liftedPieceColour = NO_COLOUR;
 					toSquare = &Square(currentBoard[i][j].piece, currentBoard[i][j].colour, i, j);
+          printHall();
 					return true;
 				}
 			}
@@ -1573,6 +1611,25 @@ void lightsOff() {
     for (int i = 0; i < BOARD_X; i++) {
         digitalWrite(anodes[i], HIGH);
         digitalWrite(cathodes[i], LOW);
+    }
+}
+
+void printHall()
+{
+    int i, j;
+
+    Serial.println("\ta\tb\tc\td\te\tf\tg\th");
+    for (i = 0; i < 8; i++)
+    {
+        Serial.print(8 - i);
+        Serial.print("\t");
+        for (j = 0; j < 8; j++)
+        {
+            Serial.print(rawStates[i][j]);
+            Serial.print("\t");
+        }
+        Serial.print("\n");
+        //delay(1);
     }
 }
 
