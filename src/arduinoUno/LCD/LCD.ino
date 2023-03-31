@@ -606,6 +606,7 @@ void setup() {
 	setupHallSensors();
 	setupLEDs();
 	setupAvg();
+	getColourOrientation();
 	for (int i = 0; i < AVG_SAMPLE_SIZE; i++) {
 		getHallSensorData();
 	}
@@ -666,7 +667,6 @@ void stateMachine() {
 					afterError = GAME_ACTIVE;
 					Serial.println("Moving to ERROR");
 				}
-				
 				break;
 			}
 			//Handled in respective termination functions:
@@ -1156,12 +1156,12 @@ void promotePawn(ChessPiece promotionPiece) {
 	promotionSquare = NULL;
 }
 
-void highlightMoves(Square square[]) {
+void highlightMoves(Square squares[]) {
 	int i = 0;
-	Square nextSquare = square[i++];
+	Square nextSquare = squares[i++];
 	while (nextSquare.row >= 0 && nextSquare.col >= 0) {
 		lightUp(nextSquare.row, nextSquare.col);
-		nextSquare = square[i++];
+		nextSquare = squares[i++];
 	}
 }
 
@@ -1625,10 +1625,10 @@ void setupLEDs() {
 }
 
 void lightUp(int row, int col) {
-	int whoopsiesRow = BOARD_Y - row - 1;
-	int whoopsiesCol = BOARD_X - col;
-	digitalWrite(anodes[whoopsiesCol], LOW);
-    digitalWrite(cathodes[whoopsiesRow], HIGH);
+	int adjustedRow = BOARD_Y - row - 1;
+	int adjustedCol = BOARD_X - col;
+	digitalWrite(anodes[adjustedCol], LOW);
+    digitalWrite(cathodes[adjustedRow], HIGH);
 }
 
 void lightsOff() {
