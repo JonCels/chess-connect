@@ -7,10 +7,10 @@ import { calculateBestMove, initGame } from "chess-ai";
 import axios from "axios";
 import { Grid } from '@mui/material';
 import { io } from 'socket.io-client';
-const socket = io("http://localhost:8002");
+const socket = io("http://localhost:8005");
 
 const sendData = (data) => {
-  axios.post("http://localhost:8002/", { engineMove: data }).then(response => {})
+  axios.post("http://localhost:8005/", { engineMove: data }).then(response => {})
 }
 
 const container = {
@@ -23,7 +23,7 @@ function App() {
   const [data, setData] = useState([])
   const [deviceName, setDeviceName] = useState("")
   useEffect(() => {
-    socket.on("new_data", (data) => {
+    socket.on("data_to_frontend", (data) => {
       console.log(JSON.parse(data))
       setData(JSON.parse(data).board)
       setDeviceName(JSON.parse(data).deviceName)
