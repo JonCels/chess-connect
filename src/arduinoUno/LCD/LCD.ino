@@ -727,21 +727,24 @@ void stateMachine() {
 		case PROMOTING:
 			//Handled in promotionButton():
 			//Piece selected on LCD -> GAME_ACTIVE
-			if (checkPlaceDown() && !piecePromoted) { //Change detected on board -> ERROR
+			if (piecePromoted)
+			{
+				if (promoting) {
+				piecePromoted = false;
+				promoting = false;
+				gameState = GAME_ACTIVE;
+				Serial.println("Moving to GAME_ACTIVE");
+				break;
+			}
+			}
+			
+			if (checkPlaceDown()) { //Change detected on board -> ERROR
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Please select a piece for promotion!");
 				afterError = PROMOTING;
 				Serial.println("Moving to ERROR");
-				piecePromoted = true;
 			}
-			if (piecePromoted && promoting) {
-				piecePromoted = false;
-				promoting = false;
-				gameState = GAME_ACTIVE;
-				Serial.println("Moving to GAME_ACTIVE");
-			}
-			
 			break;
 			
 		case GAME_TERMINATED:
@@ -1100,7 +1103,14 @@ bool checkPlaceDown() {
 	checkPickup();
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
-			if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
+			if ((i == 0 || i == 7) && gameState == PROMOTING && currentBoard[i][j].colour == oldBoard[i][j].colour) {
+				piecePromoted = true;
+				return true;
+			}
+			else if ((i == 0 || i == 7) && gameState == PROMOTING && currentBoard[i][j].colour != oldBoard[i][j].colour) {
+				return false;
+			}
+			else if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
 				if (liftedSquare != NULL && liftedPieceColour == currentBoard[i][j].colour) {
 					currentBoard[i][j] = Square((*liftedSquare).piece, liftedPieceColour, i, j);
 					toSquare = new Square(currentBoard[i][j].piece, currentBoard[i][j].colour, i, j);
