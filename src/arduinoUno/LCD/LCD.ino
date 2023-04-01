@@ -27,7 +27,7 @@
 #define MAXPRESSURE 1000
 
 //Delay before lights come on after piece is picked up in beginner mode
-#define SUSPENSION_TIME 3000
+#define SUSPENSION_TIME 1000
 
 #define AVG_SAMPLE_SIZE 20
 
@@ -1007,28 +1007,16 @@ bool validStartingBoard() {
 			switch(i) {
 				case 0: case 1:
 					if (currentBoard[i][j].colour != topColour) {
-						Serial.print("Failed1: ");
-						Serial.print(i);
-						Serial.print(", ");
-						Serial.println(j);
 						return false;
 					}
 					break;
 				case 2: case 3: case 4: case 5:
 					if (currentBoard[i][j].colour != NO_COLOUR) {
-						Serial.print("Failed2: ");
-						Serial.print(i);
-						Serial.print(", ");
-						Serial.println(j);
 						return false;
 					}
 					break;
 				case 6: case 7:
 					if (currentBoard[i][j].colour != botColour) {
-						Serial.print("Failed3: ");
-						Serial.print(i);
-						Serial.print(", ");
-						Serial.println(j);
 						return false;
 					}
 					break;					
@@ -1222,15 +1210,10 @@ void getValidMoves(Square startingSquare, Square possibleMoves[]) {
 void getPawnMoves(Square startingSquare, Square possibleMoves[PAWN_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
+	
 	int direction = (activeColour == WHITE) ? -1 : 1; //-1 for up, 1 for down
-	Serial.print("Starting from: ");
-	Serial.print(row);
-	Serial.print(", ");
-	Serial.print(col);
-	Serial.print(". Dir: ");
-	Serial.println(direction);
 	int newRow = row + direction;
 	if (newRow >= 0 && newRow < BOARD_X) { //Target row on board
 		if (currentBoard[newRow][col].piece == NO_PIECE) { //Move forward 1 square if unoccupied
@@ -1256,7 +1239,7 @@ void getPawnMoves(Square startingSquare, Square possibleMoves[PAWN_SIGHT]) {
 void getKnightMoves(Square startingSquare, Square possibleMoves[KNIGHT_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	int moves[8][2] = {{-2, -1}, {-2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}};
@@ -1276,7 +1259,7 @@ void getKnightMoves(Square startingSquare, Square possibleMoves[KNIGHT_SIGHT]) {
 void getBishopMoves(Square startingSquare, Square possibleMoves[BISHOP_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	//Up and left
@@ -1343,7 +1326,7 @@ void getBishopMoves(Square startingSquare, Square possibleMoves[BISHOP_SIGHT]) {
 void getRookMoves(Square startingSquare, Square possibleMoves[ROOK_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	//Up
@@ -1402,7 +1385,7 @@ void getRookMoves(Square startingSquare, Square possibleMoves[ROOK_SIGHT]) {
 void getQueenMoves(Square startingSquare, Square possibleMoves[QUEEN_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	//Up
@@ -1521,7 +1504,7 @@ void getQueenMoves(Square startingSquare, Square possibleMoves[QUEEN_SIGHT]) {
 void getKingMoves(Square startingSquare, Square possibleMoves[KING_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	//Up
@@ -1602,34 +1585,43 @@ void getKingMoves(Square startingSquare, Square possibleMoves[KING_SIGHT]) {
 }
 
 void flash() {
-	Square square = *liftedSquare;
-	switch(square.piece) {
+	Square square = *fromSquare;
+	ChessPiece squarePiece = square.piece;
+	Serial.print("Square: ");
+	Serial.println(squarePiece);
+	switch(squarePiece) {
 		case PAWN:
+			Serial.println("Pawn lifted");
 			Square possiblePawnMoves[PAWN_SIGHT] = {};
 			getPawnMoves(square, possiblePawnMoves);
 			highlightMoves(possiblePawnMoves);
 			break;
 		case KNIGHT:
+			Serial.println("Knight lifted");
 			Square possibleKnightMoves[KNIGHT_SIGHT] = {};
 			getKnightMoves(square, possibleKnightMoves);
 			highlightMoves(possibleKnightMoves);
 			break;
 		case BISHOP:
+			Serial.println("Bishop lifted");
 			Square possibleBishopMoves[BISHOP_SIGHT] = {};
 			getBishopMoves(square, possibleBishopMoves);
 			highlightMoves(possibleBishopMoves);
 			break;
 		case ROOK:
+			Serial.println("Rook lifted");
 			Square possibleRookMoves[ROOK_SIGHT] = {};
 			getRookMoves(square, possibleRookMoves);
 			highlightMoves(possibleRookMoves);
 			break;
 		case QUEEN:
+			Serial.println("Queen lifted");	
 			Square possibleQueenMoves[QUEEN_SIGHT] = {};
 			getQueenMoves(square, possibleQueenMoves);
 			highlightMoves(possibleQueenMoves);
 			break;
 		case KING:
+			Serial.println("King lifted");
 			Square possibleKingMoves[KING_SIGHT] = {};
 			getKingMoves(square, possibleKingMoves);
 			highlightMoves(possibleKingMoves);
@@ -1648,7 +1640,7 @@ void setupLEDs() {
 
 void lightUp(int row, int col) {
 	int adjustedRow = BOARD_Y - row - 1;
-	int adjustedCol = BOARD_X - col;
+	int adjustedCol = BOARD_X - col - 1;
 	digitalWrite(anodes[adjustedCol], LOW);
     digitalWrite(cathodes[adjustedRow], HIGH);
 }
