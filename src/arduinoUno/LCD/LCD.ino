@@ -242,6 +242,7 @@ char inputStr[100] = "";
 char* currentEngineMove = "N/A";
 ChessPiece selectedPromotion = QUEEN;
 bool promoting = false;
+bool piecePromoted = false;
 char* castlingStatus = "KQkq";
 char whoseTurn = WHITE;
 int numTurns = 1;
@@ -606,7 +607,7 @@ void setup() {
 	setupHallSensors();
 	setupLEDs();
 	setupAvg();
-
+	lightsOff();
 	for (int i = 0; i < AVG_SAMPLE_SIZE; i++) {
 		getHallSensorData();
 	}
@@ -639,6 +640,7 @@ void loop() {
 void stateMachine() {
 	getHallSensorData();
 	identifyColours();
+	//lightsOn();
 	switch(gameState) { //State machine
 		case GAME_INACTIVE:
 			//Handled in startGameButton() function:
@@ -656,9 +658,7 @@ void stateMachine() {
 			}
 			
 			if (checkPickup()) {//Change detected on board -> PIECE_LIFTED
-				Serial.print(liftedPieceColour);
-				Serial.println("Colour");
-				if (liftedPieceColour == whoseTurn) {
+				if (liftedPieceColour != NO_COLOUR && liftedPieceColour == whoseTurn) {
 					gameState = PIECE_LIFTED;
 					whoseTurn = (whoseTurn == WHITE) ? BLACK : WHITE;
 					Serial.println("Moving to PIECE_LIFTED");
@@ -727,13 +727,21 @@ void stateMachine() {
 		case PROMOTING:
 			//Handled in promotionButton():
 			//Piece selected on LCD -> GAME_ACTIVE
-			if (checkPlaceDown()) { //Change detected on board -> ERROR
+			if (checkPlaceDown() && !piecePromoted) { //Change detected on board -> ERROR
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Please select a piece for promotion!");
 				afterError = PROMOTING;
 				Serial.println("Moving to ERROR");
+				piecePromoted = true;
 			}
+			if (piecePromoted && promoting) {
+				piecePromoted = false;
+				promoting = false;
+				gameState = GAME_ACTIVE;
+				Serial.println("Moving to GAME_ACTIVE");
+			}
+			
 			break;
 			
 		case GAME_TERMINATED:
@@ -742,7 +750,6 @@ void stateMachine() {
 			break;
 			
 		case ERROR:
-			Serial.print("Error!");
 			//Ok button on LCD after wrong move -> GAME_ACTIVE
 			//Ok button on LCD after no promotion selection -> PROMOTION
 			//Ok button on LCD after other error? -> GAME_ACTIVE
@@ -1088,10 +1095,10 @@ bool checkPickup() {
 					liftedSquare = &currentBoard[i][j];
 					liftedPieceColour = oldBoard[i][j].colour;
 					fromSquare = new Square(currentBoard[i][j].piece, liftedPieceColour, i, j);
-          			// Serial.print("Pickup on square: ");
-					// Serial.print(i);
-					// Serial.print(", ");
-					// Serial.println(j);
+          			Serial.print("Pickup on square: ");
+					Serial.print(i);
+					Serial.print(", ");
+					Serial.println(j);
 					updateBoard();
 					return true;
 				}
@@ -1114,10 +1121,10 @@ bool checkPlaceDown() {
 					currentBoard[origRow][origCol] = Square(origRow, origCol);
 					liftedSquare = NULL;
 					liftedPieceColour = NO_COLOUR;
-          			// Serial.print("Placedown on square: ");
-					// Serial.print(i);
-					// Serial.print(", ");
-					// Serial.println(j);
+          			Serial.print("Placedown on square: ");
+					Serial.print(i);
+					Serial.print(", ");
+					Serial.println(j);
 					updateBoard();
 					return true;
 				}
@@ -1218,7 +1225,12 @@ void getPawnMoves(Square startingSquare, Square possibleMoves[PAWN_SIGHT]) {
     Colour activeColour = startingSquare.colour;
 	int numMoves = 0; //Index and counter for possible moves
 	int direction = (activeColour == WHITE) ? -1 : 1; //-1 for up, 1 for down
-	
+	Serial.print("Starting from: ");
+	Serial.print(row);
+	Serial.print(", ");
+	Serial.print(col);
+	Serial.print(". Dir: ");
+	Serial.println(direction);
 	int newRow = row + direction;
 	if (newRow >= 0 && newRow < BOARD_X) { //Target row on board
 		if (currentBoard[newRow][col].piece == NO_PIECE) { //Move forward 1 square if unoccupied
@@ -2286,6 +2298,7 @@ void makeConfirmationScreen(ChessPiece piece) {
 	x = (tft.width() - getPixelWidth(confirmationText, 5)) / 2;
 	tft.setCursor(x, tft.getCursorY());
 	tft.println(confirmationText);
+	promoting = true;
   	time = millis();
 }
 
