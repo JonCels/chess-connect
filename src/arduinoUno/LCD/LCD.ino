@@ -29,7 +29,7 @@
 //Delay before lights come on after piece is picked up in beginner mode
 #define SUSPENSION_TIME 1000
 
-#define AVG_SAMPLE_SIZE 8
+#define AVG_SAMPLE_SIZE 20
 
 //Common colours:
 #define BLACK_COLOUR 0x0000
@@ -88,8 +88,8 @@
 #define TOUCH_DELAY 50
 
 //Hall sensors
-#define WHITE_HALL 140
-#define BLACK_HALL 310
+#define BLACK_HALL 120
+#define WHITE_HALL 420
 
 #define BOARD_X 8
 #define BOARD_Y 8
@@ -187,28 +187,28 @@ struct Square {
 	}
 };
 
-struct hallAvg
-{
-	int elements[AVG_SAMPLE_SIZE];
-	int index;
+// struct hallAvg
+// {
+// 	int elements[AVG_SAMPLE_SIZE];
+// 	int index;
 
-	void add(int value)
-	{
-		elements[index] = value;
-		index = (index + 1) % AVG_SAMPLE_SIZE;
-	}
-	int avg()
-	{
-		int s = 0;
-		for (int i = 0; i < AVG_SAMPLE_SIZE; i++)
-		{
-			s += elements[i];
-		}
-		return s / AVG_SAMPLE_SIZE;
-	}
+// 	void add(int value)
+// 	{
+// 		elements[index] = value;
+// 		index = (index + 1) % AVG_SAMPLE_SIZE;
+// 	}
+// 	int avg()
+// 	{
+// 		int s = 0;
+// 		for (int i = 0; i < AVG_SAMPLE_SIZE; i++)
+// 		{
+// 			s += elements[i];
+// 		}
+// 		return s / AVG_SAMPLE_SIZE;
+// 	}
 
-	hallAvg() : elements{}, index(0) {}
-};
+// 	hallAvg() : elements{}, index(0) {}
+// };
 
 SoftwareSerial BTserial(10, 11); //TX, RX
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, A4);
@@ -233,7 +233,7 @@ int promotionScreenBounds[4][2] = {};
 int confirmationScreenBounds[2][2] = {};
 
 Theme currentTheme = LIGHT;
-int currentScreen = MAIN_SCREEN; //0 for main screen, 1 for mode select screen, 2 for game screen, 3 for promotion screen, 4 for termination screen, 5 for error screen, 6 for confirmation screen
+Screen currentScreen = MAIN_SCREEN; //0 for main screen, 1 for mode select screen, 2 for game screen, 3 for promotion screen, 4 for termination screen, 5 for error screen, 6 for confirmation screen
 UserMode currentUserMode = NORMAL; //0 for beginner mode, 1 for normal mode, 2 for engine mode
 char currentBluetoothGameState = 'n'; //n for not active, s for started (game active), b for black resign, w for white resign, d for draw by agreement
 char currentFen[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; //Starting position
@@ -242,8 +242,9 @@ char inputStr[100] = "";
 char* currentEngineMove = "N/A";
 ChessPiece selectedPromotion = QUEEN;
 bool promoting = false;
+bool piecePromoted = false;
 char* castlingStatus = "KQkq";
-char activeColour = WHITE;
+char whoseTurn = WHITE;
 int numTurns = 1;
 Square *liftedSquare = NULL;
 Square *toSquare = NULL;
@@ -252,14 +253,17 @@ Colour liftedPieceColour = NO_COLOUR;
 GameState gameState = GAME_INACTIVE;
 bool liftedFlag = false;
 double timeLifted = 0;
-Square *promotionSquare;
+Square *promotionSquare = NULL;
 GameState afterError = GAME_ACTIVE;
 Colour topColour = BLACK;
-Colour botColour = BLACK;
+Colour botColour = WHITE;
 
 //Hall sensor board state
-hallAvg hAvg[8][8];
-int rawStates[8][8] = {{0, 0, 0, 0, 0, 0, 0, 0},
+//hallAvg hAvg[8][8];
+int avgData[BOARD_X][BOARD_Y][AVG_SAMPLE_SIZE]; 
+int avgSums[BOARD_X][BOARD_Y];
+int avgIndex = 0; 
+int rawStates[BOARD_X][BOARD_Y] = {{0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 0, 0, 0},
@@ -602,9 +606,19 @@ void setup() {
 	
 	setupHallSensors();
 	setupLEDs();
-	
+	setupAvg();
+	lightsOff();
+	for (int i = 0; i < AVG_SAMPLE_SIZE; i++) {
+		getHallSensorData();
+	}
 	initBoard();
+	Serial.print("\n");
+	Serial.println("Starting");
 	//printing();
+	//delay(2000);
+	//lightsOff();
+	//delay(3000);
+	//lightsOn();
 }
 
 void loop() {
@@ -620,46 +634,50 @@ void loop() {
 		handleTouch(x, y);
 	}
 	btComm();
-	//stateMachine();
+	stateMachine();
 }
 
 void stateMachine() {
 	getHallSensorData();
 	identifyColours();
 	
+	//lightsOn();
 	switch(gameState) { //State machine
 		case GAME_INACTIVE:
 			//Handled in startGameButton() function:
 			//Start button and board in starting position -> GAME_ACTIVE
 			//Start button while board not in starting position -> ERROR	
-			if (checkPlaceDown() && otherwiseStartingBoard()) { //Move made and board (otherwise) in starting position -> GAME_ACTIVE
-				gameState = GAME_ACTIVE;
-				currentScreen = GAME_SCREEN;
-				makeGameScreen();
-			}
-			else if (checkPlaceDown() && !otherwiseStartingBoard()) { //Move made and board (otherwise) not in starting position -> ERROR
-				gameState = ERROR;
-				currentScreen = ERROR_SCREEN;
-				makeErrorScreen("Board not in starting position!");
-				afterError = GAME_INACTIVE;
-			}
 			break;
-		case GAME_ACTIVE:			
-			if ((*promotionSquare).row != -1 && (*promotionSquare).col != -1) { //Pawn on final row -> PROMOTING
+			
+		case GAME_ACTIVE:
+			checkPromotingPawns();
+			if (promotionSquare != NULL) {
 				gameState = PROMOTING;
 				currentScreen = PROMOTION_SCREEN;
 				makePromotionScreen();
-				break;
+				Serial.println("Moving to promotion");
 			}
 			
 			if (checkPickup()) {//Change detected on board -> PIECE_LIFTED
-				gameState = PIECE_LIFTED;
+				if (liftedPieceColour != NO_COLOUR && liftedPieceColour == whoseTurn) {
+					gameState = PIECE_LIFTED;
+					whoseTurn = (whoseTurn == WHITE) ? BLACK : WHITE;
+					Serial.println("Moving to PIECE_LIFTED");
+				}
+				else {
+					gameState = ERROR;
+					currentScreen = ERROR_SCREEN;
+					makeErrorScreen("Not your turn!");
+					afterError = GAME_ACTIVE;
+					Serial.println("Moving to ERROR");
+				}
 				break;
 			}
 			//Handled in respective termination functions:
 			//Checkmate, stalemate detected -> GAME_TERMINATED
 			//Resign, draw selected on LCD -> GAME_TERMINATED
 			break;
+			
 		case PIECE_LIFTED:
 			if (currentUserMode == BEGINNER) {
 				if (liftedFlag) {
@@ -669,54 +687,79 @@ void stateMachine() {
 				else if ((millis() - timeLifted) > SUSPENSION_TIME) { //Beginner mode and no change detected on board within timeframe -> PIECE_SUSPENDED
 					gameState = PIECE_SUSPENDED;
 					liftedFlag = true;
+					Serial.println("Moving to PIECE_SUSPENDED");
 					break;
 				}
 			}
 			
 			if (checkPlaceDown() && moveValid()) { //Change detected on board and valid move -> GAME_ACTIVE
 				gameState = GAME_ACTIVE;
+				Serial.println("Moving to GAME_ACTIVE");
+				char currentFenStr[100] = "";
+				boardToFen(currentFenStr);
+				updateState(currentFenStr, 's', getUserModeChar(currentUserMode)); //Send position over bluetooth
 			}
 			else if (checkPlaceDown() && !moveValid()) { //Change detected on board and invalid move -> ERROR
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Invalid move!");
 				afterError = GAME_ACTIVE;
+				Serial.println("Moving to ERROR");
 			}
 			break;
+			
 		case PIECE_SUSPENDED:
 			flash();
 			if (checkPlaceDown() && moveValid()) { //Change detected on board and valid move -> GAME_ACTIVE
 				gameState = GAME_ACTIVE;
+				Serial.println("Moving to GAME_ACTIVE");
+				lightsOff();
 			}
 			else if (checkPlaceDown() && !moveValid()) { //Change detected on board and invalid move -> ERROR
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Invalid move!");
 				afterError = GAME_ACTIVE;
+				Serial.println("Moving to ERROR");
+				lightsOff();
 			}
 			break;
+			
 		case PROMOTING:
 			//Handled in promotionButton():
 			//Piece selected on LCD -> GAME_ACTIVE
+			if (piecePromoted) {
+				if (promoting) {
+					piecePromoted = false;
+					promoting = false;
+					gameState = GAME_ACTIVE;
+					Serial.println("Moving to GAME_ACTIVE");
+					break;
+				}
+			}
+			
 			if (checkPlaceDown()) { //Change detected on board -> ERROR
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Please select a piece for promotion!");
 				afterError = PROMOTING;
+				Serial.println("Moving to ERROR");
 			}
 			break;
+			
 		case GAME_TERMINATED:
 			//Handled in terminationOkButton()
-			//ok button on LCD -> GAME_INACTIVE
+			//Ok button on LCD -> GAME_INACTIVE
 			break;
+			
 		case ERROR:
-			Serial.print("Error!");
-			//ok button on LCD after wrong move -> GAME_ACTIVE
-			//ok button on LCD after no promotion selection -> PROMOTION
-			//ok button on LCD after other error? -> GAME_ACTIVE
+			//Ok button on LCD after wrong move -> GAME_ACTIVE
+			//Ok button on LCD after no promotion selection -> PROMOTION
+			//Ok button on LCD after other error? -> GAME_ACTIVE
 			break;
 	}
 	updateBoard();
+	//checkPromotingPawns();
 }
 
 void setupHallSensors() {
@@ -773,17 +816,48 @@ int readHallSensorData(int adcnum, int rx, int tx) {
 void getHallSensorData() {
     for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
-			rawStates[i][j] = runningAverage(&hAvg[i][j], readHallSensorData(j, hallRx[i], hallTx[i]));
+			rawStates[i][j] = avg(readHallSensorData(j, hallRx[i], hallTx[i]), i, j);
 		}
     }
+	// rawStates[7][0] = 400;
+    // rawStates[6][0] = 400;
+    // rawStates[6][6] = 400;
+    // rawStates[7][7] = 400;
+	// rawStates[5][6] = 200;
+	rawStates[1][0] = 20;
+	rawStates[5][0] = 200;
+	rawStates[7][0] = 450;
+	rawStates[6][6] = 450;
 }
 
-int runningAverage(hallAvg *ha, int x) {
-	ha->add(x);
-	return ha->avg();
+// int runningAverage(hallAvg *ha, int x) {
+// 	ha->add(x);
+// 	return ha->avg();
+// }
+
+void setupAvg() { 
+	for (int i = 0; i < 8; i++)  { 
+		for (int j = 0; j < 8; j++) { 
+			for (int k = 0; k < AVG_SAMPLE_SIZE; k++) { 
+				avgData[i][j][k] = 0;
+			}
+			avgSums[i][j] = 0; 
+		}
+	}
 }
 
-//Initializes currentBoard with the starting position. Places white at the bottom and black at the top of the board
+int avg(int value, int row, int col) {
+	int temp = avgData[row][col][avgIndex];
+	avgSums[row][col] += value - temp; 
+	avgData[row][col][avgIndex] = value;
+	
+	if (row == 7 && col == 7) {
+		avgIndex = (avgIndex + 1) % AVG_SAMPLE_SIZE;
+	}
+	return avgSums[row][col] / AVG_SAMPLE_SIZE;
+}
+
+//Initializes currentBoard with the starting position
 void initBoard() {	
 	ChessPiece backRow[BOARD_X] = {ROOK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROOK};
 	for (int i = 0; i < BOARD_Y; i++) { //Rows
@@ -791,29 +865,32 @@ void initBoard() {
 			switch(i) {
 				case 0:
 					currentBoard[i][j].piece = backRow[j];
-					//currentBoard[i][j].colour = BLACK;
+					currentBoard[i][j].colour = topColour;
 					break;
 				case 7:
 					currentBoard[i][j].piece = backRow[j];
-					//currentBoard[i][j].colour = WHITE;
+					currentBoard[i][j].colour = botColour;
 					break;
 				case 1:
 					currentBoard[i][j].piece = PAWN;
-					//currentBoard[i][j].colour = BLACK;
+					currentBoard[i][j].colour = topColour;
 					break;
 				case 6:
 					currentBoard[i][j].piece = PAWN;
-					//currentBoard[i][j].colour = WHITE;
+					currentBoard[i][j].colour = botColour;
 					break;
 				default:
 					currentBoard[i][j].piece = NO_PIECE;
-					//currentBoard[i][j].colour = NO_COLOUR;
+					currentBoard[i][j].colour = NO_COLOUR;
 					break;
 			}
 			currentBoard[i][j].row = i;
 			currentBoard[i][j].col = j;
 		}
 	}
+	getColourOrientation();
+	updateBoard();
+	whoseTurn = WHITE;
 }
 
 //Should only be called in the starting position
@@ -831,11 +908,11 @@ void updateBoard() {
 	}
 }
 
-void rowToFen(Square row[8], char rowFen[9]) {
+void rowToFen(Square row[8], char* rowFen) {
 	int emptySquares = 0;
 	for (int i = 0; i < BOARD_X; i++) {
 		ChessPiece piece = row[i].piece;	
-		Colour colour = row[i].colour;	
+		Colour colour = row[i].colour;
 		if (piece == NO_PIECE) {
 			emptySquares++;
 		}
@@ -849,28 +926,27 @@ void rowToFen(Square row[8], char rowFen[9]) {
 			strncat(rowFen, &pieceChar, 1);
 		}
 	}
-	if (emptySquares == BOARD_X) {
+	if (emptySquares > 0) {
 		char numChar = emptySquares + '0';
 		strncat(rowFen, &numChar, 1);
 	}
 }
 
-void boardToFen(char boardFen[90]) {
-	//Board position
+void boardToFen(char* boardFen) {
 	for (int i = 0; i < BOARD_Y - 1; i++) {
-		char* row = "";
+		char row[9] = "";
 		rowToFen(currentBoard[i], row);
 		strcat(boardFen, row);
 		strncat(boardFen, "/", 1);
 	}
-	char* row = "";
+	char row[9] = "";
 	rowToFen(currentBoard[BOARD_Y - 1], row);
 	strcat(boardFen, row);
 	
 	//Active colour
 	char space = ' ';
 	strncat(boardFen, &space, 1);
-	strncat(boardFen, &activeColour, 1);
+	strncat(boardFen, &whoseTurn, 1);
 
 	//Castling availability
 	strncat(boardFen, &space, 1);
@@ -922,10 +998,10 @@ char pieceToChar(ChessPiece piece, Colour colour) {
 }
 
 bool validStartingPosition() {
-	char* currentFen = "";
+	char* currentFenStr = "";
 	char* startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; //Starting position
-	boardToFen(currentFen);
-	return (strcmp(currentFen, startingFen) == 0);
+	boardToFen(currentFenStr);
+	return (strcmp(currentFenStr, startingFen) == 0);
 }
 
 bool validStartingBoard() {
@@ -989,10 +1065,10 @@ bool otherwiseStartingBoard() {
 void identifyColours() {
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
-			if (rawStates[i][j] < WHITE_HALL) { //White piece according to hall sensor
+			if (rawStates[i][j] > WHITE_HALL) { //White piece according to hall sensor
 				currentBoard[i][j].colour = WHITE;
 			}
-			else if (rawStates[i][j] > BLACK_HALL) { //Black piece according to hall sensor
+			else if (rawStates[i][j] < BLACK_HALL) { //Black piece according to hall sensor
 				currentBoard[i][j].colour = BLACK;
 			}
 			else { //No piece according to hall sensor
@@ -1007,9 +1083,15 @@ bool checkPickup() {
 		for (int j = 0; j < BOARD_X; j++) {
 			if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
 				if (liftedSquare == NULL) {
+					printHall();
 					liftedSquare = &currentBoard[i][j];
 					liftedPieceColour = oldBoard[i][j].colour;
-					fromSquare = &Square(currentBoard[i][j].piece, liftedPieceColour, i, j);
+					fromSquare = new Square(currentBoard[i][j].piece, liftedPieceColour, i, j);
+          			Serial.print("Pickup on square: ");
+					Serial.print(i);
+					Serial.print(", ");
+					Serial.println(j);
+					updateBoard();
 					return true;
 				}
 			}
@@ -1022,15 +1104,29 @@ bool checkPlaceDown() {
 	checkPickup();
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
-			if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
+			if ((i == 0 || i == 7) && gameState == PROMOTING && currentBoard[i][j].colour == oldBoard[i][j].colour) {
+				if (liftedSquare != NULL && liftedPieceColour == currentBoard[i][j].colour) {
+					piecePromoted = true;
+					return true;
+				}				
+			}
+			else if ((i == 0 || i == 7) && gameState == PROMOTING && currentBoard[i][j].colour != oldBoard[i][j].colour) {
+				return false;
+			}
+			else if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
 				if (liftedSquare != NULL && liftedPieceColour == currentBoard[i][j].colour) {
 					currentBoard[i][j] = Square((*liftedSquare).piece, liftedPieceColour, i, j);
+					toSquare = new Square(currentBoard[i][j].piece, currentBoard[i][j].colour, i, j);
 					int origRow = (*liftedSquare).row;
 					int origCol = (*liftedSquare).col;
 					currentBoard[origRow][origCol] = Square(origRow, origCol);
 					liftedSquare = NULL;
 					liftedPieceColour = NO_COLOUR;
-					toSquare = &Square(currentBoard[i][j].piece, currentBoard[i][j].colour, i, j);
+          			Serial.print("Placedown on square: ");
+					Serial.print(i);
+					Serial.print(", ");
+					Serial.println(j);
+					updateBoard();
 					return true;
 				}
 			}
@@ -1039,29 +1135,16 @@ bool checkPlaceDown() {
 	return false;
 }
 
-void getPlaceDownSquare() { //Can delete?
-	int liftedRow = (*liftedSquare).row;
-	int liftedCol = (*liftedSquare).col;
-	for (int i = 0; i < BOARD_Y; i++) {
-		for (int j = 0; j < BOARD_X; j++) {
-			if (currentBoard[i][j] != oldBoard[i][j]) {
-				if (i != liftedRow || j != liftedCol) { //Board value changed somewhere besides the lifted square
-					toSquare = &currentBoard[i][j];
-				}
-			}
-		}
-	}
-}
-
 bool moveValid() { //To be implemented
 	Square from = *fromSquare;
 	Square to = *toSquare;
 	
 	Square possibleMoves[QUEEN_SIGHT] = {};
 	getValidMoves(from, possibleMoves);
+	
 	int i = 0;
 	while (possibleMoves[i].row != -1 && possibleMoves[i].col != -1) {
-		if (possibleMoves[i] == *toSquare) {
+		if (possibleMoves[i++] == *toSquare) {
 			return true;
 		}
 	}
@@ -1071,68 +1154,67 @@ bool moveValid() { //To be implemented
 void checkPromotingPawns() {
 	for (int i = 0; i < BOARD_X; i++) {
 		if (currentBoard[0][i].piece == PAWN) {
-			promotionSquare = &currentBoard[0][i];
+			promotionSquare = new Square(currentBoard[0][i].piece, currentBoard[0][i].colour, 0, i);
+			return;
 		}
 		else if (currentBoard[7][i].piece == PAWN) {
-			promotionSquare = &currentBoard[7][i];
+			promotionSquare = new Square(currentBoard[7][i].piece, currentBoard[7][i].colour, 7, i);
+			return;
 		}
 	}
-	Square blankSquare;
-	promotionSquare = &blankSquare;
+	promotionSquare = NULL;
 }
 
 void promotePawn(ChessPiece promotionPiece) {
 	int row = (*promotionSquare).row;
 	int col = (*promotionSquare).col;
+	Serial.print("Promotion at: ");
+	Serial.print(row);
+	Serial.print(", ");
+	Serial.println(col);
 	currentBoard[row][col].piece = promotionPiece;
-	Square blankSquare;
-	promotionSquare = &blankSquare;
+	promotionSquare = NULL;
 }
 
-void highlightMoves(Square square[]) {
+void highlightMoves(Square squares[]) {
 	int i = 0;
-	Square nextSquare = square[i++];
+	Square nextSquare = squares[i++];
 	while (nextSquare.row >= 0 && nextSquare.col >= 0) {
-		Serial.print("Light up square: ");
-		Serial.print(nextSquare.row);
-		Serial.print(", ");
-		Serial.println(nextSquare.col);
 		lightUp(nextSquare.row, nextSquare.col);
-		nextSquare = square[i++];
+		nextSquare = squares[i++];
 	}
 }
 
 void getValidMoves(Square startingSquare, Square possibleMoves[]) {
-	Square square = *liftedSquare;
-	switch(square.piece) {
+	switch(startingSquare.piece) {
 		case PAWN:
 			Square possiblePawnMoves[PAWN_SIGHT] = {};
-			getPawnMoves(square, possiblePawnMoves);
+			getPawnMoves(startingSquare, possiblePawnMoves);
 			memcpy(possibleMoves, possiblePawnMoves, sizeof(possiblePawnMoves));
 			break;
 		case KNIGHT:
 			Square possibleKnightMoves[KNIGHT_SIGHT] = {};
-			getKnightMoves(square, possibleKnightMoves);
+			getKnightMoves(startingSquare, possibleKnightMoves);
 			memcpy(possibleMoves, possibleKnightMoves, sizeof(possibleKnightMoves));
 			break;
 		case BISHOP:
 			Square possibleBishopMoves[BISHOP_SIGHT] = {};
-			getBishopMoves(square, possibleBishopMoves);
+			getBishopMoves(startingSquare, possibleBishopMoves);
 			memcpy(possibleMoves, possibleBishopMoves, sizeof(possibleBishopMoves));
 			break;
 		case ROOK:
 			Square possibleRookMoves[ROOK_SIGHT] = {};
-			getRookMoves(square, possibleRookMoves);
+			getRookMoves(startingSquare, possibleRookMoves);
 			memcpy(possibleMoves, possibleRookMoves, sizeof(possibleRookMoves));
 			break;
 		case QUEEN:
 			Square possibleQueenMoves[QUEEN_SIGHT] = {};
-			getQueenMoves(square, possibleQueenMoves);
+			getQueenMoves(startingSquare, possibleQueenMoves);
 			memcpy(possibleMoves, possibleQueenMoves, sizeof(possibleQueenMoves));
 			break;
 		case KING:
 			Square possibleKingMoves[KING_SIGHT] = {};
-			getKingMoves(square, possibleKingMoves);
+			getKingMoves(startingSquare, possibleKingMoves);
 			memcpy(possibleMoves, possibleKingMoves, sizeof(possibleKingMoves));
 			break;
 	}
@@ -1141,10 +1223,10 @@ void getValidMoves(Square startingSquare, Square possibleMoves[]) {
 void getPawnMoves(Square startingSquare, Square possibleMoves[PAWN_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
-	int direction = (activeColour == WHITE) ? -1 : 1; //-1 for up, 1 for down
 	
+	int direction = (activeColour == WHITE) ? -1 : 1; //-1 for up, 1 for down
 	int newRow = row + direction;
 	if (newRow >= 0 && newRow < BOARD_X) { //Target row on board
 		if (currentBoard[newRow][col].piece == NO_PIECE) { //Move forward 1 square if unoccupied
@@ -1170,7 +1252,7 @@ void getPawnMoves(Square startingSquare, Square possibleMoves[PAWN_SIGHT]) {
 void getKnightMoves(Square startingSquare, Square possibleMoves[KNIGHT_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	int moves[8][2] = {{-2, -1}, {-2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}};
@@ -1190,7 +1272,7 @@ void getKnightMoves(Square startingSquare, Square possibleMoves[KNIGHT_SIGHT]) {
 void getBishopMoves(Square startingSquare, Square possibleMoves[BISHOP_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	//Up and left
@@ -1257,7 +1339,7 @@ void getBishopMoves(Square startingSquare, Square possibleMoves[BISHOP_SIGHT]) {
 void getRookMoves(Square startingSquare, Square possibleMoves[ROOK_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	//Up
@@ -1314,10 +1396,9 @@ void getRookMoves(Square startingSquare, Square possibleMoves[ROOK_SIGHT]) {
 }
 
 void getQueenMoves(Square startingSquare, Square possibleMoves[QUEEN_SIGHT]) {
-	Serial.println(millis());
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	//Up
@@ -1431,13 +1512,12 @@ void getQueenMoves(Square startingSquare, Square possibleMoves[QUEEN_SIGHT]) {
 		newRow += 1;
 		newCol += 1;
 	}
-	Serial.println(millis());
 }
 
 void getKingMoves(Square startingSquare, Square possibleMoves[KING_SIGHT]) {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
-    Colour activeColour = startingSquare.colour;
+    Colour activeColour = (*fromSquare).colour;
 	int numMoves = 0; //Index and counter for possible moves
 	
 	//Up
@@ -1518,34 +1598,44 @@ void getKingMoves(Square startingSquare, Square possibleMoves[KING_SIGHT]) {
 }
 
 void flash() {
-	Square square = *liftedSquare;
-	switch(square.piece) {
+	Square square = *fromSquare;
+	ChessPiece squarePiece = square.piece;
+	delay(10);
+	//Serial.print("Square: ");
+	//Serial.println(squarePiece);
+	switch(squarePiece) {
 		case PAWN:
+			//Serial.println("Pawn lifted");
 			Square possiblePawnMoves[PAWN_SIGHT] = {};
 			getPawnMoves(square, possiblePawnMoves);
 			highlightMoves(possiblePawnMoves);
 			break;
 		case KNIGHT:
+			Serial.println("Knight lifted");
 			Square possibleKnightMoves[KNIGHT_SIGHT] = {};
 			getKnightMoves(square, possibleKnightMoves);
 			highlightMoves(possibleKnightMoves);
 			break;
 		case BISHOP:
+			Serial.println("Bishop lifted");
 			Square possibleBishopMoves[BISHOP_SIGHT] = {};
 			getBishopMoves(square, possibleBishopMoves);
 			highlightMoves(possibleBishopMoves);
 			break;
 		case ROOK:
+			Serial.println("Rook lifted");
 			Square possibleRookMoves[ROOK_SIGHT] = {};
 			getRookMoves(square, possibleRookMoves);
 			highlightMoves(possibleRookMoves);
 			break;
 		case QUEEN:
+			Serial.println("Queen lifted");	
 			Square possibleQueenMoves[QUEEN_SIGHT] = {};
 			getQueenMoves(square, possibleQueenMoves);
 			highlightMoves(possibleQueenMoves);
 			break;
 		case KING:
+			Serial.println("King lifted");
 			Square possibleKingMoves[KING_SIGHT] = {};
 			getKingMoves(square, possibleKingMoves);
 			highlightMoves(possibleKingMoves);
@@ -1563,10 +1653,10 @@ void setupLEDs() {
 }
 
 void lightUp(int row, int col) {
-	digitalWrite(anodes[row], LOW);
-    digitalWrite(anodes[row + 1], LOW);
-    digitalWrite(cathodes[col], HIGH);
-    digitalWrite(cathodes[col + 1], HIGH);
+	int adjustedRow = BOARD_Y - row - 1;
+	int adjustedCol = BOARD_X - col - 1;
+	digitalWrite(anodes[adjustedCol], LOW);
+    digitalWrite(cathodes[adjustedRow], HIGH);
 }
 
 void lightsOff() {
@@ -1576,15 +1666,49 @@ void lightsOff() {
     }
 }
 
-void printing() {
+void lightsOn() {
 	for (int i = 0; i < BOARD_X; i++) {
-		for (int j = 0; j < BOARD_X; j++) {
-			Serial.print(currentBoard[i][j].piece);
-			Serial.print(" ");
-		}
-		Serial.print("\n");
-	}
-	Serial.println("\n");
+        digitalWrite(anodes[i], LOW);
+        digitalWrite(cathodes[i], HIGH);
+    }
+}
+
+void printHall() {
+    int i, j;
+
+    Serial.println("\ta\tb\tc\td\te\tf\tg\th");
+    for (i = 0; i < 8; i++)
+    {
+        Serial.print(8 - i);
+        Serial.print("\t");
+        for (j = 0; j < 8; j++)
+        {
+            Serial.print(rawStates[i][j]);
+            Serial.print("\t");
+        }
+        Serial.print("\n");
+        //delay(1);
+    }
+}
+
+void printing() {
+	// Serial.println("\n New:");
+	// for (int i = 0; i < BOARD_X; i++) {
+	// 	for (int j = 0; j < BOARD_X; j++) {
+	// 		Serial.print(currentBoard[i][j].piece);
+	// 		Serial.print(" ");
+	// 	}
+	// 	Serial.print("\n");
+	// }
+	// Serial.println("\n Old:");
+	// for (int i = 0; i < BOARD_X; i++) {
+	// 	for (int j = 0; j < BOARD_X; j++) {
+	// 		Serial.print(oldBoard[i][j].piece);
+	// 		Serial.print(" ");
+	// 	}
+	// 	Serial.print("\n");
+	// }
+	Serial.println("\n New:");
 	for (int i = 0; i < BOARD_X; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
 			Serial.print(currentBoard[i][j].colour);
@@ -1592,71 +1716,76 @@ void printing() {
 		}
 		Serial.print("\n");
 	}
-	Serial.println("\n");
-	char* boardFen = "";
-	boardToFen(boardFen);
-	Serial.println(boardFen);	
-	
-	Square squarray[PAWN_SIGHT] = {};
-	getPawnMoves(currentBoard[6][1], squarray);
-	Serial.println("Pawn: ");
-	for (int i = 0; i < PAWN_SIGHT; i++) {
-		Serial.print(squarray[i].row);	
-		Serial.print(", ");	
-		Serial.println(squarray[i].col);	
+	Serial.println("\n Old:");
+	for (int i = 0; i < BOARD_X; i++) {
+		for (int j = 0; j < BOARD_X; j++) {
+			Serial.print(oldBoard[i][j].colour);
+			Serial.print(" ");
+		}
+		Serial.print("\n");
 	}
 	
-	Square squarray2[KNIGHT_SIGHT] = {};
-	Square knightStart(KNIGHT, BLACK, 5, 4);
-	getKnightMoves(knightStart, squarray2);
-	Serial.println("Knight: ");
-	for (int i = 0; i < KNIGHT_SIGHT; i++) {
-		Serial.print(squarray2[i].row);	
-		Serial.print(", ");	
-		Serial.println(squarray2[i].col);	
-	}
 	
-	Square squarray3[BISHOP_SIGHT] = {};
-	Square bishopStart(BISHOP, BLACK, 4, 4);
-	getBishopMoves(bishopStart, squarray3);
-	Serial.println("Bishop: ");
-	for (int i = 0; i < BISHOP_SIGHT; i++) {
-		Serial.print(squarray3[i].row);	
-		Serial.print(", ");	
-		Serial.println(squarray3[i].col);
-	}
+	// Square squarray[PAWN_SIGHT] = {};
+	// getPawnMoves(currentBoard[1][1], squarray);
+	// Serial.println("Pawn: ");
+	// for (int i = 0; i < PAWN_SIGHT; i++) {
+	// 	Serial.print(squarray[i].row);	
+	// 	Serial.print(", ");	
+	// 	Serial.println(squarray[i].col);	
+	// }
 	
-	Square squarray4[ROOK_SIGHT] = {};
-	Square rookStart(ROOK, BLACK, 4, 4);
-	getRookMoves(rookStart, squarray4);
-	Serial.println("Rook: ");
-	for (int i = 0; i < ROOK_SIGHT; i++) {
-		Serial.print(squarray4[i].row);	
-		Serial.print(", ");	
-		Serial.println(squarray4[i].col);	
-	}
+	// Square squarray2[KNIGHT_SIGHT] = {};
+	// Square knightStart(KNIGHT, BLACK, 5, 4);
+	// getKnightMoves(knightStart, squarray2);
+	// Serial.println("Knight: ");
+	// for (int i = 0; i < KNIGHT_SIGHT; i++) {
+	// 	Serial.print(squarray2[i].row);	
+	// 	Serial.print(", ");	
+	// 	Serial.println(squarray2[i].col);	
+	// }
 	
-	Square squarray5[QUEEN_SIGHT] = {};
-	Square queenStart(QUEEN, BLACK, 4, 4);
-	getQueenMoves(queenStart, squarray5);
-	Serial.println("Queen: ");
-	for (int i = 0; i < QUEEN_SIGHT; i++) {
-		Serial.print(squarray5[i].row);	
-		Serial.print(", ");	
-		Serial.println(squarray5[i].col);	
-	}
+	// Square squarray3[BISHOP_SIGHT] = {};
+	// Square bishopStart(BISHOP, BLACK, 4, 4);
+	// getBishopMoves(bishopStart, squarray3);
+	// Serial.println("Bishop: ");
+	// for (int i = 0; i < BISHOP_SIGHT; i++) {
+	// 	Serial.print(squarray3[i].row);	
+	// 	Serial.print(", ");	
+	// 	Serial.println(squarray3[i].col);
+	// }
 	
-	Square squarray6[KING_SIGHT] = {};
-	Square kingStart(KING, BLACK, 4, 4);
-	getKingMoves(kingStart, squarray6);
-	Serial.println("King: ");
-	for (int i = 0; i < KING_SIGHT; i++) {
-		Serial.print(squarray6[i].row);	
-		Serial.print(", ");	
-		Serial.println(squarray6[i].col);	
-	}
+	// Square squarray4[ROOK_SIGHT] = {};
+	// Square rookStart(ROOK, BLACK, 4, 4);
+	// getRookMoves(rookStart, squarray4);
+	// Serial.println("Rook: ");
+	// for (int i = 0; i < ROOK_SIGHT; i++) {
+	// 	Serial.print(squarray4[i].row);	
+	// 	Serial.print(", ");	
+	// 	Serial.println(squarray4[i].col);	
+	// }
 	
-	highlightMoves(squarray5);
+	// Square squarray5[QUEEN_SIGHT] = {};
+	// Square queenStart(QUEEN, BLACK, 4, 4);
+	// getQueenMoves(queenStart, squarray5);
+	// Serial.println("Queen: ");
+	// for (int i = 0; i < QUEEN_SIGHT; i++) {
+	// 	Serial.print(squarray5[i].row);	
+	// 	Serial.print(", ");	
+	// 	Serial.println(squarray5[i].col);	
+	// }
+	
+	// Square squarray6[KING_SIGHT] = {};
+	// Square kingStart(KING, BLACK, 4, 4);
+	// getKingMoves(kingStart, squarray6);
+	// Serial.println("King: ");
+	// for (int i = 0; i < KING_SIGHT; i++) {
+	// 	Serial.print(squarray6[i].row);	
+	// 	Serial.print(", ");	
+	// 	Serial.println(squarray6[i].col);	
+	// }
+	
+	// highlightMoves(squarray);
 }
 
 void handleTouch(int x, int y) {
@@ -1745,7 +1874,7 @@ void handleTouch(int x, int y) {
 		makePromotionScreen();
 	}
 	
-	if (currentScreen = ERROR_SCREEN && (x > okButtonBounds[0][0] && x < (okButtonBounds[0][0] + OK_BUTTON_X) && y > okButtonBounds[0][1] && (y < okButtonBounds[0][1] + OK_BUTTON_Y))) {
+	if (currentScreen == ERROR_SCREEN && (x > okButtonBounds[0][0] && x < (okButtonBounds[0][0] + OK_BUTTON_X) && y > okButtonBounds[0][1] && (y < okButtonBounds[0][1] + OK_BUTTON_Y))) {
 		errorOkButton();
 	}
 }
@@ -2163,19 +2292,20 @@ void makeConfirmationScreen(ChessPiece piece) {
 	tft.println("Promote to ");
 
 	char confirmationText[10] = "a "; 
-	if (piece == 'N') { 
+	if (selectedPromotion == KNIGHT) { 
 		strcat(confirmationText, "Knight?");
 	}
-	else if (piece == 'R') { 
+	else if (selectedPromotion == ROOK) { 
 		strcat(confirmationText, "Rook?");
 	}
-	else if (piece == 'B') {
+	else if (selectedPromotion == BISHOP) {
 		strcat(confirmationText, "Bishop?");
 	}
 
 	x = (tft.width() - getPixelWidth(confirmationText, 5)) / 2;
 	tft.setCursor(x, tft.getCursorY());
 	tft.println(confirmationText);
+	promoting = true;
   	time = millis();
 }
 
@@ -2239,25 +2369,29 @@ void drawEngineMove(char* move) {
 }
 
 void startGameButton() {
-	//updateState("8/4kN2/4N1Bq/1P1P1KP1/P5p1/2P1bR2/6p1/2r5 w - - 0 1", 's', getUserModeChar(currentUserMode));
 	//start button and board in starting position -> GAME_ACTIVE
 	if (gameState == GAME_INACTIVE) {
 		if (validStartingBoard()) {
+			initBoard();
 			updateState(currentFen, 's', getUserModeChar(currentUserMode));
 			gameState = GAME_ACTIVE;
 			currentScreen = GAME_SCREEN;
 			makeGameScreen();
+			Serial.println("Moving to GAME_ACTIVE");
 		}
 		else {
+			Serial.println("Moving to ERROR");
 			gameState = ERROR;
 			currentScreen = ERROR_SCREEN;
+			makeErrorScreen("Not in starting position!");
+			afterError = GAME_INACTIVE;
 		}
 	}
 }
 
 void selectModeButton() {
-	makeModeSelectScreen();
 	currentScreen = MODE_SELECT_SCREEN;
+	makeModeSelectScreen();
 }
 
 void beginnerModeButton(bool active) {
@@ -2340,6 +2474,7 @@ void resignWhiteButton() {
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("Black Wins by Resignation");
+	Serial.println("Moving to GAME_TERMINATED");
 }
 
 void resignBlackButton() {
@@ -2347,6 +2482,7 @@ void resignBlackButton() {
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("White Wins by Resignation");
+	Serial.println("Moving to GAME_TERMINATED");
 }
 
 void drawButton() {
@@ -2354,6 +2490,7 @@ void drawButton() {
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("Game Drawn by Agreement");
+	Serial.println("Moving to GAME_TERMINATED");
 }
 
 void terminationOkButton() {
@@ -2361,6 +2498,7 @@ void terminationOkButton() {
 	currentScreen = MAIN_SCREEN;
 	resetState();
 	makeMainScreen();
+	Serial.println("Moving to GAME_INACTIVE");
 }
 
 void errorOkButton() {
@@ -2369,16 +2507,19 @@ void errorOkButton() {
 			gameState = GAME_ACTIVE;
 			currentScreen = GAME_SCREEN;
 			makeGameScreen();
+			Serial.println("Moving to GAME_ACTIVE");
 			break;
 		case GAME_INACTIVE:
 			gameState = GAME_INACTIVE;
 			currentScreen = MAIN_SCREEN;
 			makeMainScreen();
+			Serial.println("Moving to GAME_INACTIVE");
 			break;
 		case PROMOTING:
 			gameState = PROMOTING;
 			currentScreen = PROMOTION_SCREEN;
 			makePromotionScreen();
+			Serial.println("Moving to PROMOTING");
 			break;
 	}
 }
@@ -2398,6 +2539,10 @@ void promotionButton(ChessPiece piece) {
 	gameState = GAME_ACTIVE; //Piece selected on LCD -> GAME_ACTIVE
 	currentScreen = GAME_SCREEN;
 	makeGameScreen();
+	Serial.println("Moving to GAME_ACTIVE");
+	char currentFenStr[100] = "";
+	boardToFen(currentFenStr);
+	updateState(currentFenStr, 's', getUserModeChar(currentUserMode)); //Send position over bluetooth
 }
 
 void checkmateWhite() {
@@ -2405,6 +2550,7 @@ void checkmateWhite() {
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("White Wins by Checkmate");
+	Serial.println("Moving to GAME_TERMINATED");
 }
 
 void checkmateBlack() {
@@ -2412,6 +2558,7 @@ void checkmateBlack() {
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("Black Wins by Checkmate");
+	Serial.println("Moving to GAME_TERMINATED");
 }
 
 void stalemate() {
@@ -2419,6 +2566,7 @@ void stalemate() {
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("Game Drawn by Stalemate");
+	Serial.println("Moving to GAME_TERMINATED");
 }
 
 void selectMode(UserMode mode) {
@@ -2462,7 +2610,6 @@ void updateState(char* FEN, char gameStateData, char userMode) {
 	strcpy(currentFen, FEN);
 	currentBluetoothGameState = gameStateData;
 	currentUserMode = getUserModeEnum(userMode);
-	
 	sendBluetoothData(stateData);
 }
 
@@ -2471,6 +2618,18 @@ void resetState() {
 	updateState(startingFen, 'n', getUserModeChar(NORMAL)); 
 	currentEngineMove = "N/A";
 	selectedPromotion = QUEEN;
+	liftedSquare = NULL;
+	toSquare = NULL;
+	fromSquare = NULL;
+	promotionSquare = NULL;
+	promoting = false;
+	piecePromoted = false;
+	whoseTurn = WHITE;
+	numTurns = 1;
+	liftedPieceColour = NO_COLOUR;
+	liftedFlag = false;
+	timeLifted = 0;
+	afterError = GAME_ACTIVE;
 }
 
 void sendBluetoothData(char* stateData) {
@@ -2478,7 +2637,6 @@ void sendBluetoothData(char* stateData) {
 	for (int i = 0; i < len; i++) {
 		BTserial.write(stateData[i]);
 	}
-	Serial.println(stateData);
 }
 
 void parseWebPayload(char* webData) { //eg. "Nf3@w12@n" or "a@a@n" if not in engine mode
