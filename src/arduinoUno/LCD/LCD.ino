@@ -640,6 +640,7 @@ void loop() {
 void stateMachine() {
 	getHallSensorData();
 	identifyColours();
+	
 	//lightsOn();
 	switch(gameState) { //State machine
 		case GAME_INACTIVE:
@@ -727,15 +728,14 @@ void stateMachine() {
 		case PROMOTING:
 			//Handled in promotionButton():
 			//Piece selected on LCD -> GAME_ACTIVE
-			if (piecePromoted)
-			{
+			if (piecePromoted) {
 				if (promoting) {
-				piecePromoted = false;
-				promoting = false;
-				gameState = GAME_ACTIVE;
-				Serial.println("Moving to GAME_ACTIVE");
-				break;
-			}
+					piecePromoted = false;
+					promoting = false;
+					gameState = GAME_ACTIVE;
+					Serial.println("Moving to GAME_ACTIVE");
+					break;
+				}
 			}
 			
 			if (checkPlaceDown()) { //Change detected on board -> ERROR
@@ -1083,6 +1083,7 @@ bool checkPickup() {
 		for (int j = 0; j < BOARD_X; j++) {
 			if (currentBoard[i][j].colour != oldBoard[i][j].colour) {
 				if (liftedSquare == NULL) {
+					printHall();
 					liftedSquare = &currentBoard[i][j];
 					liftedPieceColour = oldBoard[i][j].colour;
 					fromSquare = new Square(currentBoard[i][j].piece, liftedPieceColour, i, j);
@@ -1104,8 +1105,10 @@ bool checkPlaceDown() {
 	for (int i = 0; i < BOARD_Y; i++) {
 		for (int j = 0; j < BOARD_X; j++) {
 			if ((i == 0 || i == 7) && gameState == PROMOTING && currentBoard[i][j].colour == oldBoard[i][j].colour) {
-				piecePromoted = true;
-				return true;
+				if (liftedSquare != NULL && liftedPieceColour == currentBoard[i][j].colour) {
+					piecePromoted = true;
+					return true;
+				}				
 			}
 			else if ((i == 0 || i == 7) && gameState == PROMOTING && currentBoard[i][j].colour != oldBoard[i][j].colour) {
 				return false;
@@ -1597,11 +1600,12 @@ void getKingMoves(Square startingSquare, Square possibleMoves[KING_SIGHT]) {
 void flash() {
 	Square square = *fromSquare;
 	ChessPiece squarePiece = square.piece;
-	Serial.print("Square: ");
-	Serial.println(squarePiece);
+	delay(10);
+	//Serial.print("Square: ");
+	//Serial.println(squarePiece);
 	switch(squarePiece) {
 		case PAWN:
-			Serial.println("Pawn lifted");
+			//Serial.println("Pawn lifted");
 			Square possiblePawnMoves[PAWN_SIGHT] = {};
 			getPawnMoves(square, possiblePawnMoves);
 			highlightMoves(possiblePawnMoves);
@@ -2180,6 +2184,7 @@ void makeEndScreen(char* msg) {
 }
 
 void makePromotionScreen() {
+	currentScreen = PROMOTION_SCREEN;
 	tft.fillScreen(BACKGROUND_COLOUR);
 
 	int padding = 10;
@@ -2613,6 +2618,18 @@ void resetState() {
 	updateState(startingFen, 'n', getUserModeChar(NORMAL)); 
 	currentEngineMove = "N/A";
 	selectedPromotion = QUEEN;
+	liftedSquare = NULL;
+	toSquare = NULL;
+	fromSquare = NULL;
+	promotionSquare = NULL;
+	promoting = false;
+	piecePromoted = false;
+	whoseTurn = WHITE;
+	numTurns = 1;
+	liftedPieceColour = NO_COLOUR;
+	liftedFlag = false;
+	timeLifted = 0;
+	afterError = GAME_ACTIVE;
 }
 
 void sendBluetoothData(char* stateData) {
