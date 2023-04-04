@@ -242,7 +242,7 @@ char inputStr[100] = "";
 char* currentEngineMove = "N/A";
 ChessPiece selectedPromotion = QUEEN;
 bool promoting = false;
-bool piecePromoted = false;
+bool pawnExchangedForPromotion = false;
 char* castlingStatus = "KQkq";
 char whoseTurn = WHITE;
 int numTurns = 1;
@@ -726,25 +726,26 @@ void stateMachine() {
 			break;
 			
 		case PROMOTING:
+			checkPlaceDown();
 			//Handled in promotionButton():
-			//Piece selected on LCD -> GAME_ACTIVE
-			if (piecePromoted) {
-				if (promoting) {
-					piecePromoted = false;
-					promoting = false;
-					gameState = GAME_ACTIVE;
-					Serial.println("Moving to GAME_ACTIVE");
-					break;
-				}
+			//Piece selected on LCD && Piece has been switched out -> GAME_ACTIVE
+			if (promoting && pawnExchangedForPromotion)
+			{
+				pawnExchangedForPromotion = false;
+				promoting = false;
+				gameState = GAME_ACTIVE;
+				Serial.println("Moving to GAME_ACTIVE");
+				break;
 			}
-			
-			if (checkPlaceDown()) { //Change detected on board -> ERROR
-				gameState = ERROR;
-				currentScreen = ERROR_SCREEN;
-				makeErrorScreen("Please select a piece for promotion!");
-				afterError = PROMOTING;
-				Serial.println("Moving to ERROR");
-			}
+
+			// Not sure how to handle errors here
+			// if (checkPlaceDown()) { //Change detected on board -> ERROR
+			// 	gameState = ERROR;
+			// 	currentScreen = ERROR_SCREEN;
+			// 	makeErrorScreen("Please select a piece for promotion!");
+			// 	afterError = PROMOTING;
+			// 	Serial.println("Moving to ERROR");
+			// }
 			break;
 			
 		case GAME_TERMINATED:
@@ -1106,7 +1107,7 @@ bool checkPlaceDown() {
 		for (int j = 0; j < BOARD_X; j++) {
 			if ((i == 0 || i == 7) && gameState == PROMOTING && currentBoard[i][j].colour == oldBoard[i][j].colour) {
 				if (liftedSquare != NULL && liftedPieceColour == currentBoard[i][j].colour) {
-					piecePromoted = true;
+					pawnExchangedForPromotion = true;
 					return true;
 				}				
 			}
@@ -2623,7 +2624,7 @@ void resetState() {
 	fromSquare = NULL;
 	promotionSquare = NULL;
 	promoting = false;
-	piecePromoted = false;
+	pawnExchangedForPromotion = false;
 	whoseTurn = WHITE;
 	numTurns = 1;
 	liftedPieceColour = NO_COLOUR;
