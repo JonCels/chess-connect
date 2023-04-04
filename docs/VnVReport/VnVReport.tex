@@ -163,7 +163,7 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
         \hline
         GA-3 & User mode button pressed while game active. & System variable `currMode' changed to represent the selected user mode. &  User mode unchanged. & Design changed, user mode not switchable while a game is active. & Rework \\
         \hline
-        GA-4 & Start game button pressed while game inactive. & System variable `gameInProgress' set to true, `currFEN' variable is set to the starting FEN. &  System variables configured correctly. &  & Pass \\
+        GA-4 & Draw/resign button pressed, or move made that results in stalemate or checkmate according to the rules of chess while game active. & Game termination and winner are displayed on LCD screen. & Display updates correctly. &  & Pass \\
         \hline
         GA-5 & Move made that results in stalemate or checkmate according to the rules of chess while game inactive. & System variable `gameInProgress' set to false. &  System variable configured correctly. &  & Pass \\ 
         \hline
@@ -194,7 +194,7 @@ Refer to the VnV Plan for descriptions of the tests derived to evaluate the func
         \hline
         GI-4 & Piece moved while game inactive. & System variable `currFEN' is unchanged. & System variable configured correctly. &  & Pass \\
         \hline
-        GI-5 & Draw/resign button pressed, or move made that results in stalemate or checkmate according to the rules of chess while game active. & Game termination and winner are displayed on LCD screen. & Display updates correctly. &  & Pass \\
+        GI-5 & Start game button pressed while game inactive. & System variable `gameInProgress' set to true, `currFEN' variable is set to the starting FEN. &  System variables configured correctly. &  & Pass \\
         \hline
         \end{tabular}
     \caption{Inactive State Functional Requirements Results}
@@ -585,9 +585,9 @@ Precision and accuracy testing will be performed for revision 1, as though it is
     \hline
     testGameStartValid & black piece on row 1 while all other pieces are white & false & false & pass \\
     \hline
-    inStalemate & {\scriptsize rnbqkbnr/pppppppp/ 8/8/8/8/PPPPPPPP/ RNBQKBNR w KQkq - 0 1} & false & false & pass \\
+    stalemate & {\scriptsize rnbqkbnr/pppppppp/ 8/8/8/8/PPPPPPPP/ RNBQKBNR w KQkq - 0 1} & false & false & pass \\
     \hline 
-    inCheckmate & {\scriptsize rnb1kbnr/pppp1ppp/ 8/4p3/5PPq/8/ PPPPP2P/ RNBQKBNR w KQkq - 1 3} & true & true & pass \\
+    checkmateWhite & {\scriptsize rnb1kbnr/pppp1ppp/ 8/4p3/5PPq/8/ PPPPP2P/ RNBQKBNR w KQkq - 1 3} & true & true & pass \\
     \hline 
     promotePawn & ChessPiece QUEEN, promotionSquare \{PAWN, WHITE, 7, 3\} & currentBoard[7][3] = \{QUEEN, WHITE, 7, 3\} & currentBoard[7][3] = \{QUEEN, WHITE, 7, 3\} & pass \\
     \hline 
@@ -766,29 +766,29 @@ of our front-end application.
   \hline
   BA-2 & BA2 & M2, M8, M9\\
   \hline
-  NFT1 & LF3 &\\
+  NFT-1 & LF3 &\\
   \hline
-  NFT2 & UH5 &\\
+  NFT-2 & UH5 &\\
   \hline
-  NFT3 & UH6 &\\
+  NFT-3 & UH6 &\\
   \hline
-  NFT4 & PR1 &\\
+  NFT-4 & PR1 &\\
   \hline
-  NFT5 & PR2 &\\
+  NFT-5 & PR2 &\\
   \hline
-  NFT6 & PR3 &\\
+  NFT-6 & PR3 &\\
   \hline
-  NFT7 & PR4 &\\
+  NFT-7 & PR4 &\\
   \hline
-  NFT8 & PR6 &\\
+  NFT-8 & PR6 &\\
   \hline
-  NFT9 & PR7 &\\
+  NFT-9 & PR7 &\\
   \hline
-  NFT10 & PR10 &\\
+  NFT-10 & PR10 &\\
   \hline
-  NFT11 & SR4 &\\
+  NFT-11 & SR4 &\\
   \hline
-  NFT12 & SR3 &\\
+  NFT-12 & SR3 &\\
   \hline
 \caption{Requirements Traceability Matrix}
 \end{longtable}
@@ -826,7 +826,7 @@ code taken by one of actions is as follows:
       \rowcolor[gray]{0.9}
       Coverage & Number of Functions/Paths & Number Tested & \% Covered & Notes\\
       \hline
-      Function & 92 & 50 & 54\% & A list of all functions covered can be found in \hyperref[FunctionsCovered]{Appendix \ref{FunctionsCovered}} \\
+      Function & 95 & 73 & 77\% & A list of all functions covered can be found in \hyperref[FunctionsCovered]{Appendix \ref{FunctionsCovered}} \\
       \hline
       Path & 41 & 32 & 78\% & A list of all paths considered can be found in \hyperref[CodePaths]{Appendix \ref{CodePaths}} \\
       \hline
@@ -874,6 +874,9 @@ code taken by one of actions is as follows:
   \item[\checkmark] highlightRookMoves
   \item[\checkmark] highlightQueenMoves
   \item[\checkmark] highlightKingMoves
+  \item[\checkmark] stalemate
+  \item[\checkmark] checkmateWhite
+  \item[$\times$] checkmateBlack
   \item[\checkmark] btComm
   \item[\checkmark] promotePawn
   \item[\checkmark] getValidMoves
@@ -885,27 +888,27 @@ code taken by one of actions is as follows:
   \item[\checkmark] avg
   \item[$\times$] StateMachine
   \item[$\times$] initBoard
-  \item[$\times$] makeMainScreen
-  \item[$\times$] makeModeSelectScreen
-  \item[$\times$] makeGameScreen
-  \item[$\times$] makeEndScreen
-  \item[$\times$] makePromotionScreen
-  \item[$\times$] makeThemeButton
-  \item[$\times$] makeConfirmationScreen
-  \item[$\times$] makeErrorScreen
-  \item[$\times$] drawStartMode
-  \item[$\times$] drawEngineMove
-  \item[$\times$] startGameButton
-  \item[$\times$] selectModeButton
-  \item[$\times$] beginnerModeButton
-  \item[$\times$] normalModeButton
-  \item[$\times$] engineModeButton
-  \item[$\times$] resignWhiteButton
-  \item[$\times$] resignBlackButton
-  \item[$\times$] drawButton
-  \item[$\times$] terminationOkButton
-  \item[$\times$] errorOkButton
-  \item[$\times$] themeButton
+  \item[\checkmark] makeMainScreen
+  \item[\checkmark] makeModeSelectScreen
+  \item[\checkmark] makeGameScreen
+  \item[\checkmark] makeEndScreen
+  \item[\checkmark] makePromotionScreen
+  \item[\checkmark] makeThemeButton
+  \item[\checkmark] makeConfirmationScreen
+  \item[\checkmark] makeErrorScreen
+  \item[\checkmark] drawStartMode
+  \item[\checkmark] drawEngineMove
+  \item[\checkmark] startGameButton
+  \item[\checkmark] selectModeButton
+  \item[\checkmark] beginnerModeButton
+  \item[\checkmark] normalModeButton
+  \item[\checkmark] engineModeButton
+  \item[\checkmark] resignWhiteButton
+  \item[\checkmark] resignBlackButton
+  \item[\checkmark] drawButton
+  \item[\checkmark] terminationOkButton
+  \item[\checkmark] errorOkButton
+  \item[\checkmark] themeButton
   \item[$\times$] appendCharToStr
   \item[\checkmark] setEngineBoxText
   \item[$\times$] makeEngineBox

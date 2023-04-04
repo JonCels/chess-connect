@@ -45,6 +45,7 @@
 2022-11-02 & Rupinder Nagra & Section 5.1\\
 2022-11-02 & Joshua Chapman & Section 4.1, 4.2, 4.3, 4.5\\
 2022-11-02 & Alexander Van Kralingen & Completed Section 4.4, 4.6, 4.7\\
+2023-04-04 & Alexander Van Kralingen & Update based on peer review issues and TA feedback\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -58,14 +59,20 @@
 \section{Symbols, Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  T & Test\\
-  GB & Gigabyte\\
-  \bottomrule
-\end{tabular}\\
+\begin{table}[hp]
+  \caption{Appreviations used in this document}
+  \begin{tabular}{l l} 
+    \toprule		
+    \textbf{symbol} & \textbf{description}\\
+    \midrule 
+    LED & Light Emitting Diode\\
+    I/O & Input/Output\\
+    IDE & Intergrated Development Environments\\
+    UI & User Interface\\
+    API & Application Program Interface\\
+    \bottomrule
+  \end{tabular}\\
+\end{table}
 
 \wss{symbols, abbreviations or acronyms --- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
@@ -92,13 +99,12 @@ The following objectives are the qualities that are the most important for the p
 \subsection{Relevant Documentation}
 The following documents are relevent to this project.
 \begin{itemize}
-  \item SRS
-  \item Hazard Analysis
-  \item Requirements Document
-  \item Design Document
-  \item VnV Report
-  \item MIS
-  \item MG
+  \item \href{file:../DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}
+  \item \href{file:../SRS/SRS.pdf}{SRS}
+  \item \href{file:../HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis}
+  \item \href{file:../Design/SoftDetailedDes/MIS.pdf}{MIS}
+  \item \href{file:../Design/SoftArchitecture/MG.pdf}{MG}
+  \item \href{file:../VnVReport/VnVReport.pdf}{VnV Report}
 \end{itemize}
 
 \section{Plan}
@@ -111,30 +117,32 @@ completeness.
 %Introduce this section.   You can provide a roadmap of the sections to come.
 
 \subsection{Verification and Validation Team}
-
-\begin{tabular}{ |p{4.5cm}||p{9cm}|  }
- \hline
- Alexander Van Kralingen & Web application connection tests\\
- & GitHub integration testing\\
- & Microcontroller code testing\\
- \hline
- Arshdeep Aujla & Sensor accuracy testing\\
- & Microcontroller hardware \& code testing\\
- & Touchscreen UI latency tests\\
- \hline
- Jonathan Cels & Microcontroller code testing\\
- & Chess API integration testing\\
- & Communication protocol testing\\
- \hline
- Joshua Chapman& Power distribution design and integration testing\\
- & Microcontroller hardware \& code testing\\
- & Communication protocol testing\\
- \hline
- Rupinder Nagra & Chess API integration testing\\ 
- & Web application connection tests\\
- & Web application functionality testing\\
- \hline
-\end{tabular}
+\begin{table}[hp]
+  \caption{Validation team members and responsibilities}
+  \begin{tabular}{ |p{4.5cm}||p{9cm}|  }
+    \hline
+    Alexander Van Kralingen & Web application connection tests\\
+    & GitHub integration testing\\
+    & Microcontroller code testing\\
+    \hline
+    Arshdeep Aujla & Sensor accuracy testing\\
+    & Microcontroller hardware \& code testing\\
+    & Touchscreen UI latency tests\\
+    \hline
+    Jonathan Cels & Microcontroller code testing\\
+    & Chess API integration testing\\
+    & Communication protocol testing\\
+    \hline
+    Joshua Chapman& Power distribution design and integration testing\\
+    & Microcontroller hardware \& code testing\\
+    & Communication protocol testing\\
+    \hline
+    Rupinder Nagra & Chess API integration testing\\ 
+    & Web application connection tests\\
+    & Web application functionality testing\\
+    \hline
+  \end{tabular}
+\end{table}
 %You, your classmates and the course instructor.  Maybe your supervisor.
 %You shoud do more than list names.  You should say what each person's role is
 %for the project.  A table is a good way to summarize this information.
@@ -155,28 +163,25 @@ throughout the process.
 \subsection{Design Verification Plan}
 \textbf{Hardware Design Verification} begins with LTSpice and Multisim design software
 packages. The designed circuits are simulated in the software and tested accordingly.
-Testingincludes simulating inputs and verifying that expected outputs are returned. 
+Testing includes simulating inputs and verifying that expected outputs are returned. 
 Edge cases are simulated to verify safety and failure conditions of the circuits. 
 \newline
 \newline
-\textbf{Software Design Verification} utilizes the compiler to verify code correctness. 
-Arduino intergrated development environments contain the tools to compile and check for 
-errors. Code walkthroughs are performed by collaborators that did not write the program. 
-This includes detailed inspection and a report describing the function of the code 
-based on their perspective. This tests the readability and functionality of 
-the code. 
-%Plans for design verification}
-%The review will include reviews by your classmates}
-%Remember you have MG and MIS checklists}
+\textbf{Software Design Verification} The software will be built to handle all of rules for
+the game of chess. Chess logic and rules will be compared to existing standards for verification.
+The \href{file:../Design/SoftArchitecture/MG.pdf}{MG} will be used as a guide to ensure that our
+code covers all of the requirements listed in the \href{file:../SRS/SRS.pdf}{SRS}. Feedback from
+evaluators will be considered alongside feedback from peers, and testing will help to ensure robustness
+and a thorough coverage of all possible user actions. The software is intended to cover all scenarios
+within reason, and failed tests will help to pinpoint where the design of the software has room for
+improvement.
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-The Verification and Validation Plan verification will include reviewing the \href{file:../Checklists/VnV-Checklist.pdf}{Verification and Validation Plan checklist} and adjusting this document accordingly. The verification will also include considering feedback from issues created by another team, as well as from the TA assigned to this project. Comments and improvements will be implemented after completing revision 0 of this document.
-%The verification and validation plan is an artifact that should also be verified.
-
-%The review will include reviews by your classmates
-
-%Create a checklists?
+The Verification and Validation Plan verification will include reviewing the 
+\href{file:../Checklists/VnV-Checklist.pdf}{Verification and Validation Plan checklist} and adjusting this document accordingly. 
+The verification will also include considering feedback from issues created by another team, as well as from the TA assigned to this project. 
+Comments and improvements will be implemented after completing revision 0 of this document.
 
 \subsection{Implementation Verification Plan}
 \textbf{Hardware Implementation Verification} begins with individual components. First 
@@ -190,10 +195,13 @@ for accurate and detailed inspection of the components and verifies their correc
 \newline 
 \newline 
 \textbf{Software Implementation Verification} requires the hardware to be tested and 
-assembled before beginning. The software is downloaded to the controller and the inputs 
-and outputs are configured one-by-one. Functionality of code is tested with unit tests
-from section 5.1 with the appropriate hardware. Once each section is unit tested, the
-sub-systems can begin to combine to test completness of full systems and their functionality.
+assembled before beginning. Arduino IDE contain the tools to compile and check for syntax
+errors. Code walkthroughs are performed by collaborators that did not write the program. 
+This includes detailed inspection and a report describing the function of the code 
+based on their perspective. This tests the readability and functionality of the code. 
+The software is downloaded to the controller and the I/Os are configured one-by-one. 
+Functionality of code is tested with unit tests from section 5.1 with the appropriate hardware. 
+Once each section is unit tested, the sub-systems can begin to combine to test completness of full systems and their functionality.
 
 %You should at least point to the tests listed in this document and the unit
 %testing plan.
@@ -203,7 +211,10 @@ sub-systems can begin to combine to test completness of full systems and their f
 
 \subsection{Automated Testing and Verification Tools}
 
-Automated testing will be carried out for the software involved with this project. Unit tests will be created to test the functionality fo each function created for the program. A minimum of one "successful" test will be written to describe the intended program execution, and one or more "unsuccessful" tests will be written to test the robustness of the program. This will ensure complete code coverage for the software. There are 3 main classes of tests that will be run involving the different aspects \progname{}:
+Automated testing will be carried out for the software involved with this project. Unit tests will be created to test the 
+functionality fo each function created for the program. A minimum of one `"successful" test will be written to describe the 
+intended program execution, and one or more `"unsuccessful" tests will be written to test the robustness of the program. 
+This will ensure complete code coverage for the software. There are 3 main classes of tests that will be run involving the different aspects \progname{}:
 \begin{itemize}
   \item \textbf{Linting:} Performed on Python and Javascript code. This will be integrated into VS Code to assist in local development; this will be run as a Github Workflow as a non-blocking check before building the software.
 
@@ -245,7 +256,9 @@ Automated testing will be carried out for the software involved with this projec
 Software will be validated by reviewing the requirements in the \href{file:../SRS/SRS.pdf}{Software Requirement Specifications} document and ensuring the software matches the expected performance and behaviour. The chess engine software integration will be validated by comparing it alongside an established online chess engine running the same Stockfish build as is selected for \progname{}, and comparing the recommended moves. One webside that may be used is \href{https://www.365chess.com/analysis_board.php}{365Chess.com}.
 \newline
 \newline
-Feedback from members of the team that are assigned to another area of the system will be called to verify the software is performing adequately. For example, a member working on the web app may come to test the hardware to ensure the sequences and behaviour is intuitive and user friendly. Feedback and comments from the professor and TA assigned to this project will also be considered when making ajustments to the software.
+Feedback from members of the team that are assigned to another area of the system will be called to verify the software is performing adequately. 
+For example, a member working on the web application may come to test the hardware to ensure the sequences and behaviour is intuitive and user friendly. 
+Feedback and comments from the professor and TA assigned to this project will also be considered when making ajustments to the software.
 \newline
 \newline
 Unit tests will be created that capture both normal-use and failure modes to validate the software as well. Unit tests will be integrated in a Github workflow to ensure that changes are never made to the software that conflict with other areas of the code. Failing unit tests will be used as direction to change parts of the software back to a valid state of operation.
@@ -315,19 +328,20 @@ Each of the user modes include distinct actions due to the purposes of each mode
   After it has ran we will check to see if the user mode has been modified.
   
   \item{GA-4\\}
-  
+
   Type: Functional, Dynamic, Manual
+                        
+  Initial State: The game is in the Game Active State.
                       
-  Initial State: The game is in the Game Inactive State.
+  Input: The game is terminated.
                       
-  Input: The game is changed to the Game Active State.
+  Output: The display the final game and message with the game termination type (stalemate,
+  checkmate, resignation, draw).
+                      
+  Test Case Derivation: The game shall output the final game and message due to the game being terminated.
   
-  Output: The game state will be reset to the starting position.
-                      
-  Test Case Derivation: The game shall be reset to the default starting position due to it entering the Game Active State.
-  
-  How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
-  After it has ran we will check to see if the board state has been reset to the starting position.
+  How test will be performed: The function that handles actions after game termination will be run using the appropriate inputs.
+  After it has ran we will check to see if the final game and message with termination type are displayed.
   
   \item{GA-5\\}
   
@@ -335,7 +349,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
                       
   Initial State: The game is in the Game Active State.
                       
-  Input: The game results in a stalemate or checkmate.
+  Input: stalemate() calculates a stalemate; or checkmateWhite() or checkmateBlack() calculates a checkmate.
   
   Output: The game state will be changed to the Game Inactive State.
                       
@@ -416,18 +430,17 @@ Each of the user modes include distinct actions due to the purposes of each mode
     \item{GI-5\\}
   
     Type: Functional, Dynamic, Manual
+                      
+    Initial State: The game is in the Game Inactive State.
                         
-    Initial State: The game is in the Game Active State.
-                        
-    Input: The game is terminated.
-                        
-    Output: The display the final game and message with the game termination type (stalemate,
-    checkmate, resignation, draw).
-                        
-    Test Case Derivation: The game shall output the final game and message due to the game being terminated.
+    Input: The game is changed to the Game Active State.
     
-    How test will be performed: The function that handles actions after game termination will be run using the appropriate inputs.
-    After it has ran we will check to see if the final game and message with termination type are displayed.
+    Output: The game state will be reset to the starting position.
+                        
+    Test Case Derivation: The game shall be reset to the default starting position due to it entering the Game Active State.
+    
+    How test will be performed: The function that resets the starting position will be run using the appropriate inputs.
+    After it has ran we will check to see if the board state has been reset to the starting position.
   
     \end{enumerate}
   
@@ -667,7 +680,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
                         
       Initial State: The game is in Engine Mode.
                           
-      Input: The game has been terminated through method of stalemate, checkmate, resignation, or draw.
+      Input: The game has been terminated calculated stalemate or checkmate, or user-selected resignation or draw.
                           
       Output: The web application will display a message with the method of game termination and the
       system shall change to the Game Inactive State.
@@ -818,7 +831,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
 \subsubsection{Look and Feel}
 \paragraph{Style}
 \begin{enumerate}
-    \item{NFT1}
+    \item{NFT-1}
     
         Type: Structural, Static, Manual
                             
@@ -836,7 +849,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
 \subsubsection{Usability and Humanity}
 \paragraph{Learnability}
 \begin{enumerate}
-    \item{NFT2}
+    \item{NFT-2}
 
         Type: Structural, Static, Manual
                             
@@ -852,7 +865,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
             moved on the board has also been moved on the web application's virtual model within 30 seconds or less, averaged over the number of people
             in the test group.
                         
-    \item{NFT3}
+    \item{NFT-3}
 
         Type: Functional, Dynamic, Manual, Static etc.
                             
@@ -873,7 +886,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
 \subsubsection{Performance}
 \paragraph{Speed and Latency}
 \begin{enumerate}
-    \item{NFT4}
+    \item{NFT-4}
 
         Type: Structural, Static, Manual
                             
@@ -889,20 +902,20 @@ Each of the user modes include distinct actions due to the purposes of each mode
             times are recorded. The response times are then averaged over the entire test group. The average response time of the entire test group must be less than 
             0.5 seconds.
                         
-    \item{NFT5}
+    \item{NFT-5}
 
         Type: Structural, Static, Manual
                             
-        Initial State: The results of the previous test, NFT4, have been measured and recorded.
+        Initial State: The results of the previous test, NFT-4, have been measured and recorded.
                             
-        Input/Condition: The results of NFT4.
+        Input/Condition: The results of NFT-4.
                             
         Output/Result: The maximum recorded time of any individual response is within a specific time frame.
                             
-        How test will be performed: The times measured in the previous test, NFT4, will be inspected. The maximum recorded individual time must be less than 
+        How test will be performed: The times measured in the previous test, NFT-4, will be inspected. The maximum recorded individual time must be less than 
             1 second.
 
-    \item{NFT6}
+    \item{NFT-6}
 
         Type: Structural, Static, Manual
                             
@@ -918,23 +931,23 @@ Each of the user modes include distinct actions due to the purposes of each mode
             individual and average times are recorded. The response times are then averaged over the entire test group. The average response time of the entire
             test group must be less than 2 seconds.
 
-    \item{NFT7}
+    \item{NFT-7}
 
         Type: Structural, Static, Manual
                                 
-        Initial State: The results of the previous test, NFT6, have been measured and recorded.
+        Initial State: The results of the previous test, NFT-6, have been measured and recorded.
                             
-        Input/Condition: The results of NFT6.
+        Input/Condition: The results of NFT-6.
                             
         Output/Result: The maximum recorded time of any individual response is within a specific time frame.
                             
-        How test will be performed: The times measured in the previous test, NFT6, will be inspected. The maximum recorded individual time must be less than 
+        How test will be performed: The times measured in the previous test, NFT-6, will be inspected. The maximum recorded individual time must be less than 
             5 seconds.
 \end{enumerate}
 
 \paragraph{Health and Safety}
 \begin{enumerate}
-    \item{NFT8}
+    \item{NFT-8}
 
         Type: Structural, Static, Manual
                             
@@ -951,7 +964,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
 
 \paragraph{Precision and Accuracy}
 \begin{enumerate}
-    \item{NFT9}
+    \item{NFT-9}
 
         Type: Structural, Static, Manual
                             
@@ -969,7 +982,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
 
 \paragraph{Capacity}
 \begin{enumerate}
-    \item{NFT10}
+    \item{NFT-10}
 
         Type: Structural, Static, Manual
                             
@@ -987,7 +1000,7 @@ Each of the user modes include distinct actions due to the purposes of each mode
 \subsubsection{Security}
 \paragraph{Integrity}
 \begin{enumerate}
-    \item{NFT11}
+    \item{NFT-11}
 
         Type: Structural, Static, Manual
                             
@@ -997,12 +1010,12 @@ Each of the user modes include distinct actions due to the purposes of each mode
                             
         Output/Result: The web application indicates that the Bluetooth connection has been lost.
                             
-        How test will be performed: A game of chess is being played when the Bluetooth option is switched off on the server, severing the connection.
-            The web application must display an alert that the Bluetooth connection has been lost.
+        How test will be performed: A game of chess is being played when the Bluetooth option is switched off (either from the server or the hardware),
+        severing the connection.The web application must display an alert that the Bluetooth connection has been lost.
 \end{enumerate}
 
 \begin{enumerate}
-    \item{NFT12}
+    \item{NFT-12}
 
         Type: Structural, Static, Manual
                             
@@ -1014,6 +1027,52 @@ Each of the user modes include distinct actions due to the purposes of each mode
                             
         How test will be performed: A game of chess is being played when the power is switched off. The power is then restored after 5 or more seconds. A single
             move is made and the state of the game is tested against the web application. The state of the game should be unchanged from before power was lost.
+\end{enumerate}
+
+\begin{enumerate}
+    \item{NFT-13}
+
+        Type: Privacy, Static, Manual
+                            
+        Initial State: The product is in any mode and a chess game is completed on the system.
+                            
+        Input/Condition: The game is reset and re-enters the initial state.
+                            
+        Output/Result: The system has no memory of the previous user or game played.
+                            
+        How test will be performed: A game of chess is being played when the end of the game is reached (checkmate, draw, stalemate and resign will be tested).
+            A member of our team will inspect the data on the server and verify that there is nothing stored in memory from the previous game.
+\end{enumerate}
+
+\begin{enumerate}
+    \item{NFT-14}
+
+        Type: Security, Static, Manual
+                            
+        Initial State: The product source code is on GitHub, and security settings will be active so only 
+            members of the \progname organization can make changes to the code.
+                            
+        Input/Condition: A member and a non-member account will attempt to modify the source code.
+                            
+        Output/Result: The non-member will be prevented from modifying the code, while the member will be able to.
+                            
+        How test will be performed: A team member will create a dummy account to attempt to change the source code. He will then use his actual
+            account to modify the same code. GitHub security settings will be checked to verify that the non-member attempt was blocked.
+\end{enumerate}
+
+\begin{enumerate}
+    \item{NFT-15}
+
+        Type: Continuous, Manual
+                            
+        Initial State: The documentation for the product will contain requirements to be matched to the VnV Plan.
+                            
+        Input/Condition: Feedback will be given on the product requirements.
+                            
+        Output/Result: Requirements will be updated according to the feedback recieved, and checked to ensure complete requirement satisfaction.
+                            
+        How test will be performed: All initial requirements will be traced and checked in the VnV Plan. New requirements from subsequent rounds of 
+          feedback recieved will be included in an ongoing basis, and verified by a member of the \progname team.
 \end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
@@ -1088,29 +1147,35 @@ Each of the user modes include distinct actions due to the purposes of each mode
     \hline
     BA-2 & BA2\\
     \hline
-    NFT1 & LF3\\
+    NFT-1 & LF3\\
     \hline
-    NFT2 & UH5\\
+    NFT-2 & UH5\\
     \hline
-    NFT3 & UH6\\
+    NFT-3 & UH6\\
     \hline
-    NFT4 & PR1\\
+    NFT-4 & PR1\\
     \hline
-    NFT5 & PR2\\
+    NFT-5 & PR2\\
     \hline
-    NFT6 & PR3\\
+    NFT-6 & PR3\\
     \hline
-    NFT7 & PR4\\
+    NFT-7 & PR4\\
     \hline
-    NFT8 & PR6\\
+    NFT-8 & PR6\\
     \hline
-    NFT9 & PR7\\
+    NFT-9 & PR7\\
     \hline
-    NFT10 & PR10\\
+    NFT-10 & PR10\\
     \hline
-    NFT11 & SR4\\
+    NFT-11 & SR4\\
     \hline
-    NFT12 & SR3\\
+    NFT-12 & SR3\\
+    \hline
+    NFT-13 & SR2, SR6\\
+    \hline
+    NFT-14 & SR1\\
+    \hline
+    NFT-15 & SR7\\
     \hline
 \caption{Traceability Matrix}
 \end{longtable}
