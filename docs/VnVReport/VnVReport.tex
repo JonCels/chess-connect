@@ -101,6 +101,7 @@
 2023-03-08 & Alexander Van Kralingen & Completed Code Coverage Metrics section\\
 2023-03-08 & Rupinder Nagra & Added Unit Testing section\\
 2023-03-08 & Alexander Van Kralingen & Clean up merge conflicts\\
+2023-04-04 & Alexander Van Kralingen & Address Peer-Review Issues\\
 \bottomrule
 \end{tabularx}
 
@@ -339,9 +340,9 @@ Usability testing will be performed for revision 1, as though it is functional, 
         \hline
         NFT-5 & Experiment performed as detailed below. & Maximum single response time of any trial is less than 1 second. & Maximum response time was 0.72 seconds. &  & Pass \\
         \hline
-        NFT-6 & N/A & N/A & N/A & Not tested, as the system is currently subject to a 2-second delay before refreshing. Will be tested for revision 1. & TBD \\
+        NFT-6 & Pawn at c1 moves to c3 & Web App moves pawn c1 to c1 & Web App moves pawn c1 to c1 & - & Pass \\
         \hline
-        NFT-7 & N/A & N/A & N/A & Not tested, as the system is currently subject to a 2-second delay before refreshing. Will be tested for revision 1. & TBD \\
+        NFT-7 & NFT-6 sequence & less than 5 seconds to update Web App & 2.3 seconds until move is made in Web App & Response time varies greatly. Consistantly between .5 to 3.5 s & Pass \\
         \hline
         \end{tabular}
     \caption{Performance Non-Functional Requirements Results}
@@ -492,6 +493,7 @@ Precision and accuracy testing will be performed for revision 1, as though it is
     Test & Input & Expected & Actual & Notes & Result\\
     \hline
     NFT-11 & Bluetooth connection to web application severed. & Web application alert that the connection has been lost. & N/A & Not implemented, planned in future revisions. & TBD \\
+    NFT-11 & Bluetooth connection to web application severed. & Bluetooth chip LED blinks faster & Bluetooth chip LED blinks faster & N/A & Pass \\
     \hline
     NFT-12 & Power connection to system is severed, and then restored after a short time frame. & The game state data is stored in local memory and is unchanged after power is restored. & Game state data is properly stored. &  & Pass \\
     \hline
@@ -586,6 +588,20 @@ Precision and accuracy testing will be performed for revision 1, as though it is
     inStalemate & {\scriptsize rnbqkbnr/pppppppp/ 8/8/8/8/PPPPPPPP/ RNBQKBNR w KQkq - 0 1} & false & false & pass \\
     \hline 
     inCheckmate & {\scriptsize rnb1kbnr/pppp1ppp/ 8/4p3/5PPq/8/ PPPPP2P/ RNBQKBNR w KQkq - 1 3} & true & true & pass \\
+    \hline 
+    promotePawn & ChessPiece QUEEN, promotionSquare \{PAWN, WHITE, 7, 3\} & currentBoard[7][3] = \{QUEEN, WHITE, 7, 3\} & currentBoard[7][3] = \{QUEEN, WHITE, 7, 3\} & pass \\
+    \hline 
+    getValidMoves & startingSquare \{PAWN, WHITE, 1, 3\} & possibleMoves [[2,3], [3,3]] & possibleMoves [[2,3], [3,3]] & pass \\
+    \hline
+    handleTouch & currentScreen MAIN\_SCREEN, x=150, y=80 & startGameButton() & startGameButton() & pass \\
+    \hline
+    handleTouch & currentScreen MODE\_SELECT\_SCREEN, x=230, y=80 & selectMode(NORMAL) & selectMode(NORMAL) & pass \\
+    \hline
+    errorOkButton & afterError PROMOTING & gameState PROMOTING, currentScreen PROMOTION\_SCREEN, makePromotionScreen() & gameState PROMOTING, currentScreen PROMOTION\_SCREEN, makePromotionScreen() & pass \\
+    \hline
+    parseWebPayload & webData "Nf3@w12@n" & engineMove="Nf3", webCode="w13", gameState="n" & engineMove="Nf3", webCode="w13", gameState="n"  & pass \\
+    \hline
+    avg & avgSums [210, 530, 610, 563], value 498, avgIndex 0 & return 550 & return 550  & pass \\
     \hline
     \caption{Unit Test functions}
   \end{longtable}
@@ -642,6 +658,22 @@ required data and processing dedicated to this communicatin. One of the proposed
 solutions is the implementation of a refresh to erase the stored data. This 
 eliminates the data size issue. A second solution is the introduction of sockets
 which eliminates polling entirely and solves the data size and processing issues. 
+
+\subsection{Overal State of the Project}
+Testing and validation revealed various weaknesses in the project that should be addressed
+in subsequent revisions. The robustness of the hardware is not at a level where the embedded
+software can be implemented reliably. The software has become more robust to compensate,
+however errors are still occurring randomly. The lack of reproducible errors can be attributed
+to the integrity of the hardware components, thus eliminating the possibility of creating
+a thorough and extensive error handling system; without the ability to generate edge-case
+scenarios, error handling cannot be reliably tested. Furthermore, while the embedded code 
+works well in a normal scenario, certain advanced features of chess cannot be implemented due
+to the lack of hardware consistency. 
+
+The web application has become much more robust to handle the constant re-flashing of
+embedded code to the Arduino controller, and has proven to be in an excellent state for
+the final product. As this is the main feature of the product, this can be combined with
+different hardware in future revisions to create a much more viable product.
 
 \section{Automated Testing}
 \subsection{C++}
@@ -794,7 +826,7 @@ code taken by one of actions is as follows:
       \rowcolor[gray]{0.9}
       Coverage & Number of Functions/Paths & Number Tested & \% Covered & Notes\\
       \hline
-      Function & 60 & 44 & 73\% & A list of all functions covered can be found in \hyperref[FunctionsCovered]{Appendix \ref{FunctionsCovered}} \\
+      Function & 92 & 50 & 54\% & A list of all functions covered can be found in \hyperref[FunctionsCovered]{Appendix \ref{FunctionsCovered}} \\
       \hline
       Path & 41 & 32 & 78\% & A list of all paths considered can be found in \hyperref[CodePaths]{Appendix \ref{CodePaths}} \\
       \hline
@@ -843,6 +875,37 @@ code taken by one of actions is as follows:
   \item[\checkmark] highlightQueenMoves
   \item[\checkmark] highlightKingMoves
   \item[\checkmark] btComm
+  \item[\checkmark] promotePawn
+  \item[\checkmark] getValidMoves
+  \item[\checkmark] handleTouch
+  \item[\checkmark] handleTouch
+  \item[\checkmark] errorOkButton
+  \item[\checkmark] parseWebPayload
+  \item[$\times$] setupAvg
+  \item[\checkmark] avg
+  \item[$\times$] StateMachine
+  \item[$\times$] initBoard
+  \item[$\times$] makeMainScreen
+  \item[$\times$] makeModeSelectScreen
+  \item[$\times$] makeGameScreen
+  \item[$\times$] makeEndScreen
+  \item[$\times$] makePromotionScreen
+  \item[$\times$] makeThemeButton
+  \item[$\times$] makeConfirmationScreen
+  \item[$\times$] makeErrorScreen
+  \item[$\times$] drawStartMode
+  \item[$\times$] drawEngineMove
+  \item[$\times$] startGameButton
+  \item[$\times$] selectModeButton
+  \item[$\times$] beginnerModeButton
+  \item[$\times$] normalModeButton
+  \item[$\times$] engineModeButton
+  \item[$\times$] resignWhiteButton
+  \item[$\times$] resignBlackButton
+  \item[$\times$] drawButton
+  \item[$\times$] terminationOkButton
+  \item[$\times$] errorOkButton
+  \item[$\times$] themeButton
   \item[$\times$] appendCharToStr
   \item[\checkmark] setEngineBoxText
   \item[$\times$] makeEngineBox
