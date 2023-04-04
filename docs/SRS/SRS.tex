@@ -93,12 +93,12 @@ description of the unit and the SI name.
     \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
     \midrule 
     \si{\volt} & electric potential & volt\\
-    \si{\ampere} & current	& ampere\\
+    %\si{\ampere} & current	& ampere\\
     \si{\ohm} & resistance	& ohm\\
     \si{\second} & time & second\\
-    \si{\celsius} & temperature & centigrade\\
-    \si{\joule} & energy & joule\\
-    \si{\watt} & power & watt (W = \si{\joule\per\second})\\
+    %\si{\celsius} & temperature & centigrade\\
+    %\si{\joule} & energy & joule\\
+    %\si{\watt} & power & watt (W = \si{\joule\per\second})\\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -116,16 +116,16 @@ description of the unit and the SI name.
   FIDE & International Chess Federation or Fédération Internationale des Échecs\\
   GD & General Definition\\
   GS & Goal Statement\\
-  IM & Instance Model\\
+  %IM & Instance Model\\
   LC & Likely Change\\
   LCD & Liquid Crystal Display\\
   LED & Light-Emmitting Diode\\
-  MCU & Micro Controller Unit\\
-  PS & Physical System Description\\
+  %MCU & Micro Controller Unit\\
+  %PS & Physical System Description\\
   R & Requirement\\
   SRS & Software Requirements Specification\\
   SS & Skills for Success\\
-  T & Theoretical Model\\
+  %T & Theoretical Model\\
   VnV & Verification and Validation\\
   WCAG & Web Content Accessibility Guidelines\\
   \bottomrule
@@ -166,10 +166,10 @@ diagrams, and mathematical notation. Readers should also have a university-level
 \subsection{Characteristics of Intended User}
 {This project will assist chess players of any level that are looking for a tool to help them learn and study the game. For beginners, 
 the board serves as a learning tutorial and a general introduction to the game, while intermediate and advanced players can use the 
-engine move recommendations to study new lines, puzzles, and specific positions to enhance their chess skills.}
+engine move recommendations to study new lines and specific positions to enhance their chess skills.}
 
 \subsection{Stakeholders}
-{The professor and TAs for the course SFWRENG 4G06 as they will be providing the feedback which will directly affect the project’s development. 
+{Stakeholders for this project are the professor and TAs for the course SFWRENG 4G06, as they will be providing the feedback which will directly affect the project’s development. 
 Society is also a stakeholder because this project will provide the members of society another gateway to be involved in the community through the game of chess. Lastly, this project will 
 also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real-time.}
 
@@ -192,11 +192,10 @@ how to play chess.}
 \begin{enumerate}[{A}1., leftmargin=2\parindent]
     \item Users of the board have knowledge of the starting positions and will
     set them up before the start of a new game.  \\
-    \item Users will not make illegal moves outside of beginner mode. \\
     \item Game termination as dictated by the rules of chess \cite{RulesofChess} \\
-    \item {During gameplay, users will not take back moves. When a piece is placed
+    \item {During gameplay, users will not take back moves, except when instructed to do so. When a piece is placed
     on the board, that move is final.} \\
-    \item Users will have the knowledge of bluetooth setup and connection. \\
+    \item Users will have knowledge of the bluetooth setup and connection. \\
 \end{enumerate}
 
 \section{Constraints}
@@ -233,9 +232,9 @@ how to play chess.}
 
 \section{Scope}
 {The system is called \progname{}, and will include a software application and physical hardware device. The hardware will take the 
-form of a chess set, and will collect and relay move and piece data. The device will convey the best moves for the specific board 
-position, and will convey legal moves for specific pieces.The device will be connected to the software application, relaying and 
-receiving relevant data. The software application will model and track the physical device, and will broadcast the data in an accessible 
+form of a chess set, and will collect and relay move and piece data. The device will convey the best move for the specific board 
+position as calculated by a chess engine, and will convey legal moves for specific pieces. The device will be connected to the software application, 
+relaying and receiving relevant data. The software application will model and track the physical device, and will broadcast the data in an accessible 
 format. The application will be constrained to a 2-dimensional model of the hardware device, showing a top-down view of the game.}
 
 \bigskip
@@ -244,9 +243,10 @@ format. The application will be constrained to a 2-dimensional model of the hard
     \item Modeling and tracking a chess game played using the \progname{} hardware
     \item Displaying and broadcasting the game state on the \progname{} software application
     \item Giving users an option to choose between beginner mode, engine mode, and normal mode
+    \item Informing users when an illegal move is made, or when a user moves out of turn
     \begin{itemize}
-        \item Beginner mode will display legal moves for individual pieces when a chess piece is picked up, and will warn the players when an illegal move is made
-        \item Engine mode will display the best moves as determined by a chess engine for the position
+        \item Beginner mode will display legal moves for individual pieces when a chess piece is picked up
+        \item Engine mode will display the best move as determined by a chess engine for the position
         \item Normal mode will disable the engine and beginner mode features. This is intended for regular play between experienced players
     \end{itemize}
 \end{enumerate}}
@@ -307,8 +307,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \subsubsection{Use Cases/Scenarios}{
     
     \paragraph{Normal Mode}{
-        Users play the game without any LED feedback. This would typically be a formal match involving players that are familiar with the game. Moves would still be broadcast to the
-        web application, and move history will still be recorded for future reference.
+        Users play the game without any LED feedback. This would typically be a formal match involving players that are familiar with the game. Moves are broadcast to the
+        web application in real time.
     }
         
     \paragraph{Engine Mode}{
@@ -317,13 +317,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
     }
     
     \paragraph{Beginner Mode}{
-        Users play the game with LED feedback on lifting a piece. The piece lifted will be determiend by the hardware and corresponding legal moves will be lit up on the board. This game
-        mode is designed to help beginners learn the game of chess. Legal moves will involve more complex strategies such as ``en passant'' and ``castling''.
-    }
-        
-    \paragraph{Studying Past Games}{
-        The web application will have a record of the moves made in past games. This can be used to study the game moves and understand scenarios which could have been handled differently
-        to produce a more favourable outcome.
+        Users play the game with LED feedback on lifting a piece. The lifted piece will be determined by the system and that piece's corresponding legal moves will be illuminated on the board. This game
+        mode is designed to help beginners learn the game of chess.
     }
     
     \paragraph{Tournament Play}{
@@ -333,7 +328,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 
 \subsection{Undesired Scenario Handling}{
     \paragraph{Earthquake Scenario}{
-        Also known as the ``sore loser scenario'', when some or all of the pieces are removed from their spaces within a short amount of time, the game will be ended as a draw. 
+        Also known as the ``sore loser scenario'', when some or all of the pieces are removed from their spaces within a short amount of time, the LCD screen will display an error.
     }
     
     \paragraph{Power Loss}{
@@ -341,47 +336,41 @@ format. The application will be constrained to a 2-dimensional model of the hard
     }
     
     \paragraph{Bluetooth Disconnection}{
-        On bluetooth disconnection, the board will attempt to reconnect for 30 seconds. Upon the expiration of this timer, the game will end as a draw.
+        On bluetooth disconnection, the board will attempt to reconnect for 30 \si{\second}. Upon the expiration of this timer, the game will end as a draw.
     }
     
     \paragraph{Internet Disconnection}{
         On internet disconnection, the server will keep a history of past moves made. On reconnection, the game will be updated to reflect these moves as they are sent through the
         queue to the hosted interface.
-    }
-    
-    \paragraph{Cheating}{
-        If pieces are moved or removed out of turn, the spaces which were affected will be lit up with red LEDs. When the board is returned to the state before cheating occurred,
-        the game will resume as normal.
-    }
-    
+    }    
 }
 
 \section{System Level Variables}
 \subsection{Constants}
 
 \begin{table}[H]
-  \centering
-      \setlength{\leftmargini}{0.4cm}
-      \begin{tabular}{| >{\centering\arraybackslash}m{5cm} | 
+    \centering
+        \setlength{\leftmargini}{0.4cm}
+        \begin{tabular}{| >{\centering\arraybackslash}m{5cm} | 
         >{\centering\arraybackslash}m{2cm} | 
         >{\centering\arraybackslash}m{5cm} |}
-      \hline
-      \rowcolor[gray]{0.9}
-      Constant & Unit & Value\\
-      \hline
-      Chess board width & inches & 12\\
-     \hline
-     Chess board length & inches & 12\\
-     \hline
-     Chess board tile width & inches & 1.5\\
-     \hline 
-     Chess board tile length & inches & 1.5\\ 
-     \hline 
-     Supply Power to Board & Volts & 110 VAC\\
-     \hline
-      \end{tabular}
-  \label{Table}
-  \end{table}
+        \hline
+        \rowcolor[gray]{0.9}
+        Constant & Unit & Value\\
+        \hline
+        Chess board width & inches & 12\\
+        \hline
+        Chess board length & inches & 12\\
+        \hline
+        Chess board tile width & inches & 1.5\\
+        \hline 
+        Chess board tile length & inches & 1.5\\ 
+        \hline 
+        Supply Power to Board & \si{\volt} & 110 VAC\\
+        \hline
+    \end{tabular}
+    \label{Table}
+\end{table}
 
 \subsection{Monitored Variables}
 
@@ -395,30 +384,12 @@ format. The application will be constrained to a 2-dimensional model of the hard
       \rowcolor[gray]{0.9}
       Variable & Units & Description\\
       \hline
-      s\_a\{1-8\} & Volts & States of tiles a1 - a8 on the board. They are analog signals 
-      converted to digital and the state of the tile is determined. The possible states of 
-      each tile is empty, black/white pawn, black/white rook, black/white knight, 
-      black/white bishop, black/white queen, black/white king. \\
+      current\_board & sequence of (sequence of \si{\volt}) & States of tiles on the board. They are analog signals 
+      converted to digital and the state of the tile is determined. The possible states of each tile is empty, 
+      black/white pawn, black/white rook, black/white knight, black/white bishop, black/white queen, black/white king. \\
       \hline
-      s\_b\{1-8\} & Volts & States of tiles b1 - b8 on the board. " " \\
-      \hline
-      s\_c\{1-8\} & Volts & States of tiles c1 - c8 on the board. " " \\
-      \hline
-      s\_d\{1-8\} & Volts & States of tiles d1 - d8 on the board. " " \\
-      \hline
-      s\_e\{1-8\} & Volts & States of tiles e1 - e8 on the board. " " \\
-      \hline
-      s\_f\{1-8\} & Volts & States of tiles f1 - f8 on the board. " " \\
-      \hline
-      s\_g\{1-8\} & Volts & States of tiles g1 - g8 on the board. " " \\
-      \hline
-      sw\_3pos & Volts & The three-position switch is located
-      on top of the board. It toggles between the beginner 
-      advice, engine advice and normal modes.\\
-      \hline
-      tieB\_p\{1-2\} & Volts & The ``draw'' push-button for each player is located on 
-      the top of the board on their respective sides. When both players press their button
-      the game is a draw. \\
+      LCD\_inputs & \si{\ohm} & The LCD screen is located in the side of the board. The LCD is a touchscreen display that uses a resistor grid input. 
+      It controls selection of user mode (beginner, normal, engine), new game button, as well as draw and resign.  \\
       \hline
       engine\_move & chess notation & The chess engine API provides best moves into 
       the system. \\
@@ -439,12 +410,13 @@ format. The application will be constrained to a 2-dimensional model of the hard
       \rowcolor[gray]{0.9}
       Variable & Units & Description\\
       \hline 
-      LED\_row\{1-9\} & Volts & A total of 81 LEDS will be located under the board. They 
-      are on the corner of each tile and illuminate based on conditions of the inputs. \\
+      LED\_row\{1-8\} & \si{\volt} & A total of 64 LEDS will be located under the board. They 
+      are in the middle of each tile and illuminate based on conditions of the inputs. \\
       \hline 
-      LCD\_Display & Volts & An LCD Display is located on the chess board to indicate
+      LCD\_Display & \si{\volt} & An LCD Display is located on the chess board to indicate
       best moves delivered by the engine. \\
       \hline 
+
       \end{tabular}
   \label{Table}
   \end{table}
@@ -506,8 +478,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \paragraph{Chess Board}
 \begin{enumerate}[{NB}1., leftmargin=2\parindent]
     \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on the LCD screen.
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on the LCD screen.  
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen.  
 \end{enumerate}
 
 \paragraph{Data Transfer}
@@ -526,8 +498,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \paragraph{Chess Board}
 \begin{enumerate}[{EB}1., leftmargin=2\parindent]
     \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on the LCD screen
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on the LCD screen
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen
     \item The system shall show the top engine moves on the LCD display.
 \end{enumerate}
 
@@ -553,8 +525,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
     \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
     \item When a user picks up a piece, allow them to view all legal moves with green LED lights on valid squares.
     \item If an illegal move is made, the LCD screen will halt play and request a correct action.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME seconds located on the LCD screen.
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME seconds located on the LCD screen. 
+    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen.
+    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen. 
 \end{enumerate}
 
 \paragraph{Data Transfer}
