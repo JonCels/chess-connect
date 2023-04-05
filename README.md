@@ -30,13 +30,11 @@ The folders and files for this project are as follows:
   - VnVReport: [Verification and Validation Report](docs/VnVReport/VnVReport.pdf)
 - **refs** - Reference material used for the documentation
 - **src** - Source code
-  - Arduino_transmitter: Part of the development stage and will be removed in future revisions.
-  - arduinoUno/LCD: Source code to run the Arduino controller powering the chess board. Name change will be required for final production.
   - chess-app: Front-end of the web application
   - chess-app-backend: Back-end of the web application
-  - Embedded: First revision of the embedded software for the chess board controller. To be removed in future revisions.
+  - Embedded: Source code to run the Arduino controller powering the chess board. Source code for revision 0 demonstration (legacy).
 - **test** - Test cases
-  - EmbeddedTest: Used in conjunction with the src/Embedded folder. Mock Arduino and test setup to be reworked to support the new src/arduinoUno/LCD source code.
+  - EmbeddedTest: Used in conjunction with the src/Embedded folder.
 
 ## Getting Started
 
