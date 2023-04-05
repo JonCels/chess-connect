@@ -1,11 +1,8 @@
 # Chess Connect
 
-The Chess Connect project allows two users to play a game of chess on a physical board with the information being 
-transmitted to an online web application over Bluetooth. Currently, there is no way for players to seamlessly switch 
-between playing on a physical board and playing online, but Chess Connect intends to change this by creating a central 
-platform that will provide flexibility and remove barriers for new players looking to learn the game.
+The Chess Connect project allows two users to play a game of chess on a physical board with the information being transmitted to an online web application over Bluetooth. Our vision is to create a central platform that will provide flexibility and remove barriers for new players looking to learn the game.
 
-Date of project start: September 12, 2022
+*Date of project start: September 12, 2022*
 
 ## Authors
 
@@ -16,31 +13,44 @@ Date of project start: September 12, 2022
 - [Rupinder Nagra](https://github.com/RupinderN)
 
 
+## Repository Structure
 
 The folders and files for this project are as follows:
 
-docs - Documentation for the project
-refs - Reference material used for the project, including papers
-src - Source code
-test - Test cases
-etc.
-
-# Project Title
-
-Short description of the project.
+- **docs** - Documentation for the project
+  - ProblemStatementAndGoals: [Problem Statement](docs/ProblemStatementAndGoals/ProblemStatement.pdf)
+  - DevelopmentPlan: [Development Plan](docs/DevelopmentPlan/DevelopmentPlan.pdf)
+  - SRS: [Software Requirements Specification](docs/SRS/SRS.pdf)
+  - Design
+    - SoftArchitrcture: [Module Guide](docs/Design/SoftArchitecture/MG.pdf)
+    - SoftDetailedDes: [Module Interface Specification](docs/Design/SoftDetailedDes/MIS.pdf)
+    - SystDesign: [System Design](docs/Design/SystDesign/SystDes.pdf)
+  - HazardAnalysis: [Hazard Analysis](docs/HazardAnalysis/HazardAnalysis.pdf)
+  - VnVPlan: [Verification and Validation Plan](docs/VnVPlan/VnVPlan.pdf)
+  - VnVReport: [Verification and Validation Report](docs/VnVReport/VnVReport.pdf)
+- **refs** - Reference material used for the documentation
+- **src** - Source code
+  - Arduino_transmitter: Part of the development stage and will be removed in future revisions.
+  - arduinoUno/LCD: Source code to run the Arduino controller powering the chess board. Name change will be required for final production.
+  - chess-app: Front-end of the web application
+  - chess-app-backend: Back-end of the web application
+  - Embedded: First revision of the embedded software for the chess board controller. To be removed in future revisions.
+- **test** - Test cases
+  - EmbeddedTest: Used in conjunction with the src/Embedded folder. Mock Arduino and test setup to be reworked to support the new src/arduinoUno/LCD source code.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine.
+These instructions will get you a copy of the project up and running.
 
 ### Prerequisites
 
-- Arduino IDE
-- Node.js
+- [Arduino IDE](https://www.arduino.cc/en/software)
+- [Node.js](https://nodejs.org/en/download)
+- [React Library](https://react.dev/)
 
 ### Dependencies
 
-#### Arduino
+**Arduino**
 
 All of the following dependencies can be installed using the Arduino IDE Library Manager.
 
@@ -49,21 +59,21 @@ All of the following dependencies can be installed using the Arduino IDE Library
 - [Adafruit_TFTLCD](https://github.com/adafruit/TFTLCD-Library): This is a hardware-specific library for controlling TFT LCD displays.
 - [TouchScreen](https://github.com/adafruit/Adafruit_TouchScreen): This is a library for reading touch coordinates from a touchscreen.
 
+**Node.js**
+
+<!-- ADD WEB APP DEPENDENCIES HERE -->
+
 ### Installing
+<!-- MODIFY INSTRUCTIONS FOR RUNNING WEB APP -->
 
 1. Clone the repository
 2. Open the Arduino IDE and load the `LCD.ino` sketch from the `src/arduinoUno/LCD` folder
 3. Upload the sketch to the Arduino UNO
-4. Open a terminal and navigate to the `web-app` folder
+4. Open a terminal and navigate to the `chess-app` folder
 5. Run `npm install` to install the required Node.js packages
 6. Run `npm start` to start the React Web Application
 7. Access the Web Application at `http://localhost:3000`
 
-## Built With
-
-- Arduino IDE
-- React
-- Node.js
 
 ## License
 
