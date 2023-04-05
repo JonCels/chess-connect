@@ -65,8 +65,8 @@ All of the following dependencies can be installed using the Arduino IDE Library
 <!-- MODIFY INSTRUCTIONS FOR RUNNING WEB APP -->
 
 1. Clone the repository
-2. Open the Arduino IDE and load the `LCD.ino` sketch from the `src/arduinoUno/LCD` folder
-3. Upload the sketch to the Arduino UNO
+2. Open the Arduino IDE and load the `EmbeddedController.ino` sketch from the `src/Embedded/ArduinoController` folder
+3. Upload the sketch to the Arduino Mega
 4. Open a terminal and navigate to the `chess-app` folder
 5. Run `npm install` to install the required Node.js packages
 6. Run `npm start` to start the React Web Application
