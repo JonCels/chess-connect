@@ -68,6 +68,7 @@
 2023-01-18 & Joshua Chapman & Scope, Project Overview, System Variables, Timeline\\
 2023-01-18 & Joshua Chapman & Hardware Design, Communication Protocols, Wiring Diagram\\
 2023-01-18 & Rupinder Nagra & Interface\\
+2023-04-05 & Arshdeep Aujla & Add answer to reflection question about limitations\\
 \bottomrule
 \end{tabularx}
 
@@ -567,6 +568,11 @@ board display, where the player can see the current state of the game and make
 \section{Reflection}
 
 \subsection*{Project Limitations}
+There are a few limitations in our design. The first one is that the device is not wireless. It requires a wired power supply at all times. This could be improved by adding a wireless
+power supply to the device. Then it would only need to be charged every so often, rather than requiring a constant supply of power. Another limitation is that the device always needs to be connected to
+the Internet to upload the real-time game data. With unlimited resources, we could put an LTE chip in our device to ensure there is always a connection to the Internet. Although this is
+not feasible for the scope of the project. Lastly, a limitation is the physical size and portability of the device. The final product is expected to be larger than a chess board, as well as
+approximately 15cm thick. With more money and time, the size could be reduced to improve the portability.
 
 \subsection*{Other Considered Designs}
 One problem that we had to overcome in our design is that there are not enough input and output pins in one microcontroller for all of the components.
@@ -575,17 +581,5 @@ This design would be beneficial in the way of simplicity of code. The tradeoff w
 web application. A second option to solve this problem is to use multiplexing to reduce the number of input and output pins needed for a large number of components. 
 This option requires more complex code, but only requires one microcontroller device. We chose to implement the multiplexing option because it only used one device which saves money,
 as well as eliminates the need to coordinate between multiple microcontrollers. 
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Problem Analysis and Design.  Please answer the following questions:
-
-\begin{enumerate}
-  \item What are the limitations of your solution?  Put another way, given
-  unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
-  \item Give a brief overview of other design solutions you considered.  What
-  are the benefits and tradeoffs of those other designs compared with the chosen
-  design?  From all the potential options, why did you select documented design?
-  (LO\_Explores)
-\end{enumerate}
 
 \end{document}
