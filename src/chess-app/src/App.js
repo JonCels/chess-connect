@@ -13,6 +13,7 @@ const sendData = (data) => {
   axios.post("http://localhost:8002/", { engineMove: data }).then(response => {})
 }
 
+// Define the container style for centering the chessboard and other elements
 const container = {
   display: "flex",
   justifyContent: "center",
@@ -20,8 +21,11 @@ const container = {
 }
 
 function App() {
+  // Set up state variables for data and deviceName
   const [data, setData] = useState([])
   const [deviceName, setDeviceName] = useState("")
+
+  // Listen for new data from the server and update state accordingly
   useEffect(() => {
     socket.on("new_data", (data) => {
       console.log(JSON.parse(data))
@@ -30,6 +34,7 @@ function App() {
     })
   }, [socket])
 
+  // Connect to the server when the component mounts and disconnect when it unmounts
   useEffect(() => {
     socket.connect();
   
@@ -38,6 +43,7 @@ function App() {
     };
   }, []);
 
+  // Process the received data and extract the FEN string, game state, and mode
   let fenString = ""
   let gameState = ""
   let mode = ""
@@ -47,10 +53,14 @@ function App() {
     gameState = splitString[1]
     mode = splitString[2]  
   }
+
+  // Initialize the chess game and calculate the best move
   const chess = new Chess(fenString) 
   const difficulty = 1
   initGame(chess, difficulty)
   const calculatedMove = calculateBestMove(chess, difficulty)
+
+  // Send the calculated move and game state to the server based on the current game state
   let index = fenString.indexOf(" ")
   if (!chess.in_checkmate() && !chess.in_stalemate() && mode[0] == "e") {
     sendData(calculatedMove + "@" + fenString[index + 1] + fenString[fenString.length-1] + "@n" + "\r\n");
@@ -62,6 +72,7 @@ function App() {
     sendData("a@" + fenString[index + 1] + fenString[fenString.length-1] + "@n" + "\r\n");
   } 
 
+  // Determine the game output based on the current game state
   let gameOutput;
   if (chess.in_checkmate()) {
     gameOutput = "Checkmate!";
@@ -77,6 +88,7 @@ function App() {
     gameOutput = "";
   }
 
+  // Determine the current player
   let currentPlayer = ""
   if (fenString[index + 1] == "w") {
     currentPlayer = "w"
@@ -84,6 +96,7 @@ function App() {
     currentPlayer = "b"
   }
 
+  // Render the main App component
   return (
     <div className="App" style={container}>
       <Grid container spacing={2} style={{marginBottom: '100px'}}>
@@ -103,7 +116,6 @@ function App() {
               <h3 className="font-link" style={{ color: "green", marginTop: '0px', paddingTop: '0px', paddingBottom: '0px', marginBottom: '0px'}}>Connected To: {deviceName}</h3> 
               </div>
             }
-            {/* <h3 className="font-link">{currentPlayer} to {calculatedMove}</h3> */}
             {currentPlayer == "w" ? 
               <TbChessKnight style={{ fontSize: "50px" }}/> :
               <TbChessKnightFilled style={{ fontSize: "50px" }}/>
