@@ -65,7 +65,7 @@
 2022-10-19 & Jonathan Cels & Added requirements\\
 2022-10-19 & Joshua Chapman & FMEA table edits and description changed\\
 2022-10-19 & Rupinder Nagra & Added roadmap\\
-... & ... & ...\\
+2023-04-04 & Alexander Van Kralingen & Addressed peer review issues and TA feedback\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -78,14 +78,29 @@
 
 \pagenumbering{arabic}
 
-\wss{You are free to modify this template.}
+\section{List of Tables}
+\begin{itemize}
+    \item \textbf{Table 1:} Failure Mode and Effects Analysis
+\end{itemize}
+
+\section{List of Figures}
+\begin{itemize}
+    \item \textbf{Figure 1:} Overall System Context
+\end{itemize}
 
 \section{Introduction}{
-    Creating a product designed for consumer use requires a robust hazard identification and mitigation strategy before the product is released to the public. A hazard can be defined as any source of potential damage, harm or adverse health effects on something or someone \cite{CCOHS}. A hazard for the \progname{} system is anyhting that could either harm the user or cause system failure.
+    Creating a product designed for consumer use requires a robust hazard identification and mitigation strategy before the 
+    product is released to the public. A hazard can be defined as any source of potential damage, harm or adverse health effects 
+    on something or someone \cite{CCOHS}. A hazard for the \progname{} system is anyhting that could either harm the user or cause system failure.
 }
 
+\section{Project Overview}
+\projectoverview
+
 \section{Scope and Purpose of Hazard Analysis}{
-    In this document, the potential cause for hazards will be explored in detail, as well as methods for preemptive detection, and recommended actions should the hazard still present itself. Its purpose is to identify potential sources for harm or failure and address them before they are presented in the finished product.
+    In this document, the potential cause for hazards will be explored in detail, as well as methods for preemptive detection, 
+    and recommended actions should the hazard still present itself. Its purpose is to identify potential sources for harm or 
+    failure and address them before they are presented in the finished product.
 }
 
 \section{System Boundaries and Components}{
@@ -103,7 +118,26 @@
         \item The hosted Web Application used to connect to the game remotely.
     \end{enumerate}
 
-    The boundary of this system begins at the chess board and ends at the Web Application (Web-App). The distance between the chess board and the server is spanned by a Bluetooth connection, and the server to the Web-App by Wi-Fi. The user will cross the system boundary by interacting with the hardware and the Web-App, however everything in between will be isolated within the system.
+    The system boundary encompasses the chess board and extends to the Web Application (Web-App). 
+    To bridge the distance between the chess board and the server, a Bluetooth connection is established, 
+    and a Wi-Fi connection links the server to the Web-App. \\
+
+    Interacting with the hardware and Web-App will be the means by which the user accesses the system, 
+    while the system components in-between will remain isolated within the boundary. 
+    Additionally, the power adapter required to power the Arduino controller will cross the boundary, 
+    either from a wall or laptop source. A low-voltage adapter will be selected for this purpose, as it 
+    supplies the necessary 5V to power the Arduino and its components.\\
+
+    \hyperref[Fig_SystemContext]{Figure \ref{Fig_SystemContext}} details the interactions between each of the three major components. 
+    A more detailed overview of the hardware components can be found in the \href{file:../Design/SystDesign/SystDes.pdf}{System Design} document.
+
+    \begin{figure}[H]
+        \begin{center}
+          \includegraphics[scale=0.65]{chess-connect-system-context.png}
+          \caption{Overall System Context}
+          \label{Fig_SystemContext} 
+        \end{center}
+      \end{figure}
 }
 
 \section{Critical Assumptions}
@@ -123,116 +157,120 @@ negative effects on the system. Hazard detection details the methods used to dis
 failures.Recommende actions explains the behavior of the system when the failures
 occur. Likelihood is a scale to detail the frequency and probability-of-occurence
 in the event of a failure. All of these methods are used to enhance requirement 
-implementation and hazard prevention.} 
+implementation and hazard prevention. \\
 
-\newgeometry{left=0.3cm, top=0.1cm}
-\thispagestyle{empty}
-\renewcommand{\arraystretch}{0.5}
-\begin{table}[!htbp]
-    \centering
-        \setlength{\leftmargini}{0.6cm}
-        \begin{tabular}{| >{\centering\arraybackslash}m{3cm} | 
-          >{\centering\arraybackslash}m{2cm} | 
-          >{\centering\arraybackslash}m{4cm} |
-          >{\centering\arraybackslash}m{2cm} |
-          >{\centering\arraybackslash}m{3cm} |
-          >{\centering\arraybackslash}m{2cm}|
-          >{\centering\arraybackslash}m{2cm}|}
-        \hline
-        \rowcolor[gray]{0.9}
-        Component & Failure & Causes & Detection & Recommended Action 
-        & Likelihood & Requirements\\
-        \hline
+All prompts for user action will be displayed on the LCD embedded into the chess board.
+Different prompts will correspond to different error screens, and different responses to the system.} 
 
-        Web Application & Loss of internet connection
-        & \begin{enumerate}[label=(\alph*)]
-            \item Internet outage
-            \item Internet time-out 
-            \item Board is taken out of connection range
-        \end{enumerate} 
-        & Ping the Internet and wait for the response 
-        & Alert the user to check Internet connection 
-        & 0.4 & SR3, SR4\\
-        \hline
 
-        Web Application & Connection lost between server and client
-        & \begin{enumerate}[label=(\alph*)]
-            \item Deployment hosting platform fails
-            \item Platform is taken down for maintenance
-        \end{enumerate} 
-        & Loss of connection to the platform
-        & Alert the user of the issue and wait accordingly
-        & 0.1 & SR3, SR4\\
-        \hline
+\newgeometry{left=1cm,right=1cm,top=1cm,bottom=3cm}
+\begin{center}
+    \begin{longtable}{| >{\centering\arraybackslash}m{2.25cm} | 
+        >{\centering\arraybackslash}m{2cm} | 
+        >{\centering\arraybackslash}m{4cm} |
+        >{\centering\arraybackslash}m{2cm} |
+        >{\centering\arraybackslash}m{2.25cm} |
+        >{\centering\arraybackslash}m{2cm}|
+        >{\centering\arraybackslash}m{2cm}|}
 
-        Microcontroller & Unable to detect starting game state &
-        \begin{enumerate}[label=(\alph*)]
-            \item A player begins with the pieces in the incorrect location
-            \item Player does not follow the correct starting protocol
-        \end{enumerate} 
-        & Strict guidelines programmed in the microcontroller to prevent
-        & Prompt user to make appropriate changes to pieces or board state
-        & 0.2 & SR5\\ 
-        \hline
+    \caption{Failure Mode and Effects Analysis}\\
 
-        Microcontroller & Unable to follow game state &
-        \begin{enumerate}[label=(\alph*)]
-            \item A player makes two moves in a row
-            \item A player makes an illegal move
-            \item Loss of power to system
-        \end{enumerate} 
-        & Edge cases programmed on the controller
-        & Prompt user to make appropriate action to the board
-        & 0.3 & SR5\\ 
-        \hline
+    \hline
+    \rowcolor[gray]{0.9}
+    Component & Failure & Causes & Detection & Recommended Action 
+    & Likelihood & Requirements\\
+    \hline
 
-        Microcontroller & Loss of Bluetooth connection & \begin{enumerate}[label=(\alph*)]
-            \item Distance between microcontroller and host is too large
-            \item Physical barriers between microcontroller and host
-            \item Failed to initialise connection
-            \item Packet loss from board to server
-        \end{enumerate} 
-        & Continuously monitor Bluetooth connection 
-        & Prompt the user to re-establish connection before continuing 
-        & 0.1 & SR3, SR4\\
-        \hline
+    Web Application & Loss of internet connection
+    & \begin{enumerate}[label=(\alph*)]
+        \item Internet outage
+        \item Internet time-out 
+        \item Board is taken out of connection range
+    \end{enumerate} 
+    & Ping the Internet and wait for the response 
+    & Alert the user to check Internet connection 
+    & 0.4 & SR3, SR4\\
+    \hline
 
-        Microcontroller & Loss of Power & \begin{enumerate}[label=(\alph*)]
-            \item Board is unplugged
-            \item Cable connection failure
-            \item Power surge
-        \end{enumerate} 
-        & N/A
-        & Store game state in local flash memory
-        & 0.1 & SR3\\
-        \hline
+    Web Application & Connection lost between server and client
+    & \begin{enumerate}[label=(\alph*)]
+        \item Deployment hosting platform fails
+        \item Platform is taken down for maintenance
+    \end{enumerate} 
+    & Loss of connection to the platform
+    & Alert the user of the issue and wait accordingly
+    & 0.1 & SR3, SR4\\
+    \hline
 
-        Hall Sensor & Bad inputs & \begin{enumerate}[label=(\alph*)]
-            \item Sensitivity loss over a period of time
-            \item Interference from external magnetic objects
-            \item Distance between sensor and object too large
-        \end{enumerate} & Monitoring Hall sensor inputs 
-        & \begin{enumerate}[label=(\alph*)]
-            \item Prompt the user to clear area of obstacles from the board
-            \item The sensor should be replaced after the recommended use time
-        \end{enumerate} 
-        & 0.1 & SR5\\
-        \hline
+    Microcontroller & Unable to detect starting game state &
+    \begin{enumerate}[label=(\alph*)]
+        \item A player begins with the pieces in the incorrect location
+        \item Player does not follow the correct starting protocol
+    \end{enumerate} 
+    & Strict guidelines programmed in the microcontroller to prevent
+    & Prompt user to make appropriate changes to pieces or board state
+    & 0.2 & SR5\\ 
+    \hline
 
-        \end{tabular}
-        \caption{Failure Mode and Effects Analysis}
-    \end{table}
+    Microcontroller & Unable to follow game state &
+    \begin{enumerate}[label=(\alph*)]
+        \item A player makes two moves in a row
+        \item A player makes an illegal move
+        \item Loss of power to system
+    \end{enumerate} 
+    & Edge cases programmed on the controller
+    & Prompt user to make appropriate action to the board
+    & 0.3 & SR5\\ 
+    \hline
+
+    Microcontroller & Loss of Bluetooth connection & \begin{enumerate}[label=(\alph*)]
+        \item Distance between microcontroller and host is too large
+        \item Physical barriers between microcontroller and host
+        \item Failed to initialise connection
+        \item Packet loss from board to server
+    \end{enumerate} 
+    & Continuously monitor Bluetooth connection 
+    & Prompt the user to re-establish connection before continuing 
+    & 0.1 & SR3, SR4\\
+    \hline
+
+    Microcontroller & Loss of Power & \begin{enumerate}[label=(\alph*)]
+        \item Board is unplugged
+        \item Cable connection failure
+        \item Power surge
+    \end{enumerate} 
+    & N/A
+    & Store game state in local flash memory. Ensure proper electrical safety is adhered to (no exposed wires, solid connections, etc.)
+    & 0.1 & SR3, SR8, SR9\\
+    \hline
+
+    Hall Sensor & Faulty sensor readings & \begin{enumerate}[label=(\alph*)]
+        \item Sensitivity loss over a period of time
+        \item Interference from external magnetic objects
+        \item Distance between sensor and object too large
+    \end{enumerate} & Monitoring Hall sensor inputs 
+    & \begin{enumerate}[label=(\alph*)]
+        \item Prompt the user to clear area of obstacles from the board
+        \item The sensor should be replaced after the recommended use time
+    \end{enumerate} 
+    & 0.1 & SR5\\
+    \hline
+
+\end{longtable}
+\end{center}
 \restoregeometry
+
 \newpage
+
 \section{Safety and Security Requirements}
 
 \subsection{Access Requirements}
-\begin{enumerate}[{SR}1., leftmargin=2\parindent]
+\begin{enumerate}[{AC}1., leftmargin=2\parindent]
     \item Only the \progname{} team are able to modify the software system.
 \end{enumerate}
 
 \subsection{Integrity Requirements}
-\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+\begin{enumerate}[{IR}1., leftmargin=2\parindent]
     \item The product will not store game data after a game has concluded.
     \item The system shall locally maintain the current game state, making no changes until a connection is restablished.
     \item The system shall alert the user that a connection has been lost.
@@ -240,13 +278,21 @@ implementation and hazard prevention.}
 \end{enumerate}
 
 \subsection{Privacy Requirements}
-\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
+\begin{enumerate}[{PVR}1., leftmargin=2\parindent]
     \item The product will not store or collect user data.
 \end{enumerate}
 
 \subsection{Audit Requirements}
-\begin{enumerate}[{SR}1., leftmargin=2\parindent, resume]
-    \item Requirements shall be easy to follow and verify against both the system and the VnV (Verification and Validation) plan in order to facilitate regular inspections.
+\begin{enumerate}[{AUR}1., leftmargin=2\parindent]
+    \item Requirements shall be easy to follow and verify against both the system and the VnV (Verification and Validation) plan
+        in order to facilitate regular inspections.
+\end{enumerate}
+
+\subsection{Safety Requirements}
+\begin{enumerate}[{SR}1., leftmargin=2\parindent]
+    \item The Arduino reuqires a 5V connection to power itself and all of the connected components. A laptop or a phone power adapter shall be plugged into a
+        surge protector to ensure that power surges will not overload the system and cause damage or burns to the components.
+    \item The wires, sensors and Arduino will be encapsulated within the wooden board so that the user has no access to any electrical components.
 \end{enumerate}
 
 \subsection{Immunity Requirements}
@@ -258,7 +304,24 @@ The hazard analysis has resulted in the development of more requirements related
 analysis also contains requirements that will be further specified in the VnV plan, allowing them to be verified according to specific 
 fit criteria. This document will be frequently reviewed to recognize possible risks that can arise and reduce the likelihood of such
 risks. Most of the requirements listed above will be applied to our project, while maintaining the possibility of not being able to 
-implement some due to external factors such as project time constraints.    
+implement some due to external factors such as project time constraints. Below is the planned roadmap of requirement implementation.
+
+\textbf{Throughout the Course Term}
+\begin{itemize}
+    \item ACR1
+    \item IR1
+    \item IR2
+    \item IR3
+    \item IR4
+    \item PVR1
+\end{itemize}
+
+\textbf{After the Completion of the Course Term}
+\begin{itemize}
+    \item AUR1
+    \item SR1
+    \item SR2
+\end{itemize}
 
 \newpage
 
