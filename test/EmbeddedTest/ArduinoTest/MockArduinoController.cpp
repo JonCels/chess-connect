@@ -1,3 +1,6 @@
+// Need to define all of the constants and functions that the Arduino does implicitly on compilation 
+// to accurately simulate the hardware.
+
 #pragma once
 #include <map>
 #include <string>
@@ -63,6 +66,7 @@
 
 using namespace std;
 
+// Hold the "digital" readings for pins (1 or 0) in a sequence
 struct PinValues {
     int val[1024];
     int iter;
@@ -70,6 +74,7 @@ struct PinValues {
     PinValues() : val{}, iter(0) {}
 };
 
+// Simulate reading and writing to a pin
 class PinSimulation{
 public:
     map<int, int> lastVal;
@@ -120,6 +125,7 @@ public:
         }
     }
 
+    // currently mapped pins on the Arduino Mega
     PinSimulation() {
         values = {
             {A0, PinValues()}, {A3, PinValues()}, {29, PinValues()}, {35, PinValues()}, {25, PinValues()}, {41, PinValues()},
@@ -141,6 +147,7 @@ public:
     }
 };
 
+// Simulate reading from and writing to the serial buffer when no serial connection is present for testing
 class SerialStream {
 public:
     string input;
@@ -158,6 +165,8 @@ public:
     {
         return input.front();
     }
+
+    // Handle multiple different data types when writing to Serial buffer
     size_t write(const char c)
     {
         size_t size = sizeof(char);
@@ -230,6 +239,8 @@ public:
         size_t size = sizeof(int) + sizeof("\n");
         return size;
     }
+
+    // Internal functions to check the contents of the Serial bufer
     string checkOutput() {
         string temp = output;
         output.clear();
@@ -260,23 +271,28 @@ public:
 PinSimulation PinSim = PinSimulation();
 map<int, int> PinModes;
 
+// Mode is defined in the Arduino setup() function
 void pinMode(int pin, uint8_t mode) {
     PinModes[pin] = mode;
 }
 
+// Read the contents of a pin
 int digitalRead(int pin) {
     return PinSim.values[pin].val[PinSim.values[pin].iter++];
 }
 
+// Write to a pin
 int digitalWrite(int pin, int value) {
     PinSim.writePin(pin, value);
     return value;
 }
 
+// can toggle comment to display how long the Arduino sleeps during each loop iteration
 void delay(int ms) {
     //cout << "Arduino slept for " << ms << " milliseconds.\n";
 }
 
+// Convert a decimal value into a binary string that will be how the actual hardware sends the data
 void writeAdc(int pin, int decimal)
 {
     int i = ADC_LEN;
@@ -302,6 +318,7 @@ void writeAdc(int pin, int decimal)
     }
 }
 
+// Write the sensor values for an entire row of hall sensors
 void writeAdcRow(int rx, int* val)
 {
     for (int i = 0; i < 8; i++)

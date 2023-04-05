@@ -5,6 +5,7 @@ using namespace std;
 map<int, const char *> errors;
 int exitCode = 0;
 
+// Generate random values for hall sensors
 random_device rd;  // Will be used to obtain a seed for the random number engine
 mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
 uniform_int_distribution<> dist(0, WHITE_HALL);
@@ -13,6 +14,7 @@ uniform_int_distribution<> distribute(WHITE_HALL, BLACK_HALL);
 int organizedHallValues[8][8];
 int rawHallValues[8][8];
 
+// Compare data from the entire board
 bool assert_equal(Square *actualBoard, Square *expectedBoard)
 {
     bool equal = true;
@@ -29,6 +31,8 @@ bool assert_equal(Square *actualBoard, Square *expectedBoard)
     }
     return equal;
 }
+
+// Compare the values of the Square struct
 bool assert_equal(Square actualBoard, Square expectedBoard)
 {
     bool equal = true;
@@ -41,6 +45,8 @@ bool assert_equal(Square actualBoard, Square expectedBoard)
     }
     return equal;
 }
+
+// Compare the contents of int arrays (used primarily for hall sensors)
 bool assert_equal(int *arr1, int *arr2)
 {
     bool equal = true;
@@ -56,6 +62,8 @@ bool assert_equal(int *arr1, int *arr2)
     }
     return equal;
 }
+
+// Compare char values
 bool assert_equal(char a, char b)
 {
     bool result = a == b;
@@ -68,6 +76,8 @@ bool assert_equal(char a, char b)
     }
     return result;
 }
+
+// Compare numerical values
 bool assert_equal(int a, int b)
 {
     bool result = a == b;
@@ -81,18 +91,21 @@ bool assert_equal(int a, int b)
     return result;
 }
 
+// Check if an error was raised
 void check(bool b, const char *c, int l)
 {
     if (!b)
         errors[l] = c;
 }
 
+// Run another iteration of the Arduino's loop function, start reading simulated pins from beginning.
 void loopArduino()
 {
     loop();
     PinSim.resetAllPinIterators();
 }
 
+// Generate random values for hall sensors
 int randHall(Colour colour) {
     switch (colour)
     {
@@ -107,6 +120,7 @@ int randHall(Colour colour) {
     }
 }
 
+// Adjust for hardware pin configurations
 void mapHallValuesToSensors()
 {
     rawHallValues[2][3] = organizedHallValues[7][0];
@@ -175,6 +189,7 @@ void mapHallValuesToSensors()
     rawHallValues[4][4] = organizedHallValues[0][7];
 }
 
+// Store simulated sensor noise in the mock Arduino pins
 void generateHallValues() {
     for (int i = 0; i < 8; i++)
     {
@@ -196,6 +211,7 @@ void generateHallValues() {
     }
 }
 
+// Initialize mock Arduino pins
 void setupMockHallSensors()
 {
     generateHallValues();
@@ -206,6 +222,7 @@ void setupMockHallSensors()
     }
 }
 
+// Reset board into initial game play mode (white and black pieces all in correct starting positions)
 void setupBoard()
 {
     setupMockHallSensors();
@@ -220,6 +237,7 @@ void setupBoard()
     check(assert_equal('w', gameState), __FUNCTION__, __LINE__);
 }
 
+// Test to read if a piece picked up will be recorded, and change the game state
 void testReadPiece()
 {
     setupBoard();
@@ -243,7 +261,7 @@ void testReadPiece()
     check(assert_equal(expectedSquare, currentBoard[0][1]), __FUNCTION__, __LINE__);
 }
 
-
+// To be re-implemented for the final version of source code 
 void testHighlightPawnValidMoves();
 void testHighlightKnightValidMoves();
 void testHighlightBishopValidMoves();
@@ -251,6 +269,7 @@ void testHighlightRookValidMoves();
 void testHighlightQueenValidMoves();
 void testHighlightKingValidMoves();
 
+// Display errors after all tests complete
 void printErrors()
 {
     if (errors.empty()) {
@@ -266,6 +285,7 @@ void printErrors()
     }
 }
 
+// Main test running entry point
 int main(void) {
     try
     {
