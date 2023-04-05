@@ -138,6 +138,8 @@ as the unit system.
     \bottomrule
   \end{tabularx}
 
+\newpage
+
 \section{Introduction}
 \subsection{Document Purpose}
 The purpose of this document is to provide a set of requirements for a system that will integrate over-the-board chess with the online world of chess to assist in learning the game in a flexible manner.
@@ -158,8 +160,10 @@ engine move recommendations to study new lines and specific positions to enhance
 
 \subsection{Stakeholders}
 {Stakeholders for this project are the professor and TAs for the course SFWRENG 4G06, as they will be providing the feedback which will directly affect the project’s development. 
-Society is also a stakeholder because this project will provide the members of society another gateway to be involved in the community through the game of chess. Lastly, this project will 
-also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real-time.}
+Users of any chess skill level are stakeholders, as this product allows them to learn, play, and improve at chess. Society is also a stakeholder because this project will provide 
+the members of society another gateway to be involved in the community through the game of chess. Lastly, this project will also be relevant to chess tournament organizers looking for a method to easily broadcast and share their games online in real-time.}
+
+\newpage
 
 \section{Problem Description}
 
@@ -217,6 +221,8 @@ how to play chess.}
       \end{tabular}
   \label{Table}
   \end{table}  
+
+\newpage
 
 \section{Scope}
 {The system is called \progname{}, and will include a software application and physical hardware device. The hardware will take the 
@@ -449,6 +455,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
     \item Pressing the New Game button will change the system to the Game Active State if current\_board matches the expected starting position. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{High}) 
     \item Pressing the New Game button will not change the system state, and will request corrective action if current\_board does not match the expected starting position. Monitored through changes to current\_board and LCD\_inputs from the LCD. Controlled through changes to LCD\_display. (Priority: \textbf{Low})
     \item Allow users to switch between user modes, choosing Normal Mode, Engine Mode, or Beginner Mode by using the button on the Game Active screen. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{High}) 
+    \item Pressing the Theme Change button will change the colours of the LCD screen. Monitored through changes to LCD\_inputs from the LCD, and controlled through changes to LCD\_display. (Priority: \textbf{Low}) 
     \item Pressing the Resign/Draw button will have no effect. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
     \item Changes to current\_board will have no effect. (Priority: \textbf{Medium}) 
 \end{enumerate}
@@ -546,8 +553,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \label{NFR_LF}
 \paragraph{Appearance Requirements}
 \begin{enumerate}[{LF}1., leftmargin=2\parindent]
-    \item The product shall use white, black, grey, and brown as its primary colours.
-    \item The product shall use green, red, beige, and blue as its secondary colours.
+    \item The product shall use distinctive light, dark, and neutral colours as its primary colours.
+    \item The product shall have both a light and dark colour theme for its screen displays.
 \end{enumerate}
 
 \paragraph{Style Requirements}
@@ -754,11 +761,11 @@ N/A
         \hline
         Priority & Requirements & Absolute Deadline & Rationale \\
         \hline
-        \textbf{HIGH} & GA1, GA5, GA6, GA7, GA9, GI1, GI3, GI7, NB1, ND1, NA1, NA2, EB1, EB5, ED1, ED2, EA1, EA2, EA3, EA4, BB1, BB2, BD1, BA1, BA2 & 2023-02-12-11:59pm & High priority requirements are vital requirements that define the core system behaviour. These should be completed first and be fully implemented in time for the rev-0 demo on February 13th.\\
+        \textbf{HIGH} & GA1, GA5, GA6, GA7, GA9, GI1, GI3, GI8, NB1, ND1, NA1, NA2, EB1, EB5, ED1, ED2, EA1, EA2, EA3, EA4, BB1, BB2, BD1, BA1, BA2 & 2023-02-12-11:59pm & High priority requirements are vital requirements that define the core system behaviour. These should be completed first and be fully implemented in time for the rev-0 demo on February 13th.\\
         \hline
-        \textbf{MEDIUM} & GA2, GA8, GI4, GI5, GI6, GI8, NB2, NB3, NB4, EB2, EB3, EB4, BB3, BB4, BB5 & 2023-03-27-11:59pm & Medium priority requirements are important to the facilitation of the higher priority requirements. These typically deal with navigation, errors, and variable control to support the system. These should be implemented as part of the final product roughly a week before the final demo on April 1st, leaving some time for integration and testing.\\
+        \textbf{MEDIUM} & GA2, GA8, GI5, GI6, GI7, GI9, NB2, NB3, NB4, EB2, EB3, EB4, BB3, BB4, BB5 & 2023-03-27-11:59pm & Medium priority requirements are important to the facilitation of the higher priority requirements. These typically deal with navigation, errors, and variable control to support the system. These should be implemented as part of the final product roughly a week before the final demo on April 1st, leaving some time for integration and testing.\\
         \hline
-        \textbf{LOW} & GA3, GA4, GI2, NA3, EA5, EA6, BA3 & 2023-04-01-10am & Low priority requirements deal with less important parts of the system, edge cases, and non-vital functionality. These are mostly self-contained and are to be implemented only after high and medium priority requirements are fully functional.\\
+        \textbf{LOW} & GA3, GA4, GI2, GI4, NA3, EA5, EA6, BA3 & 2023-04-01-10am & Low priority requirements deal with less important parts of the system, edge cases, and non-vital functionality. These are mostly self-contained and are to be implemented only after high and medium priority requirements are fully functional.\\
         \hline
     \end{tabularx}
     \label{PhaseInTable}
@@ -808,35 +815,35 @@ N/A
 \end{enumerate}
 
 \section{Traceability Matrix}
-
 \begin{table}[H]
     \centering
     \setlength{\leftmargini}{0.4cm}
-    \begin{tabularx}{\linewidth}{|c|X|}
+    \begin{tabularx}{\linewidth}{|c|>{\centering\arraybackslash}X|}
         \hline
-        A1 & GI1 \\
+        Assumption / & \\
+        Use Case / & Related Requirements\\
+        Scenario / & \\
+        NFR & \\
+        \hline
+        A1 & GI1, GI2 \\
         \hline 
-        A2 & BB3 \\ 
+        A2 & GA8, GI8, GI9, NA3, EA6, BA3 \\ 
         \hline 
-        A3 & BB2, BB3 \\
+        A3 & BB3 \\
         \hline
-        A4 & UH1 \\
-        \hline
-        BA1 & UH5 \\
-        \hline
-        7.3.2.1 & NB1,  NB2,  NB3,  ND1, NA1, NA3, \\
+        7.3.2.1 & NB1, NB2, NB3, NB4, ND1, NA1, NA2, NA3 \\
         \hline 
-        7.3.2.2 & EB1, EB2, EB3, EB4 ED1, ED2, EA1, EA2, EA3, EA4, EA5, EA6\\
+        7.3.2.2 & EB1, EB2, EB3, EB4, EB5, ED1, ED2, EA1, EA2, EA3, EA4, EA5, EA6 \\
         \hline
-        7.3.2.3 & BB1, BB2, BB3, BB4, BB5, BD1, BA1, BA2 \\
+        7.3.2.3 & BB1, BB2, BB3, BB4, BB5, BD1, BA1, BA2, BA3 \\
         \hline
-        7.4.0.4 & PR9\\ 
+        LF2 & GA4, GI4, BB2 \\
         \hline
-        7.4.0.5 & PR9\\
+        OE3 & EA3, EA4 \\
+        \hline
+        SR2 & GI1 \\
         \hline
         PR11 & LC1, LC2, LC3, LC4, LC5, LC6, LC7, LC8, LC9 \\
-        \hline
-        LF2 & BB2, BB3 \\ 
         \hline
     \end{tabularx}
     \label{Table}
