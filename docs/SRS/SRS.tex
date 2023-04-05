@@ -111,6 +111,7 @@ description of the unit and the SI name.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   A & Assumption\\
+  API && Application Programming Interface\\
   CSA & Canadian Standards Association\\
   DD & Data Definition\\
   FIDE & International Chess Federation or Fédération Internationale des Échecs\\
@@ -358,13 +359,13 @@ format. The application will be constrained to a 2-dimensional model of the hard
         \rowcolor[gray]{0.9}
         Constant & Unit & Value\\
         \hline
-        Chess board width & inches & 12\\
+        Chess board width & inches & 15\\
         \hline
-        Chess board length & inches & 12\\
+        Chess board length & inches & 18\\
         \hline
-        Chess board tile width & inches & 1.5\\
+        Chess board tile width & inches & 1.75\\
         \hline 
-        Chess board tile length & inches & 1.5\\ 
+        Chess board tile length & inches & 1.75\\ 
         \hline 
         Supply Power to Board & \si{\volt} & 110 VAC\\
         \hline
@@ -389,10 +390,9 @@ format. The application will be constrained to a 2-dimensional model of the hard
       black/white pawn, black/white rook, black/white knight, black/white bishop, black/white queen, black/white king. \\
       \hline
       LCD\_inputs & \si{\ohm} & The LCD screen is located in the side of the board. The LCD is a touchscreen display that uses a resistor grid input. 
-      It controls selection of user mode (beginner, normal, engine), new game button, as well as draw and resign.  \\
+      It controls selection of user mode (beginner, normal, engine), new game button, as well as draw and resign, and a colour theme change button.  \\
       \hline
-      engine\_move & chess notation & The chess engine API provides best moves into 
-      the system. \\
+      engine\_move & chess notation & The chess engine API provides best moves into the system. \\
       \hline 
       \end{tabular}
   \label{Table}
@@ -413,12 +413,11 @@ format. The application will be constrained to a 2-dimensional model of the hard
       LED\_row\{1-8\} & \si{\volt} & A total of 64 LEDS will be located under the board. They 
       are in the middle of each tile and illuminate based on conditions of the inputs. \\
       \hline 
-      LCD\_Display & \si{\volt} & An LCD Display is located on the chess board to indicate
-      best moves delivered by the engine. \\
+      LCD\_Display & \si{\volt} & An LCD Display is located on the chess board to indicate best moves delivered by the engine and display errors. \\
       \hline 
 
       \end{tabular}
-  \label{Table}
+  \label{Table1}
   \end{table}
 
 
