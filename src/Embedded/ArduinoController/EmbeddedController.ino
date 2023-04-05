@@ -3,39 +3,39 @@
 #include <Adafruit_TFTLCD.h> //Hardware-specific library
 #include <TouchScreen.h>	 //Touchscreen LCD library
 
-#define LCD_CS A3 // Chip Select
-#define LCD_CD A2 // Command/Data
-#define LCD_WR A1 // LCD Write
-#define LCD_RD A0 // LCD Read
+#define LCD_CS A3 //Chip Select
+#define LCD_CD A2 //Command/Data
+#define LCD_WR A1 //LCD Write
+#define LCD_RD A0 //LCD Read
 
 #define CLK A5
 #define CS A8
 
-#define YP A3 // Y+ to A10
-#define XM A2 // X- to A11
-#define YM 23 // Y- to D9
-#define XP 22 // X+ to D8
+#define YP A3 //Y+ to A10
+#define XM A2 //X- to A11
+#define YM 23 //Y- to D9
+#define XP 22 //X+ to D8
 
-// Coordinate system for touchscreen
+//Coordinate system for touchscreen
 #define TS_MINX 110
 #define TS_MINY 80
 #define TS_MAXX 900
 #define TS_MAXY 940
 
-// Pressure values for touchscreen
+//Pressure values for touchscreen
 #define MINPRESSURE 50
 #define MAXPRESSURE 1000
 
-// Delay before lights come on after piece is picked up in beginner mode
+//Delay before lights come on after piece is picked up in beginner mode
 #define SUSPENSION_TIME 1000
 
 #define AVG_SAMPLE_SIZE 20
 
-// Common colours:
+//Common colours:
 #define BLACK_COLOUR 0x0000
 #define WHITE_COLOUR 0xFFFF
 
-// Default theme colours:
+//Default theme colours:
 #define TEAL 0x028C
 #define LIGHTBROWN 0xDD0D
 #define GREEN 0x4305
@@ -44,7 +44,7 @@
 #define PINK 0xEAAA
 #define PURPLE 0x398A
 
-// Dark theme colours:
+//Dark theme colours:
 #define DARK_BLUEGRAY 0x2947
 #define DARK_BROWN 0x3944
 #define DARK_GREEN 0x01A0
@@ -54,47 +54,47 @@
 #define DARK_PINK 0x4806
 #define DARK_PURPLE 0x1885
 
-// Main screen buttons
+//Main screen buttons
 #define MAIN_BUTTON_X 230
 #define MAIN_BUTTON_Y 235
 
-// Mode screen buttons
+//Mode screen buttons
 #define MODE_BUTTON_X 230
 #define MODE_BUTTON_Y 75
 
-// Game screen buttons
+//Game screen buttons
 #define GAME_BUTTON_X 200
 #define GAME_BUTTON_Y 75
 
-// Promotion screen buttons
+//Promotion screen buttons
 #define PROMOTION_COMMON_X 360
 #define PROMOTION_RARE_X 90
 #define PROMOTION_Y 100
 #define ICON_SIZE 90
 
-// Confirmation screen buttons
+//Confirmation screen buttons
 #define YES_NO_X 120
 #define YES_NO_Y 80
 
-// End/error screen buttons
+//End/error screen buttons
 #define OK_BUTTON_X 100
 #define OK_BUTTON_Y 80
 #define TERMINATION_TEXT_Y 100
 
-// Theme button
+//Theme button
 #define THEME_BUTTON_X 70
 #define THEME_BUTTON_Y 70
 
 #define TOUCH_DELAY 50
 
-// Hall sensors
+//Hall sensors
 #define BLACK_HALL 120
 #define WHITE_HALL 420
 
 #define BOARD_X 8
 #define BOARD_Y 8
 
-// Maximum possible number of squares that each type of piece can move to
+//Maximum possible number of squares that each type of piece can move to
 #define PAWN_SIGHT 4
 #define KNIGHT_SIGHT 8
 #define BISHOP_SIGHT 13
@@ -121,7 +121,7 @@ enum GameState : char
 	ERROR
 };
 
-// Follows FEN notation assuming white pieces. For black pieces, add 32
+//Follows FEN notation assuming white pieces. For black pieces, add 32
 enum ChessPiece : char
 {
 	PAWN = 'P',
@@ -147,7 +147,7 @@ enum Theme
 };
 
 enum Screen
-{ // 0 for main screen, 1 for mode select screen, 2 for game screen, 3 for promotion screen, 4 for termination screen, 5 for error screen, 6 for confirmation screen
+{ 
 	MAIN_SCREEN,
 	MODE_SELECT_SCREEN,
 	GAME_SCREEN,
@@ -157,7 +157,7 @@ enum Screen
 	CONFIRMATION_SCREEN
 };
 
-// Represents each square on the physical chess board
+//Represents each square on the physical chess board
 struct Square
 {
 	ChessPiece piece;
@@ -165,7 +165,7 @@ struct Square
 	int row;
 	int col;
 
-	// operators used for testing
+	//Define == and != for Square objects
 	bool operator==(const Square &s) const
 	{
 		return (piece == s.piece && colour == s.colour && row == s.row && col == s.col);
@@ -176,6 +176,7 @@ struct Square
 		return !(piece == s.piece && colour == s.colour && row == s.row && col == s.col);
 	}
 
+    //Constructors
 	Square()
 	{
 		piece = NO_PIECE;
@@ -201,46 +202,25 @@ struct Square
 	}
 };
 
-// struct hallAvg
-// {
-// 	int elements[AVG_SAMPLE_SIZE];
-// 	int index;
+//Global variables
 
-// 	void add(int value)
-// 	{
-// 		elements[index] = value;
-// 		index = (index + 1) % AVG_SAMPLE_SIZE;
-// 	}
-// 	int avg()
-// 	{
-// 		int s = 0;
-// 		for (int i = 0; i < AVG_SAMPLE_SIZE; i++)
-// 		{
-// 			s += elements[i];
-// 		}
-// 		return s / AVG_SAMPLE_SIZE;
-// 	}
+//Bluetooth
+SoftwareSerial BTserial(10, 11); //(TX, RX)
 
-// 	hallAvg() : elements{}, index(0) {}
-// };
-
-// Global variables
-
-SoftwareSerial BTserial(10, 11); // TX, RX
+//LCD
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, A4);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 290);
 
+//Colours for theme
 int BACKGROUND_COLOUR, PRIMARY_COLOUR, SECONDARY_COLOUR, TERTIARY_COLOUR, QUATERNARY_COLOUR, BORDER_COLOUR, TEXT_COLOUR_1, TEXT_COLOUR_2, TEXT_COLOUR_3, HIGHLIGHT_COLOUR, THEME_BUTTON_COLOUR;
 
-int delay_const = 2000;
-
-// Arduino pin configurations
+//Arduino pin configurations
 int anodes[8] = {46, 47, 48, 49, 50, 51, 52, 53};
 int cathodes[8] = {38, 39, 40, 41, 42, 43, 44, 45};
 int hallRx[8] = {A13, A11, A9, A6, 2, 4, 6, 8};
 int hallTx[8] = {A14, A12, A10, A7, 3, 5, 7, 9};
 
-//[topLeftX, topLeftY] for each button
+//Pixel bounds in format [topLeftX, topLeftY] for each button
 int mainScreenBounds[2][2] = {};
 int modeSelectScreenBounds[3][2] = {};
 int gameScreenBounds[3][2] = {};
@@ -249,13 +229,15 @@ int themeButtonBounds[1][2] = {};
 int promotionScreenBounds[4][2] = {};
 int confirmationScreenBounds[2][2] = {};
 
-// Game state variables
+//Screen variables
 Theme currentTheme = LIGHT;
-Screen currentScreen = MAIN_SCREEN; // 0 for main screen, 1 for mode select screen, 2 for game screen, 3 for promotion screen, 4 for termination screen, 5 for error screen, 6 for confirmation screen
-UserMode currentUserMode = NORMAL;	// 0 for beginner mode, 1 for normal mode, 2 for engine mode
+Screen currentScreen = MAIN_SCREEN;
+
+//Game state variables
+UserMode currentUserMode = NORMAL;	//0 for beginner mode, 1 for normal mode, 2 for engine mode
 GameState afterError = GAME_ACTIVE;
-char currentBluetoothGameState = 'n';											   // n for not active, s for started (game active), b for black resign, w for white resign, d for draw by agreement
-char currentFen[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; // Starting position
+char currentBluetoothGameState = 'n';											   //n for not active, s for started (game active), b for black resign, w for white resign, d for draw by agreement
+char currentFen[100] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; //Starting position
 double time = 0.0;
 char inputStr[100] = "";
 char *castlingStatus = "KQkq";
@@ -263,13 +245,13 @@ char whoseTurn = WHITE;
 int numTurns = 1;
 char *currentEngineMove = "N/A";
 
-// Promotion variables
+//Promotion variables
 ChessPiece selectedPromotion = QUEEN;
 bool promoting = false;
 bool pawnExchangedForPromotion = false;
 Square *promotionSquare = NULL;
 
-// Variables to track piece movement
+//Variables to track piece movement
 Square *liftedSquare = NULL;
 Square *toSquare = NULL;
 Square *fromSquare = NULL;
@@ -280,8 +262,7 @@ double timeLifted = 0;
 Colour topColour = BLACK;
 Colour botColour = WHITE;
 
-// Hall sensor board state
-// hallAvg hAvg[8][8];
+//Hall sensor board state
 int avgData[BOARD_X][BOARD_Y][AVG_SAMPLE_SIZE];
 int avgSums[BOARD_X][BOARD_Y];
 int avgIndex = 0;
@@ -294,13 +275,11 @@ int rawStates[BOARD_X][BOARD_Y] = {{0, 0, 0, 0, 0, 0, 0, 0},
 								   {0, 0, 0, 0, 0, 0, 0, 0},
 								   {0, 0, 0, 0, 0, 0, 0, 0}};
 
-Square currentBoard[BOARD_X][BOARD_Y]; // current board based on sensor data
-Square oldBoard[BOARD_X][BOARD_Y];	   // compare current board to old state before user interaction
+Square currentBoard[BOARD_X][BOARD_Y]; //Current board based on sensor data
+Square oldBoard[BOARD_X][BOARD_Y];	   //Old board for change comparison
 
-// Add array of "attacked" pieces by each colour, to help with check. Remove king when generating attacked squares
-
-// Bitmap icons
-//'brush', 60x60px
+//Bitmap icons
+//brush icon, 60x60px
 const unsigned char epdBitmapBrush[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xc0,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xff, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0xff, 0xe0,
@@ -332,7 +311,8 @@ const unsigned char epdBitmapBrush[] PROGMEM = {
 	0x7f, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xff, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0xff, 0xff, 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x3f, 0xff, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-//'knight', 90x90px
+
+//knight icon, 90x90px
 const unsigned char epdBitmapKnight[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -402,7 +382,8 @@ const unsigned char epdBitmapKnight[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-//'bishop', 90x90px
+
+//bishop icon, 90x90px
 const unsigned char epdBitmapBishop[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -472,7 +453,8 @@ const unsigned char epdBitmapBishop[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-//'queen', 90x90px
+
+//queen icon, 90x90px
 const unsigned char epdBitmapQueen[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -542,7 +524,8 @@ const unsigned char epdBitmapQueen[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-//'rook', 90x90px
+
+//rook icon, 90x90px
 const unsigned char epdBitmapRook[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -615,17 +598,17 @@ const unsigned char epdBitmapRook[] PROGMEM = {
 
 void setup()
 {
-	// initialize communication
+	//Initialize communication
 	Serial.begin(9600);
 	BTserial.begin(9600);
 
-	// initialize LCD
+	//Initialize LCD
 	tft.begin(tft.readID());
 	changeTheme(currentTheme);
 	tft.setRotation(1);
 	makeMainScreen();
 
-	// initialize chess board hardware
+	//Initialize chess board hardware
 	setupHallSensors();
 	setupLEDs();
 	setupAvg();
@@ -635,26 +618,18 @@ void setup()
 		getHallSensorData();
 	}
 	initBoard();
-
-	// used for debugging
-	// Serial.print("\n");
-	// Serial.println("Starting");
-	// printing();
-	// delay(2000);
-	// lightsOff();
-	// delay(3000);
-	// lightsOn();
 }
 
-// Main Arduino controll loop
+//Main Arduino control loop
 void loop()
 {
-	// Touchscreen points
+	//Touchscreen points
 	TSPoint p = ts.getPoint();
 	pinMode(XM, OUTPUT);
 	pinMode(YP, OUTPUT);
 	if (p.z > MINPRESSURE && p.z < MAXPRESSURE)
 	{
+        //Map touch to rotated screen
 		p.x = map(p.x, TS_MINY, TS_MAXY, 0, tft.height());
 		p.y = map(p.y, TS_MINX, TS_MAXX, 0, tft.width());
 		int x = p.y;
@@ -670,138 +645,111 @@ void stateMachine()
 	getHallSensorData();
 	identifyColours();
 
-	// lightsOn();
 	switch (gameState)
-	{ // State machine
-	case GAME_INACTIVE:
-		// Handled in startGameButton() function:
-		// Start button and board in starting position -> GAME_ACTIVE
-		// Start button while board not in starting position -> ERROR
-		break;
+	{ 
+        case GAME_INACTIVE:
+            //Handled in startGameButton() function
+            break;
 
-	case GAME_ACTIVE:
-		checkPromotingPawns();
-		if (promotionSquare != NULL)
-		{
-			gameState = PROMOTING;
-			currentScreen = PROMOTION_SCREEN;
-			makePromotionScreen();
-			Serial.println("Moving to promotion");
-		}
+        case GAME_ACTIVE:
+            checkPromotingPawns();
+            if (promotionSquare != NULL)
+            {
+                gameState = PROMOTING;
+                currentScreen = PROMOTION_SCREEN;
+                makePromotionScreen();
+            }
 
-		if (checkPickup())
-		{ // Change detected on board -> PIECE_LIFTED
-			if (liftedPieceColour != NO_COLOUR && liftedPieceColour == whoseTurn)
-			{
-				gameState = PIECE_LIFTED;
-				whoseTurn = (whoseTurn == WHITE) ? BLACK : WHITE;
-				Serial.println("Moving to PIECE_LIFTED");
-			}
-			else
-			{
-				gameState = ERROR;
-				currentScreen = ERROR_SCREEN;
-				makeErrorScreen("Not your turn!");
-				afterError = GAME_ACTIVE;
-				Serial.println("Moving to ERROR");
-			}
-			break;
-		}
-		// Handled in respective termination functions:
-		// Checkmate, stalemate detected -> GAME_TERMINATED
-		// Resign, draw selected on LCD -> GAME_TERMINATED
-		break;
+            if (checkPickup())
+            { //Change detected on board -> PIECE_LIFTED
+                if (liftedPieceColour != NO_COLOUR && liftedPieceColour == whoseTurn)
+                {
+                    gameState = PIECE_LIFTED;
+                    whoseTurn = (whoseTurn == WHITE) ? BLACK : WHITE;
+                }
+                else
+                {
+                    gameState = ERROR;
+                    currentScreen = ERROR_SCREEN;
+                    makeErrorScreen("Not your turn!");
+                    afterError = GAME_ACTIVE;
+                }
+                break;
+            }
+            //Handled in respective termination functions
+            break;
 
-	case PIECE_LIFTED:
-		if (currentUserMode == BEGINNER)
-		{
-			if (liftedFlag)
-			{
-				timeLifted = millis();
-				liftedFlag = false;
-			}
-			else if ((millis() - timeLifted) > SUSPENSION_TIME)
-			{ // Beginner mode and no change detected on board within timeframe -> PIECE_SUSPENDED
-				gameState = PIECE_SUSPENDED;
-				liftedFlag = true;
-				Serial.println("Moving to PIECE_SUSPENDED");
-				break;
-			}
-		}
+        case PIECE_LIFTED:
+            if (currentUserMode == BEGINNER)
+            {
+                if (liftedFlag)
+                {
+                    timeLifted = millis();
+                    liftedFlag = false;
+                }
+                else if ((millis() - timeLifted) > SUSPENSION_TIME)
+                { //Beginner mode and no change detected on board within timeframe -> PIECE_SUSPENDED
+                    gameState = PIECE_SUSPENDED;
+                    liftedFlag = true;
+                    break;
+                }
+            }
 
-		if (checkPlaceDown() && moveValid())
-		{ // Change detected on board and valid move -> GAME_ACTIVE
-			gameState = GAME_ACTIVE;
-			Serial.println("Moving to GAME_ACTIVE");
-			char currentFenStr[100] = "";
-			boardToFen(currentFenStr);
-			updateState(currentFenStr, 's', getUserModeChar(currentUserMode)); // Send position over bluetooth
-		}
-		else if (checkPlaceDown() && !moveValid())
-		{ // Change detected on board and invalid move -> ERROR
-			gameState = ERROR;
-			currentScreen = ERROR_SCREEN;
-			makeErrorScreen("Invalid move!");
-			afterError = GAME_ACTIVE;
-			Serial.println("Moving to ERROR");
-		}
-		break;
+            if (checkPlaceDown() && moveValid())
+            { //Change detected on board and valid move -> GAME_ACTIVE
+                gameState = GAME_ACTIVE;
+                char currentFenStr[100] = "";
+                boardToFen(currentFenStr);
+                updateState(currentFenStr, 's', getUserModeChar(currentUserMode)); //Send position over bluetooth
+            }
+            else if (checkPlaceDown() && !moveValid())
+            { //Change detected on board and invalid move -> ERROR
+                gameState = ERROR;
+                currentScreen = ERROR_SCREEN;
+                makeErrorScreen("Invalid move!");
+                afterError = GAME_ACTIVE;
+            }
+            break;
 
-	case PIECE_SUSPENDED:
-		flash();
-		if (checkPlaceDown() && moveValid())
-		{ // Change detected on board and valid move -> GAME_ACTIVE
-			gameState = GAME_ACTIVE;
-			Serial.println("Moving to GAME_ACTIVE");
-			lightsOff();
-		}
-		else if (checkPlaceDown() && !moveValid())
-		{ // Change detected on board and invalid move -> ERROR
-			gameState = ERROR;
-			currentScreen = ERROR_SCREEN;
-			makeErrorScreen("Invalid move!");
-			afterError = GAME_ACTIVE;
-			Serial.println("Moving to ERROR");
-			lightsOff();
-		}
-		break;
+        case PIECE_SUSPENDED:
+            flash();
+            if (checkPlaceDown() && moveValid())
+            { //Change detected on board and valid move -> GAME_ACTIVE
+                gameState = GAME_ACTIVE;
+                lightsOff();
+            }
+            else if (checkPlaceDown() && !moveValid())
+            { //Change detected on board and invalid move -> ERROR
+                gameState = ERROR;
+                currentScreen = ERROR_SCREEN;
+                makeErrorScreen("Invalid move!");
+                afterError = GAME_ACTIVE;
+                lightsOff();
+            }
+            break;
 
-	case PROMOTING:
-		checkPlaceDown();
-		// Handled in promotionButton():
-		// Piece selected on LCD && Piece has been switched out -> GAME_ACTIVE
-		if (promoting && pawnExchangedForPromotion)
-		{
-			pawnExchangedForPromotion = false;
-			promoting = false;
-			gameState = GAME_ACTIVE;
-			Serial.println("Moving to GAME_ACTIVE");
-			break;
-		}
+        case PROMOTING:
+            checkPlaceDown();
+            //Handled in promotionButton()
+            //Piece selected on LCD && Piece has been switched out -> GAME_ACTIVE
+            if (promoting && pawnExchangedForPromotion)
+            {
+                pawnExchangedForPromotion = false;
+                promoting = false;
+                gameState = GAME_ACTIVE;
+                break;
+            }
+            break;
 
-		// Not sure how to handle errors here
-		// if (checkPlaceDown()) { //Change detected on board -> ERROR
-		// 	gameState = ERROR;
-		// 	currentScreen = ERROR_SCREEN;
-		// 	makeErrorScreen("Please select a piece for promotion!");
-		// 	afterError = PROMOTING;
-		// 	Serial.println("Moving to ERROR");
-		// }
-		break;
+        case GAME_TERMINATED:
+            //Handled in terminationOkButton()
+            break;
 
-	case GAME_TERMINATED:
-		// Handled in terminationOkButton()
-		// Ok button on LCD -> GAME_INACTIVE
-		break;
-
-	case ERROR:
-		// Ok button on LCD after wrong move -> GAME_ACTIVE
-		// Ok button on LCD after no promotion selection -> PROMOTION
-		// Ok button on LCD after other error? -> GAME_ACTIVE
-		break;
+        case ERROR:
+            //Handled in errorOkButton()
+            break;
 	}
 	updateBoard();
-	// checkPromotingPawns();
 }
 
 void setupHallSensors()
@@ -816,8 +764,8 @@ void setupHallSensors()
 	}
 }
 
-// Since our Arduino has too many ADC's and not enough SPI pins, we need to read the chips manually.
-// The code below is taken from Adafruit's MCP3008.h library and modified for our specific usage.
+//Since our Arduino has too many ADC's and not enough SPI pins, we need to read the chips manually.
+//The code below is taken from Adafruit's MCP3008.h library and modified for our specific usage.
 int readHallSensorData(int adcnum, int rx, int tx)
 {
 	digitalWrite(CS, HIGH);
@@ -865,7 +813,7 @@ int readHallSensorData(int adcnum, int rx, int tx)
 	return adcout;
 }
 
-// Collecting average hall sensor data to smooth out noise
+//Collecting average hall sensor data to smooth out noise
 void getHallSensorData()
 {
 	for (int i = 0; i < BOARD_Y; i++)
@@ -876,23 +824,13 @@ void getHallSensorData()
 		}
 	}
 
-	// Some hall sensors are busted. Gotta hard code the values...
-	// rawStates[7][0] = 400;
-	// rawStates[6][0] = 400;
-	// rawStates[6][6] = 400;
-	// rawStates[7][7] = 400;
-	// rawStates[5][6] = 200;
-	rawStates[1][0] = 20;
-	rawStates[5][0] = 200;
-	rawStates[7][0] = 450;
-	rawStates[6][6] = 450;
+	//Some hall sensors are broken. Values can be hard coded as follows
+	// rawStates[1][0] = 20; //Hardcoded black piece
+	// rawStates[5][0] = 200; //Hardcoded empty square
+	// rawStates[7][0] = 450; //Hardcoded white piece
 }
 
-// int runningAverage(hallAvg *ha, int x) {
-// 	ha->add(x);
-// 	return ha->avg();
-// }
-
+//Setup 3D array of 0's
 void setupAvg()
 {
 	for (int i = 0; i < 8; i++)
@@ -908,6 +846,7 @@ void setupAvg()
 	}
 }
 
+//Compute running average of hall sensor
 int runningAverage(int value, int row, int col)
 {
 	int temp = avgData[row][col][avgIndex];
@@ -921,14 +860,14 @@ int runningAverage(int value, int row, int col)
 	return avgSums[row][col] / AVG_SAMPLE_SIZE;
 }
 
-// Initializes currentBoard with the starting position
+//Initializes currentBoard with the starting position
 void initBoard()
 {
 	ChessPiece backRow[BOARD_X] = {ROOK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROOK};
 	for (int i = 0; i < BOARD_Y; i++)
-	{ // Rows
+	{ //Rows
 		for (int j = 0; j < BOARD_X; j++)
-		{ // Columns
+		{ //Columns
 			switch (i)
 			{
 			case 0:
@@ -961,7 +900,8 @@ void initBoard()
 	whoseTurn = WHITE;
 }
 
-// Should only be called in the starting position
+//Sets which colour pieces are on which side of the board
+//Should only be called in the starting position
 void getColourOrientation()
 {
 	identifyColours();
@@ -969,7 +909,7 @@ void getColourOrientation()
 	botColour = currentBoard[7][0].colour;
 }
 
-// User action was accepted, update saved board state with current state.
+//User action was accepted, update saved board state with current state.
 void updateBoard()
 {
 	for (int i = 0; i < BOARD_Y; i++)
@@ -981,7 +921,7 @@ void updateBoard()
 	}
 }
 
-// Read a row of the chess board and translate it into a FEN string
+//Read a row of the chess board and translate it into a FEN string
 void rowToFen(Square row[8], char *rowFen)
 {
 	int emptySquares = 0;
@@ -994,7 +934,7 @@ void rowToFen(Square row[8], char *rowFen)
 			emptySquares++;
 		}
 		else
-		{ // Piece
+		{ //Piece
 			if (emptySquares > 0)
 			{
 				char numChar = emptySquares + '0';
@@ -1012,7 +952,7 @@ void rowToFen(Square row[8], char *rowFen)
 	}
 }
 
-// Generate the FEN string to send to the web-app
+//Generate the FEN string of the board
 void boardToFen(char *boardFen)
 {
 	for (int i = 0; i < BOARD_Y - 1; i++)
@@ -1026,30 +966,30 @@ void boardToFen(char *boardFen)
 	rowToFen(currentBoard[BOARD_Y - 1], row);
 	strcat(boardFen, row);
 
-	// Active colour
+	//Active colour
 	char space = ' ';
 	strncat(boardFen, &space, 1);
 	strncat(boardFen, &whoseTurn, 1);
 
-	// Castling availability
+	//Castling availability
 	strncat(boardFen, &space, 1);
 	strcat(boardFen, castlingStatus);
 
-	// En passant target square
+	//En passant target square
 	strncat(boardFen, &space, 1);
 	strncat(boardFen, "-", 1);
 
-	// Halfmove clock
+	//Halfmove clock
 	strncat(boardFen, &space, 1);
 	strncat(boardFen, "0", 1);
 
-	// Fullmove number
+	//Fullmove number
 	strncat(boardFen, &space, 1);
 	char fullmoves = numTurns + '0';
 	strncat(boardFen, &fullmoves, 1);
 }
 
-// Translate the piece to a char for the FEN string
+//Translate a piece to its FEN character representation
 char pieceToChar(ChessPiece piece, Colour colour)
 {
 	char pieceChar;
@@ -1079,19 +1019,21 @@ char pieceToChar(ChessPiece piece, Colour colour)
 	}
 	if (colour == BLACK)
 	{
-		pieceChar += 32; // Uppercase to lowercase
+		pieceChar += 32; //Uppercase to lowercase
 	}
 	return pieceChar;
 }
 
+//Check if the software board representation is in the starting chess position 
 bool validStartingPosition()
 {
 	char *currentFenStr = "";
-	char *startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; // Starting position
+	char *startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; //Starting position
 	boardToFen(currentFenStr);
 	return (strcmp(currentFenStr, startingFen) == 0);
 }
 
+//Check if the hall sensors read the board to be in the starting chess position
 bool validStartingBoard()
 {
 	for (int i = 0; i < BOARD_Y; i++)
@@ -1129,8 +1071,8 @@ bool validStartingBoard()
 	return true;
 }
 
-// Besides the moved piece, the board is in the starting position
-// Must be called after checkPlacedown()
+//Ignoring the moved piece, the board is in the starting position
+//Must be called after checkPlacedown()
 bool otherwiseStartingBoard()
 {
 	int fromRow = (*fromSquare).row;
@@ -1142,7 +1084,7 @@ bool otherwiseStartingBoard()
 		for (int j = 0; j < BOARD_X; j++)
 		{
 			if ((fromRow != i || fromCol != j) && (toRow != i || toCol != j))
-			{ // Not square that piece moved to or from
+			{ //Not square that piece moved to or from
 				switch (i)
 				{
 				case 0:
@@ -1175,6 +1117,7 @@ bool otherwiseStartingBoard()
 	return true;
 }
 
+//Which colour pieces are on which squares according to the hall sensors
 void identifyColours()
 {
 	for (int i = 0; i < BOARD_Y; i++)
@@ -1182,22 +1125,22 @@ void identifyColours()
 		for (int j = 0; j < BOARD_X; j++)
 		{
 			if (rawStates[i][j] > WHITE_HALL)
-			{ // White piece according to hall sensor
+			{ //White piece according to hall sensor
 				currentBoard[i][j].colour = WHITE;
 			}
 			else if (rawStates[i][j] < BLACK_HALL)
-			{ // Black piece according to hall sensor
+			{ //Black piece according to hall sensor
 				currentBoard[i][j].colour = BLACK;
 			}
 			else
-			{ // No piece according to hall sensor
+			{ //No piece according to hall sensor
 				currentBoard[i][j].colour = NO_COLOUR;
 			}
 		}
 	}
 }
 
-// Scanning the entire board to see if the current state has changed form the saved state
+//Check if a piece has been picked up
 bool checkPickup()
 {
 	for (int i = 0; i < BOARD_Y; i++)
@@ -1225,6 +1168,7 @@ bool checkPickup()
 	return false;
 }
 
+//Check if the lifted piece has been placed down
 bool checkPlaceDown()
 {
 	checkPickup();
@@ -1234,14 +1178,14 @@ bool checkPlaceDown()
 		{
 			if (gameState == PROMOTING && liftedSquare != NULL && (i == 0 || i == 7) && liftedSquare->col == promotionSquare->col)
 			{
-				// Successfully exchanged same piece as promoting square
+				//Successfully exchanged same piece as promoting square
 				promotionSquare = NULL;
 				pawnExchangedForPromotion = true;
 				return true;
 			}
 			else if (gameState == PROMOTING && liftedSquare != NULL && (i == 0 || i == 7) && liftedSquare->colour != promotionSquare->colour)
 			{
-				// Another piece was moved other than the promoting square
+				//Another piece was moved other than the promoting square
 				gameState = ERROR;
 				currentScreen = ERROR_SCREEN;
 				makeErrorScreen("Please select a piece for promotion!");
@@ -1251,17 +1195,17 @@ bool checkPlaceDown()
 			}
 			else if (currentBoard[i][j].colour != oldBoard[i][j].colour)
 			{
-				// Normal game play, no promotion
+				//Normal game play, no promotion
 				if (liftedSquare != NULL && liftedPieceColour == currentBoard[i][j].colour)
 				{
-					// Record lifted square in the current board configuration
+					//Record lifted square in the current board configuration
 					currentBoard[i][j] = Square((*liftedSquare).piece, liftedPieceColour, i, j);
 					toSquare = new Square(currentBoard[i][j].piece, currentBoard[i][j].colour, i, j);
 					int origRow = (*liftedSquare).row;
 					int origCol = (*liftedSquare).col;
 					currentBoard[origRow][origCol] = Square(origRow, origCol);
 
-					// Reset lifted piece variables to nothing
+					//Reset lifted piece variables to nothing
 					liftedSquare = NULL;
 					liftedPieceColour = NO_COLOUR;
 					Serial.print("Placedown on square: ");
@@ -1269,7 +1213,7 @@ bool checkPlaceDown()
 					Serial.print(", ");
 					Serial.println(j);
 
-					// Save board state
+					//Save board state
 					updateBoard();
 					return true;
 				}
@@ -1279,9 +1223,9 @@ bool checkPlaceDown()
 	return false;
 }
 
-// Validate move against the standard rules of chess
+//Validate move against the standard rules of chess
 bool moveValid()
-{ // To be implemented
+{
 	Square from = *fromSquare;
 	Square to = *toSquare;
 
@@ -1296,10 +1240,10 @@ bool moveValid()
 			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
-// Check to see if a pawn made it to the other side for promotion
+//Check to see if a pawn made it to the other side for promotion
 void checkPromotingPawns()
 {
 	for (int i = 0; i < BOARD_X; i++)
@@ -1318,19 +1262,15 @@ void checkPromotingPawns()
 	promotionSquare = NULL;
 }
 
-// Exchange pawn piece for another piece
+//Exchange pawn piece for another piece
 void promotePawn(ChessPiece promotionPiece)
 {
 	int row = (*promotionSquare).row;
 	int col = (*promotionSquare).col;
-	Serial.print("Promotion at: ");
-	Serial.print(row);
-	Serial.print(", ");
-	Serial.println(col);
 	currentBoard[row][col].piece = promotionPiece;
 }
 
-// Light valid moves for pawns
+//Light valid moves
 void highlightMoves(Square squares[])
 {
 	int i = 0;
@@ -1342,7 +1282,7 @@ void highlightMoves(Square squares[])
 	}
 }
 
-// Algorithm to determin valid moves for each piece. To be used for Beginner mode lights and move validation
+//Algorithm to determine valid moves for each piece. Used for Beginner mode lights
 void getValidMoves(Square startingSquare, Square possibleMoves[])
 {
 	switch (startingSquare.piece)
@@ -1380,57 +1320,59 @@ void getValidMoves(Square startingSquare, Square possibleMoves[])
 	}
 }
 
+//Get valid moves for a pawn on the starting square
 void getPawnMoves(Square startingSquare, Square possibleMoves[PAWN_SIGHT])
 {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
 	Colour activeColour = (*fromSquare).colour;
-	int numMoves = 0; // Index and counter for possible moves
+	int numMoves = 0; //Index and counter for possible moves
 
 	int direction = (activeColour == WHITE) ? -1 : 1; //-1 for up, 1 for down
 	int newRow = row + direction;
 	if (newRow >= 0 && newRow < BOARD_X)
-	{ // Target row on board
+	{ //Target row on board
 		if (currentBoard[newRow][col].piece == NO_PIECE)
-		{ // Move forward 1 square if unoccupied
+		{ //Move forward 1 square if unoccupied
 			possibleMoves[numMoves++] = currentBoard[newRow][col];
 		}
 
 		if (col >= 1 && currentBoard[newRow][col - 1].colour != activeColour && currentBoard[newRow][col - 1].piece != NO_PIECE)
-		{ // Capture diagonally to the left
+		{ //Capture diagonally to the left
 			possibleMoves[numMoves++] = currentBoard[newRow][col - 1];
 		}
 
 		if (col <= BOARD_X && currentBoard[newRow][col + 1].colour != activeColour && currentBoard[newRow][col + 1].piece != NO_PIECE)
-		{ // Capture diagonally to the right
+		{ //Capture diagonally to the right
 			possibleMoves[numMoves++] = currentBoard[newRow][col + 1];
 		}
 	}
 
 	if ((row == 1 && direction == 1) || (row == 6 && direction == -1))
-	{ // On starting row
+	{ //On starting row
 		if (currentBoard[newRow][col].piece == NO_PIECE && currentBoard[newRow + direction][col].piece == NO_PIECE)
-		{ // Move forward 2 squares if on starting row and both squares unoccupied
+		{ //Move forward 2 squares if on starting row and both squares unoccupied
 			possibleMoves[numMoves++] = currentBoard[newRow + direction][col];
 		}
 	}
 }
 
+//Get valid moves for a knight on the starting square
 void getKnightMoves(Square startingSquare, Square possibleMoves[KNIGHT_SIGHT])
 {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
 	Colour activeColour = (*fromSquare).colour;
-	int numMoves = 0; // Index and counter for possible moves
+	int numMoves = 0; //Index and counter for possible moves
 
 	int moves[8][2] = {{-2, -1}, {-2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}};
 	for (int i = 0; i < 8; i++)
 	{
-		// For every directional move
+		//For every directional move
 		int newRow = row + moves[i][0];
 		int newCol = col + moves[i][1];
 		if (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-		{ // Target row/col on board
+		{ //Target row/col on board
 			Square targetSquare = currentBoard[newRow][newCol];
 			if (targetSquare.colour != activeColour)
 			{
@@ -1440,79 +1382,80 @@ void getKnightMoves(Square startingSquare, Square possibleMoves[KNIGHT_SIGHT])
 	}
 }
 
+//Get valid moves for a bishop on the starting square
 void getBishopMoves(Square startingSquare, Square possibleMoves[BISHOP_SIGHT])
 {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
 	Colour activeColour = (*fromSquare).colour;
-	int numMoves = 0; // Index and counter for possible moves
+	int numMoves = 0; //Index and counter for possible moves
 
-	// Up and left
+	//Up and left
 	int newRow = row - 1;
 	int newCol = col - 1;
 	while (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow -= 1;
 		newCol -= 1;
 	}
 
-	// Up and right
+	//Up and right
 	newRow = row - 1;
 	newCol = col + 1;
 	while (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow -= 1;
 		newCol += 1;
 	}
 
-	// Down and left
+	//Down and left
 	newRow = row + 1;
 	newCol = col - 1;
 	while (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow += 1;
 		newCol -= 1;
 	}
 
-	// Down and right
+	//Down and right
 	newRow = row + 1;
 	newCol = col + 1;
 	while (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow += 1;
@@ -1520,215 +1463,217 @@ void getBishopMoves(Square startingSquare, Square possibleMoves[BISHOP_SIGHT])
 	}
 }
 
+//Get valid moves for a rook on the starting square
 void getRookMoves(Square startingSquare, Square possibleMoves[ROOK_SIGHT])
 {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
 	Colour activeColour = (*fromSquare).colour;
-	int numMoves = 0; // Index and counter for possible moves
+	int numMoves = 0; //Index and counter for possible moves
 
-	// Up
+	//Up
 	int newRow = row - 1;
 	while (newRow >= 0 && newRow < BOARD_Y)
-	{ // Target row on board
+	{ //Target row on board
 		Square targetSquare = currentBoard[newRow][col];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][col];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow -= 1;
 	}
 
-	// Down
+	//Down
 	newRow = row + 1;
 	while (newRow >= 0 && newRow < BOARD_Y)
-	{ // Target row on board
+	{ //Target row on board
 		Square targetSquare = currentBoard[newRow][col];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][col];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow += 1;
 	}
 
-	// Left
+	//Left
 	int newCol = col - 1;
 	while (newCol >= 0 && newCol < BOARD_X)
-	{ // Target col on board
+	{ //Target col on board
 		Square targetSquare = currentBoard[row][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[row][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newCol -= 1;
 	}
 
-	// Right
+	//Right
 	newCol = col + 1;
 	while (newCol >= 0 && newCol < BOARD_X)
-	{ // Target col on board
+	{ //Target col on board
 		Square targetSquare = currentBoard[row][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[row][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newCol += 1;
 	}
 }
 
+//Get valid moves for a queen on the starting square
 void getQueenMoves(Square startingSquare, Square possibleMoves[QUEEN_SIGHT])
 {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
 	Colour activeColour = (*fromSquare).colour;
-	int numMoves = 0; // Index and counter for possible moves
+	int numMoves = 0; //Index and counter for possible moves
 
-	// Up
+	//Up
 	int newRow = row - 1;
 	while (newRow >= 0 && newRow < BOARD_Y)
-	{ // Target row on board
+	{ //Target row on board
 		Square targetSquare = currentBoard[newRow][col];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][col];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow -= 1;
 	}
 
-	// Down
+	//Down
 	newRow = row + 1;
 	while (newRow >= 0 && newRow < BOARD_Y)
-	{ // Target row on board
+	{ //Target row on board
 		Square targetSquare = currentBoard[newRow][col];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][col];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow += 1;
 	}
 
-	// Left
+	//Left
 	int newCol = col - 1;
 	while (newCol >= 0 && newCol < BOARD_X)
-	{ // Target col on board
+	{ //Target col on board
 		Square targetSquare = currentBoard[row][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[row][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newCol -= 1;
 	}
 
-	// Right
+	//Right
 	newCol = col + 1;
 	while (newCol >= 0 && newCol < BOARD_X)
-	{ // Target col on board
+	{ //Target col on board
 		Square targetSquare = currentBoard[row][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[row][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newCol += 1;
 	}
 
-	// Up and left
+	//Up and left
 	newRow = row - 1;
 	newCol = col - 1;
 	while (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow -= 1;
 		newCol -= 1;
 	}
 
-	// Up and right
+	//Up and right
 	newRow = row - 1;
 	newCol = col + 1;
 	while (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow -= 1;
 		newCol += 1;
 	}
 
-	// Down and left
+	//Down and left
 	newRow = row + 1;
 	newCol = col - 1;
 	while (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow += 1;
 		newCol -= 1;
 	}
 
-	// Down and right
+	//Down and right
 	newRow = row + 1;
 	newCol = col + 1;
 	while (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 		if (targetSquare.piece != NO_PIECE)
-		{ // Target square has opposing piece
+		{ //Target square has opposing piece
 			break;
 		}
 		newRow += 1;
@@ -1736,148 +1681,140 @@ void getQueenMoves(Square startingSquare, Square possibleMoves[QUEEN_SIGHT])
 	}
 }
 
+//Get valid moves for a king on the starting square
 void getKingMoves(Square startingSquare, Square possibleMoves[KING_SIGHT])
 {
 	int row = startingSquare.row;
 	int col = startingSquare.col;
 	Colour activeColour = (*fromSquare).colour;
-	int numMoves = 0; // Index and counter for possible moves
+	int numMoves = 0; //Index and counter for possible moves
 
-	// Up
+	//Up
 	int newRow = row - 1;
 	if (newRow >= 0 && newRow < BOARD_Y)
-	{ // Target row on board
+	{ //Target row on board
 		Square targetSquare = currentBoard[newRow][col];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][col];
 		}
 	}
 
-	// Down
+	//Down
 	newRow = row + 1;
 	if (newRow >= 0 && newRow < BOARD_Y)
-	{ // Target row on board
+	{ //Target row on board
 		Square targetSquare = currentBoard[newRow][col];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][col];
 		}
 	}
 
-	// Left
+	//Left
 	int newCol = col - 1;
 	if (newCol >= 0 && newCol < BOARD_X)
-	{ // Target col on board
+	{ //Target col on board
 		Square targetSquare = currentBoard[row][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[row][newCol];
 		}
 	}
 
-	// Right
+	//Right
 	newCol = col + 1;
 	if (newCol >= 0 && newCol < BOARD_X)
-	{ // Target col on board
+	{ //Target col on board
 		Square targetSquare = currentBoard[row][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[row][newCol];
 		}
 	}
 
-	// Up and left
+	//Up and left
 	newRow = row - 1;
 	newCol = col - 1;
 	if (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 	}
 
-	// Up and right
+	//Up and right
 	newRow = row - 1;
 	newCol = col + 1;
 	if (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 	}
 
-	// Down and left
+	//Down and left
 	newRow = row + 1;
 	newCol = col - 1;
 	if (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 	}
 
-	// Down and right
+	//Down and right
 	newRow = row + 1;
 	newCol = col + 1;
 	if (newRow >= 0 && newRow < BOARD_Y && newCol >= 0 && newCol < BOARD_X)
-	{ // Target row/col on board
+	{ //Target row/col on board
 		Square targetSquare = currentBoard[newRow][newCol];
 		if (targetSquare.colour != activeColour)
-		{ // Target square does not have same-coloured piece
+		{ //Target square does not have same-coloured piece
 			possibleMoves[numMoves++] = currentBoard[newRow][newCol];
 		}
 	}
 }
 
-// Light up LED based on what piece was lifted
+//Light up LED based on what piece was lifted
 void flash()
 {
 	Square square = *fromSquare;
 	ChessPiece squarePiece = square.piece;
-	delay(10);
-	// Serial.print("Square: ");
-	// Serial.println(squarePiece);
 	switch (squarePiece)
 	{
 	case PAWN:
-		// Serial.println("Pawn lifted");
 		Square possiblePawnMoves[PAWN_SIGHT] = {};
 		getPawnMoves(square, possiblePawnMoves);
 		highlightMoves(possiblePawnMoves);
 		break;
 	case KNIGHT:
-		Serial.println("Knight lifted");
 		Square possibleKnightMoves[KNIGHT_SIGHT] = {};
 		getKnightMoves(square, possibleKnightMoves);
 		highlightMoves(possibleKnightMoves);
 		break;
 	case BISHOP:
-		Serial.println("Bishop lifted");
 		Square possibleBishopMoves[BISHOP_SIGHT] = {};
 		getBishopMoves(square, possibleBishopMoves);
 		highlightMoves(possibleBishopMoves);
 		break;
 	case ROOK:
-		Serial.println("Rook lifted");
 		Square possibleRookMoves[ROOK_SIGHT] = {};
 		getRookMoves(square, possibleRookMoves);
 		highlightMoves(possibleRookMoves);
 		break;
 	case QUEEN:
-		Serial.println("Queen lifted");
 		Square possibleQueenMoves[QUEEN_SIGHT] = {};
 		getQueenMoves(square, possibleQueenMoves);
 		highlightMoves(possibleQueenMoves);
 		break;
 	case KING:
-		Serial.println("King lifted");
 		Square possibleKingMoves[KING_SIGHT] = {};
 		getKingMoves(square, possibleKingMoves);
 		highlightMoves(possibleKingMoves);
@@ -1885,7 +1822,7 @@ void flash()
 	}
 }
 
-// LEDs initialize to off
+//Setup LED control
 void setupLEDs()
 {
 	for (int i = 0; i < BOARD_X; i++)
@@ -1897,7 +1834,7 @@ void setupLEDs()
 	}
 }
 
-// Turn on specific LED
+//Turn on specific LED
 void lightUp(int row, int col)
 {
 	int adjustedRow = BOARD_Y - row - 1;
@@ -1906,7 +1843,7 @@ void lightUp(int row, int col)
 	digitalWrite(cathodes[adjustedRow], HIGH);
 }
 
-// All LEDs
+//All LEDs off
 void lightsOff()
 {
 	for (int i = 0; i < BOARD_X; i++)
@@ -1916,7 +1853,7 @@ void lightsOff()
 	}
 }
 
-// All LEDs
+//All LEDs on
 void lightsOn()
 {
 	for (int i = 0; i < BOARD_X; i++)
@@ -1926,7 +1863,7 @@ void lightsOn()
 	}
 }
 
-// Debug Hall sensor data
+//Debug Hall sensor data
 void printHall()
 {
 	int i, j;
@@ -1942,210 +1879,108 @@ void printHall()
 			Serial.print("\t");
 		}
 		Serial.print("\n");
-		// delay(1);
+		//delay(1);
 	}
 }
 
-// Useful for debugging
-void printing()
-{
-	// Serial.println("\n New:");
-	// for (int i = 0; i < BOARD_X; i++) {
-	// 	for (int j = 0; j < BOARD_X; j++) {
-	// 		Serial.print(currentBoard[i][j].piece);
-	// 		Serial.print(" ");
-	// 	}
-	// 	Serial.print("\n");
-	// }
-	// Serial.println("\n Old:");
-	// for (int i = 0; i < BOARD_X; i++) {
-	// 	for (int j = 0; j < BOARD_X; j++) {
-	// 		Serial.print(oldBoard[i][j].piece);
-	// 		Serial.print(" ");
-	// 	}
-	// 	Serial.print("\n");
-	// }
-	Serial.println("\n New:");
-	for (int i = 0; i < BOARD_X; i++)
-	{
-		for (int j = 0; j < BOARD_X; j++)
-		{
-			Serial.print(currentBoard[i][j].colour);
-			Serial.print(" ");
-		}
-		Serial.print("\n");
-	}
-	Serial.println("\n Old:");
-	for (int i = 0; i < BOARD_X; i++)
-	{
-		for (int j = 0; j < BOARD_X; j++)
-		{
-			Serial.print(oldBoard[i][j].colour);
-			Serial.print(" ");
-		}
-		Serial.print("\n");
-	}
-
-	// Square squarray[PAWN_SIGHT] = {};
-	// getPawnMoves(currentBoard[1][1], squarray);
-	// Serial.println("Pawn: ");
-	// for (int i = 0; i < PAWN_SIGHT; i++) {
-	// 	Serial.print(squarray[i].row);
-	// 	Serial.print(", ");
-	// 	Serial.println(squarray[i].col);
-	// }
-
-	// Square squarray2[KNIGHT_SIGHT] = {};
-	// Square knightStart(KNIGHT, BLACK, 5, 4);
-	// getKnightMoves(knightStart, squarray2);
-	// Serial.println("Knight: ");
-	// for (int i = 0; i < KNIGHT_SIGHT; i++) {
-	// 	Serial.print(squarray2[i].row);
-	// 	Serial.print(", ");
-	// 	Serial.println(squarray2[i].col);
-	// }
-
-	// Square squarray3[BISHOP_SIGHT] = {};
-	// Square bishopStart(BISHOP, BLACK, 4, 4);
-	// getBishopMoves(bishopStart, squarray3);
-	// Serial.println("Bishop: ");
-	// for (int i = 0; i < BISHOP_SIGHT; i++) {
-	// 	Serial.print(squarray3[i].row);
-	// 	Serial.print(", ");
-	// 	Serial.println(squarray3[i].col);
-	// }
-
-	// Square squarray4[ROOK_SIGHT] = {};
-	// Square rookStart(ROOK, BLACK, 4, 4);
-	// getRookMoves(rookStart, squarray4);
-	// Serial.println("Rook: ");
-	// for (int i = 0; i < ROOK_SIGHT; i++) {
-	// 	Serial.print(squarray4[i].row);
-	// 	Serial.print(", ");
-	// 	Serial.println(squarray4[i].col);
-	// }
-
-	// Square squarray5[QUEEN_SIGHT] = {};
-	// Square queenStart(QUEEN, BLACK, 4, 4);
-	// getQueenMoves(queenStart, squarray5);
-	// Serial.println("Queen: ");
-	// for (int i = 0; i < QUEEN_SIGHT; i++) {
-	// 	Serial.print(squarray5[i].row);
-	// 	Serial.print(", ");
-	// 	Serial.println(squarray5[i].col);
-	// }
-
-	// Square squarray6[KING_SIGHT] = {};
-	// Square kingStart(KING, BLACK, 4, 4);
-	// getKingMoves(kingStart, squarray6);
-	// Serial.println("King: ");
-	// for (int i = 0; i < KING_SIGHT; i++) {
-	// 	Serial.print(squarray6[i].row);
-	// 	Serial.print(", ");
-	// 	Serial.println(squarray6[i].col);
-	// }
-
-	// highlightMoves(squarray);
-}
-
+//Touchscreen input logic
 void handleTouch(int x, int y)
 {
-	// Start button (main screen or mode select screen)
+	//Start button (main screen or mode select screen)
 	if ((currentScreen == MAIN_SCREEN || currentScreen == MODE_SELECT_SCREEN) && (x > mainScreenBounds[0][0] && x < (mainScreenBounds[0][0] + MAIN_BUTTON_X) && y > mainScreenBounds[0][1] && y < (mainScreenBounds[0][1] + MAIN_BUTTON_Y)))
 	{
 		startGameButton();
 	}
 
-	// Mode button (main screen)
+	//Mode button (main screen)
 	if (currentScreen == MAIN_SCREEN && (x > mainScreenBounds[1][0] && x < (mainScreenBounds[1][0] + MAIN_BUTTON_X) && y > mainScreenBounds[1][1] && y < (mainScreenBounds[1][1] + MAIN_BUTTON_Y)))
 	{
 		selectModeButton();
 	}
 
-	// Beginner mode button (mode select screen)
+	//Beginner mode button (mode select screen)
 	if (currentScreen == MODE_SELECT_SCREEN && ((millis() - time) > TOUCH_DELAY) && (x > modeSelectScreenBounds[0][0] && x < (modeSelectScreenBounds[0][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[0][1] && y < (modeSelectScreenBounds[0][1] + MODE_BUTTON_Y)))
 	{
 		selectMode(BEGINNER);
 	}
 
-	// Normal mode button (mode select screen)
+	//Normal mode button (mode select screen)
 	if (currentScreen == MODE_SELECT_SCREEN && ((millis() - time) > TOUCH_DELAY) && (x > modeSelectScreenBounds[1][0] && x < (modeSelectScreenBounds[1][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[1][1] && y < (modeSelectScreenBounds[1][1] + MODE_BUTTON_Y)))
 	{
 		selectMode(NORMAL);
 	}
 
-	// Engine mode button (mode select screen)
+	//Engine mode button (mode select screen)
 	if (currentScreen == MODE_SELECT_SCREEN && ((millis() - time) > TOUCH_DELAY) && (x > modeSelectScreenBounds[2][0] && x < (modeSelectScreenBounds[2][0] + MODE_BUTTON_X) && y > modeSelectScreenBounds[2][1] && y < (modeSelectScreenBounds[2][1] + MODE_BUTTON_Y)))
 	{
 		selectMode(ENGINE);
 	}
 
-	// White resign button (game screen)
+	//White resign button (game screen)
 	if (currentScreen == GAME_SCREEN && (x > gameScreenBounds[0][0] && x < (gameScreenBounds[0][0] + GAME_BUTTON_X) && y > gameScreenBounds[0][1] && (y < gameScreenBounds[0][1] + GAME_BUTTON_Y)))
 	{
 		resignWhiteButton();
 	}
 
-	// Draw button (game screen)
+	//Draw button (game screen)
 	if (currentScreen == GAME_SCREEN && (x > gameScreenBounds[1][0] && x < (gameScreenBounds[1][0] + GAME_BUTTON_X) && y > gameScreenBounds[1][1] && (y < gameScreenBounds[1][1] + GAME_BUTTON_Y)))
 	{
 		drawButton();
 	}
 
-	// Black resign button (game screen)
+	//Black resign button (game screen)
 	if (currentScreen == GAME_SCREEN && (x > gameScreenBounds[2][0] && x < (gameScreenBounds[2][0] + GAME_BUTTON_X) && y > gameScreenBounds[2][1] && (y < gameScreenBounds[2][1] + GAME_BUTTON_Y)))
 	{
 		resignBlackButton();
 	}
 
-	// Queen button (promotion screen)
+	//Queen button (promotion screen)
 	if (currentScreen == PROMOTION_SCREEN && (x > promotionScreenBounds[0][0] && x < (promotionScreenBounds[0][0] + PROMOTION_COMMON_X) && y > promotionScreenBounds[0][1] && (y < promotionScreenBounds[0][1] + PROMOTION_Y)))
 	{
 		selectedPromotion = QUEEN;
 		promotionButton(selectedPromotion);
 	}
 
-	// Rook button (promotion screen)
+	//Rook button (promotion screen)
 	if (currentScreen == PROMOTION_SCREEN && (x > promotionScreenBounds[1][0] && x < (promotionScreenBounds[1][0] + PROMOTION_RARE_X) && y > promotionScreenBounds[1][1] && (y < promotionScreenBounds[1][1] + PROMOTION_Y)))
 	{
 		currentScreen = CONFIRMATION_SCREEN;
 		makeConfirmationScreen(ROOK);
 	}
 
-	// Bishop button (promotion screen)
+	//Bishop button (promotion screen)
 	if (currentScreen == PROMOTION_SCREEN && (x > promotionScreenBounds[2][0] && x < (promotionScreenBounds[2][0] + PROMOTION_RARE_X) && y > promotionScreenBounds[2][1] && (y < promotionScreenBounds[2][1] + PROMOTION_Y)))
 	{
 		currentScreen = CONFIRMATION_SCREEN;
 		makeConfirmationScreen(BISHOP);
 	}
 
-	// Knight button (promotion screen)
+	//Knight button (promotion screen)
 	if (currentScreen == PROMOTION_SCREEN && (x > promotionScreenBounds[3][0] && x < (promotionScreenBounds[3][0] + PROMOTION_COMMON_X) && y > promotionScreenBounds[3][1] && (y < promotionScreenBounds[3][1] + PROMOTION_Y)))
 	{
 		currentScreen = CONFIRMATION_SCREEN;
 		makeConfirmationScreen(KNIGHT);
 	}
 
-	// OK button (end screen)
+	//OK button (end screen)
 	if (currentScreen == TERMINATION_SCREEN && (x > okButtonBounds[0][0] && x < (okButtonBounds[0][0] + OK_BUTTON_X) && y > okButtonBounds[0][1] && (y < okButtonBounds[0][1] + OK_BUTTON_Y)))
 	{
 		terminationOkButton();
 	}
 
-	// Theme button
+	//Theme button
 	if ((currentScreen != PROMOTION_SCREEN && currentScreen != TERMINATION_SCREEN && currentScreen != ERROR_SCREEN && currentScreen != CONFIRMATION_SCREEN) && (x > themeButtonBounds[0][0] && x < (themeButtonBounds[0][0] + THEME_BUTTON_X) && y > themeButtonBounds[0][1] && (y < themeButtonBounds[0][1] + THEME_BUTTON_Y)))
 	{
 		themeButton();
-		// makePromotionScreen();
 	}
 
-	// Yes confirmation
+	//Yes confirmation
 	if (currentScreen == CONFIRMATION_SCREEN && ((millis() - time) > TOUCH_DELAY) && (x > confirmationScreenBounds[0][0] && x < (confirmationScreenBounds[0][0] + YES_NO_X) && y > confirmationScreenBounds[0][1] && (y < confirmationScreenBounds[0][1] + YES_NO_Y)))
 	{
 		promotionButton(selectedPromotion);
 	}
 
-	// No confirmation
+	//No confirmation
 	if (currentScreen == CONFIRMATION_SCREEN && ((millis() - time) > TOUCH_DELAY) && (x > confirmationScreenBounds[1][0] && x < (confirmationScreenBounds[1][0] + YES_NO_X) && y > confirmationScreenBounds[1][1] && (y < confirmationScreenBounds[1][1] + YES_NO_Y)))
 	{
 		makePromotionScreen();
@@ -2159,10 +1994,10 @@ void handleTouch(int x, int y)
 
 void btComm()
 {
-	// Receive data from external device
+	//Receive data from external device
 	if (BTserial.available())
 	{
-		char c = BTserial.read(); // Comes in form "FEN@code@code\r\n"
+		char c = BTserial.read(); //Comes in form "FEN@code@code\r\n"
 		if (c == -1)
 		{
 			return;
@@ -2182,13 +2017,14 @@ void btComm()
 		}
 	}
 
-	// Send data to external device
+	//Send data to external device
 	if (Serial.available())
 	{
 		BTserial.write(Serial.read());
 	}
 }
 
+//Draw main screen on the LCD
 void makeMainScreen()
 {
 	tft.fillScreen(BACKGROUND_COLOUR);
@@ -2197,7 +2033,7 @@ void makeMainScreen()
 	int x = paddingX;
 	int y = 2 * paddingY + THEME_BUTTON_Y;
 
-	// Boarder and background
+	//Border and background
 	tft.fillRect(x, y, MAIN_BUTTON_X + paddingX, MAIN_BUTTON_Y, SECONDARY_COLOUR);
 	tft.drawRect(x, y, MAIN_BUTTON_X + paddingX, MAIN_BUTTON_Y, BORDER_COLOUR);
 	mainScreenBounds[0][0] = x;
@@ -2208,7 +2044,7 @@ void makeMainScreen()
 	mainScreenBounds[1][0] = 3 * paddingX + MAIN_BUTTON_X;
 	mainScreenBounds[1][1] = y;
 
-	// Game initialization buttons
+	//Game initialization buttons
 	tft.setTextColor(TEXT_COLOUR_1);
 	tft.setTextSize(6);
 	int textInset = (MAIN_BUTTON_X - getPixelWidth("Start", 6)) / 2;
@@ -2219,7 +2055,7 @@ void makeMainScreen()
 	tft.setCursor(mainScreenBounds[0][0] + textInset, tft.getCursorY() + paddingY);
 	tft.println("Game");
 
-	// Game mode select buttons
+	//Game mode select buttons
 	drawStartMode();
 
 	tft.setTextColor(TEXT_COLOUR_1);
@@ -2236,7 +2072,7 @@ void makeMainScreen()
 	tft.setCursor(mainScreenBounds[1][0] + textInset, tft.getCursorY() + paddingY);
 	tft.println("Mode");
 
-	// Logo
+	//Logo
 	tft.setCursor(5, 18);
 	tft.setTextColor(TEXT_COLOUR_2);
 	tft.setTextSize(5);
@@ -2245,6 +2081,7 @@ void makeMainScreen()
 	makeThemeButton();
 }
 
+//Draw mode select screen on the LCD
 void makeModeSelectScreen()
 {
 	int paddingX = 5;
@@ -2254,7 +2091,7 @@ void makeModeSelectScreen()
 	tft.fillRect(x, 2 * paddingY + THEME_BUTTON_Y, MODE_BUTTON_X, 3 * MODE_BUTTON_Y + 2 * paddingY, BACKGROUND_COLOUR);
 	if (currentUserMode == BEGINNER)
 	{
-		// Highlight Beginner mode button
+		//Highlight Beginner mode button
 		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, HIGHLIGHT_COLOUR);
 		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
 		modeSelectScreenBounds[0][0] = x;
@@ -2265,7 +2102,7 @@ void makeModeSelectScreen()
 		tft.setTextSize(4);
 		tft.print("Beginner");
 
-		// Normal mode button
+		//Normal mode button
 		tft.fillRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR);
 		tft.drawRect(x, y, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
 		modeSelectScreenBounds[1][0] = x;
@@ -2276,7 +2113,7 @@ void makeModeSelectScreen()
 		tft.setTextSize(4);
 		tft.print("Normal");
 
-		// Engine mode button
+		//Engine mode button
 		tft.fillRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR);
 		tft.drawRect(x, y + MODE_BUTTON_Y + 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
 		modeSelectScreenBounds[2][0] = x;
@@ -2289,7 +2126,7 @@ void makeModeSelectScreen()
 	}
 	else if (currentUserMode == NORMAL)
 	{
-		// Highlight Normal
+		//Highlight Normal
 		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR);
 		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
 		modeSelectScreenBounds[0][0] = x;
@@ -2322,7 +2159,7 @@ void makeModeSelectScreen()
 	}
 	else if (currentUserMode == ENGINE)
 	{
-		// Highlight Engine
+		//Highlight Engine
 		tft.fillRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, PRIMARY_COLOUR);
 		tft.drawRect(x, y - MODE_BUTTON_Y - 5, MODE_BUTTON_X, MODE_BUTTON_Y, BORDER_COLOUR);
 		modeSelectScreenBounds[0][0] = x;
@@ -2356,6 +2193,7 @@ void makeModeSelectScreen()
 	time = millis();
 }
 
+//Draw game screen on the LCD
 void makeGameScreen()
 {
 	tft.fillScreen(BACKGROUND_COLOUR);
@@ -2364,7 +2202,7 @@ void makeGameScreen()
 	int x = tft.width() - GAME_BUTTON_X - padding;
 	int y = startY;
 
-	// Create buttons
+	//Create buttons
 	tft.fillRect(x, y, GAME_BUTTON_X, GAME_BUTTON_Y, PRIMARY_COLOUR);
 	tft.drawRect(x, y, GAME_BUTTON_X, GAME_BUTTON_Y, BORDER_COLOUR);
 	gameScreenBounds[0][0] = x;
@@ -2383,9 +2221,9 @@ void makeGameScreen()
 	tft.fillRect(padding, startY, tft.width() - 3 * padding - GAME_BUTTON_X, 3 * GAME_BUTTON_Y + 2 * padding, QUATERNARY_COLOUR);
 	tft.drawRect(padding, startY, tft.width() - 3 * padding - GAME_BUTTON_X, 3 * GAME_BUTTON_Y + 2 * padding, BORDER_COLOUR);
 
-	// Add text to buttons
+	//Add text to buttons
 
-	// Resign white button
+	//Resign white button
 	int textInset = (GAME_BUTTON_X - getPixelWidth("Resign", 4)) / 2;
 	tft.setCursor(gameScreenBounds[0][0] + textInset, gameScreenBounds[0][1] + 10);
 	tft.setTextColor(TEXT_COLOUR_1);
@@ -2397,14 +2235,14 @@ void makeGameScreen()
 	tft.print("(White)");
 	int endButton1Y = tft.getCursorY() + 3 + 3 * 8;
 
-	// Draw button
+	//Draw button
 	textInset = (GAME_BUTTON_X - getPixelWidth("Draw", 4)) / 2;
 	tft.setCursor(gameScreenBounds[1][0] + textInset, gameScreenBounds[1][1] + 25);
 	tft.setTextColor(TEXT_COLOUR_1);
 	tft.setTextSize(4);
 	tft.print("Draw");
 
-	// Resign black button
+	//Resign black button
 	textInset = (GAME_BUTTON_X - getPixelWidth("Resign", 4)) / 2;
 	tft.setCursor(gameScreenBounds[2][0] + textInset, gameScreenBounds[2][1] + 10);
 	tft.setTextColor(TEXT_COLOUR_1);
@@ -2415,7 +2253,7 @@ void makeGameScreen()
 	tft.setCursor(gameScreenBounds[0][0] + textInset, tft.getCursorY() + 3);
 	tft.print("(Black)");
 
-	// Game mode display
+	//Game mode display
 	tft.setTextColor(TEXT_COLOUR_2);
 	tft.setTextSize(5);
 	char *currModeStr = getUserModeStr(currentUserMode);
@@ -2426,7 +2264,7 @@ void makeGameScreen()
 	tft.setCursor(padding + textInset, 20);
 	tft.print(fullModeStr);
 
-	// Chess engine calculated move display
+	//Chess engine calculated move display
 	int paddingY = 10;
 	textInset = ((tft.width() - 3 * padding - GAME_BUTTON_X) - getPixelWidth("Calculated", 3)) / 2;
 	tft.setTextColor(TEXT_COLOUR_1);
@@ -2438,6 +2276,7 @@ void makeGameScreen()
 	tft.setCursor(padding + textInset, tft.getCursorY() + 6);
 	tft.println("Engine Move");
 
+    //Only display engine move in engine mode
 	if (currentUserMode == ENGINE)
 	{
 		drawEngineMove(currentEngineMove);
@@ -2455,10 +2294,11 @@ void makeGameScreen()
 	makeThemeButton();
 }
 
+//Draw end screen on the LCD
 void makeEndScreen(char *msg)
 {
 	tft.fillScreen(BACKGROUND_COLOUR);
-	// resetState();
+	//resetState();
 	int x = (tft.width() - OK_BUTTON_X) / 2;
 	int y = 2 * tft.height() / 3;
 	tft.fillRect(x, y, OK_BUTTON_X, OK_BUTTON_Y, PRIMARY_COLOUR);
@@ -2471,7 +2311,7 @@ void makeEndScreen(char *msg)
 	tft.setTextSize(6);
 	tft.print("OK");
 
-	// Split message into 2 lines for readability
+	//Split message into 2 lines for readability
 	char *line2 = strstr(msg, "by ") + sizeof(char) * 3;
 	int ind = line2 - msg;
 	char line1[ind];
@@ -2489,6 +2329,7 @@ void makeEndScreen(char *msg)
 	tft.print(line2);
 }
 
+//Draw promotion screen on the LCD
 void makePromotionScreen()
 {
 	currentScreen = PROMOTION_SCREEN;
@@ -2515,7 +2356,7 @@ void makePromotionScreen()
 		knightColour = PRIMARY_COLOUR;
 	}
 
-	// Queen
+	//Queen
 	tft.fillRect(padding, marginY + padding, PROMOTION_COMMON_X, PROMOTION_Y, queenColour);
 	tft.drawRect(padding, marginY + padding, PROMOTION_COMMON_X, PROMOTION_Y, BORDER_COLOUR);
 	promotionScreenBounds[0][0] = padding;
@@ -2527,21 +2368,21 @@ void makePromotionScreen()
 	tft.setTextSize(6);
 	tft.print("Queen");
 
-	// Rook
+	//Rook
 	tft.fillRect(PROMOTION_COMMON_X + 2 * padding, marginY + padding, PROMOTION_RARE_X, PROMOTION_Y, rbColour);
 	tft.drawRect(PROMOTION_COMMON_X + 2 * padding, marginY + padding, PROMOTION_RARE_X, PROMOTION_Y, BORDER_COLOUR);
 	promotionScreenBounds[1][0] = PROMOTION_COMMON_X + 2 * padding;
 	promotionScreenBounds[1][1] = marginY + padding;
 	tft.drawBitmap(promotionScreenBounds[1][0], promotionScreenBounds[1][1], epdBitmapRook, ICON_SIZE, ICON_SIZE, BLACK);
 
-	// Bishop
+	//Bishop
 	tft.fillRect(padding, PROMOTION_Y + marginY + 2 * padding, PROMOTION_RARE_X, PROMOTION_Y, rbColour);
 	tft.drawRect(padding, PROMOTION_Y + marginY + 2 * padding, PROMOTION_RARE_X, PROMOTION_Y, BORDER_COLOUR);
 	promotionScreenBounds[2][0] = padding;
 	promotionScreenBounds[2][1] = PROMOTION_Y + marginY + 2 * padding;
 	tft.drawBitmap(promotionScreenBounds[2][0], promotionScreenBounds[2][1] + padding / 2, epdBitmapBishop, ICON_SIZE, ICON_SIZE, BLACK);
 
-	// Knight
+	//Knight
 	tft.fillRect(PROMOTION_RARE_X + 2 * padding, PROMOTION_Y + marginY + 2 * padding, PROMOTION_COMMON_X, PROMOTION_Y, knightColour);
 	tft.drawRect(PROMOTION_RARE_X + 2 * padding, PROMOTION_Y + marginY + 2 * padding, PROMOTION_COMMON_X, PROMOTION_Y, BORDER_COLOUR);
 	promotionScreenBounds[3][0] = PROMOTION_RARE_X + 2 * padding;
@@ -2554,6 +2395,7 @@ void makePromotionScreen()
 	tft.print("Knight");
 }
 
+//Draw theme button on the LCD
 void makeThemeButton()
 {
 	int padding = 5;
@@ -2564,6 +2406,7 @@ void makeThemeButton()
 	tft.drawBitmap(themeButtonBounds[0][0] + 5, themeButtonBounds[0][1] + 5, epdBitmapBrush, 60, 60, TEXT_COLOUR_1);
 }
 
+//Draw confirmation screen on the LCD
 void makeConfirmationScreen(ChessPiece piece)
 {
 	selectedPromotion = piece;
@@ -2622,6 +2465,7 @@ void makeConfirmationScreen(ChessPiece piece)
 	time = millis();
 }
 
+//Draw error screen on the LCD
 void makeErrorScreen(char *err)
 {
 	tft.fillScreen(BACKGROUND_COLOUR);
@@ -2645,6 +2489,7 @@ void makeErrorScreen(char *err)
 	tft.print(err);
 }
 
+//Draw the selected user mode on the LCD
 void drawStartMode()
 {
 	char *tmp = getUserModeStr(currentUserMode);
@@ -2669,6 +2514,7 @@ void drawStartMode()
 	tft.print(mode);
 }
 
+//Draw the engine move on the LCD
 void drawEngineMove(char *move)
 {
 	if (currentScreen == GAME_SCREEN)
@@ -2687,9 +2533,10 @@ void drawEngineMove(char *move)
 	strcpy(currentEngineMove, move);
 }
 
+//Draw start game button on the LCD
 void startGameButton()
 {
-	// start button and board in starting position -> GAME_ACTIVE
+	//start button and board in starting position -> GAME_ACTIVE
 	if (gameState == GAME_INACTIVE)
 	{
 		if (validStartingBoard())
@@ -2712,12 +2559,14 @@ void startGameButton()
 	}
 }
 
+//Draw mode select button on the LCD
 void selectModeButton()
 {
 	currentScreen = MODE_SELECT_SCREEN;
 	makeModeSelectScreen();
 }
 
+//Draw beginner mode button on the LCD
 void beginnerModeButton(bool active)
 {
 	if (active)
@@ -2748,6 +2597,7 @@ void beginnerModeButton(bool active)
 	tft.print("Beginner");
 }
 
+//Draw normal mode button on the LCD
 void normalModeButton(bool active)
 {
 	if (active)
@@ -2778,6 +2628,7 @@ void normalModeButton(bool active)
 	tft.print("Normal");
 }
 
+//Draw engine mode button on the LCD
 void engineModeButton(bool active)
 {
 	if (active)
@@ -2808,42 +2659,43 @@ void engineModeButton(bool active)
 	tft.print("Engine");
 }
 
+//White resigns
 void resignWhiteButton()
 {
 	updateState(currentFen, 'b', getUserModeChar(currentUserMode));
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("Black Wins by Resignation");
-	Serial.println("Moving to GAME_TERMINATED");
 }
 
+//Black resigns
 void resignBlackButton()
 {
 	updateState(currentFen, 'w', getUserModeChar(currentUserMode));
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("White Wins by Resignation");
-	Serial.println("Moving to GAME_TERMINATED");
 }
 
+//Draw by agreement
 void drawButton()
 {
 	updateState(currentFen, 'd', getUserModeChar(currentUserMode));
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("Game Drawn by Agreement");
-	Serial.println("Moving to GAME_TERMINATED");
 }
 
+//User presses OK on end screen
 void terminationOkButton()
 {
 	gameState = GAME_INACTIVE;
 	currentScreen = MAIN_SCREEN;
 	resetState();
 	makeMainScreen();
-	Serial.println("Moving to GAME_INACTIVE");
 }
 
+//User presses OK on error screen
 void errorOkButton()
 {
 	switch (afterError)
@@ -2869,6 +2721,7 @@ void errorOkButton()
 	}
 }
 
+//Logic when theme button is pressed
 void themeButton()
 {
 	if (currentTheme == DARK)
@@ -2882,45 +2735,46 @@ void themeButton()
 	refreshScreen();
 }
 
+//Logic when promotion button is pressed
 void promotionButton(ChessPiece piece)
 {
 	promotePawn(piece);
-	gameState = GAME_ACTIVE; // Piece selected on LCD -> GAME_ACTIVE
+	gameState = GAME_ACTIVE; //Piece selected on LCD -> GAME_ACTIVE
 	currentScreen = GAME_SCREEN;
 	makeGameScreen();
-	Serial.println("Moving to GAME_ACTIVE");
 	char currentFenStr[100] = "";
 	boardToFen(currentFenStr);
-	updateState(currentFenStr, 's', getUserModeChar(currentUserMode)); // Send position over bluetooth
+	updateState(currentFenStr, 's', getUserModeChar(currentUserMode)); //Send position over bluetooth
 }
 
+//White checkmates black
 void checkmateWhite()
 {
 	updateState(currentFen, 'w', getUserModeChar(currentUserMode));
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("White Wins by Checkmate");
-	Serial.println("Moving to GAME_TERMINATED");
 }
 
+//Black checkmates white
 void checkmateBlack()
 {
 	updateState(currentFen, 'b', getUserModeChar(currentUserMode));
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("Black Wins by Checkmate");
-	Serial.println("Moving to GAME_TERMINATED");
 }
 
+//Game ends in stalemate
 void stalemate()
 {
 	updateState(currentFen, 'd', getUserModeChar(currentUserMode));
 	gameState = GAME_TERMINATED;
 	currentScreen = TERMINATION_SCREEN;
 	makeEndScreen("Game Drawn by Stalemate");
-	Serial.println("Moving to GAME_TERMINATED");
 }
 
+//Logic for selecting a user mode
 void selectMode(UserMode mode)
 {
 	if (currentUserMode != mode)
@@ -2940,24 +2794,25 @@ void selectMode(UserMode mode)
 	}
 }
 
+//Visually refreshes the currently displayed screen
 void refreshScreen()
 {
 	switch (currentScreen)
 	{
-	case MAIN_SCREEN: // Main Screen
-		makeMainScreen();
-		break;
-	case MODE_SELECT_SCREEN: // Mode Select Screen
-		makeMainScreen();
-		makeModeSelectScreen();
-		break;
-	case GAME_SCREEN: // Game Screen
-		makeGameScreen();
-		break;
+        case MAIN_SCREEN: //Main Screen
+            makeMainScreen();
+            break;
+        case MODE_SELECT_SCREEN: //Mode Select Screen
+            makeMainScreen();
+            makeModeSelectScreen();
+            break;
+        case GAME_SCREEN: //Game Screen
+            makeGameScreen();
+            break;
 	}
 }
 
-// Encode game data (chess board config, game state, and game mode) to send to web app
+//Encode game data (chess board config, game state, and game mode) to send to web app
 void updateState(char *FEN, char gameStateData, char userMode)
 {
 	char stateData[100] = {};
@@ -2974,7 +2829,7 @@ void updateState(char *FEN, char gameStateData, char userMode)
 	sendBluetoothData(stateData);
 }
 
-// Reset all data when game ends (checkmate, draw, resign, stalemate)
+//Reset all data when game ends (checkmate, draw, resign, stalemate)
 void resetState()
 {
 	char *startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -2995,7 +2850,7 @@ void resetState()
 	afterError = GAME_ACTIVE;
 }
 
-// Communicate to the web app server
+//Communicate to the web app server
 void sendBluetoothData(char *stateData)
 {
 	int len = strlen(stateData);
@@ -3005,12 +2860,12 @@ void sendBluetoothData(char *stateData)
 	}
 }
 
-// Decode data sent back from the web-abb
+//Decode data sent back from the web-abb
 void parseWebPayload(char *webData)
-{											 // eg. "Nf3@w12@n" or "a@a@n" if not in engine mode
-	char *engineMove = strtok(webData, "@"); // eg. Nf3
-	char *webCode = strtok(NULL, "@");		 // eg. 'w12', meaning white just moved, and the fullmove number is 12. Can only be 'w' (white), 'b' (black), or 'a' (filler)
-	char *gameState = strtok(NULL, "@");	 // eg. 'c' checkmate, 's' stalemate', 'n' nothing
+{											 //eg. "Nf3@w12@n" or "a@a@n" if not in engine mode
+	char *engineMove = strtok(webData, "@"); //eg. Nf3
+	char *webCode = strtok(NULL, "@");		 //eg. 'w12', meaning white just moved, and the fullmove number is 12. Can only be 'w' (white), 'b' (black), or 'a' (filler)
+	char *gameState = strtok(NULL, "@");	 //eg. 'c' checkmate, 's' stalemate', 'n' nothing
 
 	char *turnColour;
 	getSubstring(webCode, turnColour, 0, 1);
@@ -3020,16 +2875,16 @@ void parseWebPayload(char *webData)
 	moveNum += (strcmp(turnColour, "b") == 0) ? 1 : 0;
 
 	if (moveNum == 0)
-	{ // Starting position
+	{ //Starting position
 		currentEngineMove = "N/A";
 		drawEngineMove(currentEngineMove);
 		return;
 	}
 
 	if (strcmp(gameState, "c") == 0)
-	{ // Checkmate
+	{ //Checkmate
 		if (strcmp(turnColour, "w") == 0)
-		{ // White win
+		{ //White win
 			checkmateWhite();
 		}
 		else if (strcmp(turnColour, "b") == 0)
@@ -3039,13 +2894,13 @@ void parseWebPayload(char *webData)
 		return;
 	}
 	else if (strcmp(gameState, "s") == 0)
-	{ // Stalemate
+	{ //Stalemate
 		stalemate();
 		return;
 	}
 
 	if (strcmp(engineMove, "a") == 0)
-	{ // Not in engine mode
+	{ //Not in engine mode
 		currentEngineMove = "N/A";
 		drawEngineMove(currentEngineMove);
 		return;
@@ -3057,11 +2912,12 @@ void parseWebPayload(char *webData)
 	}
 
 	if (strcmp(engineMove, currentEngineMove) != 0)
-	{ // Display engine move
+	{ //Display engine move
 		drawEngineMove(engineMove);
 	}
 }
 
+//Change the colour theme on the LCD
 void changeTheme(Theme theme)
 {
 	if (theme == LIGHT)
@@ -3095,7 +2951,7 @@ void changeTheme(Theme theme)
 	currentTheme = theme;
 }
 
-// Functions to encode game state variables to send to the web app
+//String representation of the user mode
 char *getUserModeStr(UserMode mode)
 {
 	if (mode == BEGINNER)
@@ -3112,6 +2968,7 @@ char *getUserModeStr(UserMode mode)
 	}
 }
 
+//Character representation of the user mode
 char getUserModeChar(UserMode mode)
 {
 	if (mode == BEGINNER)
@@ -3128,6 +2985,7 @@ char getUserModeChar(UserMode mode)
 	}
 }
 
+//UserMode type representation of a user mode character
 UserMode getUserModeEnum(char mode)
 {
 	if (mode == 'b')
@@ -3144,7 +3002,7 @@ UserMode getUserModeEnum(char mode)
 	}
 }
 
-// LCD screen drawing helper functions
+//Gets the width in pixels of a string with some text size
 int getPixelWidth(char *str, int textSize)
 {
 	int strLen = strlen(str);
@@ -3153,6 +3011,7 @@ int getPixelWidth(char *str, int textSize)
 	return wordPixelWidth;
 }
 
+//Extracts a substring from the given string
 char *getSubstring(char *src, char *dest, int start, int end)
 {
 	memcpy(dest, &src[start], end - start);
@@ -3160,6 +3019,7 @@ char *getSubstring(char *src, char *dest, int start, int end)
 	return dest;
 }
 
+//Calculate the largest possible text size to display a variable-size engine move
 int getEngineMoveTextSize(char *move)
 {
 	int padding = 5;
