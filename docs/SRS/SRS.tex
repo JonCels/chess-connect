@@ -22,6 +22,7 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage[round]{natbib}
 \usepackage{array}
+\usepackage{geometry}
 
 \input{../Comments}
 \input{../Common}
@@ -50,23 +51,40 @@
 
 \addcontentsline{toc}{section}{Table of Revisions}
 \section*{Table of Revisions}
-\begin{table}[hp]
-\caption{Revision History} \label{TblRevisionHistory}
-\begin{tabularx}{\textwidth}{llX}
-\toprule
-\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
-\midrule
-2022-10-05 & All members & Revision 0\\
-2023-04-05 & Jonathan Cels & Updated table of units to only list units used in the document\\
-2023-04-05 & Jonathan Cels & Slight changes to descriptions of system and problem, assumptions, scope\\ 
-2023-04-05 & Jonathan Cels & Changed monitored variable s\_a through s\_g to current\_board. Removed button inputs sw\_3pos and tieB\_p\{1-2\}, replacing them with LCD touchscreen inputs. Added other missing user inputs.\\
-2023-04-05 & Jonathan Cels & Fixed system context diagram to match variables\\
-2023-04-05 & Jonathan Cels & Changed functional requirements to be specified via the respective monitored and controlled variables of the system.\\
-2023-04-05 & Jonathan Cels & Added priority (high, medium, low) to all functional requirements. Added a phase-in plan section specifying timeline and rationale based on requirement priority.\\
-2023-04-05 & Jonathan Cels & Fixed traceability matrix, changed appearance NFRs, edited stakeholders, fixed incorrect use-cases.\\
-\bottomrule
-\end{tabularx}
-\end{table}
+\begin{center}
+    \renewcommand*{\arraystretch}{1.6}
+    \begin{longtable}{m{2.5cm} m{5cm} m{7cm}}
+    \caption{Revision History}\\
+    \hline
+    \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
+    \hline
+    \endhead
+    2022-10-04 & Jonathan Cels & Template creation and document formatting\\ 
+    2022-10-04 & Jonathan Cels & Non-functional requirements\\
+    2022-10-05 & Joshua Chapman & Constants, Monitored Variables, Controlled Variables\\
+    2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
+    2022-10-05 & Joshua Chapman & Problem Description, Assumptions \\
+    2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
+    2022-10-05 & Rupinder, Jonathan & Functional Requirements\\
+    2022-10-05 & Arshdeep Aujla & Constraints\\
+    2022-10-05 & Alexander Van Kralingen & Added Use Cases/Scenarios. Fixed system context diagram position. Added likely change.\\
+    2022-10-05 & Rupinder Nagra & Purpose, Likely Changes and Unlikely Changes\\
+    2022-10-05 & Alexander Van Kralingen & Added Undesired Event Handling section and a likely change.\\
+    2022-10-05 & Arshdeep Aujla & Characteristics of Intended User, Stakeholders\\
+    2022-10-05 & Arshdeep Aujla & Reflection\\
+    2022-10-05 & Alexander Van Kralingen & Added FSM\\
+    2022-10-19 & Jonathan Cels & Added new hazard requirements\\
+    2022-10-23 & Alexander Van Kralingen & Fixed FSM, added diagram source code\\
+    2022-11-02 & Jonathan Cels & Changed some NFRs\\
+    2023-04-05 & Jonathan Cels & Updated table of units to only list units used in the document\\
+    2023-04-05 & Jonathan Cels & Slight changes to descriptions of system and problem, assumptions, scope\\ 
+    2023-04-05 & Jonathan Cels & Changed monitored variable s\_a through s\_g to current\_board. Removed button inputs sw\_3pos and tieB\_p\{1-2\}, replacing them with LCD touchscreen inputs. Added other missing user inputs.\\
+    2023-04-05 & Jonathan Cels & Fixed system context diagram to match variables\\
+    2023-04-05 & Jonathan Cels & Changed functional requirements to be specified via the respective monitored and controlled variables of the system.\\
+    2023-04-05 & Jonathan Cels & Added priority (high, medium, low) to all functional requirements. Added a phase-in plan section specifying timeline and rationale based on requirement priority.\\
+    2023-04-05 & Jonathan Cels & Fixed traceability matrix, changed appearance NFRs, edited stakeholders, fixed incorrect use-cases.\\
+    \end{longtable}
+\end{center}
 
 ~\newpage
 
