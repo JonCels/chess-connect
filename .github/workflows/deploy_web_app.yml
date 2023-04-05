@@ -1,0 +1,46 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - name: Install dependencies
+        run: |
+          npm install 
+
+      - name: Build React app
+        run: |
+          npm run build
+          
+      # Integrate deployment once we find someone to host us
+
+#       - name: Deploy to server
+#         uses: easingthemes/ssh-deploy@v2.1.5
+#         with:
+#           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+#           remote-user: ${{ secrets.SERVER_USER }}
+#           hostname: ${{ secrets.SERVER_IP }}
+#           remote-dir: /var/www/my-app
+#           local-dir: build
+#           args: --delete
+
+#       - name: Test deployment
+#         run: |
+#           curl -I https://example.com
