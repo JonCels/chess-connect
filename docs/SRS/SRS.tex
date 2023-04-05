@@ -62,7 +62,7 @@
 2022-10-05 & Alexander Van Kralingen & Added Context Diagram\\
 2022-10-05 & Joshua Chapman & Problem Description, Assumptions \\
 2022-10-05 & Jonathan Cels & Scope, Intended Reader, Stakeholders\\
-2022-10-05 & Rupinder Nagra, Jonathan Cels & Functional Requirements\\
+2022-10-05 & Multiple & Functional Requirements\\
 2022-10-05 & Arshdeep Aujla & Constraints\\
 2022-10-05 & Alexander Van Kralingen & Added Use Cases/Scenarios. Fixed system context diagram position. Added likely change.\\
 2022-10-05 & Rupinder Nagra & Purpose, Likely Changes and Unlikely Changes\\
@@ -73,6 +73,12 @@
 2022-10-19 & Jonathan Cels & Added new hazard requirements\\
 2022-10-23 & Alexander Van Kralingen & Fixed FSM, added diagram source code\\
 2022-11-02 & Jonathan Cels & Changed some NFRs\\
+2023-04-05 & Jonathan Cels & Updated table of units to only list units used in the document\\
+2023-04-05 & Jonathan Cels & Slight changes to descriptions of system and problem, assumptions, scope\\ 
+2023-04-05 & Jonathan Cels & Changed monitored variable s\_a through s\_g to current\_board. Removed button inputs sw\_3pos and tieB\_p\{1-2\}, replacing them with LCD touchscreen inputs. Added other missing user inputs.\\
+2023-04-05 & Jonathan Cels & Fixed system context diagram to match variables\\
+2023-04-05 & Jonathan Cels & Changed functional requirements to be specified via the respective monitored and controlled variables of the system.\\
+2023-04-05 & Jonathan Cels & Added priority (high, medium, low) to all functional requirements. Added a phase-in plan section specifying timeline and rationale based on requirement priority.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -111,7 +117,7 @@ description of the unit and the SI name.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   A & Assumption\\
-  API && Application Programming Interface\\
+  API & Application Programming Interface\\
   CSA & Canadian Standards Association\\
   DD & Data Definition\\
   FIDE & International Chess Federation or Fédération Internationale des Échecs\\
@@ -413,9 +419,8 @@ format. The application will be constrained to a 2-dimensional model of the hard
       LED\_row\{1-8\} & \si{\volt} & A total of 64 LEDS will be located under the board. They 
       are in the middle of each tile and illuminate based on conditions of the inputs. \\
       \hline 
-      LCD\_Display & \si{\volt} & An LCD Display is located on the chess board to indicate best moves delivered by the engine and display errors. \\
+      LCD\_display & \si{\volt} & An LCD Display is located on the chess board to indicate best moves delivered by the engine, take user inputs, and display errors. \\
       \hline 
-
       \end{tabular}
   \label{Table1}
   \end{table}
@@ -436,109 +441,114 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \subsubsection{Game Active State}
 \paragraph{Chess Board}
 \begin{enumerate}[{GA}1., leftmargin=2\parindent]
-    \item Pressing the Resign/Draw button will change the system to the Game Inactive State.
-    \item Pressing the New Game button will have no effect.
-    \item Allow users to switch between user modes, choosing Normal Mode, Engine Mode, or Beginner Mode by using the button on the Game Active screen. 
-    \item The chess board follows the \textbf{Chess Board} section for the respective user mode being played.
+    \item Pressing the Resign/Draw button will change the system to the Game Inactive State. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{High}) 
+    \item Pressing the New Game button will have no effect. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
+    \item User Mode selection will have no effect. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Low}) 
+    \item Pressing the Theme Change button will change the colours of the LCD screen. Monitored through changes to LCD\_inputs from the LCD, and controlled through changes to LCD\_display. (Priority: \textbf{Low}) 
+    \item The chess board follows the \textbf{Chess Board} section for the respective user mode being played. (Priority: \textbf{High}) 
 \end{enumerate}
 
 \paragraph{Data Transfer}
 \begin{enumerate}[{GA}1., leftmargin=2\parindent, resume]
-    \item Data transfer follows the \textbf{Data Transfer} section for the respective user mode being played.
+    \item Data transfer follows the \textbf{Data Transfer} section for the respective user mode being played. (Priority: \textbf{High}) 
 \end{enumerate}
 
 \paragraph{Web Application}
 \begin{enumerate}[{GA}1., leftmargin=2\parindent, resume]
-    \item Entering the Game Active State will reset the game state to the starting position.
-    \item Game termination of type stalemate or checkmate shall change the system to the Game Inactive State.
-    \item The web application follows the \textbf{Web Application} section for the respective user mode being played.
+    \item Entering the Game Active State will reset the game state to the starting position. (Priority: \textbf{High}) 
+    \item Game termination of type stalemate or checkmate shall change the system to the Game Inactive State. (Priority: \textbf{Medium}) 
+    \item The web application follows the \textbf{Web Application} section for the respective user mode being played. (Priority: \textbf{High}) 
 \end{enumerate}
 
 \subsubsection{Game Inactive State}
 \paragraph{Chess Board}
 \begin{enumerate}[{GI}1., leftmargin=2\parindent]
-    \item Pressing the New Game button will change the system to the Game Active State.
-    \item Using the User Mode button will have no effect until the system is in the Game Active State.
-    \item Pressing the Resign/Draw button will have no effect.
+    \item Pressing the New Game button will change the system to the Game Active State if current\_board matches the expected starting position. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{High}) 
+    \item Pressing the New Game button will not change the system state, and will request corrective action if current\_board does not match the expected starting position. Monitored through changes to current\_board and LCD\_inputs from the LCD. Controlled through changes to LCD\_display. (Priority: \textbf{Low})
+    \item Allow users to switch between user modes, choosing Normal Mode, Engine Mode, or Beginner Mode by using the button on the Game Active screen. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{High}) 
+    \item Pressing the Resign/Draw button will have no effect. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
+    \item Changes to current\_board will have no effect. (Priority: \textbf{Medium}) 
 \end{enumerate}
 
 \paragraph{Data Transfer}
 \begin{enumerate}[{GI}1., leftmargin=2\parindent, resume]
-    \item The board state data is not sent to the web application when a piece is moved.
+    \item The board state data is not sent to the web application when a piece is moved. (Priority: \textbf{Medium}) 
 \end{enumerate}
 
 \paragraph{Web Application}
 \begin{enumerate}[{GI}1., leftmargin=2\parindent, resume]
-    \item The web application will display the final game state upon game termination.
-    \item The web application will display a message with the game termination type (stalemate, checkmate, resignation, draw).
+    \item The web application will display the final game state upon game termination. (Priority: \textbf{High}) 
+    \item The web application will display a message with the game termination type (stalemate, checkmate, resignation, draw). (Priority: \textbf{Medium}) 
 \end{enumerate}
 
 \subsubsection{Normal Mode}
 \paragraph{Chess Board}
 \begin{enumerate}[{NB}1., leftmargin=2\parindent]
-    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen.
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen.  
+    \item The system shall store the position, colour, and type of the previously moved piece in current\_board. (Priority: \textbf{High}) 
+    \item If an illegal move is made, the LCD screen will halt play and request a corrective action. Controlled through changes to LCD\_display. (Priority: \textbf{Medium}) 
+    \item Allow each player the ability to resign by holding down their respective Resign button for ENDTIME \si{\second} located on the LCD screen. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
+    \item Allow the players the ability to draw by having them both hold down the Draw button for ENDTIME \si{\second} located on the LCD screen. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
 \end{enumerate}
 
 \paragraph{Data Transfer}
 \begin{enumerate}[{ND}1., leftmargin=2\parindent]
-    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+    \item The system shall send a representation of the data contained in current\_board over the chosen data transfer method as an input to the web application. (Priority: \textbf{High}) 
 \end{enumerate}
 
 \paragraph{Web Application}
 \begin{enumerate}[{NA}1., leftmargin=2\parindent]
-    \item The web application will receive data related to the previous move.
-    \item The web application will display the updated game board configuration with the data of the previous move.
-    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State.
+    \item The web application will receive a representation of the data contained in current\_board. (Priority: \textbf{High}) 
+    \item The web application will display the updated game board configuration with the data of the previous move. (Priority: \textbf{High}) 
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State. (Priority: \textbf{Low}) 
 \end{enumerate}
 
 \subsubsection{Engine Mode}
 \paragraph{Chess Board}
 \begin{enumerate}[{EB}1., leftmargin=2\parindent]
-    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen
-    \item The system shall show the top engine moves on the LCD display.
+    \item The system shall store the position, colour, and type of the previously moved piece in current\_board. (Priority: \textbf{High}) 
+    \item If an illegal move is made, the LCD screen will halt play and request a corrective action. Controlled through changes to LCD\_display. (Priority: \textbf{Medium}) 
+    \item Allow each player the ability to resign by holding down their respective Resign button for ENDTIME \si{\second} located on the LCD screen. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
+    \item Allow the players the ability to draw by having them both hold down the Draw button for ENDTIME \si{\second} located on the LCD screen. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
+    \item The system shall display engine\_move on the LCD screen. Controlled through changes to LCD\_display. (Priority: \textbf{High}) 
 \end{enumerate}
 
 \paragraph{Data Transfer}
 \begin{enumerate}[{ED}1., leftmargin=2\parindent]
-    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
-    \item The system shall send the web application engine moves to the LCD display over the chosen data transfer method.
+    \item The system shall send a representation of the data contained in current\_board over the chosen data transfer method as an input to the web application. (Priority: \textbf{High}) 
+    \item The system shall send engine\_move to the LCD display over the chosen data transfer method. (Priority: \textbf{High}) 
 \end{enumerate}
 
 \paragraph{Web Application}
 \begin{enumerate}[{EA}1., leftmargin=2\parindent]
-    \item The web application will receive data related to the previous move.
-    \item The web application will display the updated game board configuration with the data of the previous move.
-    \item The system shall input the current chess game position to a chess engine.
-    \item The system shall use the chess engine to evaluate the position and calculate the best engine moves.
-    \item The system shall display the calculated engine moves on the web application.
-    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State.
+    \item The web application will receive a representation of the data contained in current\_board. (Priority: \textbf{High}) 
+    \item The web application will display the updated game board configuration with the data of the previous move. (Priority: \textbf{High}) 
+    \item The system shall input the current game position to a chess engine API. (Priority: \textbf{High}) 
+    \item The system shall use the chess engine to evaluate the position and calculate the best engine move. (Priority: \textbf{High}) 
+    \item The system shall display engine\_move on the web application. (Priority: \textbf{Low}) 
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State. (Priority: \textbf{Low}) 
 \end{enumerate}
 
 \subsubsection{Beginner Mode}
 \paragraph{Chess Board}
 \begin{enumerate}[{BB}1., leftmargin=2\parindent]
-    \item The system shall store the position, colour, and type of the previously moved piece in the micro-controller.
-    \item When a user picks up a piece, allow them to view all legal moves with green LED lights on valid squares.
-    \item If an illegal move is made, the LCD screen will halt play and request a correct action.
-    \item Allow each player the ability to resign by holding down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen.
-    \item Allow the players the ability to draw by having them both hold down the Resign/Draw button for ENDTIME \si{\second} located on the LCD screen. 
+    \item The system shall store the position, colour, and type of the previously moved piece in current\_board. (Priority: \textbf{High}) 
+    \item When a user picks up a piece and suspends it in the air for LIFTTIME \si{\second}, all legal moves starting from that piece's current\_board index will be visually indicated on the board. Visual indication controlled through changes to LED\_row. (Priority: \textbf{High}) 
+    \item If an illegal move is made, the LCD screen will halt play and request a corrective action. Controlled through changes to LCD\_display. (Priority: \textbf{Medium}) 
+    \item Allow each player the ability to resign by holding down their respective Resign button for ENDTIME \si{\second} located on the LCD screen. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
+    \item Allow the players the ability to draw by having them both hold down the Draw button for ENDTIME \si{\second} located on the LCD screen. Monitored through changes to LCD\_inputs from the LCD. (Priority: \textbf{Medium}) 
 \end{enumerate}
 
 \paragraph{Data Transfer}
 \begin{enumerate}[{BD}1., leftmargin=2\parindent]
-    \item The system shall send the micro-controller output over the chosen data transfer method as an input to the web application.
+    \item The system shall send a representation of the data contained in current\_board over the chosen data transfer method as an input to the web application. (Priority: \textbf{High}) 
 \end{enumerate}
 
 \paragraph{Web Application}
 \begin{enumerate}[{BA}1., leftmargin=2\parindent]
-    \item Allow user to view instructions regarding the rules of chess on web application.
-    \item The web application will display the updated game board configuration with the data of the previous move.
+    \item The web application will receive a representation of the data contained in current\_board. (Priority: \textbf{High})
+    \item The web application will display the updated game board configuration with the data of the previous move. (Priority: \textbf{High})
+    \item In event of game termination (stalemate, checkmate, resignation, draw), the web application will display a message with the method of game termination. The system shall change to the Game Inactive State. (Priority: \textbf{Low}) 
 \end{enumerate}
-
 
 
 \subsection{Nonfunctional Requirements}
@@ -554,7 +564,7 @@ format. The application will be constrained to a 2-dimensional model of the hard
 \paragraph{Appearance Requirements}
 \begin{enumerate}[{LF}1., leftmargin=2\parindent]
     \item The product shall use white, black, grey, and brown as its primary colours.
-    \item The product shall use green, red, and blue as its secondary colours.
+    \item The product shall use green, red, beige, and blue as its secondary colours.
 \end{enumerate}
 
 \paragraph{Style Requirements}
@@ -753,6 +763,24 @@ N/A
     \item The product shall follow \cite{WCAG2018}.
 \end{enumerate}
 
+\section{Phase-In Plan}
+\begin{table}[H]
+    \centering
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabularx}{\linewidth}{|c|X|c|>{\centering\arraybackslash}X|}
+        \hline
+        Priority & Requirements & Absolute Deadline & Rationale \\
+        \hline
+        \textbf{HIGH} & GA1, GA5, GA6, GA7, GA9, GI1, GI3, GI7, NB1, ND1, NA1, NA2, EB1, EB5, ED1, ED2, EA1, EA2, EA3, EA4, BB1, BB2, BD1, BA1, BA2 & 2023-02-12-11:59pm & High priority requirements are vital requirements that define the core system behaviour. These should be completed first and be fully implemented in time for the rev-0 demo on February 13th.\\
+        \hline
+        \textbf{MEDIUM} & GA2, GA8, GI4, GI5, GI6, GI8, NB2, NB3, NB4, EB2, EB3, EB4, BB3, BB4, BB5 & 2023-03-27-11:59pm & Medium priority requirements are important to the facilitation of the higher priority requirements. These typically deal with navigation, errors, and variable control to support the system. These should be implemented as part of the final product roughly a week before the final demo on April 1st, leaving some time for integration and testing.\\
+        \hline
+        \textbf{LOW} & GA3, GA4, GI2, NA3, EA5, EA6, BA3 & 2023-04-01-10am & Low priority requirements deal with less important parts of the system, edge cases, and non-vital functionality. These are mostly self-contained and are to be implemented only after high and medium priority requirements are fully functional.\\
+        \hline
+    \end{tabularx}
+    \label{PhaseInTable}
+\end{table}
+
 
 \section{Likely Changes}
 \noindent
@@ -800,8 +828,8 @@ N/A
 
 \begin{table}[H]
     \centering
-        \setlength{\leftmargini}{0.4cm}
-        \begin{tabularx}{\linewidth}{|c|X|}
+    \setlength{\leftmargini}{0.4cm}
+    \begin{tabularx}{\linewidth}{|c|X|}
         \hline
         A1 & GI1 \\
         \hline 
@@ -827,9 +855,9 @@ N/A
         \hline
         LF2 & BB2, BB3 \\ 
         \hline
-        \end{tabularx}
+    \end{tabularx}
     \label{Table}
-    \end{table}
+\end{table}
   
   
 
