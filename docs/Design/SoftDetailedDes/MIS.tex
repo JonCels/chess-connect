@@ -62,6 +62,7 @@ urlcolor=cyan          % color of external links
 2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
 2023-01-17 & Alexander Van Kralingen & Detailed Modules used by Arduino Mega 2560\\
 2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
+2023-04-05 & Joshua Chapman & Team\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -160,7 +161,6 @@ The following table is taken directly from the Module Guide document for this pr
 & Web Application Output Module\\
 & Piece Identification Module \\
 & Communication Module\\
-& Teensy Input from Mega Module\\
 & Teensy Input Bluetooth from Web App Module\\
 & Teensy Output Bluetooth from Web App Module\\
 \midrule
@@ -200,6 +200,14 @@ Communication\\
 
 \subsubsection{Exported Access Programs}
 None
+
+\subsubsection{Exception Descriptions}
+\begin{itemize}
+    \item \textbf{TeensyConnectionFailed}: Possible causes are breaks in the
+    communication chain from the Teensy to 
+    \item \textbf{InvalidAction}: 
+    \item \textbf{UnknownAction}: 
+\end{itemize}
 
 \subsection{Semantics}
 {
@@ -321,6 +329,16 @@ None
   \end{tabular}
   \end{center}
 }
+
+\subsubsection{Exception Descriptions}
+\begin{itemize}
+    \item \textbf{SensorOffline}: Can occur when a sensor returns a null
+    value or produces outputs that do not align with the intended state included 
+    in the state machine. 
+    \item \textbf{PieceMissingTimeout}: A strict timer of 5 minutes is placed 
+    on the player to return the piece to the square. The PieceMissingTimeout
+    occurs if this timer is finished without registering a placed piece. 
+\end{itemize}
 
 \subsection{Semantics}
 
@@ -968,104 +986,7 @@ SoftwareSerial.h
 
     \newpage
 
-    \section{Teensy Input from Mega Module} \label{TeensyToMegaRx}
-        \subsection{Module}
-        Teensy Input from Mega Module
     
-        \subsection{Uses}
-        Receives game state information from the Arduino Mega in the form of a FEN string. 
-    
-        \subsection{Syntax}
-        \subsubsection{Exported Constants}
-        \#define baud rate \#The baud rate of the serial communication system\\
-        \#define stringFormat \#The format of the string remains constant to perform proper 
-        communication between the two Arduinos.
-        
-        \subsubsection{Exported Access Programs}
-            \begin{center}
-            \begin{tabular}{p{4cm} p{3cm} p{3cm} p{2.5cm}}
-            \hline
-            \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-            \hline
-            copyFen & string & string & \\
-            collectMode & string & binary & \\
-            \hline
-            \end{tabular}
-            \end{center}
-    
-        \subsection{Semantics}
-        \subsubsection{State Variables}
-        local game state \\
-        local game mode
-    
-        \subsubsection{Environment Variables}
-        N/A
-    
-        \subsubsection{Assumptions}
-        The size of the string passed from the Arduino Mega aligns with the designed format. \\
-    
-        \subsubsection{Access Routine Semantics}
-            \noindent receiveGameState(pin):
-            \begin{itemize}
-                \item Input: A serial line of data from an Rx pin
-                \item Output: A string containing the FEN of the game state
-                \item exception: none
-            \end{itemize}
-    
-        \subsubsection{Local Functions}
-        N/A
-    
-    \newpage
-    
-    \section{Teensy Input from Web App Module} \label{TeensyToWaRx}
-        \subsection{Module}
-        Teensy Input via bluetooth from the Web Application
-    
-        \subsection{Uses}
-        Receives best moves from the game engine contained in the Web Application.
-    
-        \subsection{Syntax}
-        \subsubsection{Exported Constants}
-        \#define baud rate \#The baud rate of the serial communication system\\
-        \#define stringFormat \#The format of the string remains constant to perform proper 
-        communication between the two Arduinos.
-        
-        \subsubsection{Exported Access Programs}
-            \begin{center}
-            \begin{tabular}{p{4cm} p{3cm} p{3cm} p{2.5cm}}
-            \hline
-            \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-            \hline
-            copyBestMove & string & string & \\
-            \hline
-            \end{tabular}
-            \end{center}
-    
-        \subsection{Semantics}
-        \subsubsection{State Variables}
-        local bestMove1 \\
-        local bestMove2 \\
-        local bestMove3 
-    
-        \subsubsection{Environment Variables}
-        N/A
-    
-        \subsubsection{Assumptions}
-        The size of the string passed from the Web Application aligns with the designed format. \\
-        The Web Application will always be able to return best moves with the given data. 
-    
-        \subsubsection{Access Routine Semantics}
-            \noindent receiveBestMove(pin):
-            \begin{itemize}
-                \item output: String containing 3 possible moves, calculated by a chess engine from the FEN input string
-                \item exception: none
-            \end{itemize}
-    
-        \subsubsection{Local Functions}
-        N/A
-    
-
-\newpage
 
 \section{Teensy Output to Web App Module} \label{TeensyToWaTx}
     \subsection{Module}

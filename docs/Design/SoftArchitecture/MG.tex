@@ -57,6 +57,10 @@
 2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
 2023-01-18 & Rupinder Nagra & Introduction, Anticipated and Unlikely Changes, Connection Between Requirements and Design, Use Hierarchy Between Modules\\
 2023-01-18 & Alexander Van Kralingen & Modules, Anticipated and Unlikely Changes, Connection Between Requirements and Design, Module Hierarchy\\
+2023-04-05 & Joshua Chapman & Removed modules tasked with Arduino to Teensy communication. 
+Modified language of modules to reference Arduino instead of Teensy. \\
+2023-04-05 & Joshua Chapman & Reordered Modules and Added Bluetooth Communication modules
+for Arduino. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -211,9 +215,8 @@ The Hardware-Hiding module is implemented by the microcontroller as firmware tha
 & Web Application Output Module\\
 & Piece Identification Module \\
 & Communication Module\\
-& Teensy Input from Mega Module\\
-& Teensy Input Bluetooth from Web App Module\\
-& Teensy Output Bluetooth from Web App Module\\
+& Arduino Input Bluetooth from Web App Module\\
+& Arduino Output Bluetooth to Web App Module\\
 \midrule
 
 \multirow{5}{0.3\textwidth}{Software Decision Module} 
@@ -275,6 +278,29 @@ standard in use affects all modules.
 \item[Implemented By:] Arduino.h library
 \end{description}
 
+
+\subsection{Behaviour-Hiding Modules}
+\subsubsection{Web Application Input Module (\mref{mInput})}
+\begin{description}
+\item[Secrets:] Input data.
+\item[Services:] Takes in input data of current board state to provide to other modules.
+\item[Implemented By:] \progname\ (Node.js libraries, Bluetooth)
+\end{description}
+
+\subsubsection{Display Module \mref{mDisplay}} 
+\begin{description}
+\item[Secrets:] Graphics output data.
+\item[Services:] Allows users to view the current board configuration of the system.
+\item[Implemented By:] \progname\ (React.js framework)
+\end{description}
+
+\subsubsection{Web Application Output Module \mref{mOutput}} 
+\begin{description}
+\item[Secrets:] None.
+\item[Services:] Takes game state and engine moves, encodes the data, and transmits it.
+\item[Implemented By:] \progname\ (React.js framework, Bluetooth)
+\end{description}
+
 \subsubsection{Piece Identification Module (\mref{mPI})}
 \begin{description}
 \item[Secrets:] The values read by the Hall-effect sensors that are translated into the Piece data type.
@@ -282,20 +308,9 @@ standard in use affects all modules.
 \item[Implemented By:] \progname (c++, Arduino)
 \end{description}
 
-\subsubsection{Chess Board Module (\mref{mCB})}
-\begin{description}
-\item[Secrets:] Contained within this module are: 
-  \begin{itemize}
-    \item the valid move logic for chess pieces; 
-    \item The translation of the piece configuration on the chess board into a \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string} \item Checking for checkmate
-  \end{itemize}
-\item[Services:] Handles all of the logic used in the game of chess. This module processes commands recieved from the Web Application and Teensy Controller into actions to be implemented within the game and gives feedback related to valid moves and the game/board state.
-\item[Implemented By:] \progname (c++, Arduino)
-\end{description}
-
 \subsubsection{Communication Module (\mref{mCM})}
 \begin{description}
-\item[Secrets:] Message encoding string used to send board state, game mode and resignation signal. Message decoding string to interpret best moves, the check/mate/stalemate warning and commands from the Teensy controller.
+\item[Secrets:] Message encoding string used to send board state, game mode and resignation signal. Message decoding string to interpret best moves, the check/mate/stalemate warning and commands from the Web Application. 
 \item[Services:] Reads and writes to the communication pins, processes and sends commands to various parts of the embedded software.
 \item[Implemented By:] \progname (c++, Arduino, Bluetooth)
 \end{description}
@@ -307,27 +322,7 @@ standard in use affects all modules.
 \item[Implemented By:] SoftwareSerial.h library
 \end{description}
 
-\subsection{Behaviour-Hiding Modules}
-    \subsubsection{Web Application Input Module (\mref{mInput})}
-    \begin{description}
-    \item[Secrets:] Input data.
-    \item[Services:] Takes in input data of current board state to provide to other modules.
-    \item[Implemented By:] \progname\ (Node.js libraries, Bluetooth)
-    \end{description}
-    
-    \subsubsection{Display Module \mref{mDisplay}} 
-    \begin{description}
-    \item[Secrets:] Graphics output data.
-    \item[Services:] Allows users to view the current board configuration of the system.
-    \item[Implemented By:] \progname\ (React.js framework)
-    \end{description}
 
-    \subsubsection{Web Application Output Module \mref{mOutput}} 
-    \begin{description}
-    \item[Secrets:] None.
-    \item[Services:] Takes game state and engine moves, encodes the data, and transmits it.
-    \item[Implemented By:] \progname\ (React.js framework, Bluetooth)
-    \end{description}
 
 \subsection{Software Decision Modules}
     \subsubsection{User Mode Module \mref{mMode}}
@@ -336,6 +331,17 @@ standard in use affects all modules.
     \item[Services:] Handles switching between user modes and communicating with mode-specific modules.
     \item[Implemented By:] \progname\ (React.js framework)
     \end{description}
+
+    \subsubsection{Chess Board Module (\mref{mCB})}
+\begin{description}
+\item[Secrets:] Contained within this module are: 
+  \begin{itemize}
+    \item the valid move logic for chess pieces; 
+    \item The translation of the piece configuration on the chess board into a \href{https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation}{FEN string} \item Checking for checkmate
+  \end{itemize}
+\item[Services:] Handles all of the logic used in the game of chess. This module processes commands recieved from the Web Application into actions to be implemented within the game and gives feedback related to valid moves and the game/board state.
+\item[Implemented By:] \progname (c++, Arduino)
+\end{description}
 
     \subsubsection{Web Application Board Module \mref{mBoard}}
     \begin{description}
