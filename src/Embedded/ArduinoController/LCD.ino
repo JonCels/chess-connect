@@ -3,6 +3,16 @@
 #include <Adafruit_TFTLCD.h> //Hardware-specific library
 #include <TouchScreen.h>	 //Touchscreen LCD library
 
+#ifndef Arduino_h
+    #pragma message "Injecting MockArduinoController to run tests..."
+    #include "../../../test/EmbeddedTest/ArduinoTest/MockArduinoController.cpp"
+
+    SerialStream Serial = SerialStream();
+    SerialStream Serial1 = SerialStream();
+#else
+    #pragma message "Compiling software for flashing on Arduino..."
+#endif
+
 #define LCD_CS A3 // Chip Select
 #define LCD_CD A2 // Command/Data
 #define LCD_WR A1 // LCD Write
