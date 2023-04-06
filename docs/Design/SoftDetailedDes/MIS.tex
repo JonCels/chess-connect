@@ -62,6 +62,8 @@ urlcolor=cyan          % color of external links
 2023-01-16 & Jonathan Cels, Rupinder Nagra & Web Application Modules\\
 2023-01-17 & Alexander Van Kralingen & Detailed Modules used by Arduino Mega 2560\\
 2023-01-18 & Jonathan Cels, Rupinder Nagra & Finalized Web Application Modules\\
+2023-04-05 & Joshua Chapman & Edited semantics to be specified in formal language. Made adjustments
+according to team 29.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -79,6 +81,10 @@ urlcolor=cyan          % color of external links
   MIS & Module Interface Specification \\
   R & Requirement\\
   \cite{FEN} & Forsyth-Edwards Notation\\
+  FSM & Finite State Machine\\
+  FEN & Forsyth-Edwards Notation\\
+  FIDE & International Chess Federation\\
+
   \bottomrule
 \end{tabular}\\
 
@@ -160,9 +166,6 @@ The following table is taken directly from the Module Guide document for this pr
 & Web Application Output Module\\
 & Piece Identification Module \\
 & Communication Module\\
-& Teensy Input from Mega Module\\
-& Teensy Input Bluetooth from Web App Module\\
-& Teensy Output Bluetooth from Web App Module\\
 \midrule
 
 \multirow{5}{0.3\textwidth}{Software Decision Module} 
@@ -201,6 +204,16 @@ Communication\\
 \subsubsection{Exported Access Programs}
 None
 
+\subsubsection{Exception Descriptions}
+\begin{itemize}
+    \item \textbf{ArduinoConnectionFailed}: A break in the connection between the Arduino 
+    and the Web Application. 
+    \item \textbf{InvalidAction}: An action is taken by the user on the LCD screen 
+    that was not permitted as dictated by the FSM. 
+    \item \textbf{UnknownAction}: An action is performed by the user which does not 
+    follow the outlined actions in the FSM. 
+\end{itemize}
+
 \subsection{Semantics}
 {
   \begin{center}
@@ -208,9 +221,9 @@ None
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
   \hline
-  setup & - & - & TeensyConnectionFailed \\
+  setup & - & - & ArduinoConnectionFailed \\
   \midrule
-  loop & - & - & TeensyConnectionFailed \\
+  loop & - & - & ArduinoConnectionFailed \\
   \midrule
   changeGameState & gameState & gameState & InvalidAction \\
   \midrule
@@ -235,8 +248,8 @@ None
 \subsubsection{Environment Variables}{
   HALL\_PINS: input pin addresses for receiving signal from Hall-effect sensors\\
   LED\_PINS: output pin addresses for lighting up the LEDs on the board\\
-  rx\_from\_Teensy: input pin for communication with Teensy controller\\
-  tx\_from\_Teensy: output pin for communication with Teensy controller\\
+  rx\_from\_Arduino: input pin for communication with Arduino controller\\
+  tx\_from\_Arduino: output pin for communication with Arduino controller\\
 }
 
 \subsubsection{Assumptions}{
@@ -257,7 +270,7 @@ None
   \item Checking for check/checkmate/stalemate signal from Web App to update playerWarning.
   \item Wait for userAction based on Hall-effect sensor inputs.
 \end{itemize}
-\item exception: TeensyConnectionFailed
+\item exception: ArduinoConnectionFailed
 \end{itemize}
 
 \noindent changeGameState():
@@ -281,14 +294,14 @@ None
 \noindent lightLED():
 \begin{itemize}
 \item output: LED\_pin := HIGH ($\mathbb{Z} := 1$) or LOW  ($\mathbb{Z} := 0$).
-\item exception: TeensyConnectionFailed
+\item exception: ArduinoConnectionFailed
 \end{itemize}
 
 \subsubsection{Local Functions}{
   \noindent setup():
   \begin{itemize}
   \item transition: initialize serial connection; read board state; game state set to "init"
-  \item exception: TeensyConnectionFailed
+  \item exception: ArduinoConnectionFailed
   \end{itemize}
 }
 
@@ -321,6 +334,16 @@ None
   \end{tabular}
   \end{center}
 }
+
+\subsubsection{Exception Descriptions}
+\begin{itemize}
+    \item \textbf{SensorOffline}: Can occur when a sensor returns a null
+    value or produces outputs that do not align with the intended state included 
+    in the state machine. 
+    \item \textbf{PieceMissingTimeout}: A strict timer of 5 minutes is placed 
+    on the player to return the piece to the square. The PieceMissingTimeout
+    occurs if this timer is finished without registering a placed piece. 
+\end{itemize}
 
 \subsection{Semantics}
 
@@ -376,6 +399,14 @@ int HALL\_PINS[numRows][numCols] : 2-D array controlling the Hall-effect sensor 
   None
 }
 
+\subsubsection{Exception Descriptions}
+\begin{itemize}
+    \item \textbf{InvalidMove}: A move is made by the player that does not follow the 
+    rules as outlined by the FIDE association. 
+    \item \textbf{DigitalWriteFailed}: The signal from the Arduino to the LED is not
+    successful. 
+\end{itemize}
+
 \subsection{Semantics}{
   \begin{center}
   \begin{tabular}{p{6cm} p{4cm} p{2cm} p{3cm}}
@@ -410,7 +441,7 @@ int HALL\_PINS[numRows][numCols] : 2-D array controlling the Hall-effect sensor 
 \subsubsection{Environment Variables}{
   HALL\_PINS: input pins receiving signal from Hall-effect sensors\\
   LED\_PINS: output pins lighting up the LEDs on the board\\
-  serialToTeensy: serial communication to and from the Teensy controller\\
+  serialToArduino: serial communication to and from the Arduino controller\\
 }
 
 \subsubsection{Assumptions}{
@@ -498,6 +529,16 @@ SoftwareSerial.h
   \end{center}
 }
 
+\subsubsection{Exception Descriptions}
+\begin{itemize}
+    \item \textbf{UnknownAction}: An action is performed by the user which does not 
+    follow the outlined actions in the FSM.
+    \item \textbf{UnkownCommnand}: The command sent is not contained in the knowledge 
+    of the Arduino controller. 
+    \item \textbf{InvalidCommnand}: The command sent is not correct as deemed by the 
+    FSM. 
+\end{itemize}
+
 \subsection{Semantics}
 
 \subsubsection{State Variables}{
@@ -505,8 +546,8 @@ SoftwareSerial.h
 }
 
 \subsubsection{Environment Variables}{
-  messageEncoder: The string formatting to send a message to the Teensy Controller via Serial Communication.\\
-  messageDecoder: The string formatting to read a message from the Teensy Controller via Serial Communication.\\
+  messageEncoder: The string formatting to send a message to the Arduino Controller via Serial Communication.\\
+  messageDecoder: The string formatting to read a message from the Arduino Controller via Serial Communication.\\
 }
 
 \subsubsection{Assumptions}{
@@ -521,21 +562,14 @@ SoftwareSerial.h
 
 \noindent encodeMessage():
 \begin{itemize}
-\item output: Translate game state or action into encoded string to be read by Teensy or the Web Application
+\item output: Translate game state or action into encoded string to be read the Web Application
 \item exception: UnknownAction
 \end{itemize}
 
 \noindent decodeMessage():
 \begin{itemize}
-\item output: Translate encoded message from Teensy or the Web Application and convert into state change command
+\item output: Translate encoded message the Web Application and convert into state change command
 \item exception: UnknownCommand
-\end{itemize}
-
-\noindent processCommand():
-\begin{itemize}
-\item transition: Command received from Web Application or Teensy controller will be used to change the chess board accordingly.
-\item --> This could be to change the game state, game mode, player warning (check, checkmate, stalemate) or to light appropriate LED's
-\item exception: InvalidCommand
 \end{itemize}
 
 \subsubsection{Local Functions}{
@@ -567,6 +601,12 @@ SoftwareSerial.h
         \hline
         \end{tabular}
         \end{center}
+
+    \subsubsection{Exception Descriptions}
+    \begin{itemize}
+        \item \textbf{InvalidInput}: The input sent to the Web Application does not match 
+        the standard FEN string described by FIDE. 
+    \end{itemize}
     
     \subsection{Semantics}
     \subsubsection{State Variables}
@@ -807,6 +847,11 @@ SoftwareSerial.h
         \end{tabular}
         \end{center}
 
+        \subsubsection{Exception Descriptions}
+        \begin{itemize}
+            \item \textbf{InvalidIndex}: The recieved index is not contained in the standard 8x8 format. 
+        \end{itemize}
+
     \subsection{Semantics}
     \subsubsection{State Variables}
     fenString: string \#Stores FEN string of current game position
@@ -968,108 +1013,11 @@ SoftwareSerial.h
 
     \newpage
 
-    \section{Teensy Input from Mega Module} \label{TeensyToMegaRx}
-        \subsection{Module}
-        Teensy Input from Mega Module
-    
-        \subsection{Uses}
-        Receives game state information from the Arduino Mega in the form of a FEN string. 
-    
-        \subsection{Syntax}
-        \subsubsection{Exported Constants}
-        \#define baud rate \#The baud rate of the serial communication system\\
-        \#define stringFormat \#The format of the string remains constant to perform proper 
-        communication between the two Arduinos.
-        
-        \subsubsection{Exported Access Programs}
-            \begin{center}
-            \begin{tabular}{p{4cm} p{3cm} p{3cm} p{2.5cm}}
-            \hline
-            \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-            \hline
-            copyFen & string & string & \\
-            collectMode & string & binary & \\
-            \hline
-            \end{tabular}
-            \end{center}
-    
-        \subsection{Semantics}
-        \subsubsection{State Variables}
-        local game state \\
-        local game mode
-    
-        \subsubsection{Environment Variables}
-        N/A
-    
-        \subsubsection{Assumptions}
-        The size of the string passed from the Arduino Mega aligns with the designed format. \\
-    
-        \subsubsection{Access Routine Semantics}
-            \noindent receiveGameState(pin):
-            \begin{itemize}
-                \item Input: A serial line of data from an Rx pin
-                \item Output: A string containing the FEN of the game state
-                \item exception: none
-            \end{itemize}
-    
-        \subsubsection{Local Functions}
-        N/A
-    
-    \newpage
-    
-    \section{Teensy Input from Web App Module} \label{TeensyToWaRx}
-        \subsection{Module}
-        Teensy Input via bluetooth from the Web Application
-    
-        \subsection{Uses}
-        Receives best moves from the game engine contained in the Web Application.
-    
-        \subsection{Syntax}
-        \subsubsection{Exported Constants}
-        \#define baud rate \#The baud rate of the serial communication system\\
-        \#define stringFormat \#The format of the string remains constant to perform proper 
-        communication between the two Arduinos.
-        
-        \subsubsection{Exported Access Programs}
-            \begin{center}
-            \begin{tabular}{p{4cm} p{3cm} p{3cm} p{2.5cm}}
-            \hline
-            \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-            \hline
-            copyBestMove & string & string & \\
-            \hline
-            \end{tabular}
-            \end{center}
-    
-        \subsection{Semantics}
-        \subsubsection{State Variables}
-        local bestMove1 \\
-        local bestMove2 \\
-        local bestMove3 
-    
-        \subsubsection{Environment Variables}
-        N/A
-    
-        \subsubsection{Assumptions}
-        The size of the string passed from the Web Application aligns with the designed format. \\
-        The Web Application will always be able to return best moves with the given data. 
-    
-        \subsubsection{Access Routine Semantics}
-            \noindent receiveBestMove(pin):
-            \begin{itemize}
-                \item output: String containing 3 possible moves, calculated by a chess engine from the FEN input string
-                \item exception: none
-            \end{itemize}
-    
-        \subsubsection{Local Functions}
-        N/A
     
 
-\newpage
-
-\section{Teensy Output to Web App Module} \label{TeensyToWaTx}
+\section{Arduino Output to Web App Module} \label{ArduinoToWaTx}
     \subsection{Module}
-    Teensy Output via bluetooth to the Web Application
+    Arduino Output via bluetooth to the Web Application
 
     \subsection{Uses}
     Sends current game state and game mode to the Web Application via Bluetooth
