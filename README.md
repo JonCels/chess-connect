@@ -60,6 +60,8 @@ All of the following dependencies can be installed using the Arduino IDE Library
 **Node.js**
 
 <!-- ADD WEB APP DEPENDENCIES HERE -->
+-[Frontend Dependencies](https://github.com/ChessConnect/chess-connect/blob/main/src/chess-app/package.json): The dependencies section of this file includes all the dependencies used for the frontend.
+-[Backend Dependencies](https://github.com/ChessConnect/chess-connect/blob/main/src/chess-app-backend/package.json): The dependencies section of this file includes all the dependencies used for the backend.
 
 ### Installing
 <!-- MODIFY INSTRUCTIONS FOR RUNNING WEB APP -->
