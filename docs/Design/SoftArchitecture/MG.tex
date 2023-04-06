@@ -61,6 +61,8 @@
 Modified language of modules to reference Arduino instead of Teensy. \\
 2023-04-05 & Joshua Chapman & Reordered Modules and Added Bluetooth Communication modules
 for Arduino. \\
+2023-04-05 & Joshua Chapman & Addressed review from Team 29 regarding Anticipated and Unlikely 
+changes\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -155,17 +157,22 @@ unlikely changes are listed in Section \ref{SecUchange}.
 \item[\refstepcounter{acnum} \actheacnum \label{acHES}:] The pin configuration for Hall-effect sensors
 \item[\refstepcounter{acnum} \actheacnum \label{acLED}:] The pin configuration for LEDs
 \item[\refstepcounter{acnum} \actheacnum \label{acTGS}:] Transition logic between the various game states
-\item[\refstepcounter{acnum} \actheacnum \label{acHUA}:] Handling different user actions
+\item[\refstepcounter{acnum} \actheacnum \label{acHUA}:] Handling different user actions including
+all of the edge cases a user can make. Including termination of game in strange positions, removing 
+pieces from the board unprompted or continuing to play and disregarding error screens. 
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
 \begin{description}
   \item[\refstepcounter{ucnum} \uctheucnum] The user option to play against another user online.
+  This requires inputs from viewers of the web application and modifies the entire purpose of the
+  project. 
   \item[\refstepcounter{ucnum} \uctheucnum] The interface functionality of the system.
-  \item[\refstepcounter{ucnum} \uctheucnum] The rules and values related to the game itself.
   \item[\refstepcounter{ucnum} \uctheucnum] The purpose of the system to allow users to play a game of chess against an opponent.
 \item[\refstepcounter{ucnum} \uctheucnum \label{ucVML}:] Valid chess move logic.
+\item[\refstepcounter{ucnum} \uctheucnum] The rules and values related to the game itself. Including 
+pieces included on the board and the setup of a game of chess. 
 \item[\refstepcounter{ucnum} \uctheucnum \label{ucDTD}:] Data type definition locations may be shifted between different modules.
 \end{description}
 
@@ -215,8 +222,6 @@ The Hardware-Hiding module is implemented by the microcontroller as firmware tha
 & Web Application Output Module\\
 & Piece Identification Module \\
 & Communication Module\\
-& Arduino Input Bluetooth from Web App Module\\
-& Arduino Output Bluetooth to Web App Module\\
 \midrule
 
 \multirow{5}{0.3\textwidth}{Software Decision Module} 
@@ -278,6 +283,13 @@ standard in use affects all modules.
 \item[Implemented By:] Arduino.h library
 \end{description}
 
+\subsubsection{Software Serial Module (\mref{mSS})}
+\begin{description}
+\item[Secrets:] The methods in which the data is encoded, flags used to acknowledge connection, successful data transmission, incoming signal, etc.
+\item[Services:] The Arduino API that allows for sending and receiving various data types through serial communication.
+\item[Implemented By:] SoftwareSerial.h library
+\end{description}
+
 
 \subsection{Behaviour-Hiding Modules}
 \subsubsection{Web Application Input Module (\mref{mInput})}
@@ -313,13 +325,6 @@ standard in use affects all modules.
 \item[Secrets:] Message encoding string used to send board state, game mode and resignation signal. Message decoding string to interpret best moves, the check/mate/stalemate warning and commands from the Web Application. 
 \item[Services:] Reads and writes to the communication pins, processes and sends commands to various parts of the embedded software.
 \item[Implemented By:] \progname (c++, Arduino, Bluetooth)
-\end{description}
-
-\subsubsection{Software Serial Module (\mref{mSS})}
-\begin{description}
-\item[Secrets:] The methods in which the data is encoded, flags used to acknowledge connection, successful data transmission, incoming signal, etc.
-\item[Services:] The Arduino API that allows for sending and receiving various data types through serial communication.
-\item[Implemented By:] SoftwareSerial.h library
 \end{description}
 
 
