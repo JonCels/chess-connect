@@ -29,17 +29,20 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Start front-end web app
-        working-directory: ./src/chess-app
-        run: |
-          npm install
-          npm start
+      # Could not resolve GitHub Action deployment issues.
+      # need to come back to this at a later date.
 
-      - name: Start back-end server
-        working-directory: ./src/chess-app-backend
-        run: |
-          npm install
-          npm start
+      # - name: Start front-end web app
+      #   working-directory: ./src/chess-app
+      #   run: |
+      #     npm install
+      #     npm start
+
+      # - name: Start back-end server
+      #   working-directory: ./src/chess-app-backend
+      #   run: |
+      #     npm install
+      #     npm start
           
       # Integrate deployment once we find someone to host us
 
