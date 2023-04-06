@@ -29,14 +29,14 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Start back-end server
-        working-directory: ./src/chess-app-backend
+      - name: Start front-end web app
+        working-directory: ./src/chess-app
         run: |
           npm install
           npm start
 
-      - name: Start front-end web app
-        working-directory: ./src/chess-app
+      - name: Start back-end server
+        working-directory: ./src/chess-app-backend
         run: |
           npm install
           npm start
