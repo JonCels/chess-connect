@@ -57,9 +57,11 @@ All of the following dependencies can be installed using the Arduino IDE Library
 - [Adafruit_TFTLCD](https://github.com/adafruit/TFTLCD-Library): This is a hardware-specific library for controlling TFT LCD displays.
 - [TouchScreen](https://github.com/adafruit/Adafruit_TouchScreen): This is a library for reading touch coordinates from a touchscreen.
 
-**Node.js**
+**Node.js and React**
 
 <!-- ADD WEB APP DEPENDENCIES HERE -->
+- [Frontend Dependencies](https://github.com/ChessConnect/chess-connect/blob/main/src/chess-app/package.json): The dependencies section of this file includes all the dependencies used for the frontend.
+- [Backend Dependencies](https://github.com/ChessConnect/chess-connect/blob/main/src/chess-app-backend/package.json): The dependencies section of this file includes all the dependencies used for the backend.
 
 ### Installing
 <!-- MODIFY INSTRUCTIONS FOR RUNNING WEB APP -->
